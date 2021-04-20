@@ -1,0 +1,6 @@
+{
+  "mumps": {
+    "url1": "http://mumps.enseeiht.fr/MUMPS_5.4.0.tar.gz",
+    "url2": "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.4.0.tar.gz"
+  }
+}

@@ -1,0 +1,5 @@
+lapack_git https://github.com/scivision/lapack.git
+lapack_tag v3.9.0.5
+
+scalapack_git https://github.com/scivision/scalapack.git
+scalapack_tag v2.1.0.19

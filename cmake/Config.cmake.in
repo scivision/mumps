@@ -1,0 +1,40 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(MPI COMPONENTS C Fortran)
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules)
+find_dependency(LAPACK)
+
+include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake)
+
+foreach(a s d c z)
+  string(TOUPPER ${a} aup)
+  if(TARGET MUMPS::${aup}MUMPS)
+    set(MUMPS_${aup}_FOUND true)
+  endif()
+endforeach()
+
+if(TARGET MUMPS::MPISEQ)
+  set(MUMPS_MPISEQ_FOUND true)
+else()
+  find_dependency(SCALAPACK)
+endif()
+
+
+# --- determine extra libraries to be found
+
+get_target_property(ifc_libs MUMPS::COMMON INTERFACE_LINK_LIBRARIES)
+string(FIND "${ifc_libs}" "METIS::METIS" needs_metis)
+if(needs_metis GREATER 0)
+  find_dependency(METIS)
+endif()
+string(FIND "${ifc_libs}" "Scotch::Scotch" needs_scotch)
+if(needs_scotch GREATER 0)
+  find_dependency(Scotch COMPONENTS ESMUMPS)
+endif()
+
+
+
+check_required_components(@PROJECT_NAME@)
