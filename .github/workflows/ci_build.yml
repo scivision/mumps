@@ -1,0 +1,38 @@
+name: ci_build
+env:
+  CTEST_SITE: GitHub_Ubuntu
+  MUMPS_ROOT: ~/local
+  SCALAPACK_ROOT: ~/local
+
+on:
+  push:
+    paths:
+      - "**.cmake"
+      - "**/CMakeLists.txt"
+      - ".github/workflows/ci_build.yml"
+
+
+jobs:
+
+  linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install prereqs
+      run: |
+        sudo apt update -yq
+        sudo apt install -yq --no-install-recommends ninja-build gfortran libopenmpi-dev openmpi-bin
+
+
+    - run: cmake --preset default -Darith=d
+    - run: cmake --build --preset default
+    - run: ctest --preset default
+
+    - run: cmake --install build
+
+    - run: cmake -S examples -B examples/build
+    - run: cmake --build examples/build --parallel
+    - run: ctest  -parallel 2 --output-on-failure
+      working-directory: examples/build

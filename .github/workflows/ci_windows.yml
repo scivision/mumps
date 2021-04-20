@@ -1,0 +1,21 @@
+name: ci_windows
+
+on:
+  push:
+    paths:
+      - "**.cmake"
+      - "**/CMakeLists.txt"
+      - ".github/workflows/ci_windows.yml"
+
+
+jobs:
+
+  windows:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - run: cmake --preset makewin -Darith=d -Dparallel:BOOL=false
+    - run: cmake --build --preset default
+    - run: ctest --preset default

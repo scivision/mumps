@@ -1,0 +1,39 @@
+name: ci
+env:
+  MUMPS_ROOT: ~/local
+
+on:
+  push:
+    paths:
+      - "**.c"
+      - "**.f"
+      - "**.F"
+      - "**.f90"
+      - "**.F90"
+      - "**.cmake"
+      - "**.txt"
+      - ".github/workflows/ci.yml"
+
+
+jobs:
+
+  cmakeScotchMetis:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install prereqs
+      run: |
+        sudo apt update -yq
+        sudo apt install -yq --no-install-recommends ninja-build gfortran libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev libmetis-dev libscotch-dev
+
+    - run: cmake --preset default -Darith=d -Dmetis:BOOL=true -Dscotch:BOOL=true
+    - run: cmake --build --preset default
+    - run: ctest --preset default
+
+    - run: cmake --install build
+
+    - run: cmake -S examples -B examples/build
+    - run: cmake --build examples/build --parallel
+    - run: ctest  -parallel 2 --output-on-failure
+      working-directory: examples/build

@@ -1,0 +1,103 @@
+{
+  "version": 2,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+},
+"configurePresets": [
+{
+  "name": "default",
+  "binaryDir": "${sourceDir}/build",
+  "generator": "Ninja",
+  "cacheVariables": {
+    "CMAKE_BUILD_TYPE": "Release",
+    "CMAKE_INSTALL_PREFIX": "$env{HOME}/local"}
+},
+{
+  "name": "build", "inherits": "default",
+  "displayName": "build all libraries",
+  "description": "Build all external libraries (except MPI) without searching for existing libraries.",
+  "cacheVariables": {
+    "lapack_external": "on",
+    "scalapack_external": "on"
+  }
+},
+{
+  "name": "gcc10", "inherits": "default",
+  "displayName": "GCC-10",
+  "description": "specify GCC-10 -- helpful for MacOS Homebrew to avoid Clang /usr/bin/gcc",
+  "environment": {
+    "CC": "gcc-10",
+    "CXX": "g++-10",
+    "FC": "gfortran-10"
+  }
+},
+{
+  "name": "make", "inherits": "default",
+  "displayName": "build with GNU Make",
+  "generator": "Unix Makefiles"
+},
+{
+  "name": "makegcc10", "inherits": ["make", "gcc10"],
+  "displayName": "build with GNU Make and GCC"
+},
+{
+  "name": "windows", "inherits": "default",
+  "displayName": "Windows",
+  "cacheVariables": {
+    "CMAKE_INSTALL_PREFIX": "$env{USERPROFILE}/local"}
+},
+{
+  "name": "makewin", "inherits": "windows",
+  "displayName": "build with GNU Make: Windows",
+  "generator": "MinGW Makefiles"
+},
+{
+  "name": "intel", "inherits": "default",
+  "displayName": "Intel Classic compiler: Linux/MacOS",
+  "environment": {
+    "CC": "icc",
+    "CXX": "icpc",
+    "FC": "ifort",
+    "LAPACK_ROOT": "$env{MKLROOT}",
+    "SCALAPACK_ROOT": "$env{MKLROOT}",
+    "MPI_ROOT": "$env{I_MPI_ROOT}"
+  }
+},
+{
+  "name": "intelwin", "inherits": "intel",
+  "displayName": "Intel Classic compiler: Windows",
+  "environment": {
+    "CC": "icl",
+    "CXX": "icl"
+  }
+},
+{
+  "name": "intelnext", "inherits": "intel",
+  "displayName": "Intel oneAPI LLVM",
+  "environment": {
+    "CC": "icx",
+    "CXX": "icx",
+    "FC": "ifx"
+  }
+}
+],
+"buildPresets": [
+  {
+    "name": "default",
+    "configurePreset": "default"
+  }
+],
+"testPresets": [
+{
+  "name": "default",
+  "configurePreset": "default",
+  "output": {
+    "outputOnFailure": true,
+    "verbosity": "default"
+  },
+  "execution": {"noTestsAction": "error", "stopOnFailure": false}
+}
+]
+}

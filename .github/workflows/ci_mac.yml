@@ -1,0 +1,36 @@
+name: ci_mac
+env:
+  HOMEBREW_NO_INSTALL_CLEANUP: 1
+  CC: gcc-10
+  FC: gfortran-10
+  CTEST_SITE: GitHub_MacOS
+  MUMPS_ROOT: ~/local
+
+on:
+  push:
+    paths:
+      - "**.cmake"
+      - "**/CMakeLists.txt"
+      - ".github/workflows/ci_mac.yml"
+
+
+jobs:
+
+  mac:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - run: brew install gcc lapack scalapack open-mpi ninja
+
+    - run: cmake --preset default -Darith=d
+    - run: cmake --build --preset default
+    - run: ctest --preset default
+
+    - run: cmake --install build
+
+    - run: cmake -S examples -B examples/build
+    - run: cmake --build examples/build --parallel
+    - run: ctest  -parallel 2 --output-on-failure
+      working-directory: examples/build
