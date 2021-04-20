@@ -1,5 +1,7 @@
 {
   "mumps": {
+    "sha256": "c613414683e462da7c152c131cebf34f937e79b30571424060dd673368bbf627",
+    "url0": "https://github.com/scivision/mumps-release/raw/main/MUMPS_5.4.0.tar.gz",
     "url1": "http://mumps.enseeiht.fr/MUMPS_5.4.0.tar.gz",
     "url2": "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.4.0.tar.gz"
   }
