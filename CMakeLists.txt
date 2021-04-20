@@ -89,6 +89,9 @@ add_subdirectory(${mumps_SOURCE_DIR}/src ${mumps_BINARY_DIR}/src)
 
 if(${PROJECT_NAME}_BUILD_TESTING)
   add_subdirectory(tests)
+
+  configure_file(examples/CMakeLists.txt ${mumps_SOURCE_DIR}/examples/ COPYONLY)
+  # used by CI separately
 endif()
 
 
