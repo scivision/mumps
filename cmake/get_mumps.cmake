@@ -5,10 +5,10 @@ set(mumps_urls ${url})
 string(JSON url GET ${json} mumps url2)
 list(APPEND mumps_urls ${url})
 
-FetchContent_Declare(MUMPS
+FetchContent_Declare(mumps
 URL ${mumps_urls}
 TLS_VERIFY ON)
 
-if(NOT MUMPS_POPULATED)
-  FetchContent_Populate(MUMPS)
+if(NOT mumps_POPULATED)
+  FetchContent_Populate(mumps)
 endif()
