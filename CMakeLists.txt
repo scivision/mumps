@@ -85,3 +85,15 @@ add_subdirectory(${mumps_SOURCE_DIR}/PORD ${mumps_BINARY_DIR}/PORD)
 
 configure_file(src/CMakeLists.txt ${mumps_SOURCE_DIR}/src/ COPYONLY)
 add_subdirectory(${mumps_SOURCE_DIR}/src ${mumps_BINARY_DIR}/src)
+
+
+if(${PROJECT_NAME}_BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
+
+
+# --- feature summary
+
+include(cmake/summary.cmake)
+
+include(cmake/install.cmake)
