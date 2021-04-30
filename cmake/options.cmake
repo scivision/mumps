@@ -12,6 +12,13 @@ option(openmp "use OpenMP" OFF)
 option(mumps_matlab "build optional Matlab interface" OFF)
 
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS true)
+
+set(CMAKE_TLS_VERIFY true)
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR} CACHE PATH "top-level install path" FORCE)
+endif()
 
 # --- other options
 
@@ -36,7 +43,6 @@ else()
   set(EP_UPDATE_DISCONNECTED true)
 endif()
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 
 # --- auto-ignore build directory
 if(NOT EXISTS ${PROJECT_BINARY_DIR}/.gitignore)
