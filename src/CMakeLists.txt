@@ -25,7 +25,8 @@ ana_blk.F ana_orderings.F ana_set_ordering.F ana_AMDMF.F bcast_errors.F estim_fl
 mumps_type_size.F mumps_type2_blocking.F mumps_version.F mumps_print_defined.F
 mumps_pord.c
 mumps_common.c mumps_size.c mumps_io.c mumps_io_basic.c mumps_io_thread.c mumps_io_err.c
-mumps_numa.c mumps_thread.c mumps_save_restore_C.c mumps_config_file_C.c mumps_thread_affinity.c
+mumps_numa.c mumps_thread.c mumps_save_restore_C.c mumps_config_file_C.c
+mumps_thread_affinity.c mumps_register_thread.c
 tools_common.F sol_common.F
 )
 
