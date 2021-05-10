@@ -60,12 +60,7 @@ set_target_properties(mumps_common PROPERTIES
   EXPORT_NAME COMMON
   VERSION ${MUMPS_VERSION})
 
-install(TARGETS mumps_common
-  EXPORT ${PROJECT_NAME}Targets
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include)
+install(TARGETS mumps_common EXPORT ${PROJECT_NAME}Targets)
 
 # -- Mumps
 set(_ifc_libs)
@@ -133,12 +128,7 @@ set_target_properties(${a}mumps PROPERTIES
   EXPORT_NAME ${aup}MUMPS
   VERSION ${MUMPS_VERSION})
 
-install(TARGETS ${a}mumps
-  EXPORT ${PROJECT_NAME}Targets
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include)
+install(TARGETS ${a}mumps EXPORT ${PROJECT_NAME}Targets)
 
 install(FILES
   ${mumps_SOURCE_DIR}/include/${a}mumps_c.h
@@ -168,12 +158,7 @@ else()
   target_link_libraries(MUMPS INTERFACE ${_ifc_libs} mumps_common pord mpiseq)
 endif()
 
-install(TARGETS MUMPS
-  EXPORT ${PROJECT_NAME}Targets
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include)
+install(TARGETS MUMPS EXPORT ${PROJECT_NAME}Targets)
 
 # target for FetchContent
 # this must NOT be an ALIAS or linking in other packages breaks.

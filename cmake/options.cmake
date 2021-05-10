@@ -40,7 +40,7 @@ set(FETCHCONTENT_UPDATES_DISCONNECTED_MUMPS true)
 if(dev)
 
 else()
-  set(EP_UPDATE_DISCONNECTED true)
+  set_directory_properties(PROPERTIES EP_UPDATE_DISCONNECTED true)
 endif()
 
 

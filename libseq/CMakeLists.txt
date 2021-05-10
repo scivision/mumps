@@ -15,12 +15,7 @@ set_target_properties(mpiseq PROPERTIES
 add_library(MUMPS::MPISEQ INTERFACE IMPORTED GLOBAL)
 target_link_libraries(MUMPS::MPISEQ INTERFACE mpiseq)
 
-install(TARGETS mpiseq
-  EXPORT ${PROJECT_NAME}Targets
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include)
+install(TARGETS mpiseq EXPORT ${PROJECT_NAME}Targets)
 
 install(FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/elapse.h
