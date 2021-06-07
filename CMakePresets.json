@@ -12,8 +12,7 @@
   "binaryDir": "${sourceDir}/build",
   "generator": "Ninja",
   "cacheVariables": {
-    "CMAKE_BUILD_TYPE": "Release",
-    "CMAKE_INSTALL_PREFIX": "$env{HOME}"}
+    "CMAKE_BUILD_TYPE": "Release"}
 },
 {
   "name": "build", "inherits": "default",
@@ -31,9 +30,7 @@
 },
 {
   "name": "windows", "inherits": "default",
-  "displayName": "Windows",
-  "cacheVariables": {
-    "CMAKE_INSTALL_PREFIX": "$env{USERPROFILE}"}
+  "displayName": "Windows"
 },
 {
   "name": "makewin", "inherits": "windows",
