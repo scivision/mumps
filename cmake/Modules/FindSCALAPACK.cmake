@@ -73,7 +73,7 @@ set(CMAKE_REQUIRED_LINK_OPTIONS)
 set(CMAKE_REQUIRED_INCLUDES ${SCALAPACK_INCLUDE_DIR})
 set(CMAKE_REQUIRED_LIBRARIES ${SCALAPACK_LIBRARY} ${BLACS_LIBRARY} LAPACK::LAPACK MPI::MPI_Fortran MPI::MPI_C)
 # MPI needed for ifort
-include(CheckFortranSourceCompiles)
+include(CheckSourceCompiles)
 
 set(SCALAPACK_links true)
 
@@ -81,13 +81,13 @@ foreach(i s d c z)
 
 if("${i}" IN_LIST SCALAPACK_FIND_COMPONENTS)
 
-  check_fortran_source_compiles("
-  program test
+  check_source_compiles(Fortran
+  "program test
   implicit none (type, external)
   external :: p${i}lamch
   external :: blacs_pinfo, blacs_get, blacs_gridinit, blacs_gridexit, blacs_exit
   end program"
-    SCALAPACK_${i}_links SRC_EXT f90)
+  SCALAPACK_${i}_links)
 
   if(SCALAPACK_${i}_links)
     set(SCALAPACK_${i}_FOUND true PARENT_SCOPE)

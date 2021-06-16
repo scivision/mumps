@@ -6,7 +6,7 @@ set(CMAKE_REQUIRED_FLAGS)
 # --- test Fortran MPI
 
 set(CMAKE_REQUIRED_LIBRARIES MPI::MPI_Fortran Threads::Threads)
-include(CheckFortranSourceCompiles)
+include(CheckSourceCompiles)
 
 if(NOT DEFINED MPI_Fortran_OK)
   message(STATUS "Fortran MPI:
@@ -15,11 +15,12 @@ if(NOT DEFINED MPI_Fortran_OK)
   MPIexec: ${MPIEXEC_EXECUTABLE}")
 endif()
 
-check_fortran_source_compiles("use mpi
+check_source_compiles(Fortran
+"use mpi
 integer :: i
 call mpi_init(i)
 call mpi_finalize(i)
-end" MPI_Fortran_OK SRC_EXT F90)
+end" MPI_Fortran_OK)
 
 if(NOT MPI_Fortran_OK)
   message(FATAL_ERROR "MPI_Fortran not working.")
@@ -28,7 +29,6 @@ endif()
 # --- test C MPI
 
 set(CMAKE_REQUIRED_LIBRARIES MPI::MPI_C Threads::Threads)
-include(CheckCSourceCompiles)
 
 if(NOT DEFINED MPI_C_OK)
   message(STATUS "C MPI:
@@ -36,8 +36,8 @@ if(NOT DEFINED MPI_C_OK)
   Include: ${MPI_C_INCLUDE_DIRS}")
 endif()
 
-check_c_source_compiles("
-#include <mpi.h>
+check_source_compiles(C
+"#include <mpi.h>
 #ifndef NULL
 #define NULL 0
 #endif

@@ -26,6 +26,8 @@ MUMPS_INCLUDE_DIRS
 
 set(MUMPS_LIBRARY)  # don't endlessly append
 
+include(CheckSourceCompiles)
+
 # --- functions
 
 function(mumps_check)
@@ -50,14 +52,14 @@ foreach(i s d c z)
 
 if("${i}" IN_LIST MUMPS_FIND_COMPONENTS)
 
-  check_fortran_source_compiles("
-  program test_mumps
+  check_source_compiles(Fortran
+  "program test_mumps
   implicit none (type, external)
   include '${i}mumps_struc.h'
   external :: ${i}mumps
   type(${i}mumps_struc) :: mumps_par
   end program"
-    MUMPS_${i}_links SRC_EXT f90)
+  MUMPS_${i}_links)
 
   if(MUMPS_${i}_links)
     set(MUMPS_${i}_FOUND true PARENT_SCOPE)

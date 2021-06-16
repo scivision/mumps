@@ -443,18 +443,20 @@ set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARY})
 
 if(LAPACK_LIBRARY)
 if(CMAKE_Fortran_COMPILER)
-  include(CheckFortranSourceCompiles)
-  check_fortran_source_compiles("program check_lapack
+  include(CheckSourceCompiles)
+  check_source_compiles(Fortran
+  "program check_lapack
   implicit none
   double precision, external :: disnan
   print *, disnan(0.)
-  end" LAPACK_real64_links SRC_EXT f90)
+  end" LAPACK_real64_links)
 
-  check_fortran_source_compiles("program check_lapack
+  check_source_compiles(Fortran
+  "program check_lapack
   implicit none
   real, external :: sisnan
   print *, sisnan(0.)
-  end" LAPACK_real32_links SRC_EXT f90)
+  end" LAPACK_real32_links)
 
   if(LAPACK_real64_links OR LAPACK_real32_links)
     set(LAPACK_links TRUE)
