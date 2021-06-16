@@ -1,6 +1,4 @@
 name: ci
-env:
-  MUMPS_ROOT: ~/local
 
 on:
   push:

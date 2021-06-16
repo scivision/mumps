@@ -1,6 +1,6 @@
 program adder
 
-implicit none (type, external)
+implicit none
 
 interface
 integer function addone(N) bind(C)

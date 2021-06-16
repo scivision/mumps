@@ -1,8 +1,4 @@
 name: ci_build
-env:
-  CTEST_SITE: GitHub_Ubuntu
-  MUMPS_ROOT: ~/local
-  SCALAPACK_ROOT: ~/local
 
 on:
   push:
