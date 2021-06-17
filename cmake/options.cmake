@@ -22,10 +22,6 @@ endif()
 
 # --- other options
 
-if(mumps_matlab)
-  set(BUILD_SHARED_LIBS true)
-endif()
-
 # default build all
 if(NOT DEFINED arith)
   set(arith "s;d;c;z")
