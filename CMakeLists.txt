@@ -39,7 +39,7 @@ include(cmake/lapack.cmake)
 # -- Scalapack / MPI
 
 if(parallel)
-  include(cmake/mpi.cmake)
+  find_package(MPI COMPONENTS C Fortran REQUIRED)
   include(cmake/scalapack.cmake)
 
   set(NUMERIC_LIBS SCALAPACK::SCALAPACK LAPACK::LAPACK MPI::MPI_Fortran MPI::MPI_C)
