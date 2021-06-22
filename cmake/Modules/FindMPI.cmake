@@ -438,11 +438,12 @@ if(WIN32 AND NOT CMAKE_C_COMPILER_ID MATCHES Intel)
   list(APPEND _hints_inc $ENV{MSMPI_INC})
 endif()
 
-# must have MPIexec to be worthwhile (MS-MPI doesn't have mpirun, but all have mpiexec)
+# must have MPIexec to be worthwhile (de facto standard is mpiexec)
 find_program(MPIEXEC_EXECUTABLE
-  NAMES mpiexec
+  NAMES mpiexec mpirun orterun
   HINTS ${_hints} $ENV{MSMPI_BIN}
-  PATH_SUFFIXES bin sbin
+  PATHS /usr/lib64
+  PATH_SUFFIXES bin sbin openmpi/bin mpich/bin
 )
 
 
