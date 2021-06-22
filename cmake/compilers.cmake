@@ -18,7 +18,8 @@ add_compile_definitions(CDEFS "Add_")
 # "Add_" works for all modern compilers we tried.
 
 set(_gcc10opts)
-if(CMAKE_Fortran_COMPILER_ID STREQUAL GNU AND CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL 10)
+if(CMAKE_Fortran_COMPILER_ID STREQUAL GNU AND
+   CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL 10)
   set(_gcc10opts "-fallow-argument-mismatch -fallow-invalid-boz")
 endif()
 
