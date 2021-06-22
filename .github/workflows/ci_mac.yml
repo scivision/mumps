@@ -1,7 +1,6 @@
 name: ci_mac
 env:
   HOMEBREW_NO_INSTALL_CLEANUP: 1
-  CC: gcc-11
   FC: gfortran-11
 
 on:
