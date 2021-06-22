@@ -31,11 +31,10 @@ set(scalapack_external true CACHE BOOL "build ScaLapack")
 
 set(scalapack_c_flags)
 include(CheckCompilerFlag)
-if(CMAKE_C_COMPILER_ID STREQUAL GNU)
-  # test the non-no form, otherwise always succeeds
-  if(HAS_IMPLICIT_FUNC_FLAG)
-    set(scalapack_c_flags -Wno-implicit-function-declaration)
-  endif()
+# test the non-no form, otherwise always succeeds
+check_compiler_flag(C -Wimplicit-function-declaration HAS_IMPLICIT_FUNC_FLAG)
+if(HAS_IMPLICIT_FUNC_FLAG)
+  set(scalapack_c_flags -Wno-implicit-function-declaration)
 endif()
 
 if(NOT TARGET LAPACK)
