@@ -1,10 +1,5 @@
 {
   "version": 2,
-  "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 20,
-    "patch": 0
-},
 
 "configurePresets": [
 {
@@ -12,7 +7,8 @@
   "binaryDir": "${sourceDir}/build",
   "generator": "Ninja",
   "cacheVariables": {
-    "CMAKE_BUILD_TYPE": "Release"}
+    "CMAKE_BUILD_TYPE": "Release",
+    "CMAKE_INSTALL_PREFIX": "${sourceDir}/build"}
 },
 {
   "name": "build", "inherits": "default",
@@ -22,20 +18,6 @@
     "lapack_external": "on",
     "scalapack_external": "on"
   }
-},
-{
-  "name": "make", "inherits": "default",
-  "displayName": "build with GNU Make",
-  "generator": "Unix Makefiles"
-},
-{
-  "name": "windows", "inherits": "default",
-  "displayName": "Windows"
-},
-{
-  "name": "makewin", "inherits": "windows",
-  "displayName": "build with GNU Make: Windows",
-  "generator": "MinGW Makefiles"
 },
 {
   "name": "intel", "inherits": "default",

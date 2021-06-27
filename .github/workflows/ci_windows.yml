@@ -12,10 +12,12 @@ jobs:
 
   windows:
     runs-on: windows-latest
+    env:
+      CMAKE_GENERATOR: "MinGW Makefiles"
 
     steps:
     - uses: actions/checkout@v2
 
-    - run: cmake --preset makewin -Darith=d -Dparallel:BOOL=false
+    - run: cmake --preset default -Darith=d -Dparallel:BOOL=false
     - run: cmake --build --preset default
     - run: ctest --preset default
