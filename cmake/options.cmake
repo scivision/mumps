@@ -10,14 +10,14 @@ option(metis "use METIS" OFF)
 option(scotch "use Scotch" OFF)
 option(openmp "use OpenMP" OFF)
 option(mumps_matlab "build optional Matlab interface" OFF)
-option(use_default_install_prefix "don't override install path" OFF)
+option(use_default_install_location "don't override install path" OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
 set(CMAKE_TLS_VERIFY true)
 
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND (NOT
-                                                    use_default_install_prefix))
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT
+   AND (NOT use_default_install_location))
   set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR} CACHE PATH
       "top-level install path" FORCE)
 endif()

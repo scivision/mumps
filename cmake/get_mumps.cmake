@@ -6,10 +6,10 @@ string(JSON url2 GET ${json} mumps url2)
 string(JSON mumps_sha256 GET ${json} mumps sha256)
 set(mumps_urls ${url0} ${url1} ${url2})
 
-FetchContent_Declare(mumps
-URL ${mumps_urls}
-URL_HASH SHA256=${mumps_sha256}
-)
+FetchContent_Declare(
+  mumps
+  URL ${mumps_urls}
+  URL_HASH SHA256=${mumps_sha256})
 
 if(NOT mumps_POPULATED)
   FetchContent_Populate(mumps)

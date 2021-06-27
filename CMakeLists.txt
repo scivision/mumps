@@ -1,16 +1,21 @@
-# Use FetchContent to avoid directly distributing huge MUMPS source,
-# which would slow down clone of this repo
+# Use FetchContent to avoid directly distributing huge MUMPS source, which would
+# slow down clone of this repo
 
 cmake_minimum_required(VERSION 3.19...3.21)
 
-file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION PROJECT_VERSION
-  REGEX "^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)" LIMIT_INPUT 16 LENGTH_MAXIMUM 16 LIMIT_COUNT 1)
+file(
+  STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION PROJECT_VERSION
+  REGEX "^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)"
+  LIMIT_INPUT 16
+  LENGTH_MAXIMUM 16
+  LIMIT_COUNT 1)
 
-project(MUMPS
-LANGUAGES C Fortran
-VERSION ${PROJECT_VERSION}
-DESCRIPTION "Sparse direct parallel solver"
-HOMEPAGE_URL "http://mumps-solver.org/")
+project(
+  MUMPS
+  LANGUAGES C Fortran
+  VERSION ${PROJECT_VERSION}
+  DESCRIPTION "Sparse direct parallel solver"
+  HOMEPAGE_URL "http://mumps-solver.org/")
 
 include(CTest)
 include(FetchContent)
@@ -39,12 +44,19 @@ include(cmake/lapack.cmake)
 # -- Scalapack / MPI
 
 if(parallel)
-  find_package(MPI COMPONENTS C Fortran REQUIRED)
+  find_package(
+    MPI
+    COMPONENTS C Fortran
+    REQUIRED)
   include(cmake/scalapack.cmake)
 
-  set(NUMERIC_LIBS SCALAPACK::SCALAPACK LAPACK::LAPACK MPI::MPI_Fortran MPI::MPI_C)
+  set(NUMERIC_LIBS SCALAPACK::SCALAPACK LAPACK::LAPACK MPI::MPI_Fortran
+      MPI::MPI_C)
   if(openmp)
-    find_package(OpenMP COMPONENTS C Fortran REQUIRED)
+    find_package(
+      OpenMP
+      COMPONENTS C Fortran
+      REQUIRED)
     list(APPEND NUMERIC_LIBS OpenMP::OpenMP_Fortran OpenMP::OpenMP_C)
   endif()
 else(parallel)
@@ -59,7 +71,10 @@ list(APPEND NUMERIC_LIBS LAPACK::LAPACK ${CMAKE_THREAD_LIBS_INIT})
 set(ORDERING_LIBS)
 set(ORDERING_FLAGS -Dpord)
 if(scotch)
-  find_package(Scotch COMPONENTS ESMUMPS REQUIRED)
+  find_package(
+    Scotch
+    COMPONENTS ESMUMPS
+    REQUIRED)
   list(APPEND ORDERING_FLAGS -Dscotch)
   list(APPEND ORDERING_LIBS Scotch::Scotch)
 endif()
@@ -70,15 +85,14 @@ if(metis)
 endif()
 list(APPEND ORDERING_LIBS pord)
 
-install(FILES
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindLAPACK.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindSCALAPACK.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindBLACS.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMETIS.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindScotch.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMUMPS.cmake
+install(
+  FILES ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindLAPACK.cmake
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindSCALAPACK.cmake
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindBLACS.cmake
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMETIS.cmake
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindScotch.cmake
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMUMPS.cmake
   DESTINATION lib/cmake/${PROJECT_NAME}/Modules)
-
 
 # --- MUMPS build
 
@@ -89,14 +103,12 @@ add_subdirectory(${mumps_SOURCE_DIR}/PORD ${mumps_BINARY_DIR}/PORD)
 configure_file(src/CMakeLists.txt ${mumps_SOURCE_DIR}/src/ COPYONLY)
 add_subdirectory(${mumps_SOURCE_DIR}/src ${mumps_BINARY_DIR}/src)
 
-
 if(${PROJECT_NAME}_BUILD_TESTING)
   add_subdirectory(tests)
 
   configure_file(examples/CMakeLists.txt ${mumps_SOURCE_DIR}/examples/ COPYONLY)
   # used by CI separately
 endif()
-
 
 # --- feature summary
 
