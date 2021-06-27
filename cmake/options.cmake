@@ -10,14 +10,16 @@ option(metis "use METIS" OFF)
 option(scotch "use Scotch" OFF)
 option(openmp "use OpenMP" OFF)
 option(mumps_matlab "build optional Matlab interface" OFF)
-
+option(use_default_install_prefix "don't override install path" OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
 set(CMAKE_TLS_VERIFY true)
 
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR} CACHE PATH "top-level install path" FORCE)
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND (NOT
+                                                    use_default_install_prefix))
+  set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR} CACHE PATH
+      "top-level install path" FORCE)
 endif()
 
 # --- other options
@@ -38,7 +40,6 @@ if(dev)
 else()
   set_directory_properties(PROPERTIES EP_UPDATE_DISCONNECTED true)
 endif()
-
 
 # --- auto-ignore build directory
 if(NOT EXISTS ${PROJECT_BINARY_DIR}/.gitignore)
