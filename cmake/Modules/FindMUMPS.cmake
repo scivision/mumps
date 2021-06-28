@@ -46,23 +46,27 @@ set(CMAKE_REQUIRED_LIBRARIES ${MUMPS_LIBRARY} ${SCALAPACK_LIBRARIES} ${LAPACK_LI
 
 set(MUMPS_links true)
 
+get_property(enabled_langs GLOBAL PROPERTY ENABLED_LANGUAGES)
+
 foreach(i s d c z)
 
 if("${i}" IN_LIST MUMPS_FIND_COMPONENTS)
 
-  check_source_compiles(Fortran
-  "program test_mumps
-  implicit none (type, external)
-  include '${i}mumps_struc.h'
-  external :: ${i}mumps
-  type(${i}mumps_struc) :: mumps_par
-  end program"
-  MUMPS_${i}_links)
+  if(Fortran IN_LIST enabled_langs)
+    check_source_compiles(Fortran
+    "program test_mumps
+    implicit none (type, external)
+    include '${i}mumps_struc.h'
+    external :: ${i}mumps
+    type(${i}mumps_struc) :: mumps_par
+    end program"
+    MUMPS_${i}_links)
 
-  if(MUMPS_${i}_links)
-    set(MUMPS_${i}_FOUND true PARENT_SCOPE)
-  else()
-    set(MUMPS_links false)
+    if(MUMPS_${i}_links)
+      set(MUMPS_${i}_FOUND true PARENT_SCOPE)
+    else()
+      set(MUMPS_links false)
+    endif()
   endif()
 endif()
 
@@ -91,8 +95,10 @@ endif()
 
 if(DEFINED ENV{MKLROOT})
   find_library(MUMPS_COMMON NAMES mumps_common NO_DEFAULT_PATH HINTS ${MUMPS_ROOT} PATH_SUFFIXES lib DOC "MUMPS common libraries")
+elseif(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
+  find_library(MUMPS_COMMON NAMES mumps_common mumps_common_seq NAMES_PER_DIR DOC "MUMPS common libraries")
 else()
-  find_library(MUMPS_COMMON NAMES mumps_common DOC "MUMPS common libraries")
+  find_library(MUMPS_COMMON NAMES mumps_common mumps_common_mpi NAMES_PER_DIR DOC "MUMPS common libraries")
 endif()
 if(NOT MUMPS_COMMON)
   return()
@@ -101,7 +107,7 @@ endif()
 if(DEFINED ENV{MKLROOT})
   find_library(PORD NAMES pord NO_DEFAULT_PATH HINTS ${MUMPS_ROOT} PATH_SUFFIXES lib DOC "simplest MUMPS ordering library")
 else()
-  find_library(PORD NAMES pord DOC "simplest MUMPS ordering library")
+  find_library(PORD NAMES pord mumps_pord NAMES_PER_DIR DOC "simplest MUMPS ordering library")
 endif()
 if(NOT PORD)
   return()
@@ -111,7 +117,7 @@ if(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
   if(DEFINED ENV{MKLROOT})
     find_library(MUMPS_mpiseq_LIB NAMES mpiseq NO_DEFAULT_PATH HINTS ${MUMPS_ROOT} PATH_SUFFIXES lib DOC "No-MPI stub library")
   else()
-    find_library(MUMPS_mpiseq_LIB NAMES mpiseq DOC "No-MPI stub library")
+    find_library(MUMPS_mpiseq_LIB NAMES mpiseq mumps_mpi_seq NAMES_PER_DIR DOC "No-MPI stub library")
   endif()
   if(NOT MUMPS_mpiseq_LIB)
     return()
@@ -120,7 +126,7 @@ if(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
   if(DEFINED ENV{MKLROOT})
     find_path(MUMPS_mpiseq_INC NAMES mpif.h NO_DEFAULT_PATH HINTS ${MUMPS_ROOT} PATH_SUFFIXES include DOC "MUMPS mpiseq header")
   else()
-    find_path(MUMPS_mpiseq_INC NAMES mpif.h DOC "MUMPS mpiseq header")
+    find_path(MUMPS_mpiseq_INC NAMES mpif.h PATH_SUFFIXES include/mumps/mpi_seq DOC "MUMPS mpiseq header")
   endif()
   if(NOT MUMPS_mpiseq_INC)
     return()
@@ -139,8 +145,10 @@ foreach(comp ${MUMPS_FIND_COMPONENTS})
 
   if(DEFINED ENV{MKLROOT})
     find_library(MUMPS_${comp}_lib NAMES ${comp}mumps NO_DEFAULT_PATH HINTS ${MUMPS_ROOT} PATH_SUFFIXES lib DOC "MUMPS precision-specific")
+  elseif(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
+    find_library(MUMPS_${comp}_lib NAMES ${comp}mumps ${comp}mumps_seq NAMES_PER_DIR DOC "MUMPS precision-specific")
   else()
-    find_library(MUMPS_${comp}_lib NAMES ${comp}mumps DOC "MUMPS precision-specific")
+    find_library(MUMPS_${comp}_lib NAMES ${comp}mumps ${comp}mumps_mpi NAMES_PER_DIR DOC "MUMPS precision-specific")
   endif()
 
   if(NOT MUMPS_${comp}_lib)
