@@ -114,7 +114,9 @@ else()
   set(names mpi pmpi)
 endif()
 
-pkg_search_module(pc_mpi_c ompi-c)
+if(NOT MPI_C_FOUND)
+  pkg_search_module(pc_mpi_c ompi-c)
+endif()
 
 if(CMAKE_C_COMPILER_ID MATCHES Intel)
   set(wrap_name mpiicc mpiicc.bat)
@@ -221,7 +223,9 @@ else()
     mpichcxx mpi pmpi)
 endif()
 
-pkg_search_module(pc_mpi_cxx ompi-cxx)
+if(NOT MPI_CXX_FOUND)
+  pkg_search_module(pc_mpi_cxx ompi-cxx)
+endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES Intel)
   set(wrap_name mpiicpc mpiicpc.bat)
@@ -329,7 +333,9 @@ else()
     )
 endif()
 
-pkg_search_module(pc_mpi_f ompi-fort)
+if(NOT MPI_Fortran_FOUND)
+  pkg_search_module(pc_mpi_f ompi-fort)
+endif()
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
   set(wrap_name mpiifort mpiifort.bat)
