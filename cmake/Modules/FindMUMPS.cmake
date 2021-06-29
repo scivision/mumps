@@ -32,6 +32,12 @@ include(CheckSourceCompiles)
 
 function(mumps_check)
 
+get_property(enabled_langs GLOBAL PROPERTY ENABLED_LANGUAGES)
+if(NOT Fortran IN_LIST enabled_langs)
+  set(MUMPS_links true)
+  return()
+endif()
+
 if(NOT mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
   find_package(MPI COMPONENTS C Fortran)
   if(NOT TARGET SCALAPACK::SCALAPACK)
@@ -44,30 +50,21 @@ find_package(LAPACK)
 set(CMAKE_REQUIRED_INCLUDES ${MUMPS_INCLUDE_DIR} ${SCALAPACK_INCLUDE_DIRS} ${LAPACK_INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS} ${MPI_C_INCLUDE_DIRS})
 set(CMAKE_REQUIRED_LIBRARIES ${MUMPS_LIBRARY} ${SCALAPACK_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_Fortran_LIBRARIES} ${MPI_C_LIBRARIES} ${_test_lib})
 
-set(MUMPS_links true)
-
-get_property(enabled_langs GLOBAL PROPERTY ENABLED_LANGUAGES)
 
 foreach(i s d c z)
 
-if("${i}" IN_LIST MUMPS_FIND_COMPONENTS)
+check_source_compiles(Fortran
+  "program test_mumps
+  implicit none (type, external)
+  include '${i}mumps_struc.h'
+  external :: ${i}mumps
+  type(${i}mumps_struc) :: mumps_par
+  end program"
+  MUMPS_${i}_links)
 
-  if(Fortran IN_LIST enabled_langs)
-    check_source_compiles(Fortran
-    "program test_mumps
-    implicit none (type, external)
-    include '${i}mumps_struc.h'
-    external :: ${i}mumps
-    type(${i}mumps_struc) :: mumps_par
-    end program"
-    MUMPS_${i}_links)
-
-    if(MUMPS_${i}_links)
-      set(MUMPS_${i}_FOUND true PARENT_SCOPE)
-    else()
-      set(MUMPS_links false)
-    endif()
-  endif()
+if(MUMPS_${i}_links)
+  set(MUMPS_${i}_FOUND true PARENT_SCOPE)
+  set(MUMPS_links true)
 endif()
 
 endforeach()
