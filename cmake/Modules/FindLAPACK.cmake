@@ -75,6 +75,8 @@ References
 * MKL LAPACKE (C, C++): https://software.intel.com/en-us/mkl-linux-developer-guide-calling-lapack-blas-and-cblas-routines-from-c-c-language-environments
 #]=======================================================================]
 
+include(CheckSourceCompiles)
+
 # clear to avoid endless appending on subsequent calls
 set(LAPACK_LIBRARY)
 set(LAPACK_INCLUDE_DIR)
@@ -441,9 +443,11 @@ set(CMAKE_REQUIRED_LINK_OPTIONS)
 set(CMAKE_REQUIRED_INCLUDES)
 set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARY})
 
-if(LAPACK_LIBRARY)
-if(CMAKE_Fortran_COMPILER)
-  include(CheckSourceCompiles)
+get_property(enabled_langs GLOBAL PROPERTY ENABLED_LANGUAGES)
+set(LAPACK_links true)  # complex to check across distinct LapackE APIs
+
+if(LAPACK_LIBRARY AND Fortran IN_LIST enabled_langs)
+
   check_source_compiles(Fortran
   "program check_lapack
   implicit none
@@ -458,13 +462,11 @@ if(CMAKE_Fortran_COMPILER)
   print *, sisnan(0.)
   end" LAPACK_real32_links)
 
-  if(LAPACK_real64_links OR LAPACK_real32_links)
-    set(LAPACK_links TRUE)
+  if(NOT (LAPACK_real64_links AND LAPACK_real32_links))
+    set(LAPACK_links false)
   endif()
-else(CMAKE_Fortran_COMPILER)
-  set(LAPACK_links TRUE)  # complex to check with various distinct LapackE APIs
-endif(CMAKE_Fortran_COMPILER)
-endif(LAPACK_LIBRARY)
+
+endif()
 
 set(CMAKE_REQUIRED_LIBRARIES)
 

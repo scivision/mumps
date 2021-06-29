@@ -52,6 +52,8 @@ References
 * MKL link-line advisor: https://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
 #]=======================================================================]
 
+include(CheckSourceCompiles)
+
 set(SCALAPACK_LIBRARY)  # avoids appending to prior FindScalapack
 set(SCALAPACK_INCLUDE_DIR)
 
@@ -59,13 +61,17 @@ set(SCALAPACK_INCLUDE_DIR)
 
 function(scalapack_check)
 
-find_package(MPI COMPONENTS C Fortran)
+set(SCALAPACK_links true)
 
-if(NOT TARGET LAPACK::LAPACK)
-  find_package(LAPACK)
-  if(NOT (MPI_Fortran_FOUND AND LAPACK_FOUND))
-    return()
-  endif()
+get_property(enabled_langs GLOBAL PROPERTY ENABLED_LANGUAGES)
+if(NOT Fortran IN_LIST enabled_langs)
+  return()
+endif()
+
+find_package(MPI COMPONENTS C Fortran)
+find_package(LAPACK)
+if(NOT (MPI_Fortran_FOUND AND LAPACK_FOUND))
+  return()
 endif()
 
 set(CMAKE_REQUIRED_FLAGS)
@@ -73,28 +79,25 @@ set(CMAKE_REQUIRED_LINK_OPTIONS)
 set(CMAKE_REQUIRED_INCLUDES ${SCALAPACK_INCLUDE_DIR})
 set(CMAKE_REQUIRED_LIBRARIES ${SCALAPACK_LIBRARY} ${BLACS_LIBRARY} LAPACK::LAPACK MPI::MPI_Fortran MPI::MPI_C)
 # MPI needed for ifort
-include(CheckSourceCompiles)
-
-set(SCALAPACK_links true)
 
 foreach(i s d c z)
 
-if("${i}" IN_LIST SCALAPACK_FIND_COMPONENTS)
+  if("${i}" IN_LIST SCALAPACK_FIND_COMPONENTS)
 
-  check_source_compiles(Fortran
-  "program test
-  implicit none (type, external)
-  external :: p${i}lamch
-  external :: blacs_pinfo, blacs_get, blacs_gridinit, blacs_gridexit, blacs_exit
-  end program"
-  SCALAPACK_${i}_links)
+    check_source_compiles(Fortran
+    "program test
+    implicit none (type, external)
+    external :: p${i}lamch
+    external :: blacs_pinfo, blacs_get, blacs_gridinit, blacs_gridexit, blacs_exit
+    end program"
+    SCALAPACK_${i}_links)
 
-  if(SCALAPACK_${i}_links)
-    set(SCALAPACK_${i}_FOUND true PARENT_SCOPE)
-  else()
-    set(SCALAPACK_links false)
+    if(SCALAPACK_${i}_links)
+      set(SCALAPACK_${i}_FOUND true PARENT_SCOPE)
+    else()
+      set(SCALAPACK_links false)
+    endif()
   endif()
-endif()
 
 endforeach()
 
