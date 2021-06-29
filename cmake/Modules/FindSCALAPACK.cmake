@@ -61,18 +61,19 @@ set(SCALAPACK_INCLUDE_DIR)
 
 function(scalapack_check)
 
-set(SCALAPACK_links true)
-
 get_property(enabled_langs GLOBAL PROPERTY ENABLED_LANGUAGES)
 if(NOT Fortran IN_LIST enabled_langs)
+  set(SCALAPACK_links true)
   return()
 endif()
 
 find_package(MPI COMPONENTS C Fortran)
 find_package(LAPACK)
 if(NOT (MPI_Fortran_FOUND AND LAPACK_FOUND))
+  set(SCALAPACK_links true)
   return()
 endif()
+
 
 set(CMAKE_REQUIRED_FLAGS)
 set(CMAKE_REQUIRED_LINK_OPTIONS)
@@ -82,9 +83,7 @@ set(CMAKE_REQUIRED_LIBRARIES ${SCALAPACK_LIBRARY} ${BLACS_LIBRARY} LAPACK::LAPAC
 
 foreach(i s d c z)
 
-  if("${i}" IN_LIST SCALAPACK_FIND_COMPONENTS)
-
-    check_source_compiles(Fortran
+  check_source_compiles(Fortran
     "program test
     implicit none (type, external)
     external :: p${i}lamch
@@ -92,11 +91,9 @@ foreach(i s d c z)
     end program"
     SCALAPACK_${i}_links)
 
-    if(SCALAPACK_${i}_links)
-      set(SCALAPACK_${i}_FOUND true PARENT_SCOPE)
-    else()
-      set(SCALAPACK_links false)
-    endif()
+  if(SCALAPACK_${i}_links)
+    set(SCALAPACK_${i}_FOUND true PARENT_SCOPE)
+    set(SCALAPACK_links true)
   endif()
 
 endforeach()
