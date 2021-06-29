@@ -140,7 +140,6 @@ foreach(s ${_mkl_libs})
            HINTS ${pc_mkl_LIBRARY_DIRS} ${pc_mkl_LIBDIR}
            NO_DEFAULT_PATH)
   if(NOT SCALAPACK_${s}_LIBRARY)
-    message(STATUS "MKL component not found: " ${s})
     return()
   endif()
 
@@ -157,7 +156,6 @@ find_path(SCALAPACK_INCLUDE_DIR
   HINTS ${pc_mkl_INCLUDE_DIRS})
 
 if(NOT SCALAPACK_INCLUDE_DIR)
-  message(STATUS "MKL Include Dir not found")
   return()
 endif()
 

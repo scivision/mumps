@@ -196,9 +196,6 @@ if(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
     list(APPEND LAPACK_INCLUDE_DIR ${LAPACKE_INCLUDE_DIR})
     list(APPEND LAPACK_LIBRARY ${LAPACKE_LIBRARY})
   else()
-    message(WARNING "Trouble finding LAPACKE:
-      include: ${LAPACKE_INCLUDE_DIR}
-      libs: ${LAPACKE_LIBRARY}")
     return()
   endif()
 
@@ -261,9 +258,6 @@ if(LAPACK_LIBRARY AND BLAS_LIBRARY)
   list(APPEND LAPACK_LIBRARY ${BLAS_LIBRARY})
   set(LAPACK_OpenBLAS_FOUND true PARENT_SCOPE)
 else()
-  message(WARNING "Trouble finding OpenBLAS:
-      include: ${LAPACK_INCLUDE_DIR}
-      libs: ${LAPACK_LIBRARY} ${BLAS_LIBRARY}")
   return()
 endif()
 
@@ -306,7 +300,6 @@ foreach(s ${_mkl_libs})
            NO_DEFAULT_PATH)
 
   if(NOT LAPACK_${s}_LIBRARY)
-    message(STATUS "MKL component not found: " ${s})
     return()
   endif()
 

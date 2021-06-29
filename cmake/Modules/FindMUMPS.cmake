@@ -152,7 +152,6 @@ foreach(comp ${MUMPS_FIND_COMPONENTS})
   endif()
 
   if(NOT MUMPS_${comp}_lib)
-    message(WARNING "MUMPS ${comp} not found")
     return()
   endif()
 
