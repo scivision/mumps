@@ -15,7 +15,7 @@ Components
 MPI code languages are specified by components:
 
 ``C``
-  C interface for MPI (virtually all MPI libraries will have this)
+  C interface for MPI--all MPI libraries have this. Default.
 
 ``CXX``
   C++ interface for MPI (not all MPI libraries have C++ interface)
@@ -35,6 +35,25 @@ Result Variables
 
 ``MPI_INCLUDE_DIRS``
   MPI include path
+
+``MPI_<LANG>_LIBRARIES``
+  libraries for <LANG>
+
+``MPI_<LANG>_INCLUDE_DIRS``
+  include dirs for <LANG>
+
+``MPI_<LANG>_LINK_FLAGS``
+  link flags for <LANG>
+
+
+Imported Targets
+^^^^^^^^^^^^^^^^
+
+``MPI::MPI_<LANG>``
+  imported target for <LANG>  e.g. ``MPI::MPI_C`` or ``MPI::MPI_Fortran``
+
+
+
 
 #]=======================================================================]
 include(CheckFortranSourceCompiles)
@@ -63,7 +82,18 @@ set(${outvar} ${ret} PARENT_SCOPE)
 endfunction(get_flags)
 
 
+function(get_link_flags raw outvar)
+
+string(REGEX MATCHALL "(^| )(-Wl,|-L|-Xlinker +)([^\" ]+|\"[^\"]+\")" _flags "${raw}")
+list(TRANSFORM _flags STRIP)
+
+set(${outvar} ${_flags} PARENT_SCOPE)
+
+endfunction(get_link_flags)
+
+
 function(pop_flag raw flag outvar)
+# this gives the argument to flags to get their paths like -I or -l or -L
 
 set(_v)
 string(REGEX MATCHALL "(^| )${flag} *([^\" ]+|\"[^\"]+\")" _vars "${raw}")
@@ -78,6 +108,7 @@ endfunction(pop_flag)
 
 
 function(pop_path raw outvar)
+# these are file paths without flags like /usr/lib/mpi.so
 
 set(flag /)
 set(_v)
@@ -114,21 +145,22 @@ else()
   set(names mpi pmpi)
 endif()
 
-if(NOT MPI_C_FOUND)
+if(NOT MPI_FOUND)
   pkg_search_module(pc_mpi_c ompi-c)
 endif()
 
 if(CMAKE_C_COMPILER_ID MATCHES Intel)
   set(wrap_name mpiicc mpiicc.bat)
 else()
-  set(wrap_name mpicc)
+  set(wrap_name mpicc mpicc.openmpi mpicc.mpich)
 endif()
 
 find_program(c_wrap
   NAMES ${wrap_name}
   HINTS ${_hints}
-  PATH_SUFFIXES bin sbin
-  NAMES_PER_DIR)
+  NAMES_PER_DIR
+  PATHS /usr/lib64
+  PATH_SUFFIXES bin openmpi/bin)
 if(c_wrap)
   get_filename_component(_wrap_hint ${c_wrap} DIRECTORY)
   get_filename_component(_wrap_hint ${_wrap_hint} DIRECTORY)
@@ -145,6 +177,8 @@ if(c_wrap)
 
     pop_path(${c_raw} lib_paths)
     set(MPI_C_LIBRARY ${lib_paths})
+
+    get_link_flags(${c_raw} MPI_C_LINK_FLAGS)
   endif(c_raw)
 endif(c_wrap)
 
@@ -175,9 +209,8 @@ endif()
 
 set(CMAKE_REQUIRED_INCLUDES ${MPI_C_INCLUDE_DIR})
 set(CMAKE_REQUIRED_LIBRARIES ${MPI_C_LIBRARY})
-if(Threads_FOUND)
-  list(APPEND CMAKE_REQUIRED_LIBRARIES Threads::Threads)
-endif()
+list(APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+
 check_c_source_compiles("
 #include <mpi.h>
 #ifndef NULL
@@ -194,6 +227,7 @@ endif()
 
 set(MPI_C_INCLUDE_DIR ${MPI_C_INCLUDE_DIR} PARENT_SCOPE)
 set(MPI_C_LIBRARY ${MPI_C_LIBRARY} PARENT_SCOPE)
+set(MPI_C_LINK_FLAGS ${MPI_C_LINK_FLAGS} PARENT_SCOPE)
 set(MPI_C_FOUND true PARENT_SCOPE)
 
 endfunction(find_c)
@@ -223,21 +257,22 @@ else()
     mpichcxx mpi pmpi)
 endif()
 
-if(NOT MPI_CXX_FOUND)
+if(NOT MPI_FOUND)
   pkg_search_module(pc_mpi_cxx ompi-cxx)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES Intel)
   set(wrap_name mpiicpc mpiicpc.bat)
 else()
-  set(wrap_name mpicxx)
+  set(wrap_name mpicxx mpicxx.openmpi mpicxx.mpich)
 endif()
 
 find_program(cxx_wrap
   NAMES ${wrap_name}
   HINTS ${_hints}
-  PATH_SUFFIXES bin sbin
-  NAMES_PER_DIR)
+  NAMES_PER_DIR
+  PATHS /usr/lib64
+  PATH_SUFFIXES bin openmpi/bin)
 if(cxx_wrap)
   get_filename_component(_wrap_hint ${cxx_wrap} DIRECTORY)
   get_filename_component(_wrap_hint ${_wrap_hint} DIRECTORY)
@@ -254,6 +289,8 @@ if(cxx_wrap)
 
     pop_path(${cxx_raw} lib_paths)
     set(MPI_CXX_LIBRARY ${lib_paths})
+
+    get_link_flags(${cxx_raw} MPI_CXX_LINK_FLAGS)
   endif(cxx_raw)
 endif(cxx_wrap)
 
@@ -303,6 +340,7 @@ endif()
 
 set(MPI_CXX_INCLUDE_DIR ${MPI_CXX_INCLUDE_DIR} PARENT_SCOPE)
 set(MPI_CXX_LIBRARY ${MPI_CXX_LIBRARY} PARENT_SCOPE)
+set(MPI_CXX_LINK_FLAGS ${MPI_CXX_LINK_FLAGS} PARENT_SCOPE)
 set(MPI_CXX_FOUND true PARENT_SCOPE)
 
 endfunction(find_cxx)
@@ -333,21 +371,23 @@ else()
     )
 endif()
 
-if(NOT MPI_Fortran_FOUND)
+if(NOT MPI_FOUND)
   pkg_search_module(pc_mpi_f ompi-fort)
 endif()
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
   set(wrap_name mpiifort mpiifort.bat)
 else()
-  set(wrap_name mpifort mpifc)
+  set(wrap_name mpifort mpifc mpifort.openmpi mpifort.mpich)
 endif()
 
 find_program(f_wrap
   NAMES ${wrap_name}
   HINTS ${_hints}
-  PATH_SUFFIXES bin sbin
-  NAMES_PER_DIR)
+  NAMES_PER_DIR
+  PATHS /usr/lib64
+  PATH_SUFFIXES bin openmpi/bin
+  )
 if(f_wrap)
   get_filename_component(_wrap_hint ${f_wrap} DIRECTORY)
   get_filename_component(_wrap_hint ${_wrap_hint} DIRECTORY)
@@ -364,6 +404,8 @@ if(f_wrap)
 
     pop_path(${f_raw} lib_paths)
     set(MPI_Fortran_LIBRARY ${lib_paths})
+
+    get_link_flags(${f_raw} MPI_Fortran_LINK_FLAGS)
   endif(f_raw)
 endif(f_wrap)
 
@@ -425,6 +467,7 @@ endif()
 
 set(MPI_Fortran_INCLUDE_DIR ${MPI_Fortran_INCLUDE_DIR} PARENT_SCOPE)
 set(MPI_Fortran_LIBRARY ${MPI_Fortran_LIBRARY} PARENT_SCOPE)
+set(MPI_Fortran_LINK_FLAGS ${MPI_Fortran_LINK_FLAGS} PARENT_SCOPE)
 set(MPI_Fortran_FOUND true PARENT_SCOPE)
 
 endfunction(find_fortran)
@@ -435,7 +478,8 @@ find_package(PkgConfig)
 find_package(Threads)
 
 # Intel MPI, which works with non-Intel compilers on Linux
-if(CMAKE_SYSTEM_NAME STREQUAL Linux OR CMAKE_C_COMPILER_ID MATCHES Intel)
+if((CMAKE_SYSTEM_NAME STREQUAL Linux OR CMAKE_C_COMPILER_ID MATCHES Intel) AND
+      DEFINED ENV{I_MPI_ROOT})
   list(APPEND _hints $ENV{I_MPI_ROOT})
 endif()
 
@@ -449,13 +493,14 @@ find_program(MPIEXEC_EXECUTABLE
   NAMES mpiexec mpirun orterun
   HINTS ${_hints} $ENV{MSMPI_BIN}
   PATHS /usr/lib64
-  PATH_SUFFIXES bin sbin openmpi/bin mpich/bin
+  PATH_SUFFIXES bin openmpi/bin mpich/bin
 )
 
-
-if(C IN_LIST MPI_FIND_COMPONENTS)
-  find_c()
+# like factory FindMPI, always find MPI_C
+if(NOT C IN_LIST MPI_FIND_COMPONENTS)
+  list(APPEND MPI_FIND_COMPONENTS C)
 endif()
+find_c()
 
 if(CXX IN_LIST MPI_FIND_COMPONENTS)
   find_cxx()
@@ -479,6 +524,9 @@ if(MPI_C_FOUND)
       INTERFACE_LINK_LIBRARIES "${MPI_C_LIBRARIES}"
       INTERFACE_INCLUDE_DIRECTORIES "${MPI_C_INCLUDE_DIRS}"
     )
+    if(MPI_C_LINK_FLAGS)
+      set_target_properties(MPI::MPI_C PROPERTIES INTERFACE_LINK_OPTIONS "${MPI_C_LINK_FLAGS}")
+    endif()
   endif()
 endif(MPI_C_FOUND)
 
@@ -491,6 +539,9 @@ if(MPI_CXX_FOUND)
       INTERFACE_LINK_LIBRARIES "${MPI_CXX_LIBRARIES}"
       INTERFACE_INCLUDE_DIRECTORIES "${MPI_CXX_INCLUDE_DIRS}"
     )
+    if(MPI_CXX_LINK_FLAGS)
+      set_target_properties(MPI::MPI_CXX PROPERTIES INTERFACE_LINK_OPTIONS "${MPI_CXX_LINK_FLAGS}")
+    endif()
   endif()
 endif(MPI_CXX_FOUND)
 
@@ -503,6 +554,9 @@ if(MPI_Fortran_FOUND)
       INTERFACE_LINK_LIBRARIES "${MPI_Fortran_LIBRARIES}"
       INTERFACE_INCLUDE_DIRECTORIES "${MPI_Fortran_INCLUDE_DIRS}"
     )
+    if(MPI_Fortran_LINK_FLAGS)
+      set_target_properties(MPI::MPI_Fortran PROPERTIES INTERFACE_LINK_OPTIONS "${MPI_Fortran_LINK_FLAGS}")
+    endif()
   endif()
 
 endif(MPI_Fortran_FOUND)
