@@ -1,3 +1,5 @@
+include(FetchContent)
+
 file(READ ${CMAKE_CURRENT_LIST_DIR}/mumps.json json)
 
 string(JSON url0 GET ${json} mumps url0)

@@ -135,14 +135,14 @@ install(FILES
   ${mumps_SOURCE_DIR}/include/${a}mumps_root.h
   ${mumps_SOURCE_DIR}/include/${a}mumps_struc.h
   ${mumps_SOURCE_DIR}/include/mumps_int_def.h
-  DESTINATION include)
+  TYPE INCLUDE)
 
 endforeach()
 
 install(FILES
   ${mumps_SOURCE_DIR}/include/mumps_c_types.h
   ${mumps_SOURCE_DIR}/include/mumps_compat.h
-  DESTINATION include)
+  TYPE INCLUDE)
 
 # We do not need the .mod files due to the way MUMPS is interfaced
 # install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/ DESTINATION include)
