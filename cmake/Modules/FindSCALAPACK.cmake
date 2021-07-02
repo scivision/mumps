@@ -121,7 +121,6 @@ set(_mkl_libs ${ARGV})
 foreach(s ${_mkl_libs})
   find_library(SCALAPACK_${s}_LIBRARY
            NAMES ${s}
-           NAMES_PER_DIR
            PATHS
             ${MKLROOT}
             ENV I_MPI_ROOT

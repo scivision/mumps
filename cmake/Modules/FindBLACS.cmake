@@ -61,7 +61,6 @@ set(_mkl_libs ${ARGV})
 foreach(s ${_mkl_libs})
   find_library(BLACS_${s}_LIBRARY
            NAMES ${s}
-           NAMES_PER_DIR
            PATHS
             ${MKLROOT}
             ENV I_MPI_ROOT
@@ -77,7 +76,6 @@ foreach(s ${_mkl_libs})
            HINTS ${MKL_LIBRARY_DIRS} ${MKL_LIBDIR}
            NO_DEFAULT_PATH)
   if(NOT BLACS_${s}_LIBRARY)
-    message(STATUS "MKL component not found: " ${s})
     return()
   endif()
 
@@ -97,7 +95,6 @@ find_path(BLACS_INCLUDE_DIR
   HINTS ${MKL_INCLUDE_DIRS})
 
 if(NOT BLACS_INCLUDE_DIR)
-  message(STATUS "MKL Include Dir not found")
   return()
 endif()
 
@@ -124,8 +121,7 @@ endif()
 elseif(LAM IN_LIST BLACS_FIND_COMPONENTS)
 
 find_library(BLACS_LIBRARY
-              NAMES blacs-lam
-              NAMES_PER_DIR)
+              NAMES blacs-lam)
 if(BLACS_LIBRARY)
   set(BLACS_LAM_FOUND true PARENT_SCOPE)
 endif()
@@ -133,8 +129,7 @@ endif()
 elseif(PVM IN_LIST BLACS_FIND_COMPONENTS)
 
 find_library(BLACS_LIBRARY
-              NAMES blacs-pvm
-              NAMES_PER_DIR)
+              NAMES blacs-pvm)
 if(BLACS_LIBRARY)
   set(BLACS_PVM_FOUND true PARENT_SCOPE)
 endif()

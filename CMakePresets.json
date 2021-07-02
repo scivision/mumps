@@ -21,27 +21,11 @@
 },
 {
   "name": "intel", "inherits": "default",
-  "displayName": "Intel Classic compiler: Linux/MacOS",
-  "environment": {
-    "CC": "icc",
-    "CXX": "icpc",
-    "FC": "ifort",
-    "LAPACK_ROOT": "$env{MKLROOT}",
-    "SCALAPACK_ROOT": "$env{MKLROOT}",
-    "MPI_ROOT": "$env{I_MPI_ROOT}"
-  }
-},
-{
-  "name": "intelwin", "inherits": "intel",
-  "displayName": "Intel Classic compiler: Windows",
-  "environment": {
-    "CC": "icl",
-    "CXX": "icl"
-  }
-},
-{
-  "name": "intelnext", "inherits": "intel",
   "displayName": "Intel oneAPI LLVM",
+  "binaryDir": "${sourceDir}/build-intel",
+  "cacheVariables": {
+    "CMAKE_INSTALL_PREFIX": "${sourceDir}/build-intel"
+  },
   "environment": {
     "CC": "icx",
     "CXX": "icx",
@@ -53,6 +37,10 @@
   {
     "name": "default",
     "configurePreset": "default"
+  },
+  {
+    "name": "intel",
+    "configurePreset": "intel"
   }
 ],
 "testPresets": [
@@ -65,7 +53,12 @@
   },
   "execution": {
     "noTestsAction": "error",
-    "stopOnFailure": false}
+    "stopOnFailure": false
+  }
+},
+{
+  "name": "intel", "inherits": "default",
+  "configurePreset": "intel"
 }
 ]
 }

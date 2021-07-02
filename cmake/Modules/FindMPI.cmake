@@ -84,8 +84,31 @@ endfunction(get_flags)
 
 function(get_link_flags raw outvar)
 
-string(REGEX MATCHALL "(^| )(-Wl,|-L|-Xlinker +)([^\" ]+|\"[^\"]+\")" _flags "${raw}")
-list(TRANSFORM _flags STRIP)
+
+string(REGEX MATCHALL "(^| )(${CMAKE_LIBRARY_PATH_FLAG})([^\" ]+|\"[^\"]+\")" _Lflags "${raw}")
+list(TRANSFORM _Lflags STRIP)
+set(_flags ${_Lflags})
+
+string(REGEX MATCHALL "(^| )(-Wl,)([^\" ]+|\"[^\"]+\")" _Wflags "${raw}")
+list(TRANSFORM _Wflags STRIP)
+if(_Wflags)
+  set(CMAKE_C_LINKER_WRAPPER_FLAG "-Wl,")
+  set(CMAKE_C_LINKER_WRAPPER_FLAG_SEP ",")
+  set(CMAKE_CXX_LINKER_WRAPPER_FLAG "-Wl,")
+  set(CMAKE_CXX_LINKER_WRAPPER_FLAG_SEP ",")
+  set(CMAKE_Fortran_LINKER_WRAPPER_FLAG "-Wl,")
+  set(CMAKE_Fortran_LINKER_WRAPPER_FLAG_SEP ",")
+  list(APPEND _flags ${_Wflags})
+else()
+  pop_flag("${raw}" -Xlinker _Xflags)
+  if(_Xflags)
+    set(CMAKE_C_LINKER_WRAPPER_FLAG "-Xlinker" " ")
+    set(CMAKE_CXX_LINKER_WRAPPER_FLAG "-Xlinker" " ")
+    set(CMAKE_Fortran_LINKER_WRAPPER_FLAG "-Xlinker" " ")
+    string(REPLACE ";" "," _Xflags "${_Xflags}")
+    list(APPEND _flags "LINKER:${_Xflags}")
+  endif()
+endif()
 
 set(${outvar} ${_flags} PARENT_SCOPE)
 
@@ -109,6 +132,10 @@ endfunction(pop_flag)
 
 function(pop_path raw outvar)
 # these are file paths without flags like /usr/lib/mpi.so
+
+if(MSVC)
+  return()
+endif()
 
 set(flag /)
 set(_v)
