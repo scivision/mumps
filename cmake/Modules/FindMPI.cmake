@@ -45,6 +45,11 @@ Result Variables
 ``MPI_<LANG>_LINK_FLAGS``
   link flags for <LANG>
 
+``MPI_Fortran_HAVE_F90_MODULE``
+  has MPI-2 Fortran 90 interface
+
+``MPI_Fortran_HAVE_F08_MODULE``
+  has MPI-3 Fortran 2008 interface
 
 Imported Targets
 ^^^^^^^^^^^^^^^^
@@ -492,9 +497,17 @@ if(NOT MPI_Fortran_links)
   return()
 endif()
 
+check_fortran_source_compiles(
+"program test
+use mpi_f08, only : mpi_comm_rank, mpi_comm_world, mpi_init, mpi_finalize
+end program"
+MPI_Fortran_HAVE_F08_MODULE SRC_EXT f90)
+
 set(MPI_Fortran_INCLUDE_DIR ${MPI_Fortran_INCLUDE_DIR} PARENT_SCOPE)
 set(MPI_Fortran_LIBRARY ${MPI_Fortran_LIBRARY} PARENT_SCOPE)
 set(MPI_Fortran_LINK_FLAGS ${MPI_Fortran_LINK_FLAGS} PARENT_SCOPE)
+set(MPI_Fortran_HAVE_F90_MODULE true PARENT_SCOPE)
+set(MPI_Fortran_HAVE_F08_MODULE ${MPI_Fortran_HAVE_F08_MODULE} PARENT_SCOPE)
 set(MPI_Fortran_FOUND true PARENT_SCOPE)
 
 endfunction(find_fortran)
