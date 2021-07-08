@@ -6,10 +6,9 @@ option(mumps_external "build MUMPS instead of finding")
 option(dev "developer mode")
 option(parallel "parallel or sequential (non-MPI, non-Scalapack)" ON)
 option(intsize64 "use 64-bit integers in C and Fortran" OFF)
-option(metis "use METIS" OFF)
+
 option(scotch "use Scotch" OFF)
 option(openmp "use OpenMP" OFF)
-option(mumps_matlab "build optional Matlab interface" OFF)
 
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)

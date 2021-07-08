@@ -163,7 +163,7 @@ find_library(LAPACK_LIB
   NAMES lapack
   PATHS /usr/local/opt  # homebrew
   HINTS ${_lapack_hints} ${pc_lapack_LIBRARY_DIRS} ${pc_lapack_LIBDIR}
-  PATH_SUFFIXES lib lapack lapack/lib)
+  PATH_SUFFIXES lapack lapack/lib)
 if(LAPACK_LIB)
   list(APPEND LAPACK_LIBRARY ${LAPACK_LIB})
 else()
@@ -204,7 +204,7 @@ find_library(BLAS_LIBRARY
   NAMES_PER_DIR
   PATHS /usr/local/opt
   HINTS ${_lapack_hints} ${pc_blas_LIBRARY_DIRS} ${pc_blas_LIBDIR}
-  PATH_SUFFIXES lib lapack lapack/lib blas)
+  PATH_SUFFIXES lapack lapack/lib blas)
 
 if(BLAS_LIBRARY)
   list(APPEND LAPACK_LIBRARY ${BLAS_LIBRARY})

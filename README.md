@@ -86,10 +86,10 @@ cmake "-Darith=s;d"
 
 ### ordering
 
-To use Metis and/or Scotch, add configure options like:
+To use Scotch and METIS:
 
 ```sh
-cmake -B build -Dmetis=true -Dscotch=true
+cmake -B build -Dscotch=true
 ```
 
 ### OpenMP

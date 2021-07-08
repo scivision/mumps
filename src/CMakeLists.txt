@@ -32,8 +32,6 @@ tools_common.F sol_common.F
 
 if(scotch)
   list(APPEND COMM_OTHER_SRC mumps_scotch.c mumps_scotch64.c mumps_scotch_int.c)
-endif()
-if(metis)
   list(APPEND COMM_OTHER_SRC mumps_metis.c mumps_metis64.c mumps_metis_int.c)
 endif()
 
