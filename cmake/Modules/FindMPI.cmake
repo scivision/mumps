@@ -194,7 +194,8 @@ find_program(c_wrap
   HINTS ${_hints}
   NAMES_PER_DIR
   PATHS /usr/lib64
-  PATH_SUFFIXES bin openmpi/bin)
+  PATH_SUFFIXES bin openmpi/bin mpich/bin
+  )
 if(c_wrap)
   get_filename_component(_wrap_hint ${c_wrap} DIRECTORY)
   get_filename_component(_wrap_hint ${_wrap_hint} DIRECTORY)
@@ -221,7 +222,7 @@ foreach(n ${names})
   find_library(MPI_C_${n}_LIBRARY
     NAMES ${n}
     HINTS ${lib_dirs} ${_wrap_hint} ${pc_mpi_c_LIBRARY_DIRS} ${pc_mpi_c_LIBDIR} ${_hints}
-    PATH_SUFFIXES release
+    PATH_SUFFIXES release openmpi/lib mpich/lib
   )
   if(MPI_C_${n}_LIBRARY)
     list(APPEND MPI_C_LIBRARY ${MPI_C_${n}_LIBRARY})
@@ -235,6 +236,7 @@ endif()
 find_path(MPI_C_INCLUDE_DIR
   NAMES mpi.h
   HINTS ${inc_dirs} ${_wrap_hint} ${pc_mpi_c_INCLUDE_DIRS} ${_hints} ${_hints_inc}
+  PATH_SUFFIXES openmpi-x86_64 mpich-x86_64
 )
 if(NOT MPI_C_INCLUDE_DIR)
   return()
@@ -305,7 +307,8 @@ find_program(cxx_wrap
   HINTS ${_hints}
   NAMES_PER_DIR
   PATHS /usr/lib64
-  PATH_SUFFIXES bin openmpi/bin)
+  PATH_SUFFIXES bin openmpi/bin mpich/bin
+  )
 if(cxx_wrap)
   get_filename_component(_wrap_hint ${cxx_wrap} DIRECTORY)
   get_filename_component(_wrap_hint ${_wrap_hint} DIRECTORY)
@@ -332,7 +335,7 @@ foreach(n ${names})
   find_library(MPI_CXX_${n}_LIBRARY
     NAMES ${n}
     HINTS ${lib_dirs} ${_wrap_hint} ${pc_mpi_cxx_LIBRARY_DIRS} ${pc_mpi_cxx_LIBDIR} ${_hints}
-    PATH_SUFFIXES release
+    PATH_SUFFIXES release openmpi/lib mpich/lib
   )
   if(MPI_CXX_${n}_LIBRARY)
     list(APPEND MPI_CXX_LIBRARY ${MPI_CXX_${n}_LIBRARY})
@@ -346,6 +349,7 @@ endif()
 find_path(MPI_CXX_INCLUDE_DIR
   NAMES mpi.h
   HINTS ${inc_dirs} ${_wrap_hint} ${pc_mpi_cxx_INCLUDE_DIRS} ${_hints} ${_hints_inc}
+  PATH_SUFFIXES openmpi-x86_64 mpich-x86_64
 )
 if(NOT MPI_CXX_INCLUDE_DIR)
   return()
@@ -418,7 +422,7 @@ find_program(f_wrap
   HINTS ${_hints}
   NAMES_PER_DIR
   PATHS /usr/lib64
-  PATH_SUFFIXES bin openmpi/bin
+  PATH_SUFFIXES bin openmpi/bin mpich/bin
   )
 if(f_wrap)
   get_filename_component(_wrap_hint ${f_wrap} DIRECTORY)
@@ -446,7 +450,7 @@ foreach(n ${names})
   find_library(MPI_Fortran_${n}_LIBRARY
     NAMES ${n}
     HINTS ${lib_dirs} ${_wrap_hint} ${pc_mpi_f_LIBRARY_DIRS} ${pc_mpi_f_LIBDIR} ${_hints}
-    PATH_SUFFIXES release
+    PATH_SUFFIXES release openmpi/lib mpich/lib
   )
   if(MPI_Fortran_${n}_LIBRARY)
     list(APPEND MPI_Fortran_LIBRARY ${MPI_Fortran_${n}_LIBRARY})
@@ -460,7 +464,7 @@ endif()
 find_path(MPI_Fortran_INCLUDE_DIR
   NAMES mpi.mod
   HINTS ${inc_dirs} ${_wrap_hint} ${pc_mpi_f_INCLUDE_DIRS} ${_hints} ${_hints_inc}
-  PATH_SUFFIXES lib
+  PATH_SUFFIXES lib gfortran/modules/mpich gfortran/modules/openmpi
   # yes, openmpi puts .mod files into lib/
 )
 if(NOT MPI_Fortran_INCLUDE_DIR)

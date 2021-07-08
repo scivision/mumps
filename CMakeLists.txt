@@ -69,6 +69,7 @@ install(FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindSCALAPACK.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindBLACS.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMETIS.cmake
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMPI.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindScotch.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMUMPS.cmake
   DESTINATION lib/cmake/${PROJECT_NAME}/Modules)
