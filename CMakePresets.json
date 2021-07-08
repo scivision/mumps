@@ -28,7 +28,6 @@
   },
   "environment": {
     "CC": "icx",
-    "CXX": "icx",
     "FC": "ifx"
   }
 }
