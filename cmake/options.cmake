@@ -19,7 +19,7 @@ set(CMAKE_TLS_VERIFY true)
 
 # default build all
 if(NOT DEFINED arith)
-  set(arith "s;d;c;z")
+  set(arith "s;d")
 endif()
 
 if(intsize64)
