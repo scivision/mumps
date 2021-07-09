@@ -10,7 +10,7 @@ Note that MUMPS generally requires SCALAPACK and LAPACK as well.
 PORD is always used, in addition to the optional Scotch + METIS.
 
 COMPONENTS
-  s d c z   list one or more. Defaults to ``d``.
+  s d c z   list one or more. Default is "s d"
   mpiseq    for -Dparallel=false, a stub MPI & Scalapack library
 
 Result Variables
@@ -51,7 +51,7 @@ set(CMAKE_REQUIRED_INCLUDES ${MUMPS_INCLUDE_DIR} ${SCALAPACK_INCLUDE_DIRS} ${LAP
 set(CMAKE_REQUIRED_LIBRARIES ${MUMPS_LIBRARY} ${SCALAPACK_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_Fortran_LIBRARIES} ${MPI_C_LIBRARIES} ${_test_lib})
 
 
-foreach(i s d c z)
+foreach(i s d)
 
 check_source_compiles(Fortran
   "program test_mumps

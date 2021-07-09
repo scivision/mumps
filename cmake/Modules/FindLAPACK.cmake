@@ -419,7 +419,7 @@ set(CMAKE_REQUIRED_LINK_OPTIONS)
 set(CMAKE_REQUIRED_INCLUDES)
 set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARY})
 
-foreach(i s d c z)
+foreach(i s d)
   check_source_compiles(Fortran
   "program check_lapack
   print *, ${i}isnan(0.)
