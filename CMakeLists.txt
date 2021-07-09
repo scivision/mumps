@@ -67,7 +67,6 @@ list(APPEND ORDERING_LIBS pord)
 install(FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindLAPACK.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindSCALAPACK.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindBLACS.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMETIS.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMPI.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindScotch.cmake
