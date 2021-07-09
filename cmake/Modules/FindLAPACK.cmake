@@ -335,9 +335,15 @@ if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
     set(_mkl_bitflag)
   endif()
 
-  unset(_mkl_libs)
+  set(_mkl_libs)
   if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
-    set(_mkl_libs mkl_blas95_${_mkl_bitflag}lp64 mkl_lapack95_${_mkl_bitflag}lp64)
+    find_mkl_libs(mkl_blas95_${_mkl_bitflag}lp64 mkl_lapack95_${_mkl_bitflag}lp64)
+    if(LAPACK_LIBRARY)
+      set(LAPACK95_LIBRARY ${LAPACK_LIBRARY})
+      set(LAPACK_LIBRARY)
+      set(LAPACK95_INCLUDE_DIR ${LAPACK_INCLUDE_DIR})
+      set(LAPACK_LAPACK95_FOUND true)
+    endif()
   endif()
 
   unset(_tbb)
@@ -375,10 +381,6 @@ if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
 
     if(MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
       set(LAPACK_MKL64_FOUND true)
-    endif()
-
-    if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
-      set(LAPACK_LAPACK95_FOUND true)
     endif()
 
     if(OpenMP IN_LIST LAPACK_FIND_COMPONENTS)
@@ -422,7 +424,8 @@ set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARY})
 foreach(i s d)
   check_source_compiles(Fortran
   "program check_lapack
-  print *, ${i}isnan(0.)
+  implicit none (type, external)
+  external :: ${i}isnan
   end program" LAPACK_${i}_links)
 
   if(LAPACK_${i}_links)
