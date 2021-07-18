@@ -461,10 +461,15 @@ if(NOT MPI_Fortran_LIBRARY)
   return()
 endif()
 
+set(_msuf)
+if(CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
+  set(_msuf gfortran/modules/openmpi gfortran/modules/mpich)
+endif()
+
 find_path(MPI_Fortran_INCLUDE_DIR
   NAMES mpi.mod
   HINTS ${inc_dirs} ${_wrap_hint} ${pc_mpi_f_INCLUDE_DIRS} ${_hints} ${_hints_inc}
-  PATH_SUFFIXES lib gfortran/modules/mpich gfortran/modules/openmpi
+  PATH_SUFFIXES lib ${_msuf}
   # yes, openmpi puts .mod files into lib/
 )
 if(NOT MPI_Fortran_INCLUDE_DIR)
