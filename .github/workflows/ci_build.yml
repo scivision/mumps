@@ -1,5 +1,8 @@
 name: ci_build
 
+env:
+  CMAKE_BUILD_PARALLEL_LEVEL: 3
+
 on:
   push:
     paths:
@@ -19,7 +22,7 @@ jobs:
     - name: Install prereqs
       run: |
         sudo apt update -yq
-        sudo apt install -yq --no-install-recommends ninja-build gfortran libopenmpi-dev openmpi-bin
+        sudo apt install -yq --no-install-recommends gfortran libopenmpi-dev openmpi-bin
 
 
     - run: cmake --preset default -Darith=d

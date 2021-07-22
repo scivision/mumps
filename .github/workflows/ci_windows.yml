@@ -18,6 +18,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - run: cmake --preset default -Darith=d -Dparallel:BOOL=false -G "MinGW Makefiles"
+    - run: cmake --preset default -Darith=d -Dparallel:BOOL=false
     - run: cmake --build --preset default
     - run: ctest --preset default

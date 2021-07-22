@@ -1,5 +1,6 @@
 name: ci_mac
 env:
+  CMAKE_BUILD_PARALLEL_LEVEL: 3
   HOMEBREW_NO_INSTALL_CLEANUP: 1
   FC: gfortran-11
 
@@ -19,7 +20,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - run: brew install gcc lapack scalapack open-mpi ninja
+    - run: brew install gcc lapack scalapack open-mpi
 
     - run: cmake --preset default -Darith=d
     - run: cmake --build --preset default
