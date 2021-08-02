@@ -98,8 +98,8 @@ list(TRANSFORM _Lflags STRIP)
 set(_flags ${_Lflags})
 
 # check if compiler absolute path is first element and remove
-if(${raw} MATCHES "^/")
-  if(${_flags} MATCHES "^/")
+if("${raw}" MATCHES "^/")
+  if("${_flags}" MATCHES "^/")
     list(REMOVE_AT _flags 0)
   endif()
 endif()
@@ -161,7 +161,7 @@ foreach(_p IN LISTS _vars)
 endforeach()
 
 # check if compiler absolute path is first element and remove
-if(${raw} MATCHES "^/")
+if("${raw}" MATCHES "^/")
   list(REMOVE_AT _v 0)
 endif()
 
@@ -181,7 +181,7 @@ function(find_c)
 set(MPI_C_LIBRARY)
 
 if(WIN32)
-  if(CMAKE_C_COMPILER_ID MATCHES Intel)
+  if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
     set(names impi)
   else()
     set(names msmpi)
@@ -196,7 +196,7 @@ if(NOT MPI_C_COMPILER)
   pkg_search_module(pc_mpi_c ompi-c)
 endif()
 
-if(CMAKE_C_COMPILER_ID MATCHES Intel)
+if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
   set(wrap_name mpiicc mpiicc.bat)
 else()
   set(wrap_name mpicc mpicc.openmpi mpicc.mpich)
@@ -206,8 +206,8 @@ find_program(MPI_C_COMPILER
   NAMES ${wrap_name}
   HINTS ${_hints}
   NAMES_PER_DIR
-  PATHS /usr/lib64
-  PATH_SUFFIXES bin openmpi/bin mpich/bin
+  PATHS ${_binpref}
+  PATH_SUFFIXES ${_binsuf}
   )
 if(MPI_C_COMPILER)
   get_filename_component(_wrap_hint ${MPI_C_COMPILER} DIRECTORY)
@@ -235,7 +235,7 @@ foreach(n ${names})
   find_library(MPI_C_${n}_LIBRARY
     NAMES ${n}
     HINTS ${lib_dirs} ${_wrap_hint} ${pc_mpi_c_LIBRARY_DIRS} ${pc_mpi_c_LIBDIR} ${_hints}
-    PATH_SUFFIXES release openmpi/lib mpich/lib
+    PATH_SUFFIXES ${_lsuf}
   )
   if(MPI_C_${n}_LIBRARY)
     list(APPEND MPI_C_LIBRARY ${MPI_C_${n}_LIBRARY})
@@ -258,6 +258,45 @@ endif()
 set(CMAKE_REQUIRED_INCLUDES ${MPI_C_INCLUDE_DIR})
 set(CMAKE_REQUIRED_LIBRARIES ${MPI_C_LIBRARY})
 list(APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/find_mpi/get_mpi_version.c)
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/find_mpi/get_mpi_version.c
+[=[
+#include <mpi.h>
+#include <stdio.h>
+
+int main(void) {
+int version, subversion;
+
+int ierr = MPI_Get_version(&version, &subversion);
+if (ierr != 0) return 1;
+printf("%d.%d\n", version, subversion);
+
+return 0;
+}
+]=]
+)
+endif()
+
+if(NOT MPI_VERSION)
+  message(CHECK_START "Checking MPI API level")
+  try_run(mpi_run_code mpi_build_code
+    ${CMAKE_CURRENT_BINARY_DIR}/find_mpi/build
+    ${CMAKE_CURRENT_BINARY_DIR}/find_mpi/get_mpi_version.c
+    CMAKE_FLAGS -DINCLUDE_DIRECTORIES=${MPI_C_INCLUDE_DIR}
+    LINK_OPTIONS ${MPI_C_LINK_FLAGS}
+    LINK_LIBRARIES ${MPI_C_LIBRARY}
+    RUN_OUTPUT_VARIABLE MPI_VERSION
+  )
+  string(STRIP "${MPI_VERSION}" MPI_VERSION)
+  if(mpi_build_code AND mpi_run_code EQUAL 0)
+    message(CHECK_PASS "${MPI_VERSION}")
+  else()
+    message(CHECK_FAIL "MPI API not detected")
+    return()
+  endif()
+  set(MPI_VERSION ${MPI_VERSION} CACHE STRING "MPI API level")
+endif()
 
 check_c_source_compiles("
 #include <mpi.h>
@@ -292,7 +331,7 @@ function(find_cxx)
 set(MPI_CXX_LIBRARY)
 
 if(WIN32)
-  if(CMAKE_CXX_COMPILER_ID MATCHES Intel)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "^Intel")
     set(names impi)
   else()
     set(names msmpi)
@@ -309,7 +348,7 @@ if(NOT MPI_CXX_COMPILER)
   pkg_search_module(pc_mpi_cxx ompi-cxx)
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES Intel)
+if(CMAKE_CXX_COMPILER_ID MATCHES "^Intel")
   set(wrap_name mpiicpc mpiicpc.bat)
 else()
   set(wrap_name mpicxx mpicxx.openmpi mpicxx.mpich)
@@ -319,8 +358,8 @@ find_program(MPI_CXX_COMPILER
   NAMES ${wrap_name}
   HINTS ${_hints}
   NAMES_PER_DIR
-  PATHS /usr/lib64
-  PATH_SUFFIXES bin openmpi/bin mpich/bin
+  PATHS ${_binpref}
+  PATH_SUFFIXES ${_binsuf}
   )
 if(MPI_CXX_COMPILER)
   get_filename_component(_wrap_hint ${MPI_CXX_COMPILER} DIRECTORY)
@@ -348,7 +387,7 @@ foreach(n ${names})
   find_library(MPI_CXX_${n}_LIBRARY
     NAMES ${n}
     HINTS ${lib_dirs} ${_wrap_hint} ${pc_mpi_cxx_LIBRARY_DIRS} ${pc_mpi_cxx_LIBDIR} ${_hints}
-    PATH_SUFFIXES release openmpi/lib mpich/lib
+    PATH_SUFFIXES ${_lsuf}
   )
   if(MPI_CXX_${n}_LIBRARY)
     list(APPEND MPI_CXX_LIBRARY ${MPI_CXX_${n}_LIBRARY})
@@ -405,7 +444,7 @@ function(find_fortran)
 set(MPI_Fortran_LIBRARY)
 
 if(WIN32)
-  if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
+  if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
     set(names impi)
   else()
     set(names msmpi)
@@ -423,7 +462,7 @@ if(NOT MPI_Fortran_COMPILER)
   pkg_search_module(pc_mpi_f ompi-fort)
 endif()
 
-if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
+if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
   set(wrap_name mpiifort mpiifort.bat)
 else()
   set(wrap_name mpifort mpifc mpifort.openmpi mpifort.mpich)
@@ -433,8 +472,8 @@ find_program(MPI_Fortran_COMPILER
   NAMES ${wrap_name}
   HINTS ${_hints}
   NAMES_PER_DIR
-  PATHS /usr/lib64
-  PATH_SUFFIXES bin openmpi/bin mpich/bin
+  PATHS ${_binpref}
+  PATH_SUFFIXES ${_binsuf}
   )
 if(MPI_Fortran_COMPILER)
   get_filename_component(_wrap_hint ${MPI_Fortran_COMPILER} DIRECTORY)
@@ -462,7 +501,7 @@ foreach(n ${names})
   find_library(MPI_Fortran_${n}_LIBRARY
     NAMES ${n}
     HINTS ${lib_dirs} ${_wrap_hint} ${pc_mpi_f_LIBRARY_DIRS} ${pc_mpi_f_LIBDIR} ${_hints}
-    PATH_SUFFIXES release openmpi/lib mpich/lib
+    PATH_SUFFIXES ${_lsuf}
   )
   if(MPI_Fortran_${n}_LIBRARY)
     list(APPEND MPI_Fortran_LIBRARY ${MPI_Fortran_${n}_LIBRARY})
@@ -488,7 +527,7 @@ if(NOT MPI_Fortran_INCLUDE_DIR)
   return()
 endif()
 
-if(WIN32 AND NOT CMAKE_Fortran_COMPILER_ID MATCHES Intel)
+if(WIN32 AND NOT CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
   find_path(MPI_Fortran_INCLUDE_EXTRA
     NAMES mpifptr.h
     HINTS ${inc_dirs} ${_wrap_hint} ${pc_mpi_f_INCLUDE_DIRS} ${_hints} ${_hints_inc}
@@ -537,28 +576,29 @@ find_package(PkgConfig)
 find_package(Threads)
 
 # Intel MPI, which works with non-Intel compilers on Linux
-if((CMAKE_SYSTEM_NAME STREQUAL Linux OR CMAKE_C_COMPILER_ID MATCHES Intel) AND
+if((CMAKE_SYSTEM_NAME STREQUAL Linux OR CMAKE_C_COMPILER_ID MATCHES "^Intel") AND
       DEFINED ENV{I_MPI_ROOT})
   list(APPEND _hints $ENV{I_MPI_ROOT})
 endif()
 
-if(WIN32 AND NOT CMAKE_C_COMPILER_ID MATCHES Intel)
+if(WIN32 AND NOT CMAKE_C_COMPILER_ID MATCHES "^Intel")
   list(APPEND _hints $ENV{MSMPI_LIB64})
   list(APPEND _hints_inc $ENV{MSMPI_INC})
 endif()
+
+set(_lsuf release openmpi/lib mpich/lib)
+set(_binpref /usr/lib64)
+set(_binsuf bin openmpi/bin mpich/bin)
 
 # must have MPIexec to be worthwhile (de facto standard is mpiexec)
 find_program(MPIEXEC_EXECUTABLE
   NAMES mpiexec mpirun orterun
   HINTS ${_hints} $ENV{MSMPI_BIN}
-  PATHS /usr/lib64
-  PATH_SUFFIXES bin openmpi/bin mpich/bin
+  PATHS ${_binpref}
+  PATH_SUFFIXES ${_binsuf}
 )
 
 # like factory FindMPI, always find MPI_C
-if(NOT C IN_LIST MPI_FIND_COMPONENTS)
-  list(APPEND MPI_FIND_COMPONENTS C)
-endif()
 find_c()
 
 if(CXX IN_LIST MPI_FIND_COMPONENTS)
@@ -572,6 +612,7 @@ endif()
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MPI
   REQUIRED_VARS MPIEXEC_EXECUTABLE
+  VERSION_VAR MPI_VERSION
   HANDLE_COMPONENTS)
 
 if(MPI_C_FOUND)
@@ -627,6 +668,22 @@ if(MPI_FOUND)
   set(MPIEXEC_NUMPROC_FLAG "-n"  CACHE STRING "Flag used by MPI to specify the number of processes for mpiexec; the next option will be the number of processes.")
   cmake_host_system_information(RESULT _n QUERY NUMBER_OF_PHYSICAL_CORES)
   set(MPIEXEC_MAX_NUMPROCS "${_n}" CACHE STRING "Maximum number of processors available to run MPI applications.")
+
+  message(VERBOSE "FindMPI results:
+    MPI_C_COMPILER: ${MPI_C_COMPILER}
+    MPI_C_LIBRARIES: ${MPI_C_LIBRARIES}
+    MPI_C_INCLUDE_DIRS: ${MPI_C_INCLUDE_DIRS}
+    MPI_C_LINK_FLAGS: ${MPI_C_LINK_FLAGS}
+
+    MPI_Fortran_COMPILER: ${MPI_Fortran_COMPILER}
+    MPI_Fortran_LIBRARIES: ${MPI_Fortran_LIBRARIES}
+    MPI_Fortran_INCLUDE_DIRS: ${MPI_Fortran_INCLUDE_DIRS}
+    MPI_Fortran_LINK_FLAGS: ${MPI_Fortran_LINK_FLAGS}
+
+    MPIEXEC_EXECUTABLE: ${MPIEXEC_EXECUTABLE}
+    MPIEXEC_MAX_NUMPROCS: ${MPIEXEC_MAX_NUMPROCS}
+    MPI_VERSION: ${MPI_VERSION}
+    ")
 endif()
 
 mark_as_advanced(MPI_Fortran_LIBRARY MPI_Fortran_INCLUDE_DIR MPI_C_LIBRARY MPI_C_INCLUDE_DIR
