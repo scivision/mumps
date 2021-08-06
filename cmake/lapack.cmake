@@ -49,23 +49,15 @@ set(lapack_args
 -DCMAKE_BUILD_TYPE=Release
 -DBUILD_TESTING:BOOL=false)
 
-if(CMAKE_VERSION VERSION_LESS 3.20)
-  ExternalProject_Add(LAPACK
-  GIT_REPOSITORY ${lapack_git}
-  GIT_TAG ${lapack_tag}
-  CMAKE_ARGS ${lapack_args}
-  CMAKE_CACHE_ARGS -Darith:STRING=${arith}
-  BUILD_BYPRODUCTS ${LAPACK_LIBRARIES})
-else()
-  ExternalProject_Add(LAPACK
-  GIT_REPOSITORY ${lapack_git}
-  GIT_TAG ${lapack_tag}
-  CMAKE_ARGS ${lapack_args}
-  CMAKE_CACHE_ARGS -Darith:STRING=${arith}
-  BUILD_BYPRODUCTS ${LAPACK_LIBRARIES}
-  INACTIVITY_TIMEOUT 30
-  CONFIGURE_HANDLED_BY_BUILD ON)
-endif()
+ExternalProject_Add(LAPACK
+GIT_REPOSITORY ${lapack_git}
+GIT_TAG ${lapack_tag}
+CMAKE_ARGS ${lapack_args}
+CMAKE_CACHE_ARGS -Darith:STRING=${arith}
+BUILD_BYPRODUCTS ${LAPACK_LIBRARIES}
+INACTIVITY_TIMEOUT 30
+CONFIGURE_HANDLED_BY_BUILD ON
+)
 
 add_library(LAPACK::LAPACK INTERFACE IMPORTED)
 target_link_libraries(LAPACK::LAPACK INTERFACE "${LAPACK_LIBRARIES}")

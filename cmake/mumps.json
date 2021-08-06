@@ -1,8 +1,8 @@
 {
   "mumps": {
-    "sha256": "c613414683e462da7c152c131cebf34f937e79b30571424060dd673368bbf627",
-    "url0": "https://github.com/scivision/mumps-release/raw/main/MUMPS_5.4.0.tar.gz",
-    "url1": "http://mumps.enseeiht.fr/MUMPS_5.4.0.tar.gz",
-    "url2": "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.4.0.tar.gz"
+    "sha256": "93034a1a9fe0876307136dcde7e98e9086e199de76f1c47da822e7d4de987fa8",
+    "url0": "http://mumps-solver.org/MUMPS_5.4.1.tar.gz",
+    "url1": "http://mumps.enseeiht.fr/MUMPS_5.4.1.tar.gz",
+    "url2": "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.4.1.tar.gz"
   }
 }

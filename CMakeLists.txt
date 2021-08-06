@@ -1,7 +1,4 @@
-# Use FetchContent to avoid directly distributing huge MUMPS source,
-# which would slow down clone of this repo
-
-cmake_minimum_required(VERSION 3.19...3.21)
+cmake_minimum_required(VERSION 3.20...3.21)
 
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION PROJECT_VERSION
   REGEX "^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)" LIMIT_INPUT 16 LENGTH_MAXIMUM 16 LIMIT_COUNT 1)
@@ -68,7 +65,6 @@ install(FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindLAPACK.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindSCALAPACK.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMETIS.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMPI.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindScotch.cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMUMPS.cmake
   DESTINATION lib/cmake/${PROJECT_NAME}/Modules)
