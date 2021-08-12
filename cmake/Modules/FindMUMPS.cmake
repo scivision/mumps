@@ -22,6 +22,9 @@ MUMPS_LIBRARIES
 MUMPS_INCLUDE_DIRS
   dirs to be included
 
+MUMPS_HAVE_OPENMP
+  MUMPS is using OpenMP and thus user programs must link OpenMP as well.
+
 #]=======================================================================]
 
 set(MUMPS_LIBRARY)  # don't endlessly append
@@ -50,6 +53,17 @@ find_package(LAPACK)
 set(CMAKE_REQUIRED_INCLUDES ${MUMPS_INCLUDE_DIR} ${SCALAPACK_INCLUDE_DIRS} ${LAPACK_INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS} ${MPI_C_INCLUDE_DIRS})
 set(CMAKE_REQUIRED_LIBRARIES ${MUMPS_LIBRARY} ${SCALAPACK_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_Fortran_LIBRARIES} ${MPI_C_LIBRARIES} ${_test_lib})
 
+check_source_compiles(Fortran
+"program test_omp
+external :: mumps_ana_omp_return
+end program"
+MUMPS_HAVE_OPENMP
+)
+
+if(MUMPS_HAVE_OPENMP)
+  find_package(OpenMP COMPONENTS C Fortran)
+  list(APPEND CMAKE_REQUIRED_LIBRARIES OpenMP::OpenMP_Fortran OpenMP::OpenMP_C)
+endif()
 
 foreach(i s d)
 
@@ -77,7 +91,7 @@ endfunction(mumps_check)
 function(mumps_libs)
 
 # NOTE: NO_DEFAULT_PATH disables CMP0074 MUMPS_ROOT and PATH_SUFFIXES, so we manually specify:
-# HINTS ${MUMPS_ROOT}
+# HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT
 # PATH_SUFFIXES ...
 # to allow MKL using user-built MUMPS with `cmake -DMUMPS_ROOT=~/lib_intel/mumps`
 
@@ -85,7 +99,7 @@ if(DEFINED ENV{MKLROOT})
   find_path(MUMPS_INCLUDE_DIR
     NAMES mumps_compat.h
     NO_DEFAULT_PATH
-    HINTS ${MUMPS_ROOT}
+    HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT
     PATH_SUFFIXES include
     DOC "MUMPS common header")
 else()
@@ -98,39 +112,38 @@ if(NOT MUMPS_INCLUDE_DIR)
   return()
 endif()
 
+# --- Mumps Common ---
 if(DEFINED ENV{MKLROOT})
   find_library(MUMPS_COMMON
     NAMES mumps_common
     NO_DEFAULT_PATH
-    HINTS ${MUMPS_ROOT}
+    HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT
     PATH_SUFFIXES lib
-    DOC "MUMPS common libraries")
+    DOC "MUMPS MPI common libraries")
 elseif(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
   find_library(MUMPS_COMMON
     NAMES mumps_common mumps_common_seq
     NAMES_PER_DIR
     DOC "MUMPS no-MPI common libraries")
-elseif(OpenMP IN_LIST MUMPS_FIND_COMPONENTS)
-  find_library(MUMPS_COMMON
-    NAMES mumps_common mumpso_common mumps_common_shm
-    NAMES_PER_DIR
-    DOC "MUMPS no-MPI common libraries")
 else()
   find_library(MUMPS_COMMON
-    NAMES mumps_common mumps_common_mpi
+    NAMES mumps_common mumps_common_mpi mumpso_common mumps_common_shm
     NAMES_PER_DIR
     PATH_SUFFIXES openmpi/lib mpich/lib
-    DOC "MUMPS MPI common libraries")
+    DOC "MUMPS common libraries")
 endif()
+
 if(NOT MUMPS_COMMON)
   return()
 endif()
+
+# --- Pord ---
 
 if(DEFINED ENV{MKLROOT})
   find_library(PORD
     NAMES pord
     NO_DEFAULT_PATH
-    HINTS ${MUMPS_ROOT}
+    HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT
     PATH_SUFFIXES lib
     DOC "simplest MUMPS ordering library")
 else()
@@ -149,7 +162,7 @@ if(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
     find_library(MUMPS_mpiseq_LIB
       NAMES mpiseq
       NO_DEFAULT_PATH
-      HINTS ${MUMPS_ROOT}
+      HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT
       PATH_SUFFIXES lib
       DOC "No-MPI stub library")
   else()
@@ -166,7 +179,7 @@ if(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
     find_path(MUMPS_mpiseq_INC
       NAMES mpif.h
       NO_DEFAULT_PATH
-      HINTS ${MUMPS_ROOT}
+      HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT
       PATH_SUFFIXES include
       DOC "MUMPS mpiseq header")
   else()
@@ -194,7 +207,7 @@ foreach(comp ${MUMPS_FIND_COMPONENTS})
     find_library(MUMPS_${comp}_lib
       NAMES ${comp}mumps
       NO_DEFAULT_PATH
-      HINTS ${MUMPS_ROOT}
+      HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT
       PATH_SUFFIXES lib
       DOC "MUMPS precision-specific")
   elseif(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
@@ -202,7 +215,7 @@ foreach(comp ${MUMPS_FIND_COMPONENTS})
       NAMES ${comp}mumps ${comp}mumps_seq
       NAMES_PER_DIR
       DOC "MUMPS no-MPI precision-specific")
-  elseif(OpenMP IN_LIST MUMPS_FIND_COMPONENTS)
+  elseif(MUMPS_HAVE_OPENMP)
     find_library(MUMPS_${comp}_lib
       NAMES ${comp}mumpso ${comp}mumps_shm ${comp}mumps
       NAMES_PER_DIR
@@ -247,12 +260,6 @@ if(Scotch IN_LIST MUMPS_FIND_COMPONENTS)
 
   list(APPEND _test_lib Scotch::Scotch METIS::METIS)
   set(MUMPS_Scotch_FOUND true)
-endif()
-
-if(OpenMP IN_LIST MUMPS_FIND_COMPONENTS)
-  find_package(OpenMP COMPONENTS C Fortran)
-  list(APPEND _test_lib OpenMP::OpenMP_Fortran OpenMP::OpenMP_C)
-  set(MUMPS_OpenMP_FOUND true)
 endif()
 
 # -- minimal check that MUMPS is linkable
