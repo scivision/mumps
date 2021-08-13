@@ -104,30 +104,15 @@ else()
   set(_mkltype static)
 endif()
 
-if(NOT WIN32)
-  # Windows oneAPI crashes here due to bad *.pc
-  pkg_check_modules(pc_mkl mkl-${_mkltype}-${_mkl_bitflag}lp64-iomp)
-endif()
-
 set(_mkl_libs ${ARGV})
 
 foreach(s ${_mkl_libs})
   find_library(SCALAPACK_${s}_LIBRARY
-           NAMES ${s}
-           PATHS
-            ${MKLROOT}
-            ENV I_MPI_ROOT
-            ENV TBBROOT
-            ../tbb/lib/intel64/gcc4.7
-            ../tbb/lib/intel64/vc_mt
-            ../compiler/lib/intel64
-           PATH_SUFFIXES
-             lib lib/intel64 lib/intel64_win
-             intel64/lib/release
-             lib/intel64/gcc4.7
-             lib/intel64/vc_mt
-           HINTS ${pc_mkl_LIBRARY_DIRS} ${pc_mkl_LIBDIR}
-           NO_DEFAULT_PATH)
+    NAMES ${s}
+    HINTS ${MKLROOT}
+    PATH_SUFFIXES lib/intel64
+    NO_DEFAULT_PATH
+  )
   if(NOT SCALAPACK_${s}_LIBRARY)
     return()
   endif()
@@ -135,12 +120,12 @@ foreach(s ${_mkl_libs})
   list(APPEND SCALAPACK_LIBRARY ${SCALAPACK_${s}_LIBRARY})
 endforeach()
 
-
 find_path(SCALAPACK_INCLUDE_DIR
   NAMES mkl_scalapack.h
-  PATHS ${MKLROOT} ENV I_MPI_ROOT ENV TBBROOT
-  PATH_SUFFIXES intel64/${_mkl_bitflag}lp64
-  HINTS ${pc_mkl_INCLUDE_DIRS})
+  HINTS ${MKLROOT}
+  PATH_SUFFIXES include
+  NO_DEFAULT_PATH
+)
 
 if(NOT SCALAPACK_INCLUDE_DIR)
   return()
@@ -160,14 +145,10 @@ if(NOT MKL IN_LIST SCALAPACK_FIND_COMPONENTS AND DEFINED ENV{MKLROOT})
   list(APPEND SCALAPACK_FIND_COMPONENTS MKL)
 endif()
 
-find_package(PkgConfig)
-
 if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS)
   # we have to sanitize MKLROOT if it has Windows backslashes (\) otherwise it will break at build time
   # double-quotes are necessary per CMake to_cmake_path docs.
   file(TO_CMAKE_PATH "$ENV{MKLROOT}" MKLROOT)
-
-  list(APPEND CMAKE_PREFIX_PATH ${MKLROOT}/tools/pkgconfig)
 
   if(MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
     set(_mkl_bitflag i)
@@ -175,20 +156,13 @@ if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS)
     set(_mkl_bitflag)
   endif()
 
-  # find which MPI binding is used: IntelMPI, OpenMPI, or MPICH
-
-  scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_intelmpi_${_mkl_bitflag}lp64)
-  if(NOT SCALAPACK_MKL_FOUND)
-    scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_openmpi_${_mkl_bitflag}lp64)
-  endif()
-  if(NOT SCALAPACK_MKL_FOUND)
-    if(APPLE)
-      scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_mpich_${_mkl_bitflag}lp64)
-    elseif(WIN32)
-      scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_mpich2_${_mkl_bitflag}lp64.lib mpi.lib fmpich2.lib)
-    else()  # MPICH linux is just like IntelMPI
-      scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_intelmpi_${_mkl_bitflag}lp64)
-    endif()
+  # find MKL MPI binding
+  if(WIN32)
+    scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_intelmpi_${_mkl_bitflag}lp64)
+  elseif(APPLE)
+    scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_mpich_${_mkl_bitflag}lp64)
+  else()
+    scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_intelmpi_${_mkl_bitflag}lp64)
   endif()
 
   if(MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
@@ -197,13 +171,15 @@ if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS)
 
 else()
 
+  find_package(PkgConfig)
+
   pkg_search_module(pc_scalapack scalapack-openmpi scalapack-mpich scalapack)
 
   find_library(SCALAPACK_LIBRARY
-                NAMES scalapack scalapack-openmpi scalapack-mpich scalapack-mpich2
-                NAMES_PER_DIR
-                HINTS ${pc_scalapack_LIBRARY_DIRS} ${pc_scalapack_LIBDIR}
-                PATH_SUFFIXES openmpi/lib mpich/lib
+    NAMES scalapack scalapack-openmpi scalapack-mpich
+    NAMES_PER_DIR
+    HINTS ${pc_scalapack_LIBRARY_DIRS} ${pc_scalapack_LIBDIR}
+    PATH_SUFFIXES openmpi/lib mpich/lib
   )
 
 endif()

@@ -257,15 +257,12 @@ endif()
 
 foreach(s ${_mkl_libs})
   find_library(LAPACK_${s}_LIBRARY
-           NAMES ${s}
-           PATHS ${MKLROOT} ENV TBBROOT
-           PATH_SUFFIXES
-             lib lib/intel64 lib/intel64_win
-             lib/intel64/gcc4.7 ../tbb/lib/intel64/gcc4.7
-             lib/intel64/vc_mt ../tbb/lib/intel64/vc_mt
-             ../compiler/lib/intel64
-           HINTS ${pc_mkl_LIBRARY_DIRS} ${pc_mkl_LIBDIR}
-           NO_DEFAULT_PATH)
+    NAMES ${s}
+    PATHS ${MKLROOT}
+    PATH_SUFFIXES lib/intel64
+    HINTS ${pc_mkl_LIBRARY_DIRS} ${pc_mkl_LIBDIR}
+    NO_DEFAULT_PATH
+  )
 
   if(NOT LAPACK_${s}_LIBRARY)
     return()
@@ -274,16 +271,19 @@ foreach(s ${_mkl_libs})
   list(APPEND LAPACK_LIBRARY ${LAPACK_${s}_LIBRARY})
 endforeach()
 
-if(NOT BUILD_SHARED_LIBS AND CMAKE_SYSTEM_NAME STREQUAL Linux)
-  set(LAPACK_LIBRARY -Wl,--start-group ${LAPACK_LIBRARY} -Wl,--end-group)
+find_path(LAPACK_INCLUDE_DIR
+  NAMES mkl_lapack.h
+  HINTS ${MKLROOT}
+  PATH_SUFFIXES include
+  NO_DEFAULT_PATH
+)
+
+if(NOT LAPACK_INCLUDE_DIR)
+  return()
 endif()
 
 set(LAPACK_LIBRARY ${LAPACK_LIBRARY} PARENT_SCOPE)
-set(LAPACK_INCLUDE_DIR
-  ${MKLROOT}/include
-  ${MKLROOT}/include/intel64/${_mkl_bitflag}lp64
-  PARENT_SCOPE)
- # ${pc_mkl_INCLUDE_DIRS} has garbage on Windows
+set(LAPACK_INCLUDE_DIR ${LAPACK_INCLUDE_DIR} PARENT_SCOPE)
 
 endfunction(find_mkl_libs)
 
@@ -335,26 +335,20 @@ if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
     endif()
   endif()
 
-  unset(_tbb)
+  set(_tbb)
   if(TBB IN_LIST LAPACK_FIND_COMPONENTS)
     list(APPEND _mkl_libs mkl_tbb_thread mkl_core)
     set(_tbb tbb stdc++)
-    if(WIN32)
-      list(APPEND _mkl_libs tbb.lib)
-    endif()
   elseif(OpenMP IN_LIST LAPACK_FIND_COMPONENTS)
     pkg_check_modules(pc_mkl mkl-${_mkltype}-${_mkl_bitflag}lp64-iomp)
 
     set(_mp iomp5)
     if(WIN32)
-      set(_mp libiomp5md)  # "lib" is indeed necessary, even on CMake 3.14.0
+      set(_mp libiomp5md)
     endif()
     list(APPEND _mkl_libs mkl_intel_thread mkl_core ${_mp})
   else()
-    if(NOT WIN32)
-      # Windows oneAPI crashes here due to bad *.pc
-      pkg_check_modules(pc_mkl mkl-${_mkltype}-${_mkl_bitflag}lp64-seq)
-    endif()
+    pkg_check_modules(pc_mkl mkl-${_mkltype}-${_mkl_bitflag}lp64-seq)
     list(APPEND _mkl_libs mkl_sequential mkl_core)
   endif()
 
