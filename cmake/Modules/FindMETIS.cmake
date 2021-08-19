@@ -55,7 +55,6 @@ find_package_handle_standard_args(METIS
     HANDLE_COMPONENTS)
 
 if(METIS_FOUND)
-# need if _FOUND guard to allow project to autobuild; can't overwrite imported target even if bad
 
 set(METIS_LIBRARIES ${PARMETIS_LIBRARY} ${METIS_LIBRARY})
 set(METIS_INCLUDE_DIRS ${METIS_INCLUDE_DIR})

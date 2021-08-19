@@ -25,9 +25,13 @@ MUMPS_INCLUDE_DIRS
 MUMPS_HAVE_OPENMP
   MUMPS is using OpenMP and thus user programs must link OpenMP as well.
 
+MUMPS_HAVE_Scotch
+  MUMPS is using Scotch/METIS and thus user programs must link Scotch/METIS as well.
+
 #]=======================================================================]
 
 set(MUMPS_LIBRARY)  # don't endlessly append
+set(CMAKE_REQUIRED_FLAGS)
 
 include(CheckSourceCompiles)
 
@@ -43,27 +47,55 @@ endif()
 
 if(NOT mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
   find_package(MPI COMPONENTS C Fortran)
-  if(NOT TARGET SCALAPACK::SCALAPACK)
-    find_package(SCALAPACK)
-  endif()
+  find_package(SCALAPACK)
 endif()
 
 find_package(LAPACK)
 
 set(CMAKE_REQUIRED_INCLUDES ${MUMPS_INCLUDE_DIR} ${SCALAPACK_INCLUDE_DIRS} ${LAPACK_INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS} ${MPI_C_INCLUDE_DIRS})
-set(CMAKE_REQUIRED_LIBRARIES ${MUMPS_LIBRARY} ${SCALAPACK_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_Fortran_LIBRARIES} ${MPI_C_LIBRARIES} ${_test_lib})
+set(CMAKE_REQUIRED_LIBRARIES ${MUMPS_LIBRARY} ${SCALAPACK_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_Fortran_LIBRARIES} ${MPI_C_LIBRARIES})
 
-check_source_compiles(Fortran
-"program test_omp
-external :: mumps_ana_omp_return
-end program"
-MUMPS_HAVE_OPENMP
-)
+# MUMPS doesn't set any distinct symbols or procedures if OpenMP was linked,
+# so we do this indirect test to see if MUMPS needs OpenMP to link.
+set(omp_src "program test_omp
+implicit none (type, external)
+external :: mumps_ana_omp_return, MUMPS_ICOPY_32TO64_64C
+call mumps_ana_omp_return()
+call MUMPS_ICOPY_32TO64_64C()
+end program")
 
-if(MUMPS_HAVE_OPENMP)
+check_source_compiles(Fortran ${omp_src} mumps_openmp_test)
+
+if(NOT mumps_openmp_test)
   find_package(OpenMP COMPONENTS C Fortran)
-  list(APPEND CMAKE_REQUIRED_LIBRARIES OpenMP::OpenMP_Fortran OpenMP::OpenMP_C)
+  list(APPEND CMAKE_REQUIRED_FLAGS ${OpenMP_Fortran_FLAGS} ${OpenMP_C_FLAGS})
+  list(APPEND CMAKE_REQUIRED_INCLUDES ${OpenMP_Fortran_INCLUDE_DIRS} ${OpenMP_C_INCLUDE_DIRS})
+  list(APPEND CMAKE_REQUIRED_LIBRARIES ${OpenMP_Fortran_LIBRARIES} ${OpenMP_C_LIBRARIES})
+
+  check_source_compiles(Fortran ${omp_src} MUMPS_HAVE_OPENMP)
 endif()
+
+# check if Scotch linked
+find_package(Scotch COMPONENTS parallel ESMUMPS)
+# METIS is required when using Scotch
+if(Scotch_FOUND)
+  find_package(METIS COMPONENTS parallel)
+endif()
+
+if(METIS_FOUND AND Scotch_FOUND)
+  list(APPEND CMAKE_REQUIRED_INCLUDES ${Scotch_INCLUDE_DIRS} ${METIS_INCLUDE_DIRS})
+  list(APPEND CMAKE_REQUIRED_LIBRARIES ${Scotch_LIBRARIES} ${METIS_LIBRARIES})
+
+  check_source_compiles(Fortran
+  "program test_scotch
+  implicit none (type, external)
+  external :: mumps_dgraphinit
+  call mumps_dgraphinit()
+  end program"
+  MUMPS_HAVE_Scotch
+  )
+endif()
+
 
 foreach(i s d)
 
@@ -215,11 +247,6 @@ foreach(comp ${MUMPS_FIND_COMPONENTS})
       NAMES ${comp}mumps ${comp}mumps_seq
       NAMES_PER_DIR
       DOC "MUMPS no-MPI precision-specific")
-  elseif(MUMPS_HAVE_OPENMP)
-    find_library(MUMPS_${comp}_lib
-      NAMES ${comp}mumpso ${comp}mumps_shm ${comp}mumps
-      NAMES_PER_DIR
-      DOC "MUMPS OpenMP precision-specific")
   else()
     find_library(MUMPS_${comp}_lib
       NAMES ${comp}mumps ${comp}mumps_mpi
@@ -250,17 +277,6 @@ endif()
 mumps_libs()
 
 if(MUMPS_LIBRARY AND MUMPS_INCLUDE_DIR)
-# --- external MUMPS components
-set(_test_lib)
-
-if(Scotch IN_LIST MUMPS_FIND_COMPONENTS)
-  find_package(Scotch COMPONENTS parallel ESMUMPS)
-  # METIS is required when using Scotch
-  find_package(METIS COMPONENTS parallel)
-
-  list(APPEND _test_lib Scotch::Scotch METIS::METIS)
-  set(MUMPS_Scotch_FOUND true)
-endif()
 
 # -- minimal check that MUMPS is linkable
 
@@ -268,6 +284,10 @@ mumps_check()
 
 endif(MUMPS_LIBRARY AND MUMPS_INCLUDE_DIR)
 # --- finalize
+
+set(CMAKE_REQUIRED_FLAGS)
+set(CMAKE_REQUIRED_INCLUDES)
+set(CMAKE_REQUIRED_LIBRARIES)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MUMPS
