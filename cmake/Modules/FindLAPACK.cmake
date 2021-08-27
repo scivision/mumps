@@ -134,12 +134,12 @@ function(netlib_libs)
 if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
   find_path(LAPACK95_INCLUDE_DIR
     NAMES f95_lapack.mod
-    HINTS ${LAPACK95_ROOT}
+    HINTS ${LAPACK95_ROOT} ENV LAPACK95_ROOT
     PATH_SUFFIXES include)
 
   find_library(LAPACK95_LIBRARY
     NAMES lapack95
-    HINTS ${LAPACK95_ROOT})
+    HINTS ${LAPACK95_ROOT} ENV LAPACK95_ROOT)
 
   if(NOT (LAPACK95_LIBRARY AND LAPACK95_INCLUDE_DIR))
     return()
@@ -251,9 +251,6 @@ if((UNIX AND NOT APPLE) AND CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
 else()
   list(INSERT _mkl_libs 0 mkl_intel_${_mkl_bitflag}lp64)
 endif()
-
-# Note: Don't remove items from PATH_SUFFIXES unless you're extensively testing,
-# each path is there for a specific reason!
 
 foreach(s ${_mkl_libs})
   find_library(LAPACK_${s}_LIBRARY

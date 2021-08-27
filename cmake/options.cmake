@@ -10,11 +10,6 @@ option(intsize64 "use 64-bit integers in C and Fortran" OFF)
 option(scotch "use Scotch" OFF)
 option(openmp "use OpenMP" OFF)
 
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS true)
-
-set(CMAKE_TLS_VERIFY true)
-
 # --- other options
 
 # default build all
@@ -25,6 +20,10 @@ endif()
 if(intsize64)
   add_compile_definitions(INTSIZE64)
 endif()
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
+
+set(CMAKE_TLS_VERIFY true)
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED_MUMPS true)
 

@@ -173,7 +173,7 @@ else()
 
   find_package(PkgConfig)
 
-  pkg_search_module(pc_scalapack scalapack-openmpi scalapack-mpich scalapack)
+  pkg_search_module(pc_scalapack scalapack scalapack-openmpi scalapack-mpich)
 
   find_library(SCALAPACK_LIBRARY
     NAMES scalapack scalapack-openmpi scalapack-mpich
