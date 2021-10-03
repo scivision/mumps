@@ -26,9 +26,12 @@ mumps_type_size.F mumps_type2_blocking.F mumps_version.F mumps_print_defined.F
 mumps_pord.c
 mumps_common.c mumps_size.c mumps_io.c mumps_io_basic.c mumps_io_thread.c mumps_io_err.c
 mumps_numa.c mumps_thread.c mumps_save_restore_C.c mumps_config_file_C.c
-mumps_thread_affinity.c mumps_register_thread.c
+mumps_thread_affinity.c
 tools_common.F sol_common.F
 )
+if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.4)
+  list(APPEND COMM_OTHER_SRC mumps_register_thread.c)
+endif()
 
 if(scotch)
   list(APPEND COMM_OTHER_SRC mumps_scotch.c mumps_scotch64.c mumps_scotch_int.c)

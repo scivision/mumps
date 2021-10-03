@@ -6,5 +6,23 @@
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
     "tag": "v2.1.0.27"
+  },
+  "mumps": {
+    "5.3.1": {
+      "sha256": "774fc9411a3ab4704bc907cb7d30090ce6a65b83cde32549c58d3e9f63594e1a",
+      "urls": [
+        "http://mumps-solver.org/MUMPS_5.3.1.tar.gz",
+        "http://mumps.enseeiht.fr/MUMPS_5.3.1.tar.gz",
+        "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.3.1.tar.gz"
+      ]
+    },
+    "5.4.1": {
+      "sha256": "93034a1a9fe0876307136dcde7e98e9086e199de76f1c47da822e7d4de987fa8",
+      "urls": [
+        "http://mumps-solver.org/MUMPS_5.4.1.tar.gz",
+        "http://mumps.enseeiht.fr/MUMPS_5.4.1.tar.gz",
+        "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.4.1.tar.gz"
+      ]
+    }
   }
 }
