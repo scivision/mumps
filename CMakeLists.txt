@@ -11,7 +11,7 @@ HOMEPAGE_URL "http://mumps-solver.org/")
 
 include(CTest)
 
-set(MUMPS_UPSTREAM_VERSION 5.3.1)
+set(MUMPS_UPSTREAM_VERSION 5.3.5)
 
 # --- user options
 include(cmake/options.cmake)
