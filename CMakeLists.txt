@@ -86,7 +86,7 @@ if(BUILD_TESTING)
   add_subdirectory(tests)
 
   configure_file(examples/CMakeLists.txt ${mumps_SOURCE_DIR}/examples/ COPYONLY)
-  # used by CI separately
+  add_subdirectory(${mumps_SOURCE_DIR}/examples ${mumps_BINARY_DIR}/examples)
 endif()
 
 

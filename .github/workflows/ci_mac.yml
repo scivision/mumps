@@ -27,7 +27,3 @@ jobs:
     - run: ctest --preset default
 
     - run: cmake --install build
-
-    # - run: cmake -S build/_deps/mumps-src/examples -B build-ex
-    # - run: cmake --build build-ex --parallel
-    # - run: ctest --test-dir build-ex
