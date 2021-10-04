@@ -182,6 +182,15 @@ else()
     PATH_SUFFIXES openmpi/lib mpich/lib
   )
 
+  # some systems have libblacs as a separate file, instead of being subsumed in libscalapack.
+  cmake_path(GET SCALAPACK_LIBRARY PARENT_PATH BLACS_ROOT)
+
+  find_library(BLACS_LIBRARY
+    NAMES blacs
+    NO_DEFAULT_PATH
+    HINTS ${BLACS_ROOT}
+  )
+
 endif()
 
 # --- Check that Scalapack links
@@ -200,12 +209,15 @@ find_package_handle_standard_args(SCALAPACK
 if(SCALAPACK_FOUND)
 # need if _FOUND guard to allow project to autobuild; can't overwrite imported target even if bad
 set(SCALAPACK_LIBRARIES ${SCALAPACK_LIBRARY})
+if(BLACS_LIBRARY)
+  list(APPEND SCALAPACK_LIBRARIES ${BLACS_LIBRARY})
+endif()
 set(SCALAPACK_INCLUDE_DIRS ${SCALAPACK_INCLUDE_DIR})
 
 if(NOT TARGET SCALAPACK::SCALAPACK)
   add_library(SCALAPACK::SCALAPACK INTERFACE IMPORTED)
   set_target_properties(SCALAPACK::SCALAPACK PROPERTIES
-                        INTERFACE_LINK_LIBRARIES "${SCALAPACK_LIBRARY}"
+                        INTERFACE_LINK_LIBRARIES "${SCALAPACK_LIBRARIES}"
                         INTERFACE_INCLUDE_DIRECTORIES "${SCALAPACK_INCLUDE_DIR}"
                       )
 endif()
