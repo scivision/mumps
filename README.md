@@ -8,7 +8,8 @@
 
 CMake downloads the source tarfile from MUMPS developer websites and builds in parallel.
 CMake builds MUMPS in parallel **10x faster** than the Makefiles.
-CMake allows easy reuse of MUMPS in external projects via CMake FetchContent or ExternalProject or `cmake --install`.
+CMake allows easy reuse of MUMPS in external projects via CMake
+[FetchContent](https://github.com/scivision/mumps-fetchcontent) or ExternalProject or `cmake --install`.
 
 Many compilers and systems are supported by CMake build system on Windows, MacOS and Linux.
 Please open a GitHub Issue if you have a problem building Mumps with CMake.
