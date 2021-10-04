@@ -6,16 +6,14 @@
 ![ci_windows](https://github.com/scivision/mumps-cmake/workflows/ci_windows/badge.svg)
 [![intel-oneapi](https://github.com/gemini3d/gemini3d/actions/workflows/intel-oneapi.yml/badge.svg)](https://github.com/gemini3d/gemini3d/actions/workflows/intel-oneapi.yml)
 
-We avoid distributing extracted MUMPS sources ourselves--instead CMake will download the tarfile and extract, then we inject the CMakeLists.txt and build.
+CMake downloads the source tarfile from MUMPS developer websites and builds in parallel.
+CMake builds MUMPS in parallel **10x faster** than the Makefiles.
+CMake allows easy reuse of MUMPS in external projects via CMake FetchContent or ExternalProject or `cmake --install`.
 
-CMake:
+Many compilers and systems are supported by CMake build system on Windows, MacOS and Linux.
+Please open a GitHub Issue if you have a problem building Mumps with CMake.
 
-* builds MUMPS in parallel 10x faster than the Makefiles
-* allows easy reuse of MUMPS in external projects via CMake FetchContent
-
-Many compilers and systems are supported by CMake build system on Windows, MacOS and Linux. Please open a GitHub Issue if you have a problem building Mumps with CMake. Some compiler setups are not ABI compatible, that isn't a build system issue.
-
-The compiler platforms known to work with MUMPS and CMake include:
+Platforms known to work with MUMPS and CMake include:
 
 * Windows (use -G Ninja or -G "MinGW Makefiles")
   * MSYS2 (GCC)
@@ -59,12 +57,13 @@ then link to your project target `foo` via `target_link_libraries(foo MUMPS::MUM
 Numerous build options are available as in the following sections. Most users can just use the defaults.
 
 **autobuild prereqs**
-The -Dautobuild=true CMake default will download and build a local copy of Lapack and/or Scalapack if missing or broken.
+The `-Dautobuild=true` CMake default will download and build a local copy of Lapack and/or Scalapack if missing or broken.
 
 **MPI / non-MPI**
 For systems where MPI, BLACS and SCALAPACK are not available, or where non-parallel execution is suitable, the default parallel can be disabled at CMake configure time by option -Dparallel=false.
 
-Precision: The default precision is "s;d" meaning real float64 and float32. The build-time parameter
+Precision: The default precision is "s;d" covering float64 and float32.
+The build-time parameter:
 
 ```sh
 cmake -Darith="s;d"
@@ -117,5 +116,3 @@ Instead of compiling, one may install precompiled libraries by:
 
 Ubuntu: `apt install libmumps-dev`
 CentOS: `yum install MUMPS-openmpi`
-
-MUMPS is available for Linux, OSX and Windows.
