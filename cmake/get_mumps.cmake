@@ -20,3 +20,7 @@ URL_HASH SHA256=${mumps_sha256}
 if(NOT mumps_POPULATED)
   FetchContent_Populate(mumps)
 endif()
+
+if(MUMPS_UPSTREAM_VERSION VERSION_EQUAL 5.4.0 OR MUMPS_UPSTREAM_VERSION VERSION_EQUAL 5.4.1)
+  include(${CMAKE_CURRENT_LIST_DIR}/mumps_patch.cmake)
+endif()

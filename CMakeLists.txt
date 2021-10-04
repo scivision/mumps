@@ -12,7 +12,7 @@ HOMEPAGE_URL "http://mumps-solver.org/")
 include(CTest)
 
 if(NOT MUMPS_UPSTREAM_VERSION)
-  set(MUMPS_UPSTREAM_VERSION 5.3.5)
+  set(MUMPS_UPSTREAM_VERSION 5.4.1)
 endif()
 
 # --- user options
