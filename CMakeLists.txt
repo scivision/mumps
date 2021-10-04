@@ -15,6 +15,12 @@ if(NOT MUMPS_UPSTREAM_VERSION)
   set(MUMPS_UPSTREAM_VERSION 5.4.1)
 endif()
 
+if(MSVC AND BUILD_SHARED_LIBS)
+  message(WARNING "MUMPS: Windows MSVC/Intel compilers with **shared** libraries is not supported and will probably fail.
+  Recommend using static libraries, which does work:
+  cmake -DBUILD_SHARED_LIBS=off")
+endif()
+
 # --- user options
 include(cmake/options.cmake)
 include(cmake/libraries.cmake)
