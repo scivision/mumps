@@ -1,0 +1,53 @@
+name: intel-oneapi
+
+on:
+  push:
+    paths:
+      - "**.c"
+      - "**.f"
+      - "**.F"
+      - "**.f90"
+      - "**.F90"
+      - "**.cmake"
+      - "**/CMakeLists.txt"
+      - ".github/workflows/intel-oneapi.yml"
+
+
+jobs:
+
+  linux-intel-oneapi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CC: icx
+      FC: ifx
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Intel Apt repository
+      timeout-minutes: 1
+      run: |
+        wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+        sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+        rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+        echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+        sudo apt-get update
+
+    - name: Install Intel oneAPI
+      timeout-minutes: 5
+      run: sudo apt-get install intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic intel-oneapi-mpi intel-oneapi-mpi-devel intel-oneapi-mkl intel-oneapi-mkl-devel ninja-build
+
+    - name: Setup Intel oneAPI environment
+      run: |
+        source /opt/intel/oneapi/setvars.sh
+        printenv >> $GITHUB_ENV
+
+    - name: CMake Configure
+      run: cmake --preset intel
+
+    - name: CMake build
+      run: cmake --build --preset intel
+
+    - name: unit test
+      run: ctest --preset intel --output-junit test-unit-oneapi.xml
