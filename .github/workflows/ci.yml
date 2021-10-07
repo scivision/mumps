@@ -1,5 +1,8 @@
 name: ci
 
+env:
+  CMAKE_BUILD_TYPE: Release
+
 on:
   push:
     paths:

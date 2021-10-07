@@ -2,6 +2,7 @@ name: ci_build
 
 env:
   CMAKE_BUILD_PARALLEL_LEVEL: 3
+  CMAKE_BUILD_TYPE: Release
 
 on:
   push:
