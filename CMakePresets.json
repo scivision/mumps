@@ -3,11 +3,6 @@
 
 "configurePresets": [
 {
-  "name": "multi",
-  "displayName": "Ninja Multi-Config",
-  "generator": "Ninja Multi-Config"
-},
-{
   "name": "build",
   "displayName": "build all libraries",
   "description": "Build all external libraries (except MPI) without searching for existing libraries.",
@@ -17,35 +12,8 @@
   }
 },
 {
-  "name": "intel",
-  "displayName": "Intel oneAPI compiler",
-  "environment": {
-    "CC": "icx",
-    "FC": "ifx"
-  }
-},
-{
   "name": "phony"
 }
-],
-"buildPresets": [
-  {
-    "name": "release",
-    "description": "build Release (optimized)",
-    "configurePreset": "multi",
-    "configuration": "Release"
-  },
-  {
-    "name": "debug",
-    "description": "build Debug (slower runtime)",
-    "configurePreset": "multi",
-    "configuration": "Debug"
-  },
-  {
-    "name": "intel",
-    "description": "build with Intel compiler",
-    "configurePreset": "intel"
-  }
 ],
 "testPresets": [
 {
@@ -59,23 +27,6 @@
     "noTestsAction": "error",
     "stopOnFailure": false
   }
-},
-{
-  "name": "release", "inherits": "default",
-  "description": "test Release",
-  "configurePreset": "multi",
-  "configuration": "Release"
-},
-{
-  "name": "debug", "inherits": "default",
-  "description": "test Debug",
-  "configurePreset": "multi",
-  "configuration": "Debug"
-},
-{
-  "name": "intel", "inherits": "default",
-  "description": "test with Intel compiler",
-  "configurePreset": "intel"
 }
 ]
 }
