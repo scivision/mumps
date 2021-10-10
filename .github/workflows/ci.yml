@@ -28,8 +28,8 @@ jobs:
         sudo apt update -yq
         sudo apt install -yq --no-install-recommends ninja-build gfortran libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev libmetis-dev libscotch-dev
 
-    - run: cmake --preset default -Darith=d -Dscotch:BOOL=true
-    - run: cmake --build --preset default
-    - run: ctest --preset default
+    - run: cmake -B build -Darith=d -Dscotch:BOOL=true --install-prefix=${HOME}
+    - run: cmake --build build
+    - run: ctest --test-dir build --preset default
 
     - run: cmake --install build

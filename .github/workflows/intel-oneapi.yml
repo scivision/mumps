@@ -47,10 +47,10 @@ jobs:
         printenv >> $GITHUB_ENV
 
     - name: CMake Configure
-      run: cmake --preset intel
+      run: cmake -B build --preset intel
 
     - name: CMake build
-      run: cmake --build --preset intel
+      run: cmake --build build
 
     - name: unit test
-      run: ctest --preset intel --output-junit test-unit-oneapi.xml
+      run: ctest --test-dir build --preset intel --output-junit test-unit-oneapi.xml
