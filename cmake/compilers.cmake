@@ -25,21 +25,16 @@ endif()
 
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
-  if(WIN32)
-    add_compile_options(/QxHost)
-    # /heap-arrays is necessary to avoid runtime errors in programs using this library
-    add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:/warn:declarations;/heap-arrays>")
-  else()
-    add_compile_options(-xHost)
-    add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:-warn declarations>")
-  endif()
+  add_compile_options(
+  $<IF:$<BOOL:${WIN32}>,/QxHost,-xHost>
+  "$<$<COMPILE_LANGUAGE:Fortran>:$<IF:$<BOOL:${WIN32}>,/warn:declarations;/heap-arrays,-warn declarations>>"
+  )
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
-  add_compile_options(-mtune=native)
-  add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:-fimplicit-none>)
-  if(MINGW)
-    # presumably using MS-MPI, which emits extreme amounts of nuisance warnings
-    add_compile_options(-w)
-  endif(MINGW)
+  add_compile_options(-mtune=native
+  $<$<COMPILE_LANGUAGE:Fortran>:-fimplicit-none>
+  $<$<BOOL:${MINGW}>:-w>
+  )
+  # MS-MPI emits extreme amounts of nuisance warnings
 endif()
 
 if(intsize64)
