@@ -11,27 +11,27 @@ if(WIN32)
   find_program(WSL NAMES wsl REQUIRED)
 
   execute_process(COMMAND ${WSL} wslpath ${mumps_orig}
-    TIMEOUT 5
+    TIMEOUT 15
     OUTPUT_VARIABLE mumps_orig_path
     COMMAND_ERROR_IS_FATAL ANY
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
 
   execute_process(COMMAND ${WSL} wslpath ${mumps_patch}
-    TIMEOUT 5
+    TIMEOUT 15
     OUTPUT_VARIABLE mumps_patch_path
     COMMAND_ERROR_IS_FATAL ANY
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
 
   execute_process(COMMAND ${WSL} patch ${mumps_orig_path} ${mumps_patch_path}
-    TIMEOUT 10
+    TIMEOUT 15
     COMMAND_ERROR_IS_FATAL ANY
   )
 else()
   find_program(PATCH NAMES patch REQUIRED)
   execute_process(COMMAND ${PATCH} ${mumps_orig} ${mumps_patch}
-    TIMEOUT 10
+    TIMEOUT 15
     COMMAND_ERROR_IS_FATAL ANY
   )
 endif()
