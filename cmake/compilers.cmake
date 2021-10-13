@@ -27,7 +27,7 @@ endif()
 if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
   add_compile_options(
   $<IF:$<BOOL:${WIN32}>,/QxHost,-xHost>
-  "$<$<COMPILE_LANGUAGE:Fortran>:$<IF:$<BOOL:${WIN32}>,/warn:declarations;/heap-arrays,-warn declarations>>"
+  "$<$<COMPILE_LANGUAGE:Fortran>:$<IF:$<BOOL:${WIN32}>,/warn:declarations;/heap-arrays,-implicitnone>>"
   )
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
   add_compile_options(-mtune=native
