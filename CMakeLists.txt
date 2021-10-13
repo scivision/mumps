@@ -1,4 +1,9 @@
-cmake_minimum_required(VERSION 3.20...3.21)
+cmake_minimum_required(VERSION 3.20...3.22)
+
+get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if(NOT is_multi_config AND NOT (CMAKE_BUILD_TYPE OR DEFINED ENV{CMAKE_BUILD_TYPE}))
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Release default")
+endif()
 
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION PROJECT_VERSION
   REGEX "^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)" LIMIT_INPUT 16 LENGTH_MAXIMUM 16 LIMIT_COUNT 1)
@@ -7,12 +12,19 @@ project(MUMPS
 LANGUAGES C Fortran
 VERSION ${PROJECT_VERSION}
 DESCRIPTION "Sparse direct parallel solver"
-HOMEPAGE_URL "http://mumps-solver.org/")
+HOMEPAGE_URL "http://mumps-solver.org/"
+)
 
 include(CTest)
 
 if(NOT MUMPS_UPSTREAM_VERSION)
   set(MUMPS_UPSTREAM_VERSION 5.4.1)
+endif()
+
+if(CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
+  set(EXTPROJ_GENERATOR "Ninja")
+else()
+  set(EXTPROJ_GENERATOR ${CMAKE_GENERATOR})
 endif()
 
 if(MSVC AND BUILD_SHARED_LIBS)
