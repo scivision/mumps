@@ -23,16 +23,17 @@ if(WIN32)
     COMMAND_ERROR_IS_FATAL ANY
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
-
-  execute_process(COMMAND ${WSL} patch ${mumps_orig_path} ${mumps_patch_path}
+# we don't check for error as in case build got interrupted before mumps_patch
+# cache set but after patch applied.
+# the patch commmand would error on next build due to already applied patch.
+# we didn't want to apply --force option as that's too aggressive.
+  execute_process(COMMAND ${WSL} patch --batch --forward ${mumps_orig_path} --input=${mumps_patch_path}
     TIMEOUT 15
-    COMMAND_ERROR_IS_FATAL ANY
   )
 else()
   find_program(PATCH NAMES patch REQUIRED)
-  execute_process(COMMAND ${PATCH} ${mumps_orig} ${mumps_patch}
+  execute_process(COMMAND ${PATCH} --batch --forward ${mumps_orig} --input=${mumps_patch}
     TIMEOUT 15
-    COMMAND_ERROR_IS_FATAL ANY
   )
 endif()
 
