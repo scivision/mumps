@@ -31,11 +31,7 @@ endif()
 set(lapack_external true CACHE BOOL "build Lapack")
 
 if(NOT LAPACK_ROOT)
-  if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(LAPACK_ROOT ${PROJECT_BINARY_DIR} CACHE PATH "default ROOT")
-  else()
-    set(LAPACK_ROOT ${CMAKE_INSTALL_PREFIX})
-  endif()
+  set(LAPACK_ROOT ${CMAKE_INSTALL_PREFIX})
 endif()
 
 set(LAPACK_LIBRARIES

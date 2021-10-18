@@ -17,12 +17,6 @@ endif()
 add_compile_definitions(CDEFS "Add_")
 # "Add_" works for all modern compilers we tried.
 
-if(CMAKE_Fortran_COMPILER_ID STREQUAL GNU AND
-   CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL 10)
-   add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:-fallow-argument-mismatch;-fallow-invalid-boz>")
-endif()
-
-
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
   add_compile_options(
@@ -33,6 +27,7 @@ elseif(CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
   add_compile_options(-mtune=native
   $<$<COMPILE_LANGUAGE:Fortran>:-fimplicit-none>
   $<$<BOOL:${MINGW}>:-w>
+  "$<$<AND:$<VERSION_GREATER_EQUAL:${CMAKE_Fortran_COMPILER_VERSION},10>,$<COMPILE_LANGUAGE:Fortran>>:-fallow-argument-mismatch;-fallow-invalid-boz>"
   )
   # MS-MPI emits extreme amounts of nuisance warnings
 endif()
@@ -40,11 +35,7 @@ endif()
 if(intsize64)
   set(FORTRAN_FLAG_INT64)
   if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
-    if(WIN32)
-      set(FORTRAN_FLAG_INT64 /i8)
-    else()
-      set(FORTRAN_FLAG_INT64 -i8)
-    endif()
+    set(FORTRAN_FLAG_INT64 -i8)
   elseif(CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
     set(FORTRAN_FLAG_INT64 -fdefault-integer-8)
   endif()
