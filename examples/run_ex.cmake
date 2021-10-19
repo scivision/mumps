@@ -7,9 +7,5 @@ endif()
 
 execute_process(COMMAND ${cmd}
 INPUT_FILE ${in}
-RESULT_VARIABLE ret
+COMMAND_ERROR_IS_FATAL ANY
 )
-
-if(NOT ret EQUAL 0)
-  message(FATAL_ERROR "return code ${ret}")
-endif()
