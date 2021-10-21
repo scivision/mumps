@@ -11,7 +11,7 @@ if("d" IN_LIST arith)
   endif()
   set_tests_properties(mumps:config PROPERTIES
   RESOURCE_LOCK cpu_mpi
-  TIMEOUT 10
+  TIMEOUT 30  # MacOS needs at least 10 seconds
   )
 endif()
 
