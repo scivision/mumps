@@ -33,3 +33,19 @@ jobs:
     - run: ctest --test-dir build --preset default
 
     - run: cmake --install build
+
+  mumps_intsize64:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install prereqs
+      run: |
+        sudo apt update -yq
+        sudo apt install -yq --no-install-recommends ninja-build gfortran libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev
+
+    - run: cmake -B build -Dintsize64:BOOL=yes -Darith=d
+    - run: cmake --build build
+    - run: ctest --test-dir build --preset default
+
+    - run: cmake --install build
