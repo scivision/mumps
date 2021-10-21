@@ -93,6 +93,15 @@ To use Scotch and METIS:
 cmake -B build -Dscotch=true
 ```
 
+If 64-bit integers are needed, use:
+
+```sh
+cmake -B build -Dintsize64=true
+```
+
+Note that intsize64 is only known to work with GCC at this time.
+Intel oneMKL with GCC does not work, nor does Intel oneAPI compilers.
+
 ### OpenMP
 
 OpenMP can make MUMPS slower in certain situations. Try with and without OpenMP to see which is faster for your situation. Default is OpenMP OFF.
