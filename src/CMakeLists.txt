@@ -141,9 +141,10 @@ install(FILES
 endforeach()
 
 install(FILES
-  ${mumps_SOURCE_DIR}/include/mumps_c_types.h
-  ${mumps_SOURCE_DIR}/include/mumps_compat.h
-  TYPE INCLUDE)
+${mumps_SOURCE_DIR}/include/mumps_c_types.h
+${mumps_SOURCE_DIR}/include/mumps_compat.h
+TYPE INCLUDE
+)
 
 # We do not need the .mod files due to the way MUMPS is interfaced
 # install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/ DESTINATION include)
@@ -153,11 +154,9 @@ install(FILES
 # It knows all the include directories.
 
 add_library(MUMPS INTERFACE)
-if(parallel)
-  target_link_libraries(MUMPS INTERFACE ${_ifc_libs} mumps_common pord)
-else()
-  target_link_libraries(MUMPS INTERFACE ${_ifc_libs} mumps_common pord mpiseq)
-endif()
+target_link_libraries(MUMPS INTERFACE ${_ifc_libs} mumps_common pord
+$<$<NOT:$<BOOL:${parallel}>>:mpiseq>
+)
 
 install(TARGETS MUMPS EXPORT ${PROJECT_NAME}Targets)
 

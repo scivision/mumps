@@ -9,7 +9,10 @@ if("d" IN_LIST arith)
   else()
     add_test(NAME mumps:config COMMAND $<TARGET_FILE:mumpscfg>)
   endif()
-  set_tests_properties(mumps:config PROPERTIES RESOURCE_LOCK cpu_mpi)
+  set_tests_properties(mumps:config PROPERTIES
+  RESOURCE_LOCK cpu_mpi
+  TIMEOUT 10
+  )
 endif()
 
 if("s" IN_LIST arith)
@@ -21,7 +24,10 @@ if("s" IN_LIST arith)
   else()
     add_test(NAME mumps:simpleReal32 COMMAND $<TARGET_FILE:s_simple>)
   endif()
-  set_tests_properties(mumps:simpleReal32 PROPERTIES RESOURCE_LOCK cpu_mpi)
+  set_tests_properties(mumps:simpleReal32 PROPERTIES
+  RESOURCE_LOCK cpu_mpi
+  TIMEOUT 10
+  )
 endif()
 
 if("d" IN_LIST arith)
@@ -33,7 +39,10 @@ if("d" IN_LIST arith)
   else()
     add_test(NAME mumps:simpleReal64 COMMAND $<TARGET_FILE:d_simple>)
   endif()
-  set_tests_properties(mumps:simpleReal64 PROPERTIES RESOURCE_LOCK cpu_mpi)
+  set_tests_properties(mumps:simpleReal64 PROPERTIES
+  RESOURCE_LOCK cpu_mpi
+  TIMEOUT 10
+  )
 
   if(NOT ClangTest)
     return()
@@ -47,5 +56,8 @@ if("d" IN_LIST arith)
   else()
     add_test(NAME mumps:CsimpleReal64 COMMAND $<TARGET_FILE:Csimple>)
   endif()
-  set_tests_properties(mumps:CsimpleReal64 PROPERTIES RESOURCE_LOCK cpu_mpi)
+  set_tests_properties(mumps:CsimpleReal64 PROPERTIES
+  RESOURCE_LOCK cpu_mpi
+  TIMEOUT 10
+  )
 endif()

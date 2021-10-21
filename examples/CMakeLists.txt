@@ -12,14 +12,20 @@ foreach(a s d)
   target_link_libraries(${a}simpletest PRIVATE MUMPS::MUMPS MPI::MPI_Fortran)
 
   add_test(NAME mumps:example_${a} COMMAND ${CMAKE_COMMAND} -Dexe:FILEPATH=$<TARGET_FILE:${a}simpletest> -Din:PATH=${CMAKE_CURRENT_SOURCE_DIR}/${_${a}filename} -P ${PROJECT_SOURCE_DIR}/examples/run_ex.cmake)
-  set_tests_properties(mumps:example_${a} PROPERTIES RESOURCE_LOCK cpu_mpi)
+  set_tests_properties(mumps:example_${a} PROPERTIES
+  RESOURCE_LOCK cpu_mpi
+  TIMEOUT 10
+  )
 
 
   add_executable(${a}simpletest_save_restore ${a}simpletest_save_restore.F)
   target_link_libraries(${a}simpletest_save_restore PRIVATE MUMPS::MUMPS MPI::MPI_Fortran)
 
   add_test(NAME mumps:saveRestore_${a} COMMAND ${CMAKE_COMMAND} -Dexe:FILEPATH=$<TARGET_FILE:${a}simpletest_save_restore> -Din:PATH=${CMAKE_CURRENT_SOURCE_DIR}/${_${a}filename} -P ${PROJECT_SOURCE_DIR}/examples/run_ex.cmake)
-  set_tests_properties(mumps:saveRestore_${a} PROPERTIES RESOURCE_LOCK cpu_mpi)
+  set_tests_properties(mumps:saveRestore_${a} PROPERTIES
+  RESOURCE_LOCK cpu_mpi
+  TIMEOUT 10
+  )
 endforeach()
 
 if(d IN_LIST arith)
@@ -31,5 +37,8 @@ if(d IN_LIST arith)
   else()
     add_test(NAME mumps:example_C COMMAND $<TARGET_FILE:c_example>)
   endif()
-  set_tests_properties(mumps:example_C PROPERTIES RESOURCE_LOCK cpu_mpi)
+  set_tests_properties(mumps:example_C PROPERTIES
+  RESOURCE_LOCK cpu_mpi
+  TIMEOUT 10
+  )
 endif()

@@ -35,6 +35,6 @@ if (mumps_par%icntl(4) /= 1) error stop 'MUMPS console verbosity not correctly s
 call mpi_finalize(ierr)
 if (ierr /= 0) error stop 'MPI finalize error'
 
-print *, 'MUMPS OK'
+print *, 'OK: Mumps params'
 
 end program
