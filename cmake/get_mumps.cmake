@@ -12,9 +12,12 @@ endforeach()
 
 string(JSON mumps_sha256 GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} sha256)
 
+set(FETCHCONTENT_QUIET no)
+
 FetchContent_Declare(mumps
 URL ${mumps_urls}
 URL_HASH SHA256=${mumps_sha256}
+INACTIVITY_TIMEOUT 15
 )
 
 if(NOT mumps_POPULATED)
