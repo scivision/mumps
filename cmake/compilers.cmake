@@ -32,13 +32,4 @@ elseif(CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
   # MS-MPI emits extreme amounts of nuisance warnings
 endif()
 
-if(intsize64)
-  set(FORTRAN_FLAG_INT64)
-  if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
-    set(FORTRAN_FLAG_INT64 -i8)
-  elseif(CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
-    set(FORTRAN_FLAG_INT64 -fdefault-integer-8)
-  endif()
-  message(STATUS "setting Fortran integer 64 bits using:${FORTRAN_FLAG_INT64}")
-  add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:${FORTRAN_FLAG_INT64}>)
-endif(intsize64)
+# Per MUMPS 5.4 manual section 9, not necessary to set default int64. Doing so causes problems at runtime.

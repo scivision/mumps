@@ -25,6 +25,7 @@ foreach(a s d)
   set_tests_properties(mumps:saveRestore_${a} PROPERTIES
   RESOURCE_LOCK cpu_mpi
   TIMEOUT 10
+  DISABLED $<BOOL:${intsize64}>
   )
 endforeach()
 
