@@ -11,7 +11,6 @@
     "5.3.1": {
       "sha256": "774fc9411a3ab4704bc907cb7d30090ce6a65b83cde32549c58d3e9f63594e1a",
       "urls": [
-        "http://mumps-solver.org/MUMPS_5.3.1.tar.gz",
         "http://mumps.enseeiht.fr/MUMPS_5.3.1.tar.gz",
         "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.3.1.tar.gz"
       ]
@@ -19,7 +18,6 @@
     "5.3.5": {
       "sha256": "e5d665fdb7043043f0799ae3dbe3b37e5b200d1ab7a6f7b2a4e463fd89507fa4",
       "urls": [
-        "http://mumps-solver.org/MUMPS_5.3.5.tar.gz",
         "http://mumps.enseeiht.fr/MUMPS_5.3.5.tar.gz",
         "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.3.5.tar.gz"
       ]
@@ -27,7 +25,6 @@
     "5.4.1": {
       "sha256": "93034a1a9fe0876307136dcde7e98e9086e199de76f1c47da822e7d4de987fa8",
       "urls": [
-        "http://mumps-solver.org/MUMPS_5.4.1.tar.gz",
         "http://mumps.enseeiht.fr/MUMPS_5.4.1.tar.gz",
         "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.4.1.tar.gz"
       ]
