@@ -62,7 +62,10 @@ if(NOT Fortran IN_LIST enabled_langs)
 endif()
 
 find_package(MPI COMPONENTS C Fortran)
-find_package(LAPACK)
+if(NOT LAPACK_FOUND)
+  # otherwise can cause 32-bit lapack when 64-bit wanted
+  find_package(LAPACK)
+endif()
 if(NOT (MPI_Fortran_FOUND AND LAPACK_FOUND))
   return()
 endif()
