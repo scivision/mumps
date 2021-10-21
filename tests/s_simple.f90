@@ -2,15 +2,15 @@ program s_simple
 !  This file is part of MUMPS 5.2.1, released
 !  on Fri Jun 14 14:46:05 UTC 2019
 
-use, intrinsic :: iso_fortran_env, only: stderr=>error_unit, stdout=>output_unit, int64
+use, intrinsic :: iso_fortran_env, only: stderr=>error_unit, stdout=>output_unit, int32
 
 implicit none
 
 include 'mpif.h'
 INCLUDE 'smumps_struc.h'
 TYPE (sMUMPS_STRUC) mumps_par
-INTEGER :: IERR, I, num_mpi
-INTEGER(int64) :: I8
+INTEGER :: num_mpi
+integer(int32) :: ierr
 
 CALL MPI_INIT(IERR)
 if(ierr/=0) error stop 'problem initializing MPI'

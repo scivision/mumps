@@ -1,5 +1,5 @@
 program test_mumps
-use, intrinsic:: iso_fortran_env, only: output_unit, error_unit
+use, intrinsic:: iso_fortran_env, only: output_unit, error_unit, int32
 
 implicit none
 
@@ -7,7 +7,7 @@ include 'mpif.h'
 include 'dmumps_struc.h'  ! per MUMPS manual
 type(DMUMPS_STRUC) :: mumps_par
 
-integer :: ierr
+integer(int32) :: ierr
 
 call mpi_init(ierr)
 if (ierr /= 0) error stop 'MPI init error'
