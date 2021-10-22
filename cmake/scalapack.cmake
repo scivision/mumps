@@ -29,11 +29,6 @@ endif()
 
 set(scalapack_external true CACHE BOOL "build ScaLapack")
 
-if(NOT TARGET LAPACK)
-  # acquired by find_package instead of ExternalProject, so make dummy target
-  add_custom_target(LAPACK)
-endif()
-
 if(NOT SCALAPACK_ROOT)
   set(SCALAPACK_ROOT ${CMAKE_INSTALL_PREFIX})
 endif()
@@ -60,7 +55,7 @@ CMAKE_GENERATOR ${EXTPROJ_GENERATOR}
 BUILD_BYPRODUCTS ${SCALAPACK_LIBRARIES}
 INACTIVITY_TIMEOUT 15
 CONFIGURE_HANDLED_BY_BUILD ON
-DEPENDS LAPACK
+DEPENDS LAPACK::LAPACK
 )
 
 add_library(SCALAPACK::SCALAPACK INTERFACE IMPORTED)
