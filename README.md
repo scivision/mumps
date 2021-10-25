@@ -12,6 +12,7 @@ CMake allows easy reuse of MUMPS in external projects via CMake
 [FetchContent](https://github.com/scivision/mumps-fetchcontent) or ExternalProject or `cmake --install`.
 
 Many compilers and systems are supported by CMake build system on Windows, MacOS and Linux.
+Static (default) or Shared `cmake -DBUILD_SHARED_LIBS=on` MUMPS builds are supported.
 Please open a GitHub Issue if you have a problem building Mumps with CMake.
 
 Platforms known to work with MUMPS and CMake include:

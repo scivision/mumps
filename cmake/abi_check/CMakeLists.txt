@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13...3.20)
+cmake_minimum_required(VERSION 3.14...3.22)
 project(abi_check LANGUAGES C Fortran)
 
 add_library(addone OBJECT addone.c)
