@@ -15,6 +15,10 @@ if("d" IN_LIST arith)
   )
 endif()
 
+if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.1)
+  return()
+endif()
+
 if("s" IN_LIST arith)
   add_executable(s_simple s_simple.f90)
   target_link_libraries(s_simple PRIVATE MUMPS::MUMPS ${NUMERIC_LIBS})
