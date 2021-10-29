@@ -26,7 +26,7 @@ set(COMM_OTHER_SRC
 "$<$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},5.0>:ana_orderings.F;ana_set_ordering.F;ana_AMDMF.F;bcast_errors.F;estim_flops.F;mumps_type_size.F;mumps_type2_blocking.F;mumps_version.F;mumps_print_defined.F;mumps_numa.c;tools_common.F>"
 "$<$<VERSION_LESS:${MUMPS_UPSTREAM_VERSION},5.1>:tools_common_mod.F;mumps_orderings.c>"
 "$<$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},5.1>:mumps_pord.c;mumps_thread.c;mumps_save_restore_C.c>"
-"$<$<VERSION_LESS:${MUMPS_UPSTREAM_VERSION},5.2>:mumps_sol_es.F>"
+"$<$<AND:$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},4.10>,$<VERSION_LESS:${MUMPS_UPSTREAM_VERSION},5.2>>:mumps_sol_es.F>"
 "$<$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},5.2>:mumps_config_file_C.c;mumps_thread_affinity.c;sol_common.F>"
 $<$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},5.3>:ana_blk.F>
 $<$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},5.4>:mumps_register_thread.c>
