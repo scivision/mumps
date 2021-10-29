@@ -8,6 +8,8 @@
     "tag": "v2.1.0.28"
   },
   "mumps": {
+    "hosts": ["http://mumps.enseeiht.fr/", "http://graal.ens-lyon.fr/"]
+    },
     "5.3.1": {
       "sha256": "774fc9411a3ab4704bc907cb7d30090ce6a65b83cde32549c58d3e9f63594e1a",
       "urls": [
