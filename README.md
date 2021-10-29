@@ -50,6 +50,17 @@ or GNU Make:
 cmake -G "MinGW Makefiles" -B build
 ```
 
+### MUMPS version selection
+
+The MUMPS version defaults to a recent release.
+For reprocability, benchmarking and other purposes, one may select the version of MUMPS to build like:
+
+```sh
+cmake -B build -DMUMPS_UPSTREAM_VERSION=5.3.5
+```
+
+The MUMPS_UPSTREAM_VERSION works for MUMPS >= 4.8.0 at this time.
+
 ## Usage
 
 To use MUMPS as via CMake ExternalProject do like in [mumps.cmake](https://github.com/gemini3d/gemini3d/blob/main/cmake/ext_libs/mumps.cmake).
