@@ -99,7 +99,7 @@ cmake "-Darith=s;d"
 
 ### ordering
 
-To use Scotch and METIS:
+To use Scotch and METIS (requires MUMPS >= 5.0):
 
 ```sh
 cmake -B build -Dscotch=true
