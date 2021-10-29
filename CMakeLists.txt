@@ -22,7 +22,7 @@ if(NOT MUMPS_UPSTREAM_VERSION)
 endif()
 
 if(MUMPS_UPSTREAM_VERSION VERSION_LESS 4.8)
-  message(STATUS "MUMPS >= 4.8 is known to work, you selected MUMPS ${MUMPS_UPSTREAM_VERSION} that may fail to build.")
+  message(WARNING "MUMPS >= 4.8 is known to work, you selected MUMPS ${MUMPS_UPSTREAM_VERSION} that may fail to build.")
 endif()
 
 if(CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")

@@ -33,13 +33,8 @@ $<$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},4.9>:mumps_size.c>
 $<$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},5.3>:ana_blk.F>
 $<$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},5.4>:mumps_register_thread.c>
 mumps_common.c mumps_io.c mumps_io_basic.c mumps_io_thread.c mumps_io_err.c
+"$<$<BOOL:${scotch}>:mumps_scotch.c;mumps_scotch64.c;mumps_scotch_int.c;mumps_metis.c;mumps_metis64.c;mumps_metis_int.c>"
 )
-
-
-if(scotch)
-  list(APPEND COMM_OTHER_SRC mumps_scotch.c mumps_scotch64.c mumps_scotch_int.c)
-  list(APPEND COMM_OTHER_SRC mumps_metis.c mumps_metis64.c mumps_metis_int.c)
-endif()
 
 # manually create directory to avoid race condition for FetchContent
 # else can get INTERFACE_INCLUDE_DIRECTORIES not found error
