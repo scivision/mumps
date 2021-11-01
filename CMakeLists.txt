@@ -33,6 +33,8 @@ if(MSVC AND BUILD_SHARED_LIBS)
   cmake -DBUILD_SHARED_LIBS=off")
 endif()
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS true)
+
 # --- user options
 include(cmake/options.cmake)
 include(cmake/libraries.cmake)
@@ -94,9 +96,8 @@ install(FILES
 
 # --- MUMPS build
 
-configure_file(PORD/CMakeLists.txt ${mumps_SOURCE_DIR}/PORD/ COPYONLY)
 configure_file(PORD/lib/CMakeLists.txt ${mumps_SOURCE_DIR}/PORD/lib/ COPYONLY)
-add_subdirectory(${mumps_SOURCE_DIR}/PORD ${mumps_BINARY_DIR}/PORD)
+add_subdirectory(${mumps_SOURCE_DIR}/PORD/lib ${mumps_BINARY_DIR}/PORD/lib)
 
 configure_file(src/CMakeLists.txt ${mumps_SOURCE_DIR}/src/ COPYONLY)
 add_subdirectory(${mumps_SOURCE_DIR}/src ${mumps_BINARY_DIR}/src)
