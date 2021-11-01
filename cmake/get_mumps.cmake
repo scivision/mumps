@@ -10,36 +10,15 @@ file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 
 set(mumps_urls)
 set(mumps_sha256)
-set(N)
 
-string(JSON
-N
-ERROR_VARIABLE e
-LENGTH ${json} mumps ${version} urls
-)
+string(JSON N LENGTH ${json} mumps ${version} urls)
+math(EXPR N "${N}-1")
+foreach(i RANGE ${N})
+  string(JSON _u GET ${json} mumps ${version} urls ${i})
+  list(APPEND mumps_urls ${_u})
+endforeach()
 
-if(N)
-
-  # known MUMPS version
-  math(EXPR N "${N}-1")
-  foreach(i RANGE ${N})
-    string(JSON _u GET ${json} mumps ${version} urls ${i})
-    list(APPEND mumps_urls ${_u})
-  endforeach()
-
-  string(JSON mumps_sha256 GET ${json} mumps ${version} sha256)
-
-else()
-
-  # untested MUMPS version
-  string(JSON N LENGTH ${json} mumps hosts)
-  math(EXPR N "${N}-1")
-  foreach(i RANGE ${N})
-    string(JSON _u GET ${json} mumps hosts ${i})
-    list(APPEND mumps_urls ${_u}/MUMPS_${version}.tar.gz)
-  endforeach()
-
-endif()
+string(JSON mumps_sha256 GET ${json} mumps ${version} sha256)
 
 set(mumps_urls ${mumps_urls} PARENT_SCOPE)
 set(mumps_sha256 ${mumps_sha256} PARENT_SCOPE)
@@ -51,18 +30,17 @@ find_url(${MUMPS_UPSTREAM_VERSION})
 
 set(FETCHCONTENT_QUIET no)
 
-if(mumps_sha256)
+if(NOT mumps_urls)
+  message(FATAL_ERROR "unknown MUMPS_UPSTREAM_VERSION ${MUMPS_UPSTREAM_VERSION}.
+  Make a GitHub issue to request this in ${CMAKE_CURRENT_LIST_DIR}/libraries.json
+  ")
+endif()
+
 FetchContent_Declare(mumps
 URL ${mumps_urls}
 URL_HASH SHA256=${mumps_sha256}
 INACTIVITY_TIMEOUT 15
 )
-else()
-FetchContent_Declare(mumps
-URL ${mumps_urls}
-INACTIVITY_TIMEOUT 15
-)
-endif()
 
 if(NOT mumps_POPULATED)
   FetchContent_Populate(mumps)

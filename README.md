@@ -59,7 +59,8 @@ For reproducability, benchmarking and other purposes, one may select the version
 cmake -B build -DMUMPS_UPSTREAM_VERSION=5.3.5
 ```
 
-The MUMPS_UPSTREAM_VERSION works for MUMPS >= 4.8.0 at this time.
+The MUMPS_UPSTREAM_VERSION works for MUMPS >= 4.8.0 at this time; only for MUMPS versions in
+[cmake/libraries.json](./cmake/libraries.json).
 
 ## Usage
 

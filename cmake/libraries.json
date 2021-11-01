@@ -7,8 +7,50 @@
     "git": "https://github.com/scivision/scalapack.git",
     "tag": "v2.1.0.28"
   },
+
   "mumps": {
-    "hosts": ["http://mumps.enseeiht.fr/", "http://graal.ens-lyon.fr/"],
+    "4.8.4": {
+      "sha256": "cda022a12ce632ae753dcffc06411b2569647fafa01db947cc6a280d465acb2d",
+      "urls": [
+        "http://mumps.enseeiht.fr/MUMPS_4.8.4.tar.gz",
+        "http://graal.ens-lyon.fr/MUMPS/MUMPS_4.8.4.tar.gz"
+      ]
+    },
+    "4.9.2": {
+      "sha256": "b6e55ed73de6e6a433aa8537d8cd50852c948e5da471d6e72cabcad1a933f38f",
+      "urls": [
+        "http://mumps.enseeiht.fr/MUMPS_4.9.2.tar.gz",
+        "http://graal.ens-lyon.fr/MUMPS/MUMPS_4.9.2.tar.gz"
+      ]
+    },
+    "4.10.0": {
+      "sha256": "d0f86f91a74c51a17a2ff1be9c9cee2338976f13a6d00896ba5b43a5ca05d933",
+      "urls": [
+        "http://mumps.enseeiht.fr/MUMPS_4.10.0.tar.gz",
+        "http://graal.ens-lyon.fr/MUMPS/MUMPS_4.10.0.tar.gz"
+      ]
+    },
+    "5.0.2": {
+      "sha256": "77292b204942640256097a3da482c2abcd1e0d5a74ecd1d4bab0f5ef6e60fe45",
+      "urls": [
+        "http://mumps.enseeiht.fr/MUMPS_5.0.2.tar.gz",
+        "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.0.2.tar.gz"
+      ]
+    },
+    "5.1.2": {
+      "sha256": "eb345cda145da9aea01b851d17e54e7eef08e16bfa148100ac1f7f046cd42ae9",
+      "urls": [
+        "http://mumps.enseeiht.fr/MUMPS_5.1.2.tar.gz",
+        "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.1.2.tar.gz"
+      ]
+    },
+    "5.2.1": {
+      "sha256": "d988fc34dfc8f5eee0533e361052a972aa69cc39ab193e7f987178d24981744a",
+      "urls": [
+        "http://mumps.enseeiht.fr/MUMPS_5.2.1.tar.gz",
+        "http://graal.ens-lyon.fr/MUMPS/MUMPS_5.2.1.tar.gz"
+      ]
+    },
     "5.3.1": {
       "sha256": "774fc9411a3ab4704bc907cb7d30090ce6a65b83cde32549c58d3e9f63594e1a",
       "urls": [

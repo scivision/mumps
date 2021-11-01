@@ -21,10 +21,6 @@ if(NOT MUMPS_UPSTREAM_VERSION)
   set(MUMPS_UPSTREAM_VERSION 5.4.1)
 endif()
 
-if(MUMPS_UPSTREAM_VERSION VERSION_LESS 4.8)
-  message(WARNING "MUMPS >= 4.8 is known to work, you selected MUMPS ${MUMPS_UPSTREAM_VERSION} that may fail to build.")
-endif()
-
 if(CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
   set(EXTPROJ_GENERATOR "Ninja")
 else()
