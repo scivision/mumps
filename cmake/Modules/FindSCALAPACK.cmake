@@ -161,7 +161,11 @@ if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS)
 
   # find MKL MPI binding
   if(WIN32)
-    scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_intelmpi_${_mkl_bitflag}lp64)
+    if(BUILD_SHARED_LIBS)
+      scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64_dll mkl_blacs_${_mkl_bitflag}lp64_dll)
+    else()
+      scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_intelmpi_${_mkl_bitflag}lp64)
+    endif()
   elseif(APPLE)
     scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_mpich_${_mkl_bitflag}lp64)
   else()
