@@ -86,12 +86,13 @@ endif()
 list(APPEND ORDERING_LIBS pord)
 
 install(FILES
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindLAPACK.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindSCALAPACK.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMETIS.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindScotch.cmake
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMUMPS.cmake
-  DESTINATION lib/cmake/${PROJECT_NAME}/Modules)
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindLAPACK.cmake
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindSCALAPACK.cmake
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMETIS.cmake
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindScotch.cmake
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMUMPS.cmake
+DESTINATION cmake
+)
 
 
 # --- MUMPS build

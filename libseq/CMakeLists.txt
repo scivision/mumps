@@ -15,13 +15,14 @@ set_target_properties(mpiseq PROPERTIES
 add_library(MUMPS::MPISEQ INTERFACE IMPORTED GLOBAL)
 target_link_libraries(MUMPS::MPISEQ INTERFACE mpiseq)
 
-install(TARGETS mpiseq EXPORT ${PROJECT_NAME}Targets)
+install(TARGETS mpiseq EXPORT ${PROJECT_NAME}-targets)
 
 install(FILES
-  ${CMAKE_CURRENT_SOURCE_DIR}/elapse.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/mpi.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/mpif.h
-  TYPE INCLUDE)
+${CMAKE_CURRENT_SOURCE_DIR}/elapse.h
+${CMAKE_CURRENT_SOURCE_DIR}/mpi.h
+${CMAKE_CURRENT_SOURCE_DIR}/mpif.h
+TYPE INCLUDE
+)
 
 # so that tests/examples work
 add_library(MPI::MPI_C ALIAS MUMPS::MPISEQ)
