@@ -42,10 +42,7 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 add_library(mumps_common ${COMM_SRC} ${COMM_OTHER_SRC})
 target_link_libraries(mumps_common PRIVATE ${ORDERING_LIBS} ${NUMERIC_LIBS})
-target_include_directories(mumps_common
-PRIVATE ${mumps_SOURCE_DIR}/include
-INTERFACE
-$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+target_include_directories(mumps_common PUBLIC
 $<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include>
 $<INSTALL_INTERFACE:include>
 )
@@ -118,21 +115,21 @@ target_compile_definitions(${a}mumps PRIVATE MUMPS_ARITH=MUMPS_ARITH_${a} ${ORDE
 # if(WIN32)
 #   target_compile_definitions(${a}mumps PRIVATE MUMPS_WIN32)
 # endif()
-target_include_directories(${a}mumps PRIVATE ${mumps_SOURCE_DIR}/include
-  INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
-  $<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+target_include_directories(${a}mumps PUBLIC
+$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include>
+$<INSTALL_INTERFACE:include>
+)
 target_link_libraries(${a}mumps PRIVATE mumps_common ${ORDERING_LIBS} ${NUMERIC_LIBS})
 
 string(TOUPPER ${a} aup)
 
 set_target_properties(${a}mumps PROPERTIES
-  Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include
-  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
-  ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
-  EXPORT_NAME ${aup}MUMPS
-  VERSION ${MUMPS_VERSION})
+Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include
+LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
+ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
+EXPORT_NAME ${aup}MUMPS
+VERSION ${MUMPS_VERSION}
+)
 
 install(TARGETS ${a}mumps EXPORT ${PROJECT_NAME}-targets)
 

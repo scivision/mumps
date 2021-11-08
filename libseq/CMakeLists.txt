@@ -1,14 +1,12 @@
 add_library(mpiseq elapse.c mpi.f mpic.c)
-target_include_directories(mpiseq
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/include
-  INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
-  $<INSTALL_INTERFACE:include>
-  )
+target_include_directories(mpiseq PUBLIC
+"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_CURRENT_BINARY_DIR}/include>"
+$<INSTALL_INTERFACE:include>
+)
 set_target_properties(mpiseq PROPERTIES
-  Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include
-  EXPORT_NAME MPISEQ)
+Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include
+EXPORT_NAME MPISEQ
+)
 
 # target for FetchContent
 # this must NOT be an ALIAS or linking in other packages breaks.

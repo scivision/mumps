@@ -1,11 +1,11 @@
 {
   "lapack": {
     "git": "https://github.com/scivision/lapack.git",
-    "tag": "v3.10.0.2"
+    "tag": "v3.10.0.3"
   },
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
-    "tag": "v2.1.0.28"
+    "tag": "v2.1.0.29"
   },
 
   "mumps": {

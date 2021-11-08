@@ -14,7 +14,8 @@ COMPATIBILITY SameMinorVersion
 
 install(EXPORT ${PROJECT_NAME}-targets
 NAMESPACE ${PROJECT_NAME}::
-DESTINATION cmake)
+DESTINATION cmake
+)
 
 install(FILES
 ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}-config.cmake
