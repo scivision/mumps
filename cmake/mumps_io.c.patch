@@ -1,0 +1,9 @@
+@@ -13,7 +13,7 @@
+  *  https://cecill.info/licences/Licence_CeCILL-C_V1-en.html)
+  *
+  */
+-#include "mumps_io.h"
++#include "mumps_io_patched.h"
+ #include "mumps_io_basic.h"
+ #include "mumps_io_err.h"
+ #include "mumps_c_types.h"

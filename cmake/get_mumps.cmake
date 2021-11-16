@@ -48,10 +48,6 @@ if(NOT mumps_POPULATED)
   FetchContent_Populate(mumps)
 endif()
 
-if(MUMPS_UPSTREAM_VERSION VERSION_EQUAL 5.4.0 OR MUMPS_UPSTREAM_VERSION VERSION_EQUAL 5.4.1)
-  include(${CMAKE_CURRENT_LIST_DIR}/mumps_patch.cmake)
-endif()
-
 # --- dynamic shared library
 set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/lib)
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
