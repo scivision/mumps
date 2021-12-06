@@ -21,7 +21,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    # GitHub Actions windows image doesn't have WSL, so use version without need to patch
-    - run: cmake -B build -Darith=d -Dparallel:BOOL=false "-DMUMPS_UPSTREAM_VERSION=5.3.5"
+    - run: cmake -B build -Darith=d -Dparallel:BOOL=false
     - run: cmake --build build
     - run: ctest --test-dir build --preset default

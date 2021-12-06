@@ -190,7 +190,7 @@ else()
   )
 
   # some systems have libblacs as a separate file, instead of being subsumed in libscalapack.
-  cmake_path(GET SCALAPACK_LIBRARY PARENT_PATH BLACS_ROOT)
+  get_filename_component(BLACS_ROOT ${SCALAPACK_LIBRARY} DIRECTORY)
 
   find_library(BLACS_LIBRARY
     NAMES blacs

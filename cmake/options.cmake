@@ -1,5 +1,5 @@
 option(autobuild "auto-build Lapack and/or Scalapack if missing or broken" true)
-
+option(BUILD_TESTING "build with testing features" true)
 option(dev "developer mode")
 option(parallel "parallel or sequential (non-MPI, non-Scalapack)" ON)
 option(intsize64 "use 64-bit integers in C and Fortran" OFF)
@@ -30,6 +30,12 @@ if(dev)
 else()
   set(FETCHCONTENT_UPDATES_DISCONNECTED_MUMPS true)
   set_directory_properties(PROPERTIES EP_UPDATE_DISCONNECTED true)
+endif()
+
+if(CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
+  set(EXTPROJ_GENERATOR "Ninja")
+else()
+  set(EXTPROJ_GENERATOR ${CMAKE_GENERATOR})
 endif()
 
 

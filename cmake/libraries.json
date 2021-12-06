@@ -5,7 +5,7 @@
   },
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
-    "tag": "v2.1.0.29"
+    "tag": "v2.1.0.30"
   },
 
   "mumps": {
