@@ -12,7 +12,7 @@ configure_file(
 ${PROJECT_SOURCE_DIR}/include/mumps_int_def.h.in
 ${mumps_SOURCE_DIR}/include/mumps_int_def.h @ONLY)
 
-# -- Mumps COMMMON
+# -- Mumps COMMON
 set(COMM_SRC
 "$<$<VERSION_LESS:${MUMPS_UPSTREAM_VERSION},5.0>:mumps_part9.F>"
 "$<$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},5.0>:ana_omp_m.F;double_linked_list.F;fac_asm_build_sort_index_ELT_m.F;fac_asm_build_sort_index_m.F;fac_descband_data_m.F;fac_future_niv2_mod.F;fac_ibct_data_m.F;fac_maprow_data_m.F;front_data_mgt_m.F;mumps_comm_ibcast.F;mumps_l0_omp_m.F;omp_tps_common_m.F>"
