@@ -23,7 +23,7 @@ call DMUMPS(mumps_par)
 ! must set ICNTL after initialization Job= -1 above
 
 mumps_par%icntl(1) = error_unit  ! error messages
-mumps_par%icntl(2) = output_unit !  diagnosic, statistics, and warning messages
+mumps_par%icntl(2) = output_unit !  diagnostic, statistics, and warning messages
 mumps_par%icntl(3) = output_unit ! global info, for the host (myid==0)
 mumps_par%icntl(4) = 1           ! default is 2, this reduces verbosity
 
