@@ -53,7 +53,7 @@ cmake -G "MinGW Makefiles" -B build
 ### MUMPS version selection
 
 The MUMPS version defaults to a recent release.
-For reproducability, benchmarking and other purposes, one may select the version of MUMPS to build like:
+For reproducibility, benchmarking and other purposes, one may select the version of MUMPS to build like:
 
 ```sh
 cmake -B build -DMUMPS_UPSTREAM_VERSION=5.3.5
