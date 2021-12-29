@@ -29,7 +29,7 @@ mumps_par%PAR = 1
 CALL sMUMPS(mumps_par)
 
 mumps_par%icntl(1) = stderr  ! error messages
-mumps_par%icntl(2) = stdout !  diagnosic, statistics, and warning messages
+mumps_par%icntl(2) = stdout !  diagnostic, statistics, and warning messages
 mumps_par%icntl(3) = stdout! ! global info, for the host (myid==0)
 mumps_par%icntl(4) = 1           ! default is 2, this reduces verbosity
 
