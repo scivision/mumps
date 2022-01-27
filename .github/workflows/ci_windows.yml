@@ -21,6 +21,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - run: cmake -B build -Darith=d -Dparallel:BOOL=false
+    - run: cmake -B build -Darith=d -Dparallel:BOOL=false --install-prefix=${HOME}
     - run: cmake --build build
     - run: ctest --test-dir build --preset default
+
+    - name: install package
+      run: cmake --install build
+
+    - name: configure example
+      run: cmake -S examples -B examples/build -DMUMPS_ROOT=${HOME} -Dparallel:BOOL=false
+    - name: build example
+      run: cmake --build examples/build
+    - name: test example
+      run: ctest --test-dir examples/build --output-on-failure

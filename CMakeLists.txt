@@ -100,9 +100,6 @@ add_subdirectory(${mumps_SOURCE_DIR}/src ${mumps_BINARY_DIR}/src)
 
 if(BUILD_TESTING)
   add_subdirectory(tests)
-
-  configure_file(examples/CMakeLists.txt ${mumps_SOURCE_DIR}/examples/ COPYONLY)
-  add_subdirectory(${mumps_SOURCE_DIR}/examples ${mumps_BINARY_DIR}/examples)
 endif()
 
 
