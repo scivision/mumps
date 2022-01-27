@@ -43,11 +43,17 @@ foreach(a s d)
 
   add_executable(${a}simpletest ${a}simpletest.F)
   target_link_libraries(${a}simpletest PRIVATE MUMPS::MUMPS
-  SCALAPACK::SCALAPACK LAPACK::LAPACK
-  MPI::MPI_Fortran MPI::MPI_C
+  LAPACK::LAPACK
   )
+  if(parallel)
+    target_link_libraries(${a}simpletest PRIVATE SCALAPACK::SCALAPACK MPI::MPI_Fortran MPI::MPI_C)
+  else()
+    target_link_libraries(${a}simpletest PRIVATE MUMPS::MPISEQ)
+  endif()
 
-  add_test(NAME mumps:example_${a} COMMAND ${CMAKE_COMMAND} -Dexe:FILEPATH=$<TARGET_FILE:${a}simpletest> -Din:PATH=${CMAKE_CURRENT_SOURCE_DIR}/${_${a}filename} -P ${PROJECT_SOURCE_DIR}/run_ex.cmake)
+  add_test(NAME mumps:example_${a}
+  COMMAND ${CMAKE_COMMAND} -Dparallel:BOOL=${parallel} -Dexe:FILEPATH=$<TARGET_FILE:${a}simpletest> -Din:PATH=${CMAKE_CURRENT_SOURCE_DIR}/${_${a}filename} -P ${PROJECT_SOURCE_DIR}/run_ex.cmake
+  )
   set_tests_properties(mumps:example_${a} PROPERTIES
   RESOURCE_LOCK cpu_mpi
   TIMEOUT 10
@@ -56,11 +62,17 @@ foreach(a s d)
   if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
     add_executable(${a}simpletest_save_restore ${a}simpletest_save_restore.F)
     target_link_libraries(${a}simpletest_save_restore PRIVATE MUMPS::MUMPS
-    SCALAPACK::SCALAPACK LAPACK::LAPACK
-    MPI::MPI_Fortran MPI::MPI_C
+    LAPACK::LAPACK
     )
+    if(parallel)
+      target_link_libraries(${a}simpletest_save_restore PRIVATE SCALAPACK::SCALAPACK MPI::MPI_Fortran MPI::MPI_C)
+    else()
+      target_link_libraries(${a}simpletest_save_restore PRIVATE MUMPS::MPISEQ)
+    endif()
 
-    add_test(NAME mumps:saveRestore_${a} COMMAND ${CMAKE_COMMAND} -Dexe:FILEPATH=$<TARGET_FILE:${a}simpletest_save_restore> -Din:PATH=${CMAKE_CURRENT_SOURCE_DIR}/${_${a}filename} -P ${PROJECT_SOURCE_DIR}/run_ex.cmake)
+    add_test(NAME mumps:saveRestore_${a}
+    COMMAND ${CMAKE_COMMAND} -Dparallel:BOOL=${parallel} -Dexe:FILEPATH=$<TARGET_FILE:${a}simpletest_save_restore> -Din:PATH=${CMAKE_CURRENT_SOURCE_DIR}/${_${a}filename} -P ${PROJECT_SOURCE_DIR}/run_ex.cmake
+    )
     set_tests_properties(mumps:saveRestore_${a} PROPERTIES
     RESOURCE_LOCK cpu_mpi
     TIMEOUT 10
@@ -72,10 +84,14 @@ endforeach()
 if(d IN_LIST arith)
   add_executable(c_example c_example.c)
   target_link_libraries(c_example PRIVATE MUMPS::MUMPS
-  SCALAPACK::SCALAPACK LAPACK::LAPACK
-  MPI::MPI_Fortran MPI::MPI_C
+  LAPACK::LAPACK
   )
   set_target_properties(c_example PROPERTIES LINKER_LANGUAGE Fortran)
+  if(parallel)
+    target_link_libraries(c_example PRIVATE SCALAPACK::SCALAPACK MPI::MPI_Fortran MPI::MPI_C)
+  else()
+    target_link_libraries(c_example PRIVATE MUMPS::MPISEQ)
+  endif()
 
   if(parallel)
     add_test(NAME mumps:example_C
