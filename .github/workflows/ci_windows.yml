@@ -2,6 +2,7 @@ name: ci_windows
 
 env:
   CMAKE_BUILD_TYPE: Release
+  CMAKE_GENERATOR: Ninja
 
 on:
   push:
@@ -15,10 +16,23 @@ jobs:
 
   windows:
     runs-on: windows-latest
-    env:
-      CMAKE_GENERATOR: "MinGW Makefiles"
+    timeout-minutes: 15
 
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
+    - uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          git
+          mingw-w64-x86_64-cmake
+          mingw-w64-x86_64-ninja
+          mingw-w64-x86_64-gcc-fortran
+          mingw-w64-x86_64-lapack
+    # cmake install needed because of default to msys2 shell
+
     - uses: actions/checkout@v2
 
     - run: cmake -B build -Darith=d -Dparallel:BOOL=false --install-prefix=${HOME}
