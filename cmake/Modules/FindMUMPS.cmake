@@ -146,6 +146,23 @@ if(NOT MUMPS_INCLUDE_DIR)
   return()
 endif()
 
+# get Mumps version
+find_file(mumps_conf
+NAMES smumps_c.h
+HINTS ${MUMPS_INCLUDE_DIR}
+NO_DEFAULT_PATH
+DOC "MUMPS configuration header"
+)
+
+if(mumps_conf)
+  file(STRINGS ${mumps_conf} _def
+  REGEX "^[ \t]*#[ \t]*define[ \t]+MUMPS_VERSION[ \t]+" )
+
+  if("${_def}" MATCHES "MUMPS_VERSION[ \t]+\"([0-9]+\\.[0-9]+\\.[0-9]+)?\"")
+    set(MUMPS_VERSION "${CMAKE_MATCH_1}" PARENT_SCOPE)
+  endif()
+endif()
+
 # --- Mumps Common ---
 if(DEFINED ENV{MKLROOT})
   find_library(MUMPS_COMMON
@@ -306,7 +323,9 @@ set(CMAKE_REQUIRED_LIBRARIES)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MUMPS
 REQUIRED_VARS MUMPS_LIBRARY MUMPS_INCLUDE_DIR MUMPS_links
+VERSION_VAR MUMPS_VERSION
 HANDLE_COMPONENTS
+HANDLE_VERSION_RANGE
 )
 
 if(MUMPS_FOUND)
