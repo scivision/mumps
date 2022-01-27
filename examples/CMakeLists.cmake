@@ -10,7 +10,8 @@ foreach(a s d)
 
   add_executable(${a}simpletest ${a}simpletest.F)
   target_link_libraries(${a}simpletest PRIVATE MUMPS::MUMPS
-  SCALAPACK::SCALAPACK LAPACK::LAPACK MPI::MPI_Fortran
+  SCALAPACK::SCALAPACK LAPACK::LAPACK
+  MPI::MPI_Fortran MPI::MPI_C
   )
 
   add_test(NAME mumps:example_${a} COMMAND ${CMAKE_COMMAND} -Dexe:FILEPATH=$<TARGET_FILE:${a}simpletest> -Din:PATH=${CMAKE_CURRENT_SOURCE_DIR}/${_${a}filename} -P ${PROJECT_SOURCE_DIR}/run_ex.cmake)
@@ -22,7 +23,8 @@ foreach(a s d)
   if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
     add_executable(${a}simpletest_save_restore ${a}simpletest_save_restore.F)
     target_link_libraries(${a}simpletest_save_restore PRIVATE MUMPS::MUMPS
-    SCALAPACK::SCALAPACK LAPACK::LAPACK MPI::MPI_Fortran
+    SCALAPACK::SCALAPACK LAPACK::LAPACK
+    MPI::MPI_Fortran MPI::MPI_C
     )
 
     add_test(NAME mumps:saveRestore_${a} COMMAND ${CMAKE_COMMAND} -Dexe:FILEPATH=$<TARGET_FILE:${a}simpletest_save_restore> -Din:PATH=${CMAKE_CURRENT_SOURCE_DIR}/${_${a}filename} -P ${PROJECT_SOURCE_DIR}/run_ex.cmake)
@@ -37,7 +39,8 @@ endforeach()
 if(d IN_LIST arith)
   add_executable(c_example c_example.c)
   target_link_libraries(c_example PRIVATE MUMPS::MUMPS
-  SCALAPACK::SCALAPACK LAPACK::LAPACK MPI::MPI_C
+  SCALAPACK::SCALAPACK LAPACK::LAPACK
+  MPI::MPI_Fortran MPI::MPI_C
   )
   set_target_properties(c_example PROPERTIES LINKER_LANGUAGE Fortran)
 

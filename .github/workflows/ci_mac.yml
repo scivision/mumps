@@ -37,6 +37,6 @@ jobs:
     - name: configure example
       run: cmake -S examples -B examples/build -DMUMPS_ROOT=${HOME}
     - name: build example
-      run: cmake --build examples/build
+      run: cmake --build examples/build || cmake --build examples/build -v
     - name: test example
       run: ctest --test-dir examples/build --output-on-failure
