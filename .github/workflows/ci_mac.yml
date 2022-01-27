@@ -1,8 +1,8 @@
 name: ci_mac
 env:
-  CMAKE_BUILD_PARALLEL_LEVEL: 3
   HOMEBREW_NO_INSTALL_CLEANUP: 1
   CMAKE_BUILD_TYPE: Release
+  CMAKE_GENERATOR: Ninja
   FC: gfortran-11
 
 on:
@@ -21,12 +21,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - run: brew install gcc lapack scalapack open-mpi
+    - run: brew install ninja gcc lapack scalapack open-mpi
 
     - name: configure release
       run: cmake -B build -Darith=d --install-prefix=${HOME}
     - name: build release
-      run: cmake --build build
+      run: cmake --build build --parallel
     - name: test release
       run: ctest --test-dir build --preset default
 

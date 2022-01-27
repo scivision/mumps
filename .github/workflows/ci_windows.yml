@@ -22,7 +22,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - run: cmake -B build -Darith=d -Dparallel:BOOL=false --install-prefix=${HOME}
-    - run: cmake --build build
+    - run: cmake --build build --parallel
     - run: ctest --test-dir build --preset default
 
     - name: install package
