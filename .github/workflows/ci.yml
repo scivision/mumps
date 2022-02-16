@@ -19,7 +19,7 @@ on:
 
 jobs:
 
-  cmakeScotchMetis:
+  static-scotch:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
     - name: Install prereqs
       run: |
         sudo apt update -yq
-        sudo apt install -yq --no-install-recommends ninja-build gfortran libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev libmetis-dev libscotch-dev
+        sudo apt install -yq --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev libmetis-dev libscotch-dev
 
     - name: configure release
       run: cmake -B build -Darith=d -Dscotch:BOOL=true --install-prefix=${HOME}
@@ -46,8 +46,7 @@ jobs:
     - name: test example
       run: ctest --test-dir examples/build --output-on-failure
 
-
-  mumps_intsize64:
+  shared-scotch:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -55,7 +54,34 @@ jobs:
     - name: Install prereqs
       run: |
         sudo apt update -yq
-        sudo apt install -yq --no-install-recommends ninja-build gfortran libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev
+        sudo apt install -yq --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev libmetis-dev libscotch-dev
+
+    - name: configure release
+      run: cmake -B build -Darith=d -Dscotch:BOOL=true --install-prefix=${HOME} -DBUILD_SHARED_LIBS:BOOL=on
+    - name: build release
+      run: cmake --build build
+    - name: test release
+      run: ctest --test-dir build --preset default
+
+    - name: install package
+      run: cmake --install build
+
+    - name: configure example
+      run: cmake -S examples -B examples/build -DMUMPS_ROOT=${HOME} -DBUILD_SHARED_LIBS:BOOL=on
+    - name: build example
+      run: cmake --build examples/build || cmake --build examples/build -v
+    - name: test example
+      run: ctest --test-dir examples/build --output-on-failure
+
+  intsize64:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install prereqs
+      run: |
+        sudo apt update -yq
+        sudo apt install -yq --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev
 
     - run: cmake -B build -Dintsize64:BOOL=yes -Darith=d
     - run: cmake --build build
