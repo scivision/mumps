@@ -14,7 +14,7 @@ endif()
 
 # --- compiler check
 
-add_compile_definitions(CDEFS "Add_")
+add_compile_definitions(Add_)
 # "Add_" works for all modern compilers we tried.
 
 if(MSVC)
