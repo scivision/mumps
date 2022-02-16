@@ -1,7 +1,6 @@
 name: ci_build
 
 env:
-  CTEST_PARALLEL_LEVEL: 3
   CMAKE_BUILD_TYPE: Release
 
 on:
@@ -23,10 +22,10 @@ jobs:
     - name: Install prereqs
       run: |
         sudo apt update -yq
-        sudo apt install -yq --no-install-recommends gfortran libopenmpi-dev openmpi-bin
+        sudo apt install -yq --no-install-recommends libopenmpi-dev openmpi-bin
 
 
-    - run: cmake -B build -Darith=d --install-prefix=${HOME}
+    - run: cmake -B build -Darith=d -Dautobuild:BOOL=on --install-prefix=${HOME}
     - run: cmake --build build --parallel
     - run: ctest --test-dir build --preset default
 
