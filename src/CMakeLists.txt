@@ -48,7 +48,7 @@ mumps_common.c mumps_io_basic.c mumps_io_thread.c mumps_io_err.c # mumps_io.c
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 add_library(mumps_common ${COMM_SRC} ${COMM_OTHER_SRC})
-target_link_libraries(mumps_common PRIVATE ${ORDERING_LIBS} ${NUMERIC_LIBS})
+target_link_libraries(mumps_common PUBLIC ${ORDERING_LIBS} ${NUMERIC_LIBS})
 target_include_directories(mumps_common PUBLIC
 "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${mumps_SOURCE_DIR}/include>"
 $<INSTALL_INTERFACE:include>
@@ -127,7 +127,7 @@ target_include_directories(${a}mumps PUBLIC
 $<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include>
 $<INSTALL_INTERFACE:include>
 )
-target_link_libraries(${a}mumps PRIVATE mumps_common ${ORDERING_LIBS} ${NUMERIC_LIBS})
+target_link_libraries(${a}mumps PUBLIC mumps_common)
 
 string(TOUPPER ${a} aup)
 
@@ -165,7 +165,7 @@ TYPE INCLUDE
 # It knows all the include directories.
 
 add_library(MUMPS INTERFACE)
-target_link_libraries(MUMPS INTERFACE ${_ifc_libs} mumps_common pord
+target_link_libraries(MUMPS INTERFACE ${_ifc_libs}
 $<$<NOT:$<BOOL:${parallel}>>:mpiseq>
 )
 
