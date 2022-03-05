@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19...3.23)
+cmake_minimum_required(VERSION 3.20...3.23)
 
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(NOT is_multi_config AND NOT (CMAKE_BUILD_TYPE OR DEFINED ENV{CMAKE_BUILD_TYPE}))
@@ -18,7 +18,7 @@ HOMEPAGE_URL "http://mumps-solver.org/"
 enable_testing()
 
 if(NOT MUMPS_UPSTREAM_VERSION)
-  set(MUMPS_UPSTREAM_VERSION 5.3.5)
+  set(MUMPS_UPSTREAM_VERSION 5.4.1)
 endif()
 
 if(MSVC AND BUILD_SHARED_LIBS)

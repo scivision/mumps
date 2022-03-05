@@ -7,13 +7,26 @@
 #     Apply patch_file to in_file via GNU Patch.
 
 if(WIN32)
-  find_package(Msys)
-  if(MSYS_INSTALL_PATH)
+  find_package(Git QUIET)
+  if(Git_FOUND)
+    cmake_path(GET GIT_EXECUTABLE PARENT_PATH GIT_CMD_PATH)
+    cmake_path(GET GIT_CMD_PATH PARENT_PATH GIT_INSTALL_PATH)
     find_program(PATCH
     NAMES patch
-    HINTS ${MSYS_INSTALL_PATH}
-    PATH_SUFFIXES bin usr/bin
+    HINTS ${GIT_INSTALL_PATH}
+    PATH_SUFFIXES usr/bin
     )
+  endif()
+
+  if(NOT PATCH)
+    find_package(Msys QUIET)
+    if(MSYS_INSTALL_PATH)
+      find_program(PATCH
+      NAMES patch
+      HINTS ${MSYS_INSTALL_PATH}
+      PATH_SUFFIXES bin usr/bin
+      )
+    endif()
   endif()
 
   if(NOT PATCH)
