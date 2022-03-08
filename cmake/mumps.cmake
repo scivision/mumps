@@ -22,8 +22,8 @@ if(NOT mumps_external AND CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
   endif()
 
   if(MUMPS_HAVE_Scotch)
-    find_package(Scotch COMPONENTS parallel ESMUMPS REQUIRED)
-    find_package(METIS COMPONENTS parallel REQUIRED)
+    find_package(Scotch COMPONENTS ESMUMPS REQUIRED)
+    find_package(METIS REQUIRED)
   endif()
 
   if(MUMPS_HAVE_OPENMP)

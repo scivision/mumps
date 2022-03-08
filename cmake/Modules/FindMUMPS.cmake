@@ -65,18 +65,10 @@ endfunction(mumps_openmp_check)
 function(mumps_scotch_check)
 
 # check if Scotch linked
-if(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
-  find_package(Scotch COMPONENTS ESMUMPS)
-  # METIS is required when using Scotch
-  if(Scotch_FOUND)
-    find_package(METIS)
-  endif()
-else()
-  find_package(Scotch COMPONENTS parallel ESMUMPS)
-  # METIS is required when using Scotch
-  if(Scotch_FOUND)
-    find_package(METIS COMPONENTS parallel)
-  endif()
+find_package(Scotch COMPONENTS ESMUMPS)
+# METIS is required when using Scotch
+if(Scotch_FOUND)
+  find_package(METIS)
 endif()
 
 if(NOT METIS_FOUND)
