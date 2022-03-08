@@ -312,7 +312,7 @@ foreach(c IN LISTS MUMPS_FIND_COMPONENTS)
   endif()
 
   if(NOT MUMPS_${c}_lib)
-    return()
+    continue()
   endif()
 
   list(APPEND MUMPS_LIBRARY ${MUMPS_${c}_lib})
