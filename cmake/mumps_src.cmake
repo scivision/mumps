@@ -4,6 +4,12 @@
 
 include(FetchContent)
 
+set(FETCHCONTENT_QUIET no)
+
+if(NOT MUMPS_UPSTREAM_VERSION)
+  message(FATAL_ERROR "please specify MUMPS_UPSTREAM_VERSION")
+endif()
+
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 
 set(mumps_urls)
@@ -16,27 +22,17 @@ foreach(i RANGE ${N})
   list(APPEND mumps_urls ${_u})
 endforeach()
 
-string(JSON mumps_sha256 GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} sha256)
-
-
-if(NOT MUMPS_UPSTREAM_VERSION)
-  message(FATAL_ERROR "please specify MUMPS_UPSTREAM_VERSION")
-endif()
-
-
-set(FETCHCONTENT_QUIET no)
-
 if(NOT mumps_urls)
   message(FATAL_ERROR "unknown MUMPS_UPSTREAM_VERSION ${MUMPS_UPSTREAM_VERSION}.
   Make a GitHub issue to request this in ${CMAKE_CURRENT_LIST_DIR}/libraries.json
   ")
 endif()
 
+string(JSON mumps_sha256 GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} sha256)
+
 FetchContent_Declare(mumps
 URL ${mumps_urls}
 URL_HASH SHA256=${mumps_sha256}
-SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/../cache/MUMPS-${MUMPS_UPSTREAM_VERSION}-src
-SUBBUILD_DIR ${CMAKE_CURRENT_LIST_DIR}/../cache/MUMPS-${MUMPS_UPSTREAM_VERSION}-subbuild
 INACTIVITY_TIMEOUT 15
 )
 

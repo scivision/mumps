@@ -31,8 +31,8 @@ endif()
 include(cmake/options.cmake)
 include(cmake/compilers.cmake)
 
-# --- download MUMPS
-include(cmake/get_mumps.cmake)
+# --- download MUMPS source
+include(cmake/mumps_src.cmake)
 
 # --- dependencies
 find_package(Threads)
