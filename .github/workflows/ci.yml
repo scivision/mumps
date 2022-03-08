@@ -20,14 +20,14 @@ on:
 
 jobs:
 
-  scotch:
+  linux_mac:
     timeout-minutes: 15
 
     strategy:
       matrix:
         shared: [true, false]
         img: [ {os: ubuntu-latest, fc: gfortran, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev libmetis-dev libscotch-dev},
-               {os: macos-latest, fc: gfortran-11, cmd: brew install ninja gcc lapack scalapack open-mpi scotch metis}
+               {os: macos-latest, fc: gfortran-11, cmd: brew install ninja gcc lapack scalapack open-mpi}
         ]
 
     runs-on: ${{ matrix.img.os }}
@@ -40,8 +40,14 @@ jobs:
     - name: Install prereqs
       run: ${{ matrix.img.cmd }}
 
-    - name: configure release
+    - name: configure with scotch
+      if: runner.os == 'Linux'
       run: cmake -B build -Darith=d -Dscotch:BOOL=true --install-prefix=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+
+    - name: configure without scotch
+      if: runner.os == 'macOS'
+      run: cmake -B build -Darith=d -Dscotch:BOOL=false --install-prefix=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+
     - name: build release
       run: cmake --build build
     - name: test release
@@ -78,7 +84,7 @@ jobs:
 
 
   linux-build:
-    needs: scotch
+    needs: linux_mac
     runs-on: ubuntu-latest
 
     steps:

@@ -35,7 +35,7 @@ jobs:
 
     - uses: actions/checkout@v2
 
-    - run: cmake -B build -Darith=d -Dparallel:BOOL=false --install-prefix=${{ runner.temp }}
+    - run: cmake -B build -Darith=d -Dparallel:BOOL=false -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}
     - run: cmake --build build --parallel
     - run: ctest --test-dir build --preset default
 
