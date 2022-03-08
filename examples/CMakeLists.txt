@@ -100,7 +100,7 @@ if(d IN_LIST arith)
     add_test(NAME mumps:example_C
       COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:c_example>)
   else()
-    add_test(NAME mumps:example_C COMMAND $<TARGET_FILE:c_example>)
+    add_test(NAME mumps:example_C COMMAND c_example)
   endif()
   set_tests_properties(mumps:example_C PROPERTIES
   RESOURCE_LOCK cpu_mpi
