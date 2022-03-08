@@ -81,8 +81,8 @@ list(APPEND CMAKE_REQUIRED_LIBRARIES ${Scotch_LIBRARIES} ${METIS_LIBRARIES})
 check_source_compiles(Fortran
 "program test_scotch
 implicit none (type, external)
-external :: mumps_dgraphinit
-call mumps_dgraphinit()
+external :: mumps_scotch
+call mumps_scotch()
 end program"
 MUMPS_HAVE_Scotch
 )
