@@ -173,14 +173,9 @@ if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS)
 
 else()
 
-  find_package(PkgConfig)
-
-  pkg_search_module(pc_scalapack scalapack scalapack-openmpi scalapack-mpich)
-
   find_library(SCALAPACK_LIBRARY
   NAMES scalapack scalapack-openmpi scalapack-mpich
   NAMES_PER_DIR
-  HINTS ${pc_scalapack_LIBRARY_DIRS} ${pc_scalapack_LIBDIR}
   PATH_SUFFIXES openmpi/lib mpich/lib
   )
 

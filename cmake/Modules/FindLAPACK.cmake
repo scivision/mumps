@@ -86,36 +86,30 @@ unset(LAPACK_INCLUDE_DIR)
 function(atlas_libs)
 
 find_library(ATLAS_LIB
-  NAMES atlas
-  PATH_SUFFIXES atlas)
-
-pkg_check_modules(pc_atlas_lapack lapack-atlas)
+NAMES atlas
+PATH_SUFFIXES atlas
+)
 
 find_library(LAPACK_ATLAS
-  NAMES ptlapack lapack_atlas lapack
-  NAMES_PER_DIR
-  PATH_SUFFIXES atlas
-  HINTS ${pc_atlas_lapack_LIBRARY_DIRS} ${pc_atlas_lapack_LIBDIR})
-
-pkg_check_modules(pc_atlas_blas blas-atlas)
+NAMES ptlapack lapack_atlas lapack
+NAMES_PER_DIR
+PATH_SUFFIXES atlas
+)
 
 find_library(BLAS_LIBRARY
 NAMES ptf77blas f77blas blas
 NAMES_PER_DIR
 PATH_SUFFIXES atlas
-HINTS ${pc_atlas_blas_LIBRARY_DIRS} ${pc_atlas_blas_LIBDIR}
 )
 # === C ===
 find_library(BLAS_C_ATLAS
 NAMES ptcblas cblas
 NAMES_PER_DIR
 PATH_SUFFIXES atlas
-HINTS ${pc_atlas_blas_LIBRARY_DIRS} ${pc_atlas_blas_LIBDIR}
 )
 
 find_path(LAPACK_INCLUDE_DIR
 NAMES cblas-atlas.h cblas.h clapack.h
-HINTS ${pc_atlas_blas_INCLUDE_DIRS} ${pc_atlas_blas_LIBDIR}
 )
 
 #===========
@@ -153,29 +147,23 @@ if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
   set(LAPACK_LAPACK95_FOUND true PARENT_SCOPE)
 endif(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
 
-
-pkg_search_module(pc_lapack lapack-netlib lapack)
-
 find_library(LAPACK_LIBRARY
   NAMES lapack
-  HINTS ${pc_lapack_LIBRARY_DIRS} ${pc_lapack_LIBDIR}
   PATH_SUFFIXES lapack lapack/lib)
 if(NOT LAPACK_LIBRARY)
   return()
 endif()
 
 if(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
-  pkg_check_modules(pc_lapacke lapacke)
+
   find_library(LAPACKE_LIBRARY
   NAMES lapacke
-  HINTS ${pc_lapacke_LIBRARY_DIRS} ${pc_lapacke_LIBDIR}
   PATH_SUFFIXES lapack lapack/lib
   )
 
   # lapack/include for Homebrew
   find_path(LAPACKE_INCLUDE_DIR
   NAMES lapacke.h
-  HINTS ${pc_lapacke_INCLUDE_DIRS} ${pc_lapacke_LIBDIR}
   PATH_SUFFIXES lapack lapack/include
   )
   if(NOT (LAPACKE_LIBRARY AND LAPACKE_INCLUDE_DIR))
@@ -188,13 +176,11 @@ if(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
   mark_as_advanced(LAPACKE_LIBRARY LAPACKE_INCLUDE_DIR)
 endif(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
 
-pkg_search_module(pc_blas blas-netlib blas)
 # Netlib on Cygwin and others
 
 find_library(BLAS_LIBRARY
 NAMES refblas blas
 NAMES_PER_DIR
-HINTS ${pc_blas_LIBRARY_DIRS} ${pc_blas_LIBDIR}
 PATH_SUFFIXES lapack lapack/lib blas
 )
 
@@ -214,24 +200,19 @@ endfunction(netlib_libs)
 #===============================
 function(openblas_libs)
 
-pkg_check_modules(pc_lapack lapack-openblas)
 find_library(LAPACK_LIBRARY
 NAMES lapack
-HINTS ${pc_lapack_LIBRARY_DIRS} ${pc_lapack_LIBDIR}
 PATH_SUFFIXES openblas
 )
 
-pkg_check_modules(pc_blas blas-openblas)
 find_library(BLAS_LIBRARY
 NAMES openblas blas
 NAMES_PER_DIR
-HINTS ${pc_blas_LIBRARY_DIRS} ${pc_blas_LIBDIR}
 PATH_SUFFIXES openblas
 )
 
 find_path(LAPACK_INCLUDE_DIR
 NAMES cblas-openblas.h cblas.h f77blas.h openblas_config.h
-HINTS ${pc_lapack_INCLUDE_DIRS}
 )
 
 if(NOT (LAPACK_LIBRARY AND BLAS_LIBRARY))
@@ -268,7 +249,6 @@ foreach(s ${_mkl_libs})
   NAMES ${s}
   PATHS ${MKLROOT}
   PATH_SUFFIXES lib/intel64
-  HINTS ${pc_mkl_LIBRARY_DIRS} ${pc_mkl_LIBDIR}
   NO_DEFAULT_PATH
   )
 
@@ -307,7 +287,6 @@ if(NOT (OpenBLAS IN_LIST LAPACK_FIND_COMPONENTS
   endif()
 endif()
 
-find_package(PkgConfig)
 find_package(Threads)
 
 # ==== generic MKL variables ====
@@ -316,8 +295,6 @@ if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
   # we have to sanitize MKLROOT if it has Windows backslashes (\) otherwise it will break at build time
   # double-quotes are necessary per CMake to_cmake_path docs.
   file(TO_CMAKE_PATH "$ENV{MKLROOT}" MKLROOT)
-
-  list(APPEND CMAKE_PREFIX_PATH ${MKLROOT}/tools/pkgconfig)
 
   if(BUILD_SHARED_LIBS)
     set(_mkltype dynamic)
@@ -347,8 +324,6 @@ if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
     list(APPEND _mkl_libs mkl_tbb_thread mkl_core)
     set(_tbb tbb stdc++)
   elseif(OpenMP IN_LIST LAPACK_FIND_COMPONENTS)
-    pkg_check_modules(pc_mkl mkl-${_mkltype}-${_mkl_bitflag}lp64-iomp)
-
     set(_mp iomp5)
     if(WIN32)
       set(_mp libiomp5md)
@@ -359,7 +334,6 @@ if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
       list(APPEND _mkl_libs mkl_intel_thread mkl_core ${_mp})
     endif()
   else()
-    pkg_check_modules(pc_mkl mkl-${_mkltype}-${_mkl_bitflag}lp64-seq)
     if(WIN32 AND BUILD_SHARED_LIBS)
       list(APPEND _mkl_libs mkl_sequential_dll mkl_core_dll)
     else()
