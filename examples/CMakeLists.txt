@@ -19,12 +19,15 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR} CACHE PATH "Install top-level directory" FORCE)
 endif()
 
+find_package(LAPACK REQUIRED)
+
 if(parallel)
   find_package(MPI COMPONENTS C Fortran REQUIRED)
   find_package(SCALAPACK REQUIRED)
+  find_package(MUMPS)
+else()
+  find_package(MUMPS COMPONENTS mpiseq)
 endif()
-
-find_package(LAPACK REQUIRED)
 
 if(NOT MUMPS_FOUND)
   include(${PROJECT_SOURCE_DIR}/../cmake/mumps.cmake)
