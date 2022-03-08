@@ -29,6 +29,10 @@ jobs:
         img: [ {os: ubuntu-latest, fc: gfortran, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev libmetis-dev libscotch-dev},
                {os: macos-latest, fc: gfortran-11, cmd: brew install ninja gcc lapack scalapack open-mpi}
         ]
+        exclude:
+          - shared: true
+            img: {os: macos-latest}
+
 
     runs-on: ${{ matrix.img.os }}
     env:
