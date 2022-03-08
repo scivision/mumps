@@ -1,8 +1,6 @@
 # MUMPS sparse solver
 
-![ci_build](https://github.com/scivision/mumps-cmake/workflows/ci_build/badge.svg)
 ![ci](https://github.com/scivision/mumps-cmake/workflows/ci/badge.svg)
-![ci_mac](https://github.com/scivision/mumps-cmake/workflows/ci_mac/badge.svg)
 ![ci_windows](https://github.com/scivision/mumps-cmake/workflows/ci_windows/badge.svg)
 [![intel-oneapi](https://github.com/gemini3d/gemini3d/actions/workflows/intel-oneapi.yml/badge.svg)](https://github.com/gemini3d/gemini3d/actions/workflows/intel-oneapi.yml)
 

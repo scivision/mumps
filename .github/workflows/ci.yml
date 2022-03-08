@@ -3,6 +3,7 @@ name: ci
 env:
   CMAKE_BUILD_TYPE: Release
   CMAKE_GENERATOR: Ninja
+  HOMEBREW_NO_INSTALL_CLEANUP: 1
 
 on:
   push:
@@ -19,18 +20,28 @@ on:
 
 jobs:
 
-  static-scotch:
-    runs-on: ubuntu-latest
+  scotch:
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        shared: [true, false]
+        img: [ {os: ubuntu-latest, fc: gfortran, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev libmetis-dev libscotch-dev},
+               {os: macos-latest, fc: gfortran-11, cmd: brew install ninja gcc lapack scalapack open-mpi scotch metis}
+        ]
+
+    runs-on: ${{ matrix.img.os }}
+    env:
+      FC: ${{ matrix.img.fc }}
+
     steps:
     - uses: actions/checkout@v2
 
     - name: Install prereqs
-      run: |
-        sudo apt update -yq
-        sudo apt install -yq --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev libmetis-dev libscotch-dev
+      run: ${{ matrix.img.cmd }}
 
     - name: configure release
-      run: cmake -B build -Darith=d -Dscotch:BOOL=true --install-prefix=${HOME}
+      run: cmake -B build -Darith=d -Dscotch:BOOL=true --install-prefix=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
     - name: build release
       run: cmake --build build
     - name: test release
@@ -40,51 +51,47 @@ jobs:
       run: cmake --install build
 
     - name: configure example
-      run: cmake -S examples -B examples/build -DMUMPS_ROOT=${HOME}
+      run: cmake -S examples -B examples/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
     - name: build example
       run: cmake --build examples/build || cmake --build examples/build -v
     - name: test example
-      run: ctest --test-dir examples/build --output-on-failure
+      run: ctest --test-dir examples/build -V
 
-  shared-scotch:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Install prereqs
-      run: |
-        sudo apt update -yq
-        sudo apt install -yq --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev libmetis-dev libscotch-dev
-
-    - name: configure release
-      run: cmake -B build -Darith=d -Dscotch:BOOL=true --install-prefix=${HOME} -DBUILD_SHARED_LIBS:BOOL=on
-    - name: build release
-      run: cmake --build build
-    - name: test release
-      run: ctest --test-dir build --preset default
-
-    - name: install package
-      run: cmake --install build
-
-    - name: configure example
-      run: cmake -S examples -B examples/build -DMUMPS_ROOT=${HOME} -DBUILD_SHARED_LIBS:BOOL=on
-    - name: build example
-      run: cmake --build examples/build || cmake --build examples/build -v
-    - name: test example
-      run: ctest --test-dir examples/build --output-on-failure
 
   intsize64:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
     - uses: actions/checkout@v2
 
     - name: Install prereqs
       run: |
-        sudo apt update -yq
-        sudo apt install -yq --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev
+        sudo apt update
+        sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev
 
     - run: cmake -B build -Dintsize64:BOOL=yes -Darith=d
     - run: cmake --build build
+    - run: ctest --test-dir build --preset default
+
+    - run: cmake --install build
+
+
+  linux-build:
+    needs: scotch
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install prereqs
+      run: |
+        sudo apt update
+        sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin
+
+
+    - run: cmake -B build -Darith=d -Dautobuild:BOOL=on --install-prefix=${{ runner.temp }}
+    - run: cmake --build build --parallel
     - run: ctest --test-dir build --preset default
 
     - run: cmake --install build
