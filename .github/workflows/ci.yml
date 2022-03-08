@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         shared: [true, false]
-        img: [ {os: ubuntu-latest, fc: gfortran, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev libmetis-dev libscotch-dev},
+        img: [ {os: ubuntu-latest, fc: gfortran, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev},
                {os: macos-latest, fc: gfortran-11, cmd: brew install gcc lapack scalapack open-mpi}
         ]
         exclude:
@@ -43,13 +43,12 @@ jobs:
     - name: Install prereqs
       run: ${{ matrix.img.cmd }}
 
-    - name: configure with scotch
-      if: runner.os == 'Linux'
-      run: cmake -B build -Darith=d -Dscotch:BOOL=true --install-prefix=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+    # - name: configure with scotch
+    #   if: runner.os == 'Linux'
+    #   run: cmake -B build -Darith=d -Dscotch:BOOL=true --install-prefix=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
-    - name: configure without scotch
-      if: runner.os == 'macOS'
-      run: cmake -B build -Darith=d -Dscotch:BOOL=false --install-prefix=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+    - name: configure
+      run: cmake -B build -Darith=d --install-prefix=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
     - name: build release
       run: cmake --build build
@@ -87,7 +86,6 @@ jobs:
 
 
   linux-build:
-    needs: linux_mac
     runs-on: ubuntu-latest
 
     steps:
