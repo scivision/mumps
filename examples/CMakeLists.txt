@@ -17,11 +17,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR} CACHE PATH "Install top-level directory" FORCE)
 endif()
 
-find_package(LAPACK REQUIRED)
-
 if(parallel)
-  find_package(MPI COMPONENTS C Fortran REQUIRED)
-  find_package(SCALAPACK REQUIRED)
   find_package(MUMPS)
 else()
   find_package(MUMPS COMPONENTS mpiseq)
@@ -39,8 +35,8 @@ else()
   else()
     target_link_libraries(MUMPS::MUMPS INTERFACE MUMPS::MPISEQ)
   endif()
+  target_link_libraries(MUMPS::MUMPS INTERFACE LAPACK::LAPACK)
 endif()
-target_link_libraries(MUMPS::MUMPS INTERFACE LAPACK::LAPACK)
 
 # --- Examples from MUMPS itself
 set(_sfilename input_simpletest_real)
