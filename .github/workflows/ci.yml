@@ -38,17 +38,23 @@ jobs:
       FC: ${{ matrix.img.fc }}
 
     steps:
-    - uses: actions/checkout@v2
+
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v1
+      with:
+        cmake-version: '3.19'
 
     - name: Install prereqs
       run: ${{ matrix.img.cmd }}
 
+    - uses: actions/checkout@v2
+
     # - name: configure with scotch
     #   if: runner.os == 'Linux'
-    #   run: cmake -B build -Darith=d -Dscotch:BOOL=true --install-prefix=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+    #   run: cmake -B build -Darith=d -Dscotch:BOOL=true -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
     - name: configure
-      run: cmake -B build -Darith=d --install-prefix=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+      run: cmake -B build -Darith=d -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
     - name: build release
       run: cmake --build build
