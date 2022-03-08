@@ -43,6 +43,6 @@ jobs:
     - name: configure example
       run: cmake -S examples -B examples/build -DCMAKE_PREFIX_PATH=${{ runner.temp }} -Dparallel:BOOL=false
     - name: build example
-      run: cmake --build examples/build || cmake --build examples/build -v
+      run: cmake --build examples/build --parallel || cmake --build examples/build -v
     - name: test example
       run: ctest --test-dir examples/build -V

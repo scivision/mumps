@@ -57,7 +57,7 @@ jobs:
       run: cmake -B build -Darith=d -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
     - name: build release
-      run: cmake --build build
+      run: cmake --build build --parallel
     - name: test release
       run: ctest --test-dir build --preset default
 
@@ -67,7 +67,7 @@ jobs:
     - name: configure example
       run: cmake -S examples -B examples/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
     - name: build example
-      run: cmake --build examples/build || cmake --build examples/build -v
+      run: cmake --build examples/build --parallel || cmake --build examples/build -v
     - name: test example
       run: ctest --test-dir examples/build -V
 
@@ -85,7 +85,7 @@ jobs:
         sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev
 
     - run: cmake -B build -Dintsize64:BOOL=yes -Darith=d
-    - run: cmake --build build
+    - run: cmake --build build --parallel
     - run: ctest --test-dir build --preset default
 
     - run: cmake --install build
