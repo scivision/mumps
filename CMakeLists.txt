@@ -27,15 +27,8 @@ if(MSVC AND BUILD_SHARED_LIBS)
   cmake -DBUILD_SHARED_LIBS=off")
 endif()
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS true)
-
 # --- user options
 include(cmake/options.cmake)
-include(cmake/libraries.cmake)
-
-# --- compiler setup
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
-
 include(cmake/compilers.cmake)
 
 # --- download MUMPS

@@ -31,10 +31,6 @@ set(scalapack_external true CACHE BOOL "build ScaLapack")
 
 if(BUILD_SHARED_LIBS)
   if(WIN32)
-    set(SCALAPACK_IMPLIB
-    ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}scalapack${CMAKE_SHARED_LIBRARY_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}
-    ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}blacs${CMAKE_SHARED_LIBRARY_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}
-    )
     set(SCALAPACK_LIBRARIES
     ${CMAKE_INSTALL_PREFIX}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}scalapack${CMAKE_SHARED_LIBRARY_SUFFIX}
     ${CMAKE_INSTALL_PREFIX}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}blacs${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -61,8 +57,11 @@ set(scalapack_cmake_args
 -Dautobuild:BOOL=false
 )
 
+string(JSON scalapack_url GET ${json} scalapack git)
+string(JSON scalapack_tag GET ${json} scalapack tag)
+
 ExternalProject_Add(SCALAPACK
-GIT_REPOSITORY ${scalapack_git}
+GIT_REPOSITORY ${scalapack_url}
 GIT_TAG ${scalapack_tag}
 CMAKE_ARGS ${scalapack_cmake_args}
 CMAKE_CACHE_ARGS -Darith:STRING=${arith}

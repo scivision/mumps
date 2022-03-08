@@ -4,35 +4,25 @@
 
 include(FetchContent)
 
-function(find_url version)
-
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 
 set(mumps_urls)
 set(mumps_sha256)
 
-string(JSON N LENGTH ${json} mumps ${version} urls)
+string(JSON N LENGTH ${json} mumps ${MUMPS_UPSTREAM_VERSION} urls)
 math(EXPR N "${N}-1")
 foreach(i RANGE ${N})
-  string(JSON _u GET ${json} mumps ${version} urls ${i})
+  string(JSON _u GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} urls ${i})
   list(APPEND mumps_urls ${_u})
 endforeach()
 
-string(JSON mumps_sha256 GET ${json} mumps ${version} sha256)
-
-set(mumps_urls ${mumps_urls} PARENT_SCOPE)
-set(mumps_sha256 ${mumps_sha256} PARENT_SCOPE)
-
-endfunction()
-
+string(JSON mumps_sha256 GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} sha256)
 
 
 if(NOT MUMPS_UPSTREAM_VERSION)
   message(FATAL_ERROR "please specify MUMPS_UPSTREAM_VERSION")
 endif()
 
-
-find_url(${MUMPS_UPSTREAM_VERSION})
 
 set(FETCHCONTENT_QUIET no)
 
@@ -50,10 +40,4 @@ SUBBUILD_DIR ${CMAKE_CURRENT_LIST_DIR}/../cache/MUMPS-${MUMPS_UPSTREAM_VERSION}-
 INACTIVITY_TIMEOUT 15
 )
 
-if(NOT mumps_POPULATED)
-  FetchContent_Populate(mumps)
-endif()
-
-# --- dynamic shared library
-set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/lib)
-set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+FetchContent_Populate(mumps)

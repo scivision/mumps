@@ -19,19 +19,27 @@ if(intsize64)
   )
 endif()
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS on)
-
 set(CMAKE_TLS_VERIFY true)
 
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED_MUMPS true)
 set_directory_properties(PROPERTIES EP_UPDATE_DISCONNECTED true)
 
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules)
+
 if(CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
   set(EXTPROJ_GENERATOR "Ninja")
 else()
   set(EXTPROJ_GENERATOR ${CMAKE_GENERATOR})
 endif()
+
+# Rpath options necessary for shared library install to work correctly in user projects
+set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH true)
+
+# Necessary for shared library with Visual Studio / Windows oneAPI
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS true)
 
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
