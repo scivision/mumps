@@ -50,9 +50,9 @@
 set(Scotch_LIBRARIES)
 
 find_path(Scotch_INCLUDE_DIR
-  NAMES scotch.h
-  PATH_SUFFIXES scotch openmpi openmpi-x86_64 mpich-x86_64)
-mark_as_advanced(Scotch_INCLUDE_DIR)
+NAMES scotch.h
+PATH_SUFFIXES scotch openmpi openmpi-x86_64 mpich-x86_64
+)
 
 # need plain scotch when using ptscotch
 set(scotch_names scotch scotcherr)
@@ -67,21 +67,23 @@ if(parallel IN_LIST Scotch_FIND_COMPONENTS)
   endif()
 endif()
 
-foreach(_lib ${scotch_names})
-  find_library(Scotch_${_lib}_LIBRARY
-    NAMES ${_lib}
-    PATH_SUFFIXES openmpi/lib mpich/lib)
+foreach(l IN LISTS scotch_names)
+  find_library(Scotch_${l}_LIBRARY
+  NAMES ${l}
+  PATH_SUFFIXES openmpi/lib mpich/lib
+  )
 
-  list(APPEND Scotch_LIBRARIES ${Scotch_${_lib}_LIBRARY})
-  mark_as_advanced(Scotch_${_lib}_LIBRARY)
+  list(APPEND Scotch_LIBRARIES ${Scotch_${l}_LIBRARY})
+  mark_as_advanced(Scotch_${l}_LIBRARY)
 endforeach()
 
-if(Scotch_ptesmumps_LIBRARY OR Scotch_esmumps_LIBRARY)
+if(parallel IN_LIST Scotch_FIND_COMPONENTS)
+  if(Scotch_ptesmumps_LIBRARY AND Scotch_ptscotch_LIBRARY)
+    set(Scotch_ESMUMPS_FOUND true)
+    set(Scotch_parallel_FOUND true)
+  endif()
+elseif(Scotch_esmumps_LIBRARY)
   set(Scotch_ESMUMPS_FOUND true)
-endif()
-
-if(Scotch_ptscotch_LIBRARY)
-  set(Scotch_parallel_FOUND true)
 endif()
 
 include(FindPackageHandleStandardArgs)
@@ -101,3 +103,5 @@ if(NOT TARGET Scotch::Scotch)
   )
 endif()
 endif(Scotch_FOUND)
+
+mark_as_advanced(Scotch_INCLUDE_DIR)
