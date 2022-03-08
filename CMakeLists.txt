@@ -18,7 +18,7 @@ HOMEPAGE_URL "http://mumps-solver.org/"
 enable_testing()
 
 if(NOT MUMPS_UPSTREAM_VERSION)
-  set(MUMPS_UPSTREAM_VERSION 5.3.5)
+  set(MUMPS_UPSTREAM_VERSION 5.4.1)
 endif()
 
 if(MSVC AND BUILD_SHARED_LIBS)
