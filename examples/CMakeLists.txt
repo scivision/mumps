@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19...3.22)
+cmake_minimum_required(VERSION 3.19...3.23)
 
 project(MUMPSExamples
 LANGUAGES C Fortran
@@ -8,9 +8,8 @@ enable_testing()
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake/Modules)
 
-set(MUMPS_UPSTREAM_VERSION 5.3.5)
+set(MUMPS_UPSTREAM_VERSION 5.4.1)
 option(parallel "use MPI" true)
-set(autobuild true)
 set(FETCHCONTENT_UPDATES_DISCONNECTED_MUMPS true)
 set_directory_properties(PROPERTIES EP_UPDATE_DISCONNECTED true)
 
