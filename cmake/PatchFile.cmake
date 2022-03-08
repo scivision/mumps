@@ -1,10 +1,4 @@
 # use GNU Patch from any platform
-#
-# Functions
-# ---------
-#
-# patch_file(in_file patch_file)
-#     Apply patch_file to in_file via GNU Patch.
 
 find_program(PATCH NAMES patch)
 
@@ -18,7 +12,6 @@ if(WIN32 AND NOT PATCH)
     NAMES patch
     HINTS ${GIT_DIR}
     PATH_SUFFIXES usr/bin
-    REQUIRED
     )
   endif()
 endif()

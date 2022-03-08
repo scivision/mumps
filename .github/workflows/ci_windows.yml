@@ -2,7 +2,6 @@ name: ci_windows
 
 env:
   CMAKE_BUILD_TYPE: Release
-  CMAKE_GENERATOR: Ninja
 
 on:
   push:
@@ -17,21 +16,20 @@ jobs:
   windows:
     runs-on: windows-latest
     timeout-minutes: 15
+    env:
+      CMAKE_GENERATOR: MinGW Makefiles
 
-    defaults:
-      run:
-        shell: msys2 {0}
     steps:
     - uses: msys2/setup-msys2@v2
       with:
         update: true
         install: >-
-          git
-          mingw-w64-x86_64-cmake
-          mingw-w64-x86_64-ninja
           mingw-w64-x86_64-gcc-fortran
           mingw-w64-x86_64-lapack
-    # cmake install needed because of default to msys2 shell
+
+    - name: Put MSYS2_MinGW64 on PATH
+      # this is because GNU Patch doesn't work from MSYS2 shell
+      run: echo "D:/a/_temp/msys64/mingw64/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     - uses: actions/checkout@v2
 
