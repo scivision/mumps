@@ -7,7 +7,7 @@ if("d" IN_LIST arith)
   if(parallel)
     add_test(NAME mumps:config COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:mumpscfg>)
   else()
-    add_test(NAME mumps:config COMMAND $<TARGET_FILE:mumpscfg>)
+    add_test(NAME mumps:config COMMAND mumpscfg)
   endif()
   set_tests_properties(mumps:config PROPERTIES
   RESOURCE_LOCK cpu_mpi
@@ -26,7 +26,7 @@ if("s" IN_LIST arith)
   if(parallel)
     add_test(NAME mumps:simpleReal32 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:s_simple>)
   else()
-    add_test(NAME mumps:simpleReal32 COMMAND $<TARGET_FILE:s_simple>)
+    add_test(NAME mumps:simpleReal32 COMMAND s_simple)
   endif()
   set_tests_properties(mumps:simpleReal32 PROPERTIES
   RESOURCE_LOCK cpu_mpi
@@ -41,7 +41,7 @@ if("d" IN_LIST arith)
   if(parallel)
     add_test(NAME mumps:simpleReal64 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:d_simple>)
   else()
-    add_test(NAME mumps:simpleReal64 COMMAND $<TARGET_FILE:d_simple>)
+    add_test(NAME mumps:simpleReal64 COMMAND d_simple)
   endif()
   set_tests_properties(mumps:simpleReal64 PROPERTIES
   RESOURCE_LOCK cpu_mpi
@@ -58,7 +58,7 @@ if("d" IN_LIST arith)
   if(parallel)
     add_test(NAME mumps:CsimpleReal64 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:Csimple>)
   else()
-    add_test(NAME mumps:CsimpleReal64 COMMAND $<TARGET_FILE:Csimple>)
+    add_test(NAME mumps:CsimpleReal64 COMMAND Csimple)
   endif()
   set_tests_properties(mumps:CsimpleReal64 PROPERTIES
   RESOURCE_LOCK cpu_mpi
