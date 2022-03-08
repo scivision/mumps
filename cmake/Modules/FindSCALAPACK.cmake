@@ -49,17 +49,12 @@ References
 include(CheckSourceCompiles)
 
 set(SCALAPACK_LIBRARY)  # avoids appending to prior FindScalapack
-set(SCALAPACK_INCLUDE_DIR)
 
 #===== functions
 
 function(scalapack_check)
 
 get_property(enabled_langs GLOBAL PROPERTY ENABLED_LANGUAGES)
-if(NOT Fortran IN_LIST enabled_langs)
-  set(SCALAPACK_links true PARENT_SCOPE)
-  return()
-endif()
 
 find_package(MPI COMPONENTS C Fortran)
 if(NOT LAPACK_FOUND)
@@ -80,12 +75,13 @@ set(CMAKE_REQUIRED_LIBRARIES ${SCALAPACK_LIBRARY} ${LAPACK_LIBRARIES} ${MPI_Fort
 foreach(i s d)
 
   check_source_compiles(Fortran
-    "program test
-    implicit none (type, external)
-    external :: p${i}lamch
-    external :: blacs_pinfo, blacs_get, blacs_gridinit, blacs_gridexit, blacs_exit
-    end program"
-    SCALAPACK_${i}_links)
+  "program test
+  implicit none (type, external)
+  external :: p${i}lamch
+  external :: blacs_pinfo, blacs_get, blacs_gridinit, blacs_gridexit, blacs_exit
+  end program"
+  SCALAPACK_${i}_links
+  )
 
   if(SCALAPACK_${i}_links)
     set(SCALAPACK_${i}_FOUND true PARENT_SCOPE)
@@ -111,10 +107,10 @@ set(_mkl_libs ${ARGV})
 
 foreach(s ${_mkl_libs})
   find_library(SCALAPACK_${s}_LIBRARY
-    NAMES ${s}
-    HINTS ${MKLROOT}
-    PATH_SUFFIXES lib/intel64
-    NO_DEFAULT_PATH
+  NAMES ${s}
+  HINTS ${MKLROOT}
+  PATH_SUFFIXES lib/intel64
+  NO_DEFAULT_PATH
   )
   if(NOT SCALAPACK_${s}_LIBRARY)
     return()
@@ -124,10 +120,10 @@ foreach(s ${_mkl_libs})
 endforeach()
 
 find_path(SCALAPACK_INCLUDE_DIR
-  NAMES mkl_scalapack.h
-  HINTS ${MKLROOT}
-  PATH_SUFFIXES include
-  NO_DEFAULT_PATH
+NAMES mkl_scalapack.h
+HINTS ${MKLROOT}
+PATH_SUFFIXES include
+NO_DEFAULT_PATH
 )
 
 if(NOT SCALAPACK_INCLUDE_DIR)
@@ -138,7 +134,6 @@ endif()
 
 set(SCALAPACK_MKL_FOUND true PARENT_SCOPE)
 set(SCALAPACK_LIBRARY ${SCALAPACK_LIBRARY} PARENT_SCOPE)
-set(SCALAPACK_INCLUDE_DIR ${SCALAPACK_INCLUDE_DIR} PARENT_SCOPE)
 
 endfunction(scalapack_mkl)
 
@@ -183,19 +178,19 @@ else()
   pkg_search_module(pc_scalapack scalapack scalapack-openmpi scalapack-mpich)
 
   find_library(SCALAPACK_LIBRARY
-    NAMES scalapack scalapack-openmpi scalapack-mpich
-    NAMES_PER_DIR
-    HINTS ${pc_scalapack_LIBRARY_DIRS} ${pc_scalapack_LIBDIR}
-    PATH_SUFFIXES openmpi/lib mpich/lib
+  NAMES scalapack scalapack-openmpi scalapack-mpich
+  NAMES_PER_DIR
+  HINTS ${pc_scalapack_LIBRARY_DIRS} ${pc_scalapack_LIBDIR}
+  PATH_SUFFIXES openmpi/lib mpich/lib
   )
 
   # some systems have libblacs as a separate file, instead of being subsumed in libscalapack.
   get_filename_component(BLACS_ROOT ${SCALAPACK_LIBRARY} DIRECTORY)
 
   find_library(BLACS_LIBRARY
-    NAMES blacs
-    NO_DEFAULT_PATH
-    HINTS ${BLACS_ROOT}
+  NAMES blacs
+  NO_DEFAULT_PATH
+  HINTS ${BLACS_ROOT}
   )
 
 endif()
@@ -210,24 +205,25 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(SCALAPACK
-  REQUIRED_VARS SCALAPACK_LIBRARY SCALAPACK_links
-  HANDLE_COMPONENTS)
+REQUIRED_VARS SCALAPACK_LIBRARY SCALAPACK_links
+HANDLE_COMPONENTS
+)
 
 if(SCALAPACK_FOUND)
-# need if _FOUND guard to allow project to autobuild; can't overwrite imported target even if bad
-set(SCALAPACK_LIBRARIES ${SCALAPACK_LIBRARY})
-if(BLACS_LIBRARY)
-  list(APPEND SCALAPACK_LIBRARIES ${BLACS_LIBRARY})
-endif()
-set(SCALAPACK_INCLUDE_DIRS ${SCALAPACK_INCLUDE_DIR})
+  # need if _FOUND guard as can't overwrite imported target even if bad
+  set(SCALAPACK_LIBRARIES ${SCALAPACK_LIBRARY})
+  if(BLACS_LIBRARY)
+    list(APPEND SCALAPACK_LIBRARIES ${BLACS_LIBRARY})
+  endif()
+  set(SCALAPACK_INCLUDE_DIRS ${SCALAPACK_INCLUDE_DIR})
 
-if(NOT TARGET SCALAPACK::SCALAPACK)
-  add_library(SCALAPACK::SCALAPACK INTERFACE IMPORTED)
-  set_target_properties(SCALAPACK::SCALAPACK PROPERTIES
-                        INTERFACE_LINK_LIBRARIES "${SCALAPACK_LIBRARIES}"
-                        INTERFACE_INCLUDE_DIRECTORIES "${SCALAPACK_INCLUDE_DIR}"
-                      )
-endif()
+  if(NOT TARGET SCALAPACK::SCALAPACK)
+    add_library(SCALAPACK::SCALAPACK INTERFACE IMPORTED)
+    set_target_properties(SCALAPACK::SCALAPACK PROPERTIES
+    INTERFACE_LINK_LIBRARIES "${SCALAPACK_LIBRARIES}"
+    INTERFACE_INCLUDE_DIRECTORIES "${SCALAPACK_INCLUDE_DIR}"
+    )
+  endif()
 endif(SCALAPACK_FOUND)
 
 mark_as_advanced(SCALAPACK_LIBRARY SCALAPACK_INCLUDE_DIR)

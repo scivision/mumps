@@ -79,7 +79,7 @@ include(CheckSourceCompiles)
 
 # clear to avoid endless appending on subsequent calls
 set(LAPACK_LIBRARY)
-set(LAPACK_INCLUDE_DIR)
+unset(LAPACK_INCLUDE_DIR)
 
 # ===== functions ==========
 
@@ -100,20 +100,23 @@ find_library(LAPACK_ATLAS
 pkg_check_modules(pc_atlas_blas blas-atlas)
 
 find_library(BLAS_LIBRARY
-  NAMES ptf77blas f77blas blas
-  NAMES_PER_DIR
-  PATH_SUFFIXES atlas
-  HINTS ${pc_atlas_blas_LIBRARY_DIRS} ${pc_atlas_blas_LIBDIR})
+NAMES ptf77blas f77blas blas
+NAMES_PER_DIR
+PATH_SUFFIXES atlas
+HINTS ${pc_atlas_blas_LIBRARY_DIRS} ${pc_atlas_blas_LIBDIR}
+)
 # === C ===
 find_library(BLAS_C_ATLAS
-  NAMES ptcblas cblas
-  NAMES_PER_DIR
-  PATH_SUFFIXES atlas
-  HINTS ${pc_atlas_blas_LIBRARY_DIRS} ${pc_atlas_blas_LIBDIR})
+NAMES ptcblas cblas
+NAMES_PER_DIR
+PATH_SUFFIXES atlas
+HINTS ${pc_atlas_blas_LIBRARY_DIRS} ${pc_atlas_blas_LIBDIR}
+)
 
 find_path(LAPACK_INCLUDE_DIR
-  NAMES cblas-atlas.h cblas.h clapack.h
-  HINTS ${pc_atlas_blas_INCLUDE_DIRS} ${pc_atlas_blas_LIBDIR})
+NAMES cblas-atlas.h cblas.h clapack.h
+HINTS ${pc_atlas_blas_INCLUDE_DIRS} ${pc_atlas_blas_LIBDIR}
+)
 
 #===========
 if(LAPACK_ATLAS AND BLAS_C_ATLAS AND BLAS_LIBRARY AND ATLAS_LIB)
@@ -123,7 +126,6 @@ if(LAPACK_ATLAS AND BLAS_C_ATLAS AND BLAS_LIBRARY AND ATLAS_LIB)
 endif()
 
 set(LAPACK_LIBRARY ${LAPACK_LIBRARY} PARENT_SCOPE)
-set(LAPACK_INCLUDE_DIR ${LAPACK_INCLUDE_DIR} PARENT_SCOPE)
 
 endfunction(atlas_libs)
 
@@ -133,19 +135,20 @@ function(netlib_libs)
 
 if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
   find_path(LAPACK95_INCLUDE_DIR
-    NAMES f95_lapack.mod
-    HINTS ${LAPACK95_ROOT} ENV LAPACK95_ROOT
-    PATH_SUFFIXES include)
+  NAMES f95_lapack.mod
+  HINTS ${LAPACK95_ROOT} ENV LAPACK95_ROOT
+  PATH_SUFFIXES include
+  )
 
   find_library(LAPACK95_LIBRARY
-    NAMES lapack95
-    HINTS ${LAPACK95_ROOT} ENV LAPACK95_ROOT)
+  NAMES lapack95
+  HINTS ${LAPACK95_ROOT} ENV LAPACK95_ROOT
+  )
 
   if(NOT (LAPACK95_LIBRARY AND LAPACK95_INCLUDE_DIR))
     return()
   endif()
 
-  set(LAPACK95_INCLUDE_DIR ${LAPACK95_INCLUDE_DIR} PARENT_SCOPE)
   set(LAPACK95_LIBRARY ${LAPACK95_LIBRARY} PARENT_SCOPE)
   set(LAPACK_LAPACK95_FOUND true PARENT_SCOPE)
 endif(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
@@ -164,15 +167,17 @@ endif()
 if(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
   pkg_check_modules(pc_lapacke lapacke)
   find_library(LAPACKE_LIBRARY
-    NAMES lapacke
-    HINTS ${pc_lapacke_LIBRARY_DIRS} ${pc_lapacke_LIBDIR}
-    PATH_SUFFIXES lapack lapack/lib)
+  NAMES lapacke
+  HINTS ${pc_lapacke_LIBRARY_DIRS} ${pc_lapacke_LIBDIR}
+  PATH_SUFFIXES lapack lapack/lib
+  )
 
   # lapack/include for Homebrew
   find_path(LAPACKE_INCLUDE_DIR
-    NAMES lapacke.h
-    HINTS ${pc_lapacke_INCLUDE_DIRS} ${pc_lapacke_LIBDIR}
-    PATH_SUFFIXES lapack lapack/include)
+  NAMES lapacke.h
+  HINTS ${pc_lapacke_INCLUDE_DIRS} ${pc_lapacke_LIBDIR}
+  PATH_SUFFIXES lapack lapack/include
+  )
   if(NOT (LAPACKE_LIBRARY AND LAPACKE_INCLUDE_DIR))
     return()
   endif()
@@ -187,10 +192,11 @@ pkg_search_module(pc_blas blas-netlib blas)
 # Netlib on Cygwin and others
 
 find_library(BLAS_LIBRARY
-  NAMES refblas blas
-  NAMES_PER_DIR
-  HINTS ${pc_blas_LIBRARY_DIRS} ${pc_blas_LIBDIR}
-  PATH_SUFFIXES lapack lapack/lib blas)
+NAMES refblas blas
+NAMES_PER_DIR
+HINTS ${pc_blas_LIBRARY_DIRS} ${pc_blas_LIBDIR}
+PATH_SUFFIXES lapack lapack/lib blas
+)
 
 if(NOT BLAS_LIBRARY)
   return()
@@ -202,7 +208,6 @@ set(LAPACK_Netlib_FOUND true PARENT_SCOPE)
 list(APPEND LAPACK_LIBRARY ${CMAKE_THREAD_LIBS_INIT})
 
 set(LAPACK_LIBRARY ${LAPACK_LIBRARY} PARENT_SCOPE)
-set(LAPACK_INCLUDE_DIR ${LAPACK_INCLUDE_DIR} PARENT_SCOPE)
 
 endfunction(netlib_libs)
 
@@ -211,20 +216,23 @@ function(openblas_libs)
 
 pkg_check_modules(pc_lapack lapack-openblas)
 find_library(LAPACK_LIBRARY
-  NAMES lapack
-  HINTS ${pc_lapack_LIBRARY_DIRS} ${pc_lapack_LIBDIR}
-  PATH_SUFFIXES openblas)
+NAMES lapack
+HINTS ${pc_lapack_LIBRARY_DIRS} ${pc_lapack_LIBDIR}
+PATH_SUFFIXES openblas
+)
 
 pkg_check_modules(pc_blas blas-openblas)
 find_library(BLAS_LIBRARY
-  NAMES openblas blas
-  NAMES_PER_DIR
-  HINTS ${pc_blas_LIBRARY_DIRS} ${pc_blas_LIBDIR}
-  PATH_SUFFIXES openblas)
+NAMES openblas blas
+NAMES_PER_DIR
+HINTS ${pc_blas_LIBRARY_DIRS} ${pc_blas_LIBDIR}
+PATH_SUFFIXES openblas
+)
 
 find_path(LAPACK_INCLUDE_DIR
-  NAMES cblas-openblas.h cblas.h f77blas.h openblas_config.h
-  HINTS ${pc_lapack_INCLUDE_DIRS})
+NAMES cblas-openblas.h cblas.h f77blas.h openblas_config.h
+HINTS ${pc_lapack_INCLUDE_DIRS}
+)
 
 if(NOT (LAPACK_LIBRARY AND BLAS_LIBRARY))
   return()
@@ -236,7 +244,6 @@ set(LAPACK_OpenBLAS_FOUND true PARENT_SCOPE)
 list(APPEND LAPACK_LIBRARY ${CMAKE_THREAD_LIBS_INIT})
 
 set(LAPACK_LIBRARY ${LAPACK_LIBRARY} PARENT_SCOPE)
-set(LAPACK_INCLUDE_DIR ${LAPACK_INCLUDE_DIR} PARENT_SCOPE)
 
 endfunction(openblas_libs)
 
@@ -258,11 +265,11 @@ endif()
 
 foreach(s ${_mkl_libs})
   find_library(LAPACK_${s}_LIBRARY
-    NAMES ${s}
-    PATHS ${MKLROOT}
-    PATH_SUFFIXES lib/intel64
-    HINTS ${pc_mkl_LIBRARY_DIRS} ${pc_mkl_LIBDIR}
-    NO_DEFAULT_PATH
+  NAMES ${s}
+  PATHS ${MKLROOT}
+  PATH_SUFFIXES lib/intel64
+  HINTS ${pc_mkl_LIBRARY_DIRS} ${pc_mkl_LIBDIR}
+  NO_DEFAULT_PATH
   )
 
   if(NOT LAPACK_${s}_LIBRARY)
@@ -273,10 +280,10 @@ foreach(s ${_mkl_libs})
 endforeach()
 
 find_path(LAPACK_INCLUDE_DIR
-  NAMES mkl_lapack.h
-  HINTS ${MKLROOT}
-  PATH_SUFFIXES include
-  NO_DEFAULT_PATH
+NAMES mkl_lapack.h
+HINTS ${MKLROOT}
+PATH_SUFFIXES include
+NO_DEFAULT_PATH
 )
 
 if(NOT LAPACK_INCLUDE_DIR)
@@ -284,7 +291,6 @@ if(NOT LAPACK_INCLUDE_DIR)
 endif()
 
 set(LAPACK_LIBRARY ${LAPACK_LIBRARY} PARENT_SCOPE)
-set(LAPACK_INCLUDE_DIR ${LAPACK_INCLUDE_DIR} PARENT_SCOPE)
 
 endfunction(find_mkl_libs)
 
@@ -440,28 +446,29 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LAPACK
-  REQUIRED_VARS LAPACK_LIBRARY LAPACK_links
-  HANDLE_COMPONENTS)
+REQUIRED_VARS LAPACK_LIBRARY LAPACK_links
+HANDLE_COMPONENTS
+)
 
 set(BLAS_LIBRARIES ${BLAS_LIBRARY})
 set(LAPACK_LIBRARIES ${LAPACK_LIBRARY})
 set(LAPACK_INCLUDE_DIRS ${LAPACK_INCLUDE_DIR})
 
 if(LAPACK_FOUND)
-# need if _FOUND guard to allow project to autobuild; can't overwrite imported target even if bad
+# need if _FOUND guard as can't overwrite imported target even if bad
   if(NOT TARGET BLAS::BLAS)
     add_library(BLAS::BLAS INTERFACE IMPORTED)
     set_target_properties(BLAS::BLAS PROPERTIES
-                          INTERFACE_LINK_LIBRARIES "${BLAS_LIBRARY}"
-                        )
+    INTERFACE_LINK_LIBRARIES "${BLAS_LIBRARY}"
+    )
   endif()
 
   if(NOT TARGET LAPACK::LAPACK)
     add_library(LAPACK::LAPACK INTERFACE IMPORTED)
     set_target_properties(LAPACK::LAPACK PROPERTIES
-                          INTERFACE_LINK_LIBRARIES "${LAPACK_LIBRARY}"
-                          INTERFACE_INCLUDE_DIRECTORIES "${LAPACK_INCLUDE_DIR}"
-                        )
+    INTERFACE_LINK_LIBRARIES "${LAPACK_LIBRARY}"
+    INTERFACE_INCLUDE_DIRECTORIES "${LAPACK_INCLUDE_DIR}"
+    )
   endif()
 
   if(LAPACK_LAPACK95_FOUND)
@@ -471,8 +478,8 @@ if(LAPACK_FOUND)
     if(NOT TARGET LAPACK::LAPACK95)
       add_library(LAPACK::LAPACK95 INTERFACE IMPORTED)
       set_target_properties(LAPACK::LAPACK95 PROPERTIES
-        INTERFACE_LINK_LIBRARIES "${LAPACK95_LIBRARY}"
-        INTERFACE_INCLUDE_DIRECTORIES "${LAPACK95_INCLUDE_DIR}"
+      INTERFACE_LINK_LIBRARIES "${LAPACK95_LIBRARY}"
+      INTERFACE_INCLUDE_DIRECTORIES "${LAPACK95_INCLUDE_DIR}"
       )
     endif()
   endif()

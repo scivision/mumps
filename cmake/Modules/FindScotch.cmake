@@ -86,18 +86,18 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Scotch
-  REQUIRED_VARS Scotch_LIBRARIES Scotch_INCLUDE_DIR
-  HANDLE_COMPONENTS)
+REQUIRED_VARS Scotch_LIBRARIES Scotch_INCLUDE_DIR
+HANDLE_COMPONENTS
+)
 
 if(Scotch_FOUND)
-# need if _FOUND guard to allow project to autobuild; can't overwrite imported target even if bad
 set(Scotch_INCLUDE_DIRS ${Scotch_INCLUDE_DIR})
 
 if(NOT TARGET Scotch::Scotch)
   add_library(Scotch::Scotch INTERFACE IMPORTED)
   set_target_properties(Scotch::Scotch PROPERTIES
-                        INTERFACE_LINK_LIBRARIES "${Scotch_LIBRARIES}"
-                        INTERFACE_INCLUDE_DIRECTORIES "${Scotch_INCLUDE_DIR}"
-                      )
+  INTERFACE_LINK_LIBRARIES "${Scotch_LIBRARIES}"
+  INTERFACE_INCLUDE_DIRECTORIES "${Scotch_INCLUDE_DIR}"
+  )
 endif()
 endif(Scotch_FOUND)
