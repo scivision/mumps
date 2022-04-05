@@ -48,6 +48,23 @@ or GNU Make:
 cmake -G "MinGW Makefiles" -B build
 ```
 
+With the default options, under the build/ directory this results in library binaries:
+
+```
+# Linux/MacOS/MSYS2
+libdmumps.a
+libmumps_common.a
+libpord.a
+libsmumps.a
+
+# Windows oneAPI
+dmumps.lib
+mumps_common.lib
+pord.lib
+smumps.lib
+```
+
+
 ### MUMPS version selection
 
 The MUMPS version defaults to a recent release.
