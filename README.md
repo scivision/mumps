@@ -15,7 +15,7 @@ Please open a GitHub Issue if you have a problem building Mumps with CMake.
 
 Platforms known to work with MUMPS and CMake include:
 
-* Windows (use -G Ninja or -G "MinGW Makefiles")
+* Windows (use -G Ninja or -G "MinGW Makefiles" -- Visual Studio does not work)
   * MSYS2 (GCC)
   * Windows Subsystem for Linux (GCC)
   * Intel oneAPI
