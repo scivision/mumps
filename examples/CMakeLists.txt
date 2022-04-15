@@ -57,10 +57,6 @@ foreach(a s d)
   add_test(NAME mumps:example_${a}
   COMMAND ${CMAKE_COMMAND} -Dparallel:BOOL=${parallel} -Dexe:FILEPATH=$<TARGET_FILE:${a}simpletest> -Din:PATH=${CMAKE_CURRENT_SOURCE_DIR}/${_${a}filename} -P ${PROJECT_SOURCE_DIR}/run_ex.cmake
   )
-  set_tests_properties(mumps:example_${a} PROPERTIES
-  RESOURCE_LOCK cpu_mpi
-  TIMEOUT 10
-  )
 
   if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
     add_executable(${a}simpletest_save_restore ${a}simpletest_save_restore.F)
@@ -70,8 +66,6 @@ foreach(a s d)
     COMMAND ${CMAKE_COMMAND} -Dparallel:BOOL=${parallel} -Dexe:FILEPATH=$<TARGET_FILE:${a}simpletest_save_restore> -Din:PATH=${CMAKE_CURRENT_SOURCE_DIR}/${_${a}filename} -P ${PROJECT_SOURCE_DIR}/run_ex.cmake
     )
     set_tests_properties(mumps:saveRestore_${a} PROPERTIES
-    RESOURCE_LOCK cpu_mpi
-    TIMEOUT 10
     DISABLED $<BOOL:${intsize64}>
     )
   endif()
@@ -88,8 +82,19 @@ if(MUMPS_d_FOUND)
   else()
     add_test(NAME mumps:example_C COMMAND c_example)
   endif()
-  set_tests_properties(mumps:example_C PROPERTIES
-  RESOURCE_LOCK cpu_mpi
-  TIMEOUT 10
+endif()
+
+
+# Windows DLL
+get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
+
+set_tests_properties(${test_names} PROPERTIES
+RESOURCE_LOCK cpu_mpi
+TIMEOUT 10
+)
+
+if(WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.22)
+  set_tests_properties(${test_names} PROPERTIES
+  ENVIRONMENT_MODIFICATION "PATH=path_list_append:${CMAKE_INSTALL_PREFIX};PATH=path_list_append:${CMAKE_PREFIX_PATH};PATH=path_list_append:${PROJECT_BINARY_DIR}"
   )
 endif()
