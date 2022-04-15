@@ -1,4 +1,3 @@
-option(BUILD_TESTING "build with testing features" true)
 option(parallel "parallel or sequential (non-MPI, non-Scalapack)" ON)
 option(intsize64 "use 64-bit integers in C and Fortran")
 

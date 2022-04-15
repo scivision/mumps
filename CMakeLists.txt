@@ -15,7 +15,7 @@ DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "http://mumps-solver.org/"
 )
 
-enable_testing()
+include(CTest)
 
 if(NOT MUMPS_UPSTREAM_VERSION)
   set(MUMPS_UPSTREAM_VERSION 5.5.0)
