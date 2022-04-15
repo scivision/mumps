@@ -23,8 +23,8 @@ infrequently used Lapack libraries and is unreliable for me.
 Tested on Linux, MacOS and Windows with:
 * GCC / Gfortran
 * Clang / Flang
-* PGI (pgcc, pgfortran)
 * Intel (icc, ifort)
+* Cray
 
 
 Parameters
@@ -101,6 +101,7 @@ NAMES ptf77blas f77blas blas
 NAMES_PER_DIR
 PATH_SUFFIXES atlas
 )
+
 # === C ===
 find_library(BLAS_C_ATLAS
 NAMES ptcblas cblas
@@ -148,8 +149,9 @@ if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
 endif(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
 
 find_library(LAPACK_LIBRARY
-  NAMES lapack
-  PATH_SUFFIXES lapack lapack/lib)
+NAMES lapack
+PATH_SUFFIXES lapack lapack/lib
+)
 if(NOT LAPACK_LIBRARY)
   return()
 endif()
@@ -276,7 +278,13 @@ endfunction(find_mkl_libs)
 
 # ========== main program
 
-if(NOT (OpenBLAS IN_LIST LAPACK_FIND_COMPONENTS
+set(lapack_cray false)
+if(DEFINED ENV{CRAYPE_VERSION})
+  set(lapack_cray true)
+endif()
+
+if(NOT (lapack_cray
+  OR OpenBLAS IN_LIST LAPACK_FIND_COMPONENTS
   OR Netlib IN_LIST LAPACK_FIND_COMPONENTS
   OR Atlas IN_LIST LAPACK_FIND_COMPONENTS
   OR MKL IN_LIST LAPACK_FIND_COMPONENTS))
@@ -365,17 +373,13 @@ if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
   endif()
 
 elseif(Atlas IN_LIST LAPACK_FIND_COMPONENTS)
-
   atlas_libs()
-
 elseif(Netlib IN_LIST LAPACK_FIND_COMPONENTS)
-
   netlib_libs()
-
 elseif(OpenBLAS IN_LIST LAPACK_FIND_COMPONENTS)
-
   openblas_libs()
-
+elseif(lapack_cray)
+  # LAPACK is implicitly part of Cray PE LibSci, use Cray compiler wrapper.
 endif()
 
 # -- verify library works
@@ -413,14 +417,22 @@ endfunction(lapack_check)
 
 # --- Check that Scalapack links
 
-if(LAPACK_LIBRARY)
+if(lapack_cray OR LAPACK_LIBRARY)
   lapack_check()
 endif()
 
+set(lapack_req false)
+if(LAPACK_links)
+  if(lapack_cray)
+    set(lapack_req true)
+  elseif(LAPACK_LIBRARY)
+    set(lapack_req true)
+  endif()
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LAPACK
-REQUIRED_VARS LAPACK_LIBRARY LAPACK_links
+REQUIRED_VARS lapack_req
 HANDLE_COMPONENTS
 )
 

@@ -168,7 +168,7 @@ endif()
 
 # get Mumps version
 find_file(mumps_conf
-NAMES smumps_c.h
+NAMES smumps_c.h dmumps_c.h
 HINTS ${MUMPS_INCLUDE_DIR}
 NO_DEFAULT_PATH
 DOC "MUMPS configuration header"

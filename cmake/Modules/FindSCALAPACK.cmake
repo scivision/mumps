@@ -54,8 +54,6 @@ set(SCALAPACK_LIBRARY)  # avoids appending to prior FindScalapack
 
 function(scalapack_check)
 
-get_property(enabled_langs GLOBAL PROPERTY ENABLED_LANGUAGES)
-
 find_package(MPI COMPONENTS C Fortran)
 if(NOT LAPACK_FOUND)
   # otherwise can cause 32-bit lapack when 64-bit wanted
@@ -139,8 +137,15 @@ endfunction(scalapack_mkl)
 
 # === main
 
-if(NOT MKL IN_LIST SCALAPACK_FIND_COMPONENTS AND DEFINED ENV{MKLROOT})
-  list(APPEND SCALAPACK_FIND_COMPONENTS MKL)
+set(scalapack_cray false)
+if(DEFINED ENV{CRAYPE_VERSION})
+  set(scalapack_cray true)
+endif()
+
+if(NOT scalapack_cray)
+  if(NOT MKL IN_LIST SCALAPACK_FIND_COMPONENTS AND DEFINED ENV{MKLROOT})
+    list(APPEND SCALAPACK_FIND_COMPONENTS MKL)
+  endif()
 endif()
 
 if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS)
@@ -171,6 +176,8 @@ if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS)
     set(SCALAPACK_MKL64_FOUND ${SCALAPACK_MKL_FOUND})
   endif()
 
+elseif(scalapack_cray)
+  # Cray PE has Scalapack build into LibSci. Use Cray compiler wrapper.
 else()
 
   find_library(SCALAPACK_LIBRARY
@@ -192,15 +199,24 @@ endif()
 
 # --- Check that Scalapack links
 
-if(SCALAPACK_LIBRARY)
+if(scalapack_cray OR SCALAPACK_LIBRARY)
   scalapack_check()
+endif()
+
+set(scalapack_req false)
+if(SCALAPACK_links)
+  if(scalapack_cray)
+    set(scalapack_req true)
+  elseif(SCALAPACK_LIBRARY)
+    set(scalapack_req true)
+  endif()
 endif()
 
 # --- Finalize
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(SCALAPACK
-REQUIRED_VARS SCALAPACK_LIBRARY SCALAPACK_links
+REQUIRED_VARS scalapack_req
 HANDLE_COMPONENTS
 )
 
@@ -219,6 +235,6 @@ if(SCALAPACK_FOUND)
     INTERFACE_INCLUDE_DIRECTORIES "${SCALAPACK_INCLUDE_DIR}"
     )
   endif()
-endif(SCALAPACK_FOUND)
+endif()
 
 mark_as_advanced(SCALAPACK_LIBRARY SCALAPACK_INCLUDE_DIR)
