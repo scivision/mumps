@@ -47,6 +47,11 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR} CACHE PATH "Install top-level directory" FORCE)
 endif()
 
+# allow CMAKE_PREFIX_PATH with ~ expand
+if(CMAKE_PREFIX_PATH)
+  get_filename_component(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ABSOLUTE)
+endif()
+
 # --- auto-ignore build directory
 if(NOT EXISTS ${PROJECT_BINARY_DIR}/.gitignore)
   file(WRITE ${PROJECT_BINARY_DIR}/.gitignore "*")
