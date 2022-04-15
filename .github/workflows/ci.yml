@@ -102,9 +102,20 @@ jobs:
         sudo apt update
         sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin
 
+    - name: configure lapack, scalapack
+      run: cmake -B build -Darith=d --install-prefix=${{ runner.temp }}
+    - name: build,install lapack, scalapack
+      run: cmake --build build --parallel
 
-    - run: cmake -B build -Darith=d -Dautobuild:BOOL=on --install-prefix=${{ runner.temp }}
+    - run: cmake -B build -Darith=d --install-prefix=${{ runner.temp }} -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
     - run: cmake --build build --parallel
     - run: ctest --test-dir build --preset default
 
     - run: cmake --install build
+
+    - name: configure example
+      run: cmake -S examples -B examples/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+    - name: build example
+      run: cmake --build examples/build --parallel || cmake --build examples/build -v
+    - name: test example
+      run: ctest --test-dir examples/build -V
