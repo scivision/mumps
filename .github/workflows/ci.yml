@@ -103,9 +103,9 @@ jobs:
         sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin
 
     - name: configure lapack, scalapack
-      run: cmake -B build -Darith=d --install-prefix=${{ runner.temp }}
+      run: cmake -S scripts -B scripts/build -Darith=d --install-prefix=${{ runner.temp }}
     - name: build,install lapack, scalapack
-      run: cmake --build build --parallel
+      run: cmake --build scripts/build --parallel
 
     - run: cmake -B build -Darith=d --install-prefix=${{ runner.temp }} -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
     - run: cmake --build build --parallel
