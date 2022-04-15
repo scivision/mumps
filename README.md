@@ -64,6 +64,16 @@ pord.lib
 smumps.lib
 ```
 
+If the system doesn't have LAPACK and SCALAPACK, first build and install them:
+
+```sh
+cmake -S scripts -B scripts/build -DCMAKE_INSTALL_PREFIX=~/mylibs
+cmake --build build
+
+# mumps
+cmake -B build -DCMAKE_PREFIX_PATH=~/mylibs
+cmake --build build
+```
 
 ### MUMPS version selection
 
@@ -84,9 +94,6 @@ To use MUMPS as via CMake ExternalProject do like in [mumps.cmake](https://githu
 then link to your project target `foo` via `target_link_libraries(foo MUMPS::MUMPS)`
 
 Numerous build options are available as in the following sections. Most users can just use the defaults.
-
-**autobuild prereqs**
-The `-Dautobuild=true` CMake default will download and build a local copy of Lapack and/or Scalapack if missing or broken.
 
 **MPI / non-MPI**
 For systems where MPI, BLACS and SCALAPACK are not available, or where non-parallel execution is suitable, the default parallel can be disabled at CMake configure time by option -Dparallel=false.

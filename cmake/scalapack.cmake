@@ -1,6 +1,3 @@
-# Finds Scalapack, tests, and if not found or broken, autobuild scalapack
-include(ExternalProject)
-
 if(intsize64)
   if(MKL IN_LIST SCALAPACK_COMPONENTS)
     list(APPEND SCALAPACK_COMPONENTS MKL64)
@@ -15,65 +12,4 @@ if(intsize64)
   endif()
 endif()
 
-if(NOT scalapack_external)
-  if(autobuild)
-    find_package(SCALAPACK COMPONENTS ${SCALAPACK_COMPONENTS})
-  else()
-    find_package(SCALAPACK REQUIRED COMPONENTS ${SCALAPACK_COMPONENTS})
-  endif()
-endif()
-
-if(SCALAPACK_FOUND OR TARGET SCALAPACK::SCALAPACK)
-  return()
-endif()
-
-set(scalapack_external true CACHE BOOL "build ScaLapack")
-
-if(BUILD_SHARED_LIBS)
-  if(WIN32)
-    set(SCALAPACK_LIBRARIES
-    ${CMAKE_INSTALL_PREFIX}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}scalapack${CMAKE_SHARED_LIBRARY_SUFFIX}
-    ${CMAKE_INSTALL_PREFIX}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}blacs${CMAKE_SHARED_LIBRARY_SUFFIX}
-    )
-  else()
-    set(SCALAPACK_LIBRARIES
-    ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}scalapack${CMAKE_SHARED_LIBRARY_SUFFIX}
-    ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}blacs${CMAKE_SHARED_LIBRARY_SUFFIX}
-    )
-  endif()
-else()
-  set(SCALAPACK_LIBRARIES
-  ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}scalapack${CMAKE_STATIC_LIBRARY_SUFFIX}
-  ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}blacs${CMAKE_STATIC_LIBRARY_SUFFIX}
-  )
-endif()
-
-set(scalapack_cmake_args
--DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
--DCMAKE_PREFIX_PATH:PATH=${CMAKE_INSTALL_PREFIX}
--DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
--DCMAKE_BUILD_TYPE=Release
--DBUILD_TESTING:BOOL=false
--Dautobuild:BOOL=false
-)
-
-string(JSON scalapack_url GET ${json} scalapack git)
-string(JSON scalapack_tag GET ${json} scalapack tag)
-
-ExternalProject_Add(SCALAPACK
-GIT_REPOSITORY ${scalapack_url}
-GIT_TAG ${scalapack_tag}
-CMAKE_ARGS ${scalapack_cmake_args}
-CMAKE_CACHE_ARGS -Darith:STRING=${arith}
-CMAKE_GENERATOR ${EXTPROJ_GENERATOR}
-BUILD_BYPRODUCTS ${SCALAPACK_LIBRARIES}
-INACTIVITY_TIMEOUT 15
-CONFIGURE_HANDLED_BY_BUILD ON
-DEPENDS LAPACK::LAPACK
-)
-
-add_library(SCALAPACK::SCALAPACK INTERFACE IMPORTED)
-target_link_libraries(SCALAPACK::SCALAPACK INTERFACE "${SCALAPACK_LIBRARIES}")
-
-# race condition for linking without this
-add_dependencies(SCALAPACK::SCALAPACK SCALAPACK)
+find_package(SCALAPACK REQUIRED COMPONENTS ${SCALAPACK_COMPONENTS})

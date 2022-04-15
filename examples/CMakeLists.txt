@@ -17,27 +17,9 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 if(parallel)
-  find_package(MUMPS)
+  find_package(MUMPS REQUIRED)
 else()
-  find_package(MUMPS COMPONENTS mpiseq)
-endif()
-
-if(MUMPS_FOUND)
-  if(parallel)
-    target_link_libraries(MUMPS::MUMPS INTERFACE SCALAPACK::SCALAPACK MPI::MPI_Fortran MPI::MPI_C)
-  else()
-    add_library(MPI::MPI_C ALIAS MUMPS::MPISEQ)
-    add_library(MPI::MPI_Fortran ALIAS MUMPS::MPISEQ)
-  endif()
-  target_link_libraries(MUMPS::MUMPS INTERFACE LAPACK::LAPACK)
-else()
-  include(${PROJECT_SOURCE_DIR}/../cmake/mumps.cmake)
-  if(parallel)
-    target_link_libraries(MUMPS::MUMPS INTERFACE SCALAPACK::SCALAPACK MPI::MPI_Fortran MPI::MPI_C)
-  else()
-    target_link_libraries(MUMPS::MUMPS INTERFACE MUMPS::MPISEQ)
-  endif()
-  target_link_libraries(MUMPS::MUMPS INTERFACE LAPACK::LAPACK)
+  find_package(MUMPS COMPONENTS mpiseq REQUIRED)
 endif()
 
 # --- Examples from MUMPS itself
@@ -95,6 +77,6 @@ TIMEOUT 10
 
 if(WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.22)
   set_tests_properties(${test_names} PROPERTIES
-  ENVIRONMENT_MODIFICATION "PATH=path_list_append:${CMAKE_INSTALL_PREFIX};PATH=path_list_append:${CMAKE_PREFIX_PATH};PATH=path_list_append:${PROJECT_BINARY_DIR}"
+  ENVIRONMENT_MODIFICATION "PATH=path_list_append:${CMAKE_INSTALL_PREFIX}/bin;PATH=path_list_append:${CMAKE_PREFIX_PATH}/bin;PATH=path_list_append:${PROJECT_BINARY_DIR}"
   )
 endif()
