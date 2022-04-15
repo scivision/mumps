@@ -22,6 +22,15 @@ else()
   find_package(MUMPS COMPONENTS mpiseq REQUIRED)
 endif()
 
+if(parallel)
+  target_link_libraries(MUMPS::MUMPS INTERFACE SCALAPACK::SCALAPACK MPI::MPI_Fortran MPI::MPI_C)
+else()
+  add_library(MPI::MPI_C ALIAS MUMPS::MPISEQ)
+  add_library(MPI::MPI_Fortran ALIAS MUMPS::MPISEQ)
+endif()
+target_link_libraries(MUMPS::MUMPS INTERFACE LAPACK::LAPACK)
+
+
 # --- Examples from MUMPS itself
 set(_sfilename input_simpletest_real)
 set(_dfilename input_simpletest_real)
