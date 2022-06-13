@@ -250,7 +250,7 @@ foreach(s ${_mkl_libs})
   find_library(LAPACK_${s}_LIBRARY
   NAMES ${s}
   PATHS ${MKLROOT}
-  PATH_SUFFIXES lib/intel64
+  PATH_SUFFIXES lib lib/intel64
   NO_DEFAULT_PATH
   )
 
@@ -421,20 +421,19 @@ if(lapack_cray OR LAPACK_LIBRARY)
   lapack_check()
 endif()
 
-set(lapack_req false)
-if(LAPACK_links)
-  if(lapack_cray)
-    set(lapack_req true)
-  elseif(LAPACK_LIBRARY)
-    set(lapack_req true)
-  endif()
-endif()
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LAPACK
-REQUIRED_VARS lapack_req
-HANDLE_COMPONENTS
-)
+
+if(lapack_cray)
+  find_package_handle_standard_args(LAPACK HANDLE_COMPONENTS
+  REQUIRED_VARS LAPACK_links
+  )
+else()
+  find_package_handle_standard_args(LAPACK HANDLE_COMPONENTS
+  REQUIRED_VARS LAPACK_LIBRARY LAPACK_links
+  )
+endif()
+
 
 set(BLAS_LIBRARIES ${BLAS_LIBRARY})
 set(LAPACK_LIBRARIES ${LAPACK_LIBRARY})

@@ -107,7 +107,7 @@ foreach(s ${_mkl_libs})
   find_library(SCALAPACK_${s}_LIBRARY
   NAMES ${s}
   HINTS ${MKLROOT}
-  PATH_SUFFIXES lib/intel64
+  PATH_SUFFIXES lib lib/intel64
   NO_DEFAULT_PATH
   )
   if(NOT SCALAPACK_${s}_LIBRARY)
@@ -203,22 +203,19 @@ if(scalapack_cray OR SCALAPACK_LIBRARY)
   scalapack_check()
 endif()
 
-set(scalapack_req false)
-if(SCALAPACK_links)
-  if(scalapack_cray)
-    set(scalapack_req true)
-  elseif(SCALAPACK_LIBRARY)
-    set(scalapack_req true)
-  endif()
-endif()
-
 # --- Finalize
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(SCALAPACK
-REQUIRED_VARS scalapack_req
-HANDLE_COMPONENTS
-)
+
+if(scalapack_cray)
+  find_package_handle_standard_args(SCALAPACK HANDLE_COMPONENTS
+  REQUIRED_VARS SCALAPACK_links
+  )
+else()
+  find_package_handle_standard_args(SCALAPACK HANDLE_COMPONENTS
+  REQUIRED_VARS SCALAPACK_LIBRARY SCALAPACK_links
+  )
+endif()
 
 if(SCALAPACK_FOUND)
   # need if _FOUND guard as can't overwrite imported target even if bad
