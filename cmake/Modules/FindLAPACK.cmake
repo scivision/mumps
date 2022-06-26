@@ -236,7 +236,7 @@ function(find_mkl_libs)
 # https://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
 
 set(_mkl_libs ${ARGV})
-if((UNIX AND NOT APPLE) AND CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
+if((UNIX AND NOT APPLE) AND CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   list(PREPEND _mkl_libs mkl_gf_${_mkl_bitflag}lp64)
 else()
   if(WIN32 AND BUILD_SHARED_LIBS)
