@@ -17,22 +17,27 @@ endif()
 add_compile_definitions(Add_)
 # "Add_" works for all modern compilers we tried.
 
-if(MSVC)
-  add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-endif()
+add_compile_definitions($<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
   add_compile_options(
-  $<IF:$<BOOL:${WIN32}>,/QxHost,-xHost>
   "$<$<COMPILE_LANGUAGE:Fortran>:$<IF:$<BOOL:${WIN32}>,/warn:declarations;/heap-arrays,-implicitnone>>"
   )
+
+  if(NOT CMAKE_CROSSCOMPILING)
+    add_compile_options($<IF:$<BOOL:${WIN32}>,/QxHost,-xHost>)
+  endif()
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
-  add_compile_options(-mtune=native
+  add_compile_options(
   $<$<COMPILE_LANGUAGE:Fortran>:-fimplicit-none>
   $<$<BOOL:${MINGW}>:-w>
   "$<$<AND:$<VERSION_GREATER_EQUAL:${CMAKE_Fortran_COMPILER_VERSION},10>,$<COMPILE_LANGUAGE:Fortran>>:-fallow-argument-mismatch;-fallow-invalid-boz>"
   )
   # MS-MPI emits extreme amounts of nuisance warnings
+
+  if(NOT CMAKE_CROSSCOMPILING)
+    add_compile_options(-mtune=native)
+  endif()
 endif()
 
 # Per MUMPS 5.4 manual section 9, not necessary to set default int64. Doing so causes problems at runtime.
