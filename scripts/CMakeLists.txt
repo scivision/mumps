@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19...3.23)
+cmake_minimum_required(VERSION 3.19)
 
 project(MumpsPrereqs LANGUAGES C Fortran)
 
@@ -34,9 +34,10 @@ string(JSON lapack_tag GET ${json} lapack tag)
 ExternalProject_Add(LAPACK
 GIT_REPOSITORY ${lapack_url}
 GIT_TAG ${lapack_tag}
+GIT_SHALLOW true
 CMAKE_ARGS ${lapack_cmake_args}
 CMAKE_CACHE_ARGS -Darith:STRING=${arith}
-INACTIVITY_TIMEOUT 15
+INACTIVITY_TIMEOUT 60
 )
 
 # Scalapack
@@ -55,8 +56,9 @@ string(JSON scalapack_tag GET ${json} scalapack tag)
 ExternalProject_Add(SCALAPACK
 GIT_REPOSITORY ${scalapack_url}
 GIT_TAG ${scalapack_tag}
+GIT_SHALLOW true
 CMAKE_ARGS ${scalapack_cmake_args}
 CMAKE_CACHE_ARGS -Darith:STRING=${arith}
-INACTIVITY_TIMEOUT 15
+INACTIVITY_TIMEOUT 60
 DEPENDS LAPACK
 )

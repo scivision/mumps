@@ -33,7 +33,7 @@ string(JSON mumps_sha256 GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} sha256)
 FetchContent_Declare(mumps
 URL ${mumps_urls}
 URL_HASH SHA256=${mumps_sha256}
-INACTIVITY_TIMEOUT 15
+INACTIVITY_TIMEOUT 60
 )
 
 FetchContent_Populate(mumps)

@@ -1,10 +1,3 @@
-if(NOT arith)
-  message(FATAL_ERROR "Please specify arithmetic precision like:
-    cmake -B build -Darith=s
-  or similar. See MUMPS/Readme.md for details")
-endif()
-
-
 set_property(GLOBAL PROPERTY JOB_POOLS Njobs=3)
 cmake_host_system_information(RESULT _memfree QUERY AVAILABLE_PHYSICAL_MEMORY)
 # for low memory systems
