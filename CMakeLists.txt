@@ -45,7 +45,19 @@ if(parallel)
   find_package(MPI COMPONENTS C Fortran REQUIRED)
   include(cmake/scalapack.cmake)
 
-  set(NUMERIC_LIBS SCALAPACK::SCALAPACK MPI::MPI_Fortran MPI::MPI_C)
+  set(NUMERIC_LIBS SCALAPACK::SCALAPACK)
+  if(intsize64 AND DEFINED ENV{I_MPI_ROOT})
+    find_library(IMPI_LIB64
+    NAMES mpi_ilp64 libmpi_ilp64
+    HINTS ENV I_MPI_ROOT
+    NO_DEFAULT_PATH
+    PATH_SUFFIXES lib lib/release
+    REQUIRED
+    )
+    list(APPEND NUMERIC_LIBS ${IMPI_LIB64})
+  endif()
+
+  list(APPEND NUMERIC_LIBS MPI::MPI_Fortran MPI::MPI_C)
   if(openmp)
     find_package(OpenMP COMPONENTS C Fortran REQUIRED)
     list(APPEND NUMERIC_LIBS OpenMP::OpenMP_Fortran OpenMP::OpenMP_C)
@@ -55,6 +67,7 @@ else(parallel)
   add_subdirectory(${mumps_SOURCE_DIR}/libseq ${mumps_BINARY_DIR}/libseq)
   set(NUMERIC_LIBS mpiseq)
 endif(parallel)
+
 list(APPEND NUMERIC_LIBS LAPACK::LAPACK ${CMAKE_THREAD_LIBS_INIT})
 
 # --- ordering libs
