@@ -22,6 +22,7 @@ add_compile_definitions($<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${MSVC}>>:_CRT_SECU
 if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
   add_compile_options(
   "$<$<COMPILE_LANGUAGE:Fortran>:$<IF:$<BOOL:${WIN32}>,/warn:declarations;/heap-arrays,-implicitnone>>"
+  $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<BOOL:${intsize64}>>:-i8>
   )
 
   if(NOT CMAKE_CROSSCOMPILING)
