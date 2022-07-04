@@ -17,7 +17,7 @@ endif()
 add_compile_definitions(Add_)
 # "Add_" works for all modern compilers we tried.
 
-add_compile_definitions($<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
+add_compile_definitions($<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${MSVC}>>:_CRT_SECURE_NO_WARNINGS>)
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
   add_compile_options(
