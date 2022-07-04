@@ -45,6 +45,10 @@ if("d" IN_LIST arith)
     add_test(NAME CsimpleReal64 COMMAND Csimple)
   endif()
 
+  set_tests_properties(CsimpleReal64 PROPERTIES
+  DISABLED $<BOOL:${intsize64}>
+  )
+
 endif()
 
 # Windows DLL
