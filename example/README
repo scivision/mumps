@@ -43,9 +43,9 @@ or make all
    make multi
 
    Then try for example:
-   	"mpirun -np 3 ./multiple_arithmetics_example" (parallel version),or
-   	"./multiple_arithmetics_example" (sequential version).
-	
+    "mpirun -np 3 ./multiple_arithmetics_example" (parallel version),or
+    "./multiple_arithmetics_example" (sequential version).
+
 * For the small Fortran driver using the save/restore feature, see comments in simpletest_save_restore.F and try for example
     "mpirun -np 2 ./ssimpletest_save_restore < input_simpletest_real"
     "mpirun -np 2 ./dsimpletest_save_restore < input_simpletest_real"

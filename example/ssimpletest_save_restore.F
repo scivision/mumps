@@ -19,8 +19,8 @@ C  for L U factorization (sym = 0, with working host)
       CALL SMUMPS(mumps_par_save)
       IF (mumps_par_save%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1), 
-     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2) 
+     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1),
+     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2)
        GOTO 500
       END IF
 C  Define problem on the host (processor 0)
@@ -42,8 +42,8 @@ C  Call package for factorization
       CALL SMUMPS(mumps_par_save)
       IF (mumps_par_save%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1), 
-     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2) 
+     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1),
+     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2)
        GOTO 500
       END IF
 C  Call package for save
@@ -53,8 +53,8 @@ C  Call package for save
       CALL SMUMPS(mumps_par_save)
       IF (mumps_par_save%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1), 
-     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2) 
+     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1),
+     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2)
        GOTO 500
       END IF
 C  Deallocate user data
@@ -78,10 +78,10 @@ C  for L U factorization (sym = 0, with working host)
       CALL SMUMPS(mumps_par_restore)
       IF (mumps_par_restore%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &        "  mumps_par_restore%INFOG(1)= ", 
-     &        mumps_par_restore%INFOG(1), 
-     &        "  mumps_par_restore%INFOG(2)= ", 
-     &        mumps_par_restore%INFOG(2) 
+     &        "  mumps_par_restore%INFOG(1)= ",
+     &        mumps_par_restore%INFOG(1),
+     &        "  mumps_par_restore%INFOG(2)= ",
+     &        mumps_par_restore%INFOG(2)
        GOTO 500
       END IF
 C  Call package for restore with OOC feature
@@ -92,9 +92,9 @@ C  Call package for restore with OOC feature
       IF (mumps_par_restore%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
      &        "  mumps_par_restore%INFOG(1)= ",
-     &        mumps_par_restore%INFOG(1), 
-     &        "  mumps_par_restore%INFOG(2)= ", 
-     &        mumps_par_restore%INFOG(2) 
+     &        mumps_par_restore%INFOG(1),
+     &        "  mumps_par_restore%INFOG(2)= ",
+     &        mumps_par_restore%INFOG(2)
        GOTO 500
       END IF
 C  Define rhs on the host (processor 0)
@@ -109,10 +109,10 @@ C  Call package for solution
       CALL SMUMPS(mumps_par_restore)
       IF (mumps_par_restore%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  mumps_par_restore%INFOG(1)= ", 
-     &        mumps_par_restore%INFOG(1), 
-     &            "  mumps_par_restore%INFOG(2)= ", 
-     &        mumps_par_restore%INFOG(2) 
+     &            "  mumps_par_restore%INFOG(1)= ",
+     &        mumps_par_restore%INFOG(1),
+     &            "  mumps_par_restore%INFOG(2)= ",
+     &        mumps_par_restore%INFOG(2)
        GOTO 500
       END IF
 C  Solution has been assembled on the host

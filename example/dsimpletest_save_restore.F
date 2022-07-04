@@ -5,8 +5,8 @@ C
       PROGRAM MUMPS_TEST_SAVE_RESTORE
       IMPLICIT NONE
       INCLUDE 'mpif.h'
-      INCLUDE 'zmumps_struc.h'
-      TYPE (ZMUMPS_STRUC) mumps_par_save, mumps_par_restore
+      INCLUDE 'dmumps_struc.h'
+      TYPE (DMUMPS_STRUC) mumps_par_save, mumps_par_restore
       INTEGER IERR, I
       CALL MPI_INIT(IERR)
 C Define a communicator for the package.
@@ -16,11 +16,11 @@ C  for L U factorization (sym = 0, with working host)
       mumps_par_save%JOB = -1
       mumps_par_save%SYM = 0
       mumps_par_save%PAR = 1
-      CALL ZMUMPS(mumps_par_save)
+      CALL DMUMPS(mumps_par_save)
       IF (mumps_par_save%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1), 
-     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2) 
+     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1),
+     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2)
        GOTO 500
       END IF
 C  Define problem on the host (processor 0)
@@ -39,22 +39,22 @@ C  Activate OOC
       mumps_par_save%ICNTL(22)=1
 C  Call package for factorization
       mumps_par_save%JOB = 4
-      CALL ZMUMPS(mumps_par_save)
+      CALL DMUMPS(mumps_par_save)
       IF (mumps_par_save%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1), 
-     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2) 
+     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1),
+     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2)
        GOTO 500
       END IF
 C  Call package for save
       mumps_par_save%JOB = 7
       mumps_par_save%SAVE_DIR="/tmp"
       mumps_par_save%SAVE_PREFIX="mumps_simpletest_save"
-      CALL ZMUMPS(mumps_par_save)
+      CALL DMUMPS(mumps_par_save)
       IF (mumps_par_save%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1), 
-     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2) 
+     &        "  mumps_par_save%INFOG(1)= ", mumps_par_save%INFOG(1),
+     &        "  mumps_par_save%INFOG(2)= ", mumps_par_save%INFOG(2)
        GOTO 500
       END IF
 C  Deallocate user data
@@ -65,7 +65,7 @@ C  Deallocate user data
       END IF
 C  Destroy the instance (deallocate internal data structures)
       mumps_par_save%JOB = -2
-      CALL ZMUMPS(mumps_par_save)
+      CALL DMUMPS(mumps_par_save)
 C  Now mumps_par_save has be destroyed
 C  We use a new instance mumps_par_restore to finish the computation
 C  Define a communicator for the package on the new instace.
@@ -75,26 +75,26 @@ C  for L U factorization (sym = 0, with working host)
       mumps_par_restore%JOB = -1
       mumps_par_restore%SYM = 0
       mumps_par_restore%PAR = 1
-      CALL ZMUMPS(mumps_par_restore)
+      CALL DMUMPS(mumps_par_restore)
       IF (mumps_par_restore%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &        "  mumps_par_restore%INFOG(1)= ", 
-     &        mumps_par_restore%INFOG(1), 
-     &        "  mumps_par_restore%INFOG(2)= ", 
-     &        mumps_par_restore%INFOG(2) 
+     &        "  mumps_par_restore%INFOG(1)= ",
+     &        mumps_par_restore%INFOG(1),
+     &        "  mumps_par_restore%INFOG(2)= ",
+     &        mumps_par_restore%INFOG(2)
        GOTO 500
       END IF
 C  Call package for restore with OOC feature
       mumps_par_restore%JOB = 8
       mumps_par_restore%SAVE_DIR="/tmp"
       mumps_par_restore%SAVE_PREFIX="mumps_simpletest_save"
-      CALL ZMUMPS(mumps_par_restore)
+      CALL DMUMPS(mumps_par_restore)
       IF (mumps_par_restore%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
      &        "  mumps_par_restore%INFOG(1)= ",
-     &        mumps_par_restore%INFOG(1), 
-     &        "  mumps_par_restore%INFOG(2)= ", 
-     &        mumps_par_restore%INFOG(2) 
+     &        mumps_par_restore%INFOG(1),
+     &        "  mumps_par_restore%INFOG(2)= ",
+     &        mumps_par_restore%INFOG(2)
        GOTO 500
       END IF
 C  Define rhs on the host (processor 0)
@@ -106,13 +106,13 @@ C  Define rhs on the host (processor 0)
       END IF
 C  Call package for solution
       mumps_par_restore%JOB = 3
-      CALL ZMUMPS(mumps_par_restore)
+      CALL DMUMPS(mumps_par_restore)
       IF (mumps_par_restore%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  mumps_par_restore%INFOG(1)= ", 
-     &        mumps_par_restore%INFOG(1), 
-     &            "  mumps_par_restore%INFOG(2)= ", 
-     &        mumps_par_restore%INFOG(2) 
+     &            "  mumps_par_restore%INFOG(1)= ",
+     &        mumps_par_restore%INFOG(1),
+     &            "  mumps_par_restore%INFOG(2)= ",
+     &        mumps_par_restore%INFOG(2)
        GOTO 500
       END IF
 C  Solution has been assembled on the host
@@ -128,10 +128,10 @@ C  Delete the saved files
 C  Note mumps_par_restore%ICNTL(34) is kept to default (0) to suppress
 C  also the OOC files.
       mumps_par_restore%JOB = -3
-      CALL ZMUMPS(mumps_par_restore)
+      CALL DMUMPS(mumps_par_restore)
 C  Destroy the instance (deallocate internal data structures)
       mumps_par_restore%JOB = -2
-      CALL ZMUMPS(mumps_par_restore)
+      CALL DMUMPS(mumps_par_restore)
  500  CALL MPI_FINALIZE(IERR)
       STOP
       END

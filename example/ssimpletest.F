@@ -5,8 +5,8 @@ C
       PROGRAM MUMPS_TEST
       IMPLICIT NONE
       INCLUDE 'mpif.h'
-      INCLUDE 'dmumps_struc.h'
-      TYPE (DMUMPS_STRUC) mumps_par
+      INCLUDE 'smumps_struc.h'
+      TYPE (SMUMPS_STRUC) mumps_par
       INTEGER IERR, I
       INTEGER(8) I8
       CALL MPI_INIT(IERR)
@@ -17,11 +17,11 @@ C  for L U factorization (sym = 0, with working host)
       mumps_par%JOB = -1
       mumps_par%SYM = 0
       mumps_par%PAR = 1
-      CALL DMUMPS(mumps_par)
+      CALL SMUMPS(mumps_par)
       IF (mumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1), 
-     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2) 
+     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1),
+     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2)
        GOTO 500
       END IF
 C  Define problem on the host (processor 0)
@@ -41,11 +41,11 @@ C  Define problem on the host (processor 0)
       END IF
 C  Call package for solution
       mumps_par%JOB = 6
-      CALL DMUMPS(mumps_par)
+      CALL SMUMPS(mumps_par)
       IF (mumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1), 
-     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2) 
+     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1),
+     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2)
        GOTO 500
       END IF
 C  Solution has been assembled on the host
@@ -61,11 +61,11 @@ C  Deallocate user data
       END IF
 C  Destroy the instance (deallocate internal data structures)
       mumps_par%JOB = -2
-      CALL DMUMPS(mumps_par)
+      CALL SMUMPS(mumps_par)
       IF (mumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1), 
-     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2) 
+     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1),
+     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2)
        GOTO 500
       END IF
  500  CALL MPI_FINALIZE(IERR)

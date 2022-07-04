@@ -4,7 +4,7 @@
  *  on Thu Oct 22 09:29:08 UTC 2020
  *
  */
-/* Example program using the C interface to the 
+/* Example program using the C interface to the
  * double real arithmetic version of MUMPS, dmumps_c.
  * We solve the system A x = RHS with
  *   A = diag(1 2) and RHS = [1 4]^T

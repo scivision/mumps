@@ -20,8 +20,8 @@ C  for L U factorization (sym = 0, with working host)
       CALL CMUMPS(mumps_par)
       IF (mumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1), 
-     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2) 
+     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1),
+     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2)
        GOTO 500
       END IF
 C  Define problem on the host (processor 0)
@@ -44,8 +44,8 @@ C  Call package for solution
       CALL CMUMPS(mumps_par)
       IF (mumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1), 
-     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2) 
+     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1),
+     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2)
        GOTO 500
       END IF
 C  Solution has been assembled on the host
@@ -64,8 +64,8 @@ C  Destroy the instance (deallocate internal data structures)
       CALL CMUMPS(mumps_par)
       IF (mumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1), 
-     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2) 
+     &            "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1),
+     &            "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2)
        GOTO 500
       END IF
  500  CALL MPI_FINALIZE(IERR)

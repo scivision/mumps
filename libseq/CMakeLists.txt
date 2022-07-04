@@ -25,6 +25,6 @@ ${CMAKE_CURRENT_SOURCE_DIR}/mpif.h
 TYPE INCLUDE
 )
 
-# so that tests/examples work
+# so that examples work
 add_library(MPI::MPI_C ALIAS MUMPS::MPISEQ)
 add_library(MPI::MPI_Fortran ALIAS MUMPS::MPISEQ)

@@ -92,7 +92,7 @@ add_subdirectory(${mumps_SOURCE_DIR}/src ${mumps_BINARY_DIR}/src)
 
 
 if(BUILD_TESTING)
-  add_subdirectory(tests)
+  add_subdirectory(test)
 endif()
 
 

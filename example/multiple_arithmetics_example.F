@@ -28,8 +28,8 @@ C  for L U factorization (sym = 0, with working host)
       CALL SMUMPS(smumps_par)
       IF (smumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  smumps_par%INFOG(1)= ", smumps_par%INFOG(1), 
-     &            "  smumps_par%INFOG(2)= ", smumps_par%INFOG(2) 
+     &            "  smumps_par%INFOG(1)= ", smumps_par%INFOG(1),
+     &            "  smumps_par%INFOG(2)= ", smumps_par%INFOG(2)
        GOTO 500
       END IF
 
@@ -42,72 +42,71 @@ C  for L U factorization (sym = 0, with working host)
       zmumps_par%JOB = smumps_par%JOB
       zmumps_par%SYM = smumps_par%SYM
       zmumps_par%PAR = smumps_par%PAR
-      
+
       CALL DMUMPS(dmumps_par)
       IF (dmumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  dmumps_par%INFOG(1)= ", dmumps_par%INFOG(1), 
-     &            "  dmumps_par%INFOG(2)= ", dmumps_par%INFOG(2) 
+     &            "  dmumps_par%INFOG(1)= ", dmumps_par%INFOG(1),
+     &            "  dmumps_par%INFOG(2)= ", dmumps_par%INFOG(2)
        GOTO 500
       END IF
 
       CALL CMUMPS(cmumps_par)
       IF (cmumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  cmumps_par%INFOG(1)= ", cmumps_par%INFOG(1), 
-     &            "  cmumps_par%INFOG(2)= ", cmumps_par%INFOG(2) 
+     &            "  cmumps_par%INFOG(1)= ", cmumps_par%INFOG(1),
+     &            "  cmumps_par%INFOG(2)= ", cmumps_par%INFOG(2)
        GOTO 500
       END IF
 
       CALL ZMUMPS(zmumps_par)
       IF (zmumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  zmumps_par%INFOG(1)= ", zmumps_par%INFOG(1), 
-     &            "  zmumps_par%INFOG(2)= ", zmumps_par%INFOG(2) 
+     &            "  zmumps_par%INFOG(1)= ", zmumps_par%INFOG(1),
+     &            "  zmumps_par%INFOG(2)= ", zmumps_par%INFOG(2)
        GOTO 500
       END IF
 
       IF ( smumps_par%MYID .eq. 0 )THEN
          write(6,'(A)') "Creation of all instaces went well"
       ENDIF
-           
+
 C     Destroy the instances (deallocate internal data structures)
       smumps_par%JOB = -2
       CALL SMUMPS(smumps_par)
       IF (smumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  smumps_par%INFOG(1)= ", smumps_par%INFOG(1), 
-     &            "  smumps_par%INFOG(2)= ", smumps_par%INFOG(2) 
+     &            "  smumps_par%INFOG(1)= ", smumps_par%INFOG(1),
+     &            "  smumps_par%INFOG(2)= ", smumps_par%INFOG(2)
        GOTO 500
       END IF
 
       dmumps_par%JOB = smumps_par%JOB
       cmumps_par%JOB = smumps_par%JOB
       zmumps_par%JOB = smumps_par%JOB
-      
+
       CALL DMUMPS(dmumps_par)
       IF (dmumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  dmumps_par%INFOG(1)= ", dmumps_par%INFOG(1), 
-     &            "  dmumps_par%INFOG(2)= ", dmumps_par%INFOG(2) 
+     &            "  dmumps_par%INFOG(1)= ", dmumps_par%INFOG(1),
+     &            "  dmumps_par%INFOG(2)= ", dmumps_par%INFOG(2)
        GOTO 500
       END IF
       CALL CMUMPS(cmumps_par)
       IF (cmumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  cmumps_par%INFOG(1)= ", cmumps_par%INFOG(1), 
-     &            "  cmumps_par%INFOG(2)= ", cmumps_par%INFOG(2) 
+     &            "  cmumps_par%INFOG(1)= ", cmumps_par%INFOG(1),
+     &            "  cmumps_par%INFOG(2)= ", cmumps_par%INFOG(2)
        GOTO 500
       END IF
       CALL ZMUMPS(zmumps_par)
       IF (zmumps_par%INFOG(1).LT.0) THEN
        WRITE(6,'(A,A,I6,A,I9)') " ERROR RETURN: ",
-     &            "  zmumps_par%INFOG(1)= ", zmumps_par%INFOG(1), 
-     &            "  zmumps_par%INFOG(2)= ", zmumps_par%INFOG(2) 
+     &            "  zmumps_par%INFOG(1)= ", zmumps_par%INFOG(1),
+     &            "  zmumps_par%INFOG(2)= ", zmumps_par%INFOG(2)
        GOTO 500
       END IF
-      
+
  500  CALL MPI_FINALIZE(IERR)
       STOP
       END PROGRAM MUMPS_MULTIPLE_ARITHMETICS_TEST
-
