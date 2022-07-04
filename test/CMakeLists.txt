@@ -1,13 +1,13 @@
-# testing what we just built
+set_directory_properties(PROPERTIES LABELS "unit;mumps")
 
 if("d" IN_LIST arith)
   add_executable(mumpscfg test_mumps.f90)
-  target_link_libraries(mumpscfg PRIVATE MUMPS::MUMPS ${NUMERIC_LIBS})
+  target_link_libraries(mumpscfg PRIVATE MUMPS::MUMPS)
 
   if(parallel)
-    add_test(NAME mumps:config COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:mumpscfg>)
+    add_test(NAME MumpsConfig COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:mumpscfg>)
   else()
-    add_test(NAME mumps:config COMMAND mumpscfg)
+    add_test(NAME MumpsConfig COMMAND mumpscfg)
   endif()
 endif()
 
@@ -17,35 +17,34 @@ endif()
 
 if("s" IN_LIST arith)
   add_executable(s_simple s_simple.f90)
-  target_link_libraries(s_simple PRIVATE MUMPS::MUMPS ${NUMERIC_LIBS})
+  target_link_libraries(s_simple PRIVATE MUMPS::MUMPS)
 
   if(parallel)
-    add_test(NAME mumps:simpleReal32 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:s_simple>)
+    add_test(NAME SimpleReal32 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:s_simple>)
   else()
-    add_test(NAME mumps:simpleReal32 COMMAND s_simple)
+    add_test(NAME SimpleReal32 COMMAND s_simple)
   endif()
 endif()
 
 if("d" IN_LIST arith)
   add_executable(d_simple d_simple.f90)
-  target_link_libraries(d_simple PRIVATE MUMPS::MUMPS ${NUMERIC_LIBS})
+  target_link_libraries(d_simple PRIVATE MUMPS::MUMPS)
 
   if(parallel)
-    add_test(NAME mumps:simpleReal64 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:d_simple>)
+    add_test(NAME SimpleReal64 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:d_simple>)
   else()
-    add_test(NAME mumps:simpleReal64 COMMAND d_simple)
+    add_test(NAME SimpleReal64 COMMAND d_simple)
   endif()
 
-  if(ClangTest)
-    add_executable(Csimple simple.c)
-    target_link_libraries(Csimple PRIVATE MUMPS::MUMPS ${NUMERIC_LIBS})
+  add_executable(Csimple simple.c)
+  target_link_libraries(Csimple PRIVATE MUMPS::MUMPS)
 
-    if(parallel)
-      add_test(NAME mumps:CsimpleReal64 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:Csimple>)
-    else()
-      add_test(NAME mumps:CsimpleReal64 COMMAND Csimple)
-    endif()
+  if(parallel)
+    add_test(NAME CsimpleReal64 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:Csimple>)
+  else()
+    add_test(NAME CsimpleReal64 COMMAND Csimple)
   endif()
+
 endif()
 
 # Windows DLL
