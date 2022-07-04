@@ -17,7 +17,7 @@ if(ierr/=0) error stop 'problem initializing MPI'
 
 call MPI_COMM_size(MPI_COMM_WORLD, num_mpi, ierr)
 if(ierr/=0) error stop 'problem getting number of MPI processes'
-print '(A,I3,A)', 'using ',num_mpi,' MPI processes'
+print '(a,i0,a)', 'using ',num_mpi,' MPI processes'
 ! Define a communicator for the package.
 mumps_par%COMM = MPI_COMM_WORLD
 !  Initialize an instance of the package
@@ -35,7 +35,7 @@ mumps_par%icntl(4) = 1           ! default is 2, this reduces verbosity
 
 ! === config done, now check config
 IF (mumps_par%INFOG(1) < 0) THEN
-  WRITE(stderr,'(A,A,I6,A,I9)') " ERROR RETURN: ", &
+  WRITE(stderr,'(A,A,I0,A,I0)') "ERROR:initialization: ", &
   "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1), &
   "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2)
 
@@ -59,7 +59,7 @@ END IF
 mumps_par%JOB = 6
 CALL DMUMPS(mumps_par)
 IF (mumps_par%INFOG(1) < 0) THEN
-  WRITE(stderr,'(A,A,I6,A,I9)') " ERROR RETURN: ", &
+  WRITE(stderr,'(A,A,I0,A,I0)') " ERROR RETURN: ", &
   "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1), &
   "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2)
 

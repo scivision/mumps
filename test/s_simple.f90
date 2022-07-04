@@ -17,7 +17,7 @@ if(ierr/=0) error stop 'problem initializing MPI'
 
 call MPI_COMM_size(MPI_COMM_WORLD, num_mpi, ierr)
 if(ierr/=0) error stop 'problem getting number of MPI processes'
-print '(A,I3,A)', 'using ',num_mpi,' MPI processes'
+print '(a,i0,a)', 'using ',num_mpi,' MPI processes'
 ! Define a communicator for the package.
 mumps_par%COMM = MPI_COMM_WORLD
 !  Initialize an instance of the package
