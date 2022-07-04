@@ -39,6 +39,10 @@ elseif(CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
   if(NOT CMAKE_CROSSCOMPILING)
     add_compile_options(-mtune=native)
   endif()
+
+  if(intsize64 AND DEFINED ENV{I_MPI_ROOT})
+    add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:-fdefault-integer-8>)
+  endif()
 endif()
 
 # Per MUMPS 5.4 manual section 9, not necessary to set default int64. Doing so causes problems at runtime.
