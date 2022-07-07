@@ -8,7 +8,7 @@
     "downloadUrl": "https://github.com/scivision/mumps/releases",
     "issueTracker": "https://github.com/scivision/mumps/issues",
     "name": "MUMPS",
-    "version": "5.5.0.2",
+    "version": "5.5.0.3",
     "identifier": "10.1145/3242094",
     "description": "MUltifrontal Massively Parallel sparse direct Solver",
     "applicationCategory": "linear algebra",
