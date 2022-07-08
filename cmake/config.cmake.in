@@ -8,7 +8,9 @@ find_dependency(LAPACK)
 
 include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
 
-if(NOT TARGET MUMPS::MPISEQ)
+if(TARGET MUMPS::MPISEQ)
+  set(MUMPS_mpiseq_FOUND true)
+else()
   find_dependency(MPI COMPONENTS C Fortran)
   find_dependency(SCALAPACK)
 endif()

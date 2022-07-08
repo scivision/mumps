@@ -15,7 +15,12 @@ DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "http://mumps-solver.org/"
 )
 
-include(CTest)
+enable_testing()
+if(DEFINED BUILD_TESTING)
+  set(${PROJECT_NAME}_BUILD_TESTING ${BUILD_TESTING})
+else()
+  set(${PROJECT_NAME}_BUILD_TESTING true)
+endif()
 
 if(NOT MUMPS_UPSTREAM_VERSION)
   set(MUMPS_UPSTREAM_VERSION 5.5.0)
@@ -104,7 +109,7 @@ configure_file(src/CMakeLists.txt ${mumps_SOURCE_DIR}/src/ COPYONLY)
 add_subdirectory(${mumps_SOURCE_DIR}/src ${mumps_BINARY_DIR}/src)
 
 
-if(BUILD_TESTING)
+if(${PROJECT_NAME}_BUILD_TESTING)
   add_subdirectory(test)
 endif()
 

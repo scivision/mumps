@@ -4,7 +4,7 @@
     "license": "https://spdx.org/licenses/CECILL-C.html",
     "codeRepository": "https://github.com/scivision/mumps",
     "contIntegration": "https://github.com/scivision/mumps/actions",
-    "dateModified": "2022-04-14",
+    "dateModified": "2022-07-08",
     "downloadUrl": "https://github.com/scivision/mumps/releases",
     "issueTracker": "https://github.com/scivision/mumps/issues",
     "name": "MUMPS",

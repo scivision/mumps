@@ -48,10 +48,30 @@ jobs:
         printenv >> $GITHUB_ENV
 
     - name: CMake Configure
-      run: cmake -B build
+      run: cmake -B build -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}
+
+    - name: print config log
+      if: ${{ failure() }}
+      run: cat build/CMakeFiles/CMakeError.log
 
     - name: CMake build
       run: cmake --build build
 
     - name: unit test
       run: ctest --test-dir build --preset default --output-junit test-unit-oneapi.xml
+
+    - name: install package
+      run: cmake --install build
+
+    - name: configure example
+      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH=${{ runner.temp }}
+
+    - name: print config log
+      if: ${{ failure() }}
+      run: cat example/build/CMakeFiles/CMakeError.log
+
+    - name: build example
+      run: cmake --build example/build --parallel || cmake --build example/build -v
+
+    - name: test example
+      run: ctest --test-dir example/build -V

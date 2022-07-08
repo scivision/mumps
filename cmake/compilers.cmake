@@ -14,7 +14,7 @@ endif()
 
 # --- compiler check
 
-add_compile_definitions(Add_)
+add_compile_definitions("$<$<COMPILE_LANGUAGE:C>:Add_>")
 # "Add_" works for all modern compilers we tried.
 
 add_compile_definitions($<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${MSVC}>>:_CRT_SECURE_NO_WARNINGS>)
