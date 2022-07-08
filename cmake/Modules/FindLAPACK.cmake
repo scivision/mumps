@@ -304,12 +304,6 @@ if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
   # double-quotes are necessary per CMake to_cmake_path docs.
   file(TO_CMAKE_PATH "$ENV{MKLROOT}" MKLROOT)
 
-  if(BUILD_SHARED_LIBS)
-    set(_mkltype dynamic)
-  else()
-    set(_mkltype static)
-  endif()
-
   if(MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
     set(_mkl_bitflag i)
   else()
@@ -397,21 +391,29 @@ set(CMAKE_REQUIRED_LINK_OPTIONS)
 set(CMAKE_REQUIRED_INCLUDES)
 set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARY})
 
-foreach(i s d)
-  check_source_compiles(Fortran
-  "program check_lapack
-  implicit none (type, external)
-  external :: ${i}isnan
-  end program" LAPACK_${i}_links)
+check_source_compiles(Fortran
+"program check_lapack
+use, intrinsic :: iso_fortran_env, only : real32
+implicit none (type, external)
+real(real32), external :: snrm2
+print *, snrm2(1, [0._real32], 1)
+end program"
+LAPACK_s_FOUND
+)
 
-  if(LAPACK_${i}_links)
-    set(LAPACK_${i}_FOUND true PARENT_SCOPE)
-    set(LAPACK_links true)
-  endif()
+check_source_compiles(Fortran
+"program check_lapack
+use, intrinsic :: iso_fortran_env, only : real64
+implicit none (type, external)
+real(real64), external :: dnrm2
+print *, dnrm2(1, [0._real64], 1)
+end program"
+LAPACK_d_FOUND
+)
 
-endforeach()
-
-set(LAPACK_links ${LAPACK_links} PARENT_SCOPE)
+if(LAPACK_s_FOUND OR LAPACK_d_FOUND)
+  set(LAPACK_links true PARENT_SCOPE)
+endif()
 
 endfunction(lapack_check)
 

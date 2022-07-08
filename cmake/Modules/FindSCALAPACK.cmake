@@ -66,56 +66,59 @@ endif()
 
 set(CMAKE_REQUIRED_FLAGS)
 set(CMAKE_REQUIRED_LINK_OPTIONS)
-set(CMAKE_REQUIRED_INCLUDES ${SCALAPACK_INCLUDE_DIR} ${LAPACK_INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS} ${MPI_C_INCLUDE_DIRS})
-set(CMAKE_REQUIRED_LIBRARIES ${SCALAPACK_LIBRARY} ${LAPACK_LIBRARIES} ${MPI_Fortran_LIBRARIES} ${MPI_C_LIBRARIES})
+set(CMAKE_REQUIRED_INCLUDES ${SCALAPACK_INCLUDE_DIR})
+set(CMAKE_REQUIRED_LIBRARIES ${SCALAPACK_LIBRARY})
+if(BLACS_LIBRARY)
+  list(APPEND CMAKE_REQUIRED_LIBRARIES ${BLACS_LIBRARY})
+endif()
+list(APPEND CMAKE_REQUIRED_LIBRARIES LAPACK::LAPACK MPI::MPI_Fortran)
+
 # MPI needed for ifort
 
-foreach(i s d)
+check_source_compiles(Fortran
+"program test
+use, intrinsic :: iso_fortran_env, only : real64
+implicit none (type, external)
+real(real64), external :: pdlamch
+integer :: ictxt
+print *, pdlamch(ictxt, 'E')
+end program"
+SCALAPACK_d_FOUND
+)
 
-  check_source_compiles(Fortran
-  "program test
-  implicit none (type, external)
-  external :: p${i}lamch
-  external :: blacs_pinfo, blacs_get, blacs_gridinit, blacs_gridexit, blacs_exit
-  end program"
-  SCALAPACK_${i}_links
-  )
+check_source_compiles(Fortran
+"program test
+use, intrinsic :: iso_fortran_env, only : real32
+implicit none (type, external)
+real(real32), external :: pslamch
+integer :: ictxt
+print *, pslamch(ictxt, 'E')
+end program"
+SCALAPACK_s_FOUND
+)
 
-  if(SCALAPACK_${i}_links)
-    set(SCALAPACK_${i}_FOUND true PARENT_SCOPE)
-    set(SCALAPACK_links true)
-  endif()
-
-endforeach()
-
-set(SCALAPACK_links ${SCALAPACK_links} PARENT_SCOPE)
+if(SCALAPACK_s_FOUND OR SCALAPACK_d_FOUND)
+  set(SCALAPACK_links true PARENT_SCOPE)
+endif()
 
 endfunction(scalapack_check)
 
 
-function(scalapack_mkl)
+function(scalapack_mkl scalapack_name blacs_name)
 
-if(BUILD_SHARED_LIBS)
-  set(_mkltype dynamic)
-else()
-  set(_mkltype static)
-endif()
+find_library(SCALAPACK_LIBRARY
+NAMES ${scalapack_name}
+HINTS ${MKLROOT}
+PATH_SUFFIXES lib lib/intel64
+NO_DEFAULT_PATH
+)
 
-set(_mkl_libs ${ARGV})
-
-foreach(s ${_mkl_libs})
-  find_library(SCALAPACK_${s}_LIBRARY
-  NAMES ${s}
-  HINTS ${MKLROOT}
-  PATH_SUFFIXES lib lib/intel64
-  NO_DEFAULT_PATH
-  )
-  if(NOT SCALAPACK_${s}_LIBRARY)
-    return()
-  endif()
-
-  list(APPEND SCALAPACK_LIBRARY ${SCALAPACK_${s}_LIBRARY})
-endforeach()
+find_library(BLACS_LIBRARY
+NAMES ${blacs_name}
+HINTS ${MKLROOT}
+PATH_SUFFIXES lib lib/intel64
+NO_DEFAULT_PATH
+)
 
 find_path(SCALAPACK_INCLUDE_DIR
 NAMES mkl_scalapack.h
@@ -124,14 +127,11 @@ PATH_SUFFIXES include
 NO_DEFAULT_PATH
 )
 
-if(NOT SCALAPACK_INCLUDE_DIR)
-  return()
-endif()
-
 # pc_mkl_INCLUDE_DIRS on Windows injects breaking garbage
 
-set(SCALAPACK_MKL_FOUND true PARENT_SCOPE)
-set(SCALAPACK_LIBRARY ${SCALAPACK_LIBRARY} PARENT_SCOPE)
+if(SCALAPACK_LIBRARY AND BLACS_LIBRARY AND SCALAPACK_INCLUDE_DIR)
+  set(SCALAPACK_MKL_FOUND true PARENT_SCOPE)
+endif()
 
 endfunction(scalapack_mkl)
 
