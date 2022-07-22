@@ -19,16 +19,30 @@ add_compile_definitions("$<$<COMPILE_LANGUAGE:C>:Add_>")
 
 add_compile_definitions($<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${MSVC}>>:_CRT_SECURE_NO_WARNINGS>)
 
-if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
+if(CMAKE_C_COMPILER_ID MATCHES "Intel")
+  if(NOT CMAKE_CROSSCOMPILING)
+    if(WIN32)
+      add_compile_options($<$<COMPILE_LANGUAGE:C>:/QxHost>)
+    else()
+      add_compile_options($<$<COMPILE_LANGUAGE:C>:-xHost>)
+    endif()
+  endif()
+endif()
+
+if(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
   add_compile_options(
   "$<$<COMPILE_LANGUAGE:Fortran>:$<IF:$<BOOL:${WIN32}>,/warn:declarations;/heap-arrays,-implicitnone>>"
   $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<BOOL:${intsize64}>>:-i8>
   )
 
   if(NOT CMAKE_CROSSCOMPILING)
-    add_compile_options($<IF:$<BOOL:${WIN32}>,/QxHost,-xHost>)
+    if(WIN32)
+      add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:/QxHost>)
+    else()
+      add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:-xHost>)
+    endif()
   endif()
-elseif(CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
+elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   add_compile_options(
   $<$<COMPILE_LANGUAGE:Fortran>:-fimplicit-none>
   $<$<BOOL:${MINGW}>:-w>

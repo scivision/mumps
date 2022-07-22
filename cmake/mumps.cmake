@@ -6,7 +6,7 @@ endif()
 
 # --- MUMPS
 
-if(CMAKE_Fortran_COMPILER_ID STREQUAL GNU)
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   set(mumps_comp ${arith})
   if(NOT parallel)
     list(APPEND mumps_comp mpiseq)
