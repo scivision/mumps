@@ -24,11 +24,11 @@ jobs:
 
     strategy:
       matrix:
+        int64: [true, false]
         shared: [true, false]
         img: [ {os: ubuntu-latest, fc: gfortran, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev},
                {os: macos-latest, fc: gfortran-11, cmd: brew install gcc lapack scalapack open-mpi}
         ]
-        int64: [true, false]
         exclude:
           - shared: true
             img: {os: macos-latest}
@@ -57,7 +57,7 @@ jobs:
     #   if: runner.os == 'Linux'
     #   run: cmake -B build -Darith=d -Dscotch:BOOL=true -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
-    - name: configure
+    - name: configure int64=${{ matrix.int64 }}
       run: cmake -B build -Darith=d -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }} -Dintsize64:BOOL=${{ matrix.int64 }}
 
     - name: build release
