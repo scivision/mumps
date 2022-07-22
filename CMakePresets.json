@@ -3,15 +3,6 @@
 
 "configurePresets": [
 {
-  "name": "build",
-  "displayName": "build all libraries",
-  "description": "Build all external libraries (except MPI) without searching for existing libraries.",
-  "cacheVariables": {
-    "lapack_external": "on",
-    "scalapack_external": "on"
-  }
-},
-{
   "name": "phony"
 }
 ],
