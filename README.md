@@ -19,6 +19,7 @@ Platforms known to work with MUMPS and CMake include:
   * MSYS2 (GCC)
   * Windows Subsystem for Linux (GCC)
   * Intel oneAPI
+  * Visual Studio (C code) + oneAPI (Fortran code)
 * MacOS
   * GCC (Homebrew)
   * Intel oneAPI
@@ -47,6 +48,12 @@ or GNU Make:
 
 ```sh
 cmake -G "MinGW Makefiles" -B build
+```
+
+For Visual Studio, from Intel oneAPI command prompt:
+
+```sh
+cmake -B build -G Ninja -DCMAKE_C_COMPILER=cl
 ```
 
 With the default options, under the build/ directory this results in library binaries:
