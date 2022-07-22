@@ -28,9 +28,13 @@ jobs:
         img: [ {os: ubuntu-latest, fc: gfortran, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev},
                {os: macos-latest, fc: gfortran-11, cmd: brew install gcc lapack scalapack open-mpi}
         ]
+        int64: [true, false]
         exclude:
           - shared: true
             img: {os: macos-latest}
+          - shared: true
+            int64: true
+          # int64-shared: just saving ci resources
 
 
     runs-on: ${{ matrix.img.os }}
@@ -54,7 +58,7 @@ jobs:
     #   run: cmake -B build -Darith=d -Dscotch:BOOL=true -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
     - name: configure
-      run: cmake -B build -Darith=d -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+      run: cmake -B build -Darith=d -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }} -Dintsize64:BOOL=${{ matrix.int64 }}
 
     - name: build release
       run: cmake --build build --parallel
@@ -70,25 +74,6 @@ jobs:
       run: cmake --build example/build --parallel || cmake --build example/build -v
     - name: test example
       run: ctest --test-dir example/build -V
-
-
-  intsize64:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Install prereqs
-      run: |
-        sudo apt update
-        sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev
-
-    - run: cmake -B build -Dintsize64:BOOL=yes -Darith=d
-    - run: cmake --build build --parallel
-    - run: ctest --test-dir build --preset default
-
-    - run: cmake --install build
 
 
   linux-build:
