@@ -1,6 +1,5 @@
 # a few versions of MUMPS are known to work and are specifically listed in the
 # libraries.json file.
-# We allow other versions of MUMPS to be requested, but they might not build or run.
 
 include(FetchContent)
 
