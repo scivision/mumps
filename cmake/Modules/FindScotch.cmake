@@ -97,10 +97,8 @@ set(Scotch_INCLUDE_DIRS ${Scotch_INCLUDE_DIR})
 
 if(NOT TARGET Scotch::Scotch)
   add_library(Scotch::Scotch INTERFACE IMPORTED)
-  set_target_properties(Scotch::Scotch PROPERTIES
-  INTERFACE_LINK_LIBRARIES "${Scotch_LIBRARIES}"
-  INTERFACE_INCLUDE_DIRECTORIES "${Scotch_INCLUDE_DIR}"
-  )
+  set_property(TARGET Scotch::Scotch PROPERTY INTERFACE_LINK_LIBRARIES "${Scotch_LIBRARIES}")
+  set_property(TARGET Scotch::Scotch PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${Scotch_INCLUDE_DIR}")
 endif()
 endif(Scotch_FOUND)
 

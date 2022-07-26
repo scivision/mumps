@@ -1,4 +1,4 @@
-set_directory_properties(PROPERTIES LABELS "unit;mumps")
+set_property(DIRECTORY PROPERTY LABELS "unit;mumps")
 
 function(mumps_test name tgt)
 
@@ -39,22 +39,18 @@ if("d" IN_LIST arith AND LAPACK_d_FOUND)
 
   mumps_test(CsimpleReal64 Csimple)
 
-  set_tests_properties(CsimpleReal64 PROPERTIES
-  DISABLED $<BOOL:${intsize64}>
-  )
+  set_property(TEST CsimpleReal64 PROPERTY DISABLED $<BOOL:${intsize64}>)
 
 endif()
 
 # Windows DLL
 get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 
-set_tests_properties(${test_names} PROPERTIES
-RESOURCE_LOCK cpu_mpi
-TIMEOUT 30
-)
+set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
+set_property(TEST ${test_names} PROPERTY TIMEOUT 30)
 
 if(WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.22)
-  set_tests_properties(${test_names} PROPERTIES
+  set_property(TEST ${test_names} PROPERTY
   ENVIRONMENT_MODIFICATION "PATH=path_list_append:${CMAKE_INSTALL_PREFIX}/bin;PATH=path_list_append:${CMAKE_PREFIX_PATH}/bin;PATH=path_list_append:${PROJECT_BINARY_DIR}"
   )
 endif()

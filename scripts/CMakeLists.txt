@@ -15,7 +15,7 @@ endif()
 
 set(CMAKE_TLS_VERIFY true)
 
-set_directory_properties(PROPERTIES EP_UPDATE_DISCONNECTED true)
+set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED true)
 
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/libraries.json json)
 

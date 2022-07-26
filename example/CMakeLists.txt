@@ -52,16 +52,15 @@ foreach(a s d)
     add_test(NAME saveRestore_${a}
     COMMAND ${CMAKE_COMMAND} -Dparallel:BOOL=${parallel} -Dexe:FILEPATH=$<TARGET_FILE:${a}simpletest_save_restore> -Din:PATH=${CMAKE_CURRENT_SOURCE_DIR}/${_${a}filename} -P ${PROJECT_SOURCE_DIR}/run_ex.cmake
     )
-    set_tests_properties(saveRestore_${a} PROPERTIES
-    DISABLED $<BOOL:${intsize64}>
-    )
+    set_property(TEST saveRestore_${a} PROPERTY DISABLED $<BOOL:${intsize64}>)
   endif()
 endforeach()
 
 if(MUMPS_d_FOUND)
   add_executable(c_example c_example.c)
   target_link_libraries(c_example PRIVATE MUMPS::MUMPS)
-  set_target_properties(c_example PROPERTIES LINKER_LANGUAGE Fortran)  # GCC needs Fortran
+  set_property(TARGET c_example PROPERTY LINKER_LANGUAGE Fortran)
+  # GCC needs Fortran
 
   if(parallel)
     add_test(NAME example_C
@@ -75,14 +74,14 @@ endif()
 # Windows DLL
 get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 
-set_tests_properties(${test_names} PROPERTIES TIMEOUT 10)
+set_property(TEST ${test_names} PROPERTY TIMEOUT 10)
 
 if(parallel)
-  set_tests_properties(${test_names} PROPERTIES RESOURCE_LOCK cpu_mpi)
+  set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
 endif()
 
 if(WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.22)
-  set_tests_properties(${test_names} PROPERTIES
+  set_property(TEST ${test_names} PROPERTY
   ENVIRONMENT_MODIFICATION "PATH=path_list_append:${CMAKE_INSTALL_PREFIX}/bin;PATH=path_list_append:${CMAKE_PREFIX_PATH}/bin;PATH=path_list_append:${PROJECT_BINARY_DIR}"
   )
 endif()
