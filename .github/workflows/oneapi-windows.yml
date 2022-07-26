@@ -1,0 +1,64 @@
+# https://oneapi-src.github.io/oneapi-ci/
+
+name: oneapi-windows
+
+env:
+  CMAKE_GENERATOR: "MinGW Makefiles"
+  WINDOWS_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18674/w_BaseKit_p_2022.2.0.252_offline.exe
+  WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18680/w_HPCKit_p_2022.2.0.173_offline.exe
+  WINDOWS_CPP_COMPONENTS: intel.oneapi.win.cpp-compiler
+  WINDOWS_FORTRAN_COMPONENTS: intel.oneapi.win.ifort-compiler
+  WINDOWS_MKL_COMPONENTS: intel.oneapi.win.mkl.devel
+  WINDOWS_MPI_COMPONENTS: intel.oneapi.win.mpi.devel
+  CC: icx
+  CXX: icx
+  FC: ifx
+  CMAKE_BUILD_TYPE: Release
+  # Release is necessary to avoid ITERATOR_DEBUG_LEVEL mismatch with libstdc++
+
+on:
+  push:
+    paths:
+      - "**.bat"
+      - "**/*.cpp"
+      - "**.f90"
+      - "**.F90"
+      - "**.cmake"
+      - "**/CMakeLists.txt"
+      - ".github/workflows/oneapi-windows.yml"
+      - ".github/workflows/oneapi_install_windows.bat"
+      - ".github/workflows/oneapi_run_windows.bat"
+
+jobs:
+
+  windows-oneapi:
+    timeout-minutes: 60
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: cache install oneAPI
+      timeout-minutes: 10
+      id: cache-install
+      uses: actions/cache@v3
+      with:
+        path: |
+          C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat
+          C:\Program Files (x86)\Intel\oneAPI\compiler
+        key: install-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_CPP_COMPONENTS }}-${{ env.WINDOWS_FORTRAN_COMPONENTS }}-${{ env.WINDOWS_MKL_COMPONENTS }}
+
+    - name: no-cache install oneAPI
+      timeout-minutes: 40
+      if: steps.cache-install.outputs.cache-hit != 'true'
+      run: |
+        ./.github/workflows/oneapi_install_windows.bat ${{ env.WINDOWS_BASEKIT_URL }} "${{ env.WINDOWS_MKL_COMPONENTS }}"
+        ./.github/workflows/oneapi_install_windows.bat ${{ env.WINDOWS_HPCKIT_URL }} "${{ env.WINDOWS_CPP_COMPONENTS }}:${{ env.WINDOWS_FORTRAN_COMPONENTS }}:${{ env.WINDOWS_MPI_COMPONENTS }}"
+
+    - name: "Batch workaround: config, build, test"
+      shell: cmd
+      run: ".github\\workflows\\oneapi_run_windows.bat"
+
+    - name: exclude unused files from cache
+      if: steps.cache-install.outputs.cache-hit != 'true'
+      run: .github/workflows/oneapi_cache_exclude_windows.ps1
