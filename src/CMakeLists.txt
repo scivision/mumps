@@ -56,7 +56,7 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
 add_library(mumps_common ${COMM_SRC} ${COMM_OTHER_SRC})
 target_link_libraries(mumps_common PUBLIC ${ORDERING_LIBS} ${NUMERIC_LIBS})
 target_include_directories(mumps_common PUBLIC
-"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${mumps_SOURCE_DIR}/include>"
+"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
 $<INSTALL_INTERFACE:include>
 )
 
@@ -131,7 +131,7 @@ target_compile_definitions(${a}mumps PRIVATE MUMPS_ARITH=MUMPS_ARITH_${a} ${ORDE
 #   target_compile_definitions(${a}mumps PRIVATE MUMPS_WIN32)
 # endif()
 target_include_directories(${a}mumps PUBLIC
-$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include>
+"$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${CMAKE_CURRENT_BINARY_DIR}/include;${NUMERIC_INC}>"
 $<INSTALL_INTERFACE:include>
 )
 target_link_libraries(${a}mumps PUBLIC mumps_common)

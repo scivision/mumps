@@ -62,7 +62,10 @@ if(parallel)
     list(APPEND NUMERIC_LIBS ${IMPI_LIB64})
   endif()
 
-  list(APPEND NUMERIC_LIBS MPI::MPI_Fortran MPI::MPI_C)
+  # avoid MPICH -fallow flag leakage
+  set(NUMERIC_INC ${MPI_Fortran_INCLUDE_DIRS})
+  list(APPEND NUMERIC_LIBS ${MPI_Fortran_LIBRARIES} MPI::MPI_C)
+
   if(openmp)
     find_package(OpenMP COMPONENTS C Fortran REQUIRED)
     list(APPEND NUMERIC_LIBS OpenMP::OpenMP_Fortran OpenMP::OpenMP_C)
