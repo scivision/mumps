@@ -10,5 +10,8 @@ Remove-Item "C:\Program Files (x86)\Intel\oneAPI\compiler\$LATEST_VERSION\window
 Remove-Item "C:\Program Files (x86)\Intel\oneAPI\compiler\$LATEST_VERSION\windows\lib\oclfpga" -Force  -Recurse -ErrorAction SilentlyContinue
 Remove-Item "C:\Program Files (x86)\Intel\oneAPI\compiler\$LATEST_VERSION\windows\lib\ocloc" -Force  -Recurse -ErrorAction SilentlyContinue
 Remove-Item "C:\Program Files (x86)\Intel\oneAPI\compiler\$LATEST_VERSION\windows\lib\x86" -Force  -Recurse -ErrorAction SilentlyContinue
-
+Remove-Item "C:\Program Files (x86)\Intel\oneAPI\mkl\$LATEST_VERSION\redist\intel64\mkl_sycld.2.dll" -Force  -Recurse -ErrorAction SilentlyContinue
+Remove-Item "C:\Program Files (x86)\Intel\oneAPI\mkl\$LATEST_VERSION\redist\intel64\mkl_sycl.2.dll" -Force  -Recurse -ErrorAction SilentlyContinue
+Remove-Item "C:\Program Files (x86)\Intel\oneAPI\mkl\$LATEST_VERSION\lib\intel64\mkl_sycld.lib" -Force  -Recurse -ErrorAction SilentlyContinue
+Remove-Item "C:\Program Files (x86)\Intel\oneAPI\mkl\$LATEST_VERSION\lib\intel64\mkl_sycl.lib" -Force  -Recurse -ErrorAction SilentlyContinue
 exit 0

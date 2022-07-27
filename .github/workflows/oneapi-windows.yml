@@ -1,4 +1,5 @@
 # https://oneapi-src.github.io/oneapi-ci/
+# https://github.com/oneapi-src/oneapi-ci/runs/6472039626?check_suite_focus=true
 
 name: oneapi-windows
 
@@ -19,15 +20,13 @@ env:
 on:
   push:
     paths:
-      - "**.bat"
-      - "**/*.cpp"
-      - "**.f90"
-      - "**.F90"
-      - "**.cmake"
-      - "**/CMakeLists.txt"
       - ".github/workflows/oneapi-windows.yml"
       - ".github/workflows/oneapi_install_windows.bat"
       - ".github/workflows/oneapi_run_windows.bat"
+      - ".github/workflows/oneapi_cache_exclude_windows.bat"
+  schedule:
+    - cron: '25 10 6 * *'
+
 
 jobs:
 
@@ -38,15 +37,21 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: cache install oneAPI
-      timeout-minutes: 10
-      id: cache-install
-      uses: actions/cache@v3
-      with:
-        path: |
-          C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat
-          C:\Program Files (x86)\Intel\oneAPI\compiler
-        key: install-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_CPP_COMPONENTS }}-${{ env.WINDOWS_FORTRAN_COMPONENTS }}-${{ env.WINDOWS_MKL_COMPONENTS }}
+    # - name: cache install oneAPI
+    #   timeout-minutes: 10
+    #   id: cache-install
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: |
+    #       C:\Program Files (x86)\Intel\oneAPI\setvars.bat
+    #       C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat
+    #       C:\Program Files (x86)\Intel\oneAPI\compiler
+    #       C:\Program Files (x86)\Intel\oneAPI\mkl
+    #       C:\Program Files (x86)\Intel\oneAPI\mpi
+    #     key: install-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_CPP_COMPONENTS }}-${{ env.WINDOWS_FORTRAN_COMPONENTS }}-${{ env.WINDOWS_MKL_COMPONENTS }}
+    # NOTE: cache recovers oneAPI, but the setvars.bat doesn't actually find oneAPI (does find Visual Studio).
+    # cache@v2 and cache@v3 have the same behavior.
+    # Thus we run monthly till we figure out cache.
 
     - name: no-cache install oneAPI
       timeout-minutes: 40
