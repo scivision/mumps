@@ -2,7 +2,8 @@ name: intel-oneapi
 
 env:
   CMAKE_BUILD_TYPE: Release
-  CMAKE_GENERATOR: Ninja
+  CC: icx
+  FC: ifx
 
 on:
   push:
@@ -19,12 +20,10 @@ on:
 
 jobs:
 
-  linux-intel-oneapi:
+  linux:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      CC: icx
-      FC: ifx
+
 
     steps:
     - uses: actions/checkout@v3
@@ -40,7 +39,7 @@ jobs:
 
     - name: Install Intel oneAPI
       timeout-minutes: 5
-      run: sudo apt-get install intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic intel-oneapi-mpi intel-oneapi-mpi-devel intel-oneapi-mkl intel-oneapi-mkl-devel ninja-build
+      run: sudo apt-get install intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic intel-oneapi-mpi intel-oneapi-mpi-devel intel-oneapi-mkl intel-oneapi-mkl-devel
 
     - name: Setup Intel oneAPI environment
       run: |
@@ -55,7 +54,7 @@ jobs:
       run: cat build/CMakeFiles/CMakeError.log
 
     - name: CMake build
-      run: cmake --build build
+      run: cmake --build build --parallel
 
     - name: unit test
       run: ctest --test-dir build --preset default --output-junit test-unit-oneapi.xml
