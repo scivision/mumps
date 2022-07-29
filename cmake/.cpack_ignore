@@ -1,9 +1,0 @@
-\\.git/
-\\.git*
-\\.vscode/
-\\.archive/
-Make.inc/
-SCILAB/
-_CPack_Packages/
-
-build*/

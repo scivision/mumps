@@ -4,11 +4,20 @@
 
 if(NOT abi_ok)
   message(CHECK_START "checking that C and Fortran compilers can link")
-  try_compile(abi_ok ${CMAKE_CURRENT_BINARY_DIR}/abi_check ${CMAKE_CURRENT_LIST_DIR}/abi_check abi_check)
+  try_compile(abi_ok
+  ${CMAKE_CURRENT_BINARY_DIR}/abi_check ${CMAKE_CURRENT_LIST_DIR}/abi_check
+  abi_check
+  OUTPUT_VARIABLE abi_log
+  )
   if(abi_ok)
     message(CHECK_PASS "OK")
   else()
-    message(FATAL_ERROR "ABI-incompatible: C compiler ${CMAKE_C_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION} and Fortran compiler ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}")
+    message(FATAL_ERROR "ABI-incompatible compilers:
+    C compiler ${CMAKE_C_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION}
+    Fortran compiler ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}
+    ${abi_log}
+    "
+    )
   endif()
 endif()
 
@@ -19,7 +28,7 @@ add_compile_definitions("$<$<COMPILE_LANGUAGE:C>:Add_>")
 
 add_compile_definitions($<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${MSVC}>>:_CRT_SECURE_NO_WARNINGS>)
 
-if(CMAKE_C_COMPILER_ID MATCHES "Intel")
+if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
   if(NOT CMAKE_CROSSCOMPILING)
     if(WIN32)
       add_compile_options($<$<COMPILE_LANGUAGE:C>:/QxHost>)
@@ -29,7 +38,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "Intel")
   endif()
 endif()
 
-if(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
+if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
   add_compile_options(
   "$<$<COMPILE_LANGUAGE:Fortran>:$<IF:$<BOOL:${WIN32}>,/warn:declarations;/heap-arrays,-implicitnone>>"
   $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<BOOL:${intsize64}>>:-i8>
