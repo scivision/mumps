@@ -27,10 +27,12 @@ if(NOT mumps_urls)
   ")
 endif()
 
+message(DEBUG "MUMPS archive source URLs: ${mumps_urls}")
+
 string(JSON mumps_sha256 GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} sha256)
 
 FetchContent_Declare(mumps
-URL ${mumps_urls}
+URL "${mumps_urls}"
 URL_HASH SHA256=${mumps_sha256}
 INACTIVITY_TIMEOUT 60
 TLS_VERIFY true

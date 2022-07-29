@@ -36,9 +36,6 @@ endif()
 include(cmake/options.cmake)
 include(cmake/compilers.cmake)
 
-# --- download MUMPS source
-include(cmake/mumps_src.cmake)
-
 # --- dependencies
 find_package(Threads)
 
@@ -102,6 +99,8 @@ ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMUMPS.cmake
 DESTINATION cmake
 )
 
+# --- download MUMPS source
+include(cmake/mumps_src.cmake)
 
 # --- MUMPS build
 
