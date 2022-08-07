@@ -26,8 +26,8 @@ jobs:
       matrix:
         int64: [true, false]
         shared: [true, false]
-        img: [ {os: ubuntu-latest, fc: gfortran, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev},
-               {os: macos-latest, fc: gfortran-11, cmd: brew install gcc lapack scalapack open-mpi}
+        img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev},
+               {os: macos-latest, cmd: brew install lapack scalapack open-mpi}
         ]
         exclude:
           - shared: true
@@ -38,8 +38,6 @@ jobs:
 
 
     runs-on: ${{ matrix.img.os }}
-    env:
-      FC: ${{ matrix.img.fc }}
 
     steps:
 
@@ -50,6 +48,10 @@ jobs:
 
     - name: Install prereqs
       run: ${{ matrix.img.cmd }}
+
+    - name: install gfortran
+      if: runner.os == 'macOS'
+      run: brew reinstall gcc
 
     - uses: actions/checkout@v3
 
