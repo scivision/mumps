@@ -22,7 +22,7 @@ set(CMAKE_TLS_VERIFY true)
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED true)
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
 # Rpath options necessary for shared library install to work correctly in user projects
 set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/lib)

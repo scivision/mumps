@@ -91,11 +91,11 @@ endif()
 list(APPEND ORDERING_LIBS pord)
 
 install(FILES
-${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindLAPACK.cmake
-${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindSCALAPACK.cmake
-${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMETIS.cmake
-${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindScotch.cmake
-${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/FindMUMPS.cmake
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLAPACK.cmake
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindSCALAPACK.cmake
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindMETIS.cmake
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindScotch.cmake
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindMUMPS.cmake
 DESTINATION cmake
 )
 
