@@ -11,7 +11,6 @@ PORD is always used, in addition to the optional Scotch + METIS.
 
 COMPONENTS
   s d c z   list one or more. Default is "s d"
-  mpiseq    for -Dparallel=false, a stub MPI & Scalapack library
 
 Result Variables
 ^^^^^^^^^^^^^^^^
@@ -33,7 +32,7 @@ MUMPS_HAVE_Scotch
 set(MUMPS_LIBRARY)  # don't endlessly append
 set(CMAKE_REQUIRED_FLAGS)
 
-include(CheckSourceCompiles)
+include(CheckFortranSourceCompiles)
 
 # --- functions
 
@@ -49,7 +48,7 @@ if(OpenMP_FOUND)
   list(APPEND CMAKE_REQUIRED_LIBRARIES ${OpenMP_Fortran_LIBRARIES} ${OpenMP_C_LIBRARIES})
 endif()
 
-check_source_compiles(Fortran
+check_fortran_source_compiles(
 "program test_omp
 implicit none (type, external)
 external :: mumps_ana_omp_return, MUMPS_ICOPY_32TO64_64C
@@ -57,6 +56,7 @@ call mumps_ana_omp_return()
 call MUMPS_ICOPY_32TO64_64C()
 end program"
 MUMPS_HAVE_OPENMP
+SRC_EXT f90
 )
 
 endfunction(mumps_openmp_check)
@@ -78,13 +78,14 @@ endif()
 list(APPEND CMAKE_REQUIRED_INCLUDES ${Scotch_INCLUDE_DIRS} ${METIS_INCLUDE_DIRS})
 list(APPEND CMAKE_REQUIRED_LIBRARIES ${Scotch_LIBRARIES} ${METIS_LIBRARIES})
 
-check_source_compiles(Fortran
+check_fortran_source_compiles(
 "program test_scotch
 implicit none (type, external)
 external :: mumps_scotch
 call mumps_scotch()
 end program"
 MUMPS_HAVE_Scotch
+SRC_EXT f90
 )
 
 endfunction(mumps_scotch_check)
@@ -98,9 +99,11 @@ if(NOT (MUMPS_LIBRARY AND MUMPS_INCLUDE_DIR))
 endif()
 
 
-if(NOT mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
+find_package(SCALAPACK)
+
+if(NOT (MPI_C_FOUND AND MPI_Fortran_FOUND))
+  # factory FindMPI re-searches, slowing down configure, especialy when many subprojects use MPI
   find_package(MPI COMPONENTS C Fortran)
-  find_package(SCALAPACK)
 endif()
 
 find_package(LAPACK)
@@ -118,7 +121,7 @@ foreach(c IN LISTS MUMPS_FIND_COMPONENTS)
     continue()
   endif()
 
-  check_source_compiles(Fortran
+  check_fortran_source_compiles(
   "program test_mumps
   implicit none (type, external)
   include '${c}mumps_struc.h'
@@ -126,6 +129,7 @@ foreach(c IN LISTS MUMPS_FIND_COMPONENTS)
   type(${c}mumps_struc) :: mumps_par
   end program"
   MUMPS_${c}_links
+  SRC_EXT f90
   )
 
   if(NOT MUMPS_${c}_links)
@@ -192,12 +196,6 @@ if(DEFINED ENV{MKLROOT})
   PATH_SUFFIXES lib
   DOC "MUMPS MPI common libraries"
   )
-elseif(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
-  find_library(MUMPS_COMMON
-  NAMES mumps_common mumps_common_seq
-  NAMES_PER_DIR
-  DOC "MUMPS no-MPI common libraries"
-  )
 else()
   find_library(MUMPS_COMMON
   NAMES mumps_common mumps_common_mpi mumpso_common mumps_common_shm
@@ -233,48 +231,6 @@ if(NOT PORD)
   return()
 endif()
 
-if(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
-  if(DEFINED ENV{MKLROOT})
-    find_library(MUMPS_mpiseq_LIB
-    NAMES mpiseq
-    NO_DEFAULT_PATH
-    HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT ${CMAKE_PREFIX_PATH} ENV CMAKE_PREFIX_PATH
-    PATH_SUFFIXES lib
-    DOC "No-MPI stub library"
-    )
-  else()
-    find_library(MUMPS_mpiseq_LIB
-    NAMES mpiseq mumps_mpi_seq
-    NAMES_PER_DIR
-    DOC "No-MPI stub library"
-    )
-  endif()
-  if(NOT MUMPS_mpiseq_LIB)
-    return()
-  endif()
-
-  if(DEFINED ENV{MKLROOT})
-    find_path(MUMPS_mpiseq_INC
-    NAMES mpif.h
-    NO_DEFAULT_PATH
-    HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT ${CMAKE_PREFIX_PATH} ENV CMAKE_PREFIX_PATH
-    PATH_SUFFIXES include
-    DOC "MUMPS mpiseq header"
-    )
-  else()
-    find_path(MUMPS_mpiseq_INC
-    NAMES mpif.h
-    PATH_SUFFIXES MUMPS mumps mumps/mpi_seq
-    DOC "MUMPS mpiseq header"
-    )
-  endif()
-  if(NOT MUMPS_mpiseq_INC)
-    return()
-  endif()
-
-  set(MUMPS_mpiseq_FOUND true PARENT_SCOPE)
-endif()
-
 foreach(c IN LISTS MUMPS_FIND_COMPONENTS)
   if(NOT "${c}" IN_LIST mumps_ariths)
     continue()
@@ -287,12 +243,6 @@ foreach(c IN LISTS MUMPS_FIND_COMPONENTS)
     HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT ${CMAKE_PREFIX_PATH} ENV CMAKE_PREFIX_PATH
     PATH_SUFFIXES lib
     DOC "MUMPS precision-specific"
-    )
-  elseif(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
-    find_library(MUMPS_${c}_lib
-    NAMES ${c}mumps ${c}mumps_seq
-    NAMES_PER_DIR
-    DOC "MUMPS no-MPI precision-specific"
     )
   else()
     find_library(MUMPS_${c}_lib
@@ -345,30 +295,17 @@ find_package_handle_standard_args(MUMPS
 REQUIRED_VARS MUMPS_LIBRARY MUMPS_INCLUDE_DIR MUMPS_links
 VERSION_VAR MUMPS_VERSION
 HANDLE_COMPONENTS
-HANDLE_VERSION_RANGE
 )
 
 if(MUMPS_FOUND)
   # need if _FOUND guard as can't overwrite imported target even if bad
   set(MUMPS_LIBRARIES ${MUMPS_LIBRARY})
   set(MUMPS_INCLUDE_DIRS ${MUMPS_INCLUDE_DIR})
-  if(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
-    list(APPEND MUMPS_LIBRARIES ${MUMPS_mpiseq_LIB})
-    list(APPEND MUMPS_INCLUDE_DIRS ${MUMPS_mpiseq_INC})
-  endif()
 
   if(NOT TARGET MUMPS::MUMPS)
     add_library(MUMPS::MUMPS INTERFACE IMPORTED)
-    set_property(TARGET MUMPS::MUMPS PROPERTY INTERFACE_LINK_LIBRARIES "${MUMPS_LIBRARY};$<$<BOOL:${MPI_FOUND}>:SCALAPACK::SCALAPACK>;LAPACK::LAPACK;MPI::MPI_Fortran;MPI::MPI_C")
-    set_property(TARGET MUMPS::MUMPS PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${MUMPS_INCLUDE_DIR}")
-  endif()
-
-  if(mpiseq IN_LIST MUMPS_FIND_COMPONENTS)
-    if(NOT TARGET MUMPS::MPISEQ)
-      add_library(MUMPS::MPISEQ INTERFACE IMPORTED)
-      set_property(TARGET MUMPS::MPISEQ PROPERTY INTERFACE_LINK_LIBRARIES "${MUMPS_mpiseq_LIB}")
-      set_property(TARGET MUMPS::MPISEQ PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${MUMPS_mpiseq_INC}")
-    endif()
+    set_property(TARGET MUMPS::MUMPS PROPERTY INTERFACE_LINK_LIBRARIES "${MUMPS_LIBRARY};SCALAPACK::SCALAPACK;LAPACK::LAPACK;${MPI_Fortran_LIBRARIES};MPI::MPI_C")
+    set_property(TARGET MUMPS::MUMPS PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${MUMPS_INCLUDE_DIR};${MPI_Fortran_INCLUDE_DIRS}")
   endif()
 
 endif(MUMPS_FOUND)

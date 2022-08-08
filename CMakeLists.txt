@@ -1,16 +1,13 @@
-cmake_minimum_required(VERSION 3.19...3.24)
+cmake_minimum_required(VERSION 3.13...3.25)
 
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(NOT is_multi_config AND NOT (CMAKE_BUILD_TYPE OR DEFINED ENV{CMAKE_BUILD_TYPE}))
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Release default")
 endif()
 
-file(READ ${CMAKE_CURRENT_LIST_DIR}/codemeta.json _j)
-string(JSON PROJECT_VERSION GET ${_j} version)
-
 project(MUMPS
 LANGUAGES C Fortran
-VERSION ${PROJECT_VERSION}
+VERSION 5.5.1.1
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "http://mumps-solver.org/"
 )

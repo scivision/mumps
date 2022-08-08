@@ -46,7 +46,7 @@ References
 * MKL link-line advisor: https://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
 #]=======================================================================]
 
-include(CheckSourceCompiles)
+include(CheckFortranSourceCompiles)
 
 set(SCALAPACK_LIBRARY)  # avoids appending to prior FindScalapack
 
@@ -75,7 +75,7 @@ list(APPEND CMAKE_REQUIRED_LIBRARIES LAPACK::LAPACK MPI::MPI_Fortran)
 
 # MPI needed for ifort
 
-check_source_compiles(Fortran
+check_fortran_source_compiles(
 "program test
 use, intrinsic :: iso_fortran_env, only : real64
 implicit none (type, external)
@@ -84,9 +84,10 @@ integer :: ictxt
 print *, pdlamch(ictxt, 'E')
 end program"
 SCALAPACK_d_FOUND
+SRC_EXT f90
 )
 
-check_source_compiles(Fortran
+check_fortran_source_compiles(
 "program test
 use, intrinsic :: iso_fortran_env, only : real32
 implicit none (type, external)
@@ -95,6 +96,7 @@ integer :: ictxt
 print *, pslamch(ictxt, 'E')
 end program"
 SCALAPACK_s_FOUND
+SRC_EXT f90
 )
 
 if(SCALAPACK_s_FOUND OR SCALAPACK_d_FOUND)

@@ -9,7 +9,7 @@ INSTALL_DESTINATION cmake
 
 write_basic_package_version_file(
 ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}ConfigVersion.cmake
-COMPATIBILITY SameMinorVersion
+COMPATIBILITY SameMajorVersion
 )
 
 install(EXPORT ${PROJECT_NAME}-targets

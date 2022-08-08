@@ -14,12 +14,21 @@ file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 set(mumps_urls)
 set(mumps_sha256)
 
-string(JSON N LENGTH ${json} mumps ${MUMPS_UPSTREAM_VERSION} urls)
-math(EXPR N "${N}-1")
-foreach(i RANGE ${N})
-  string(JSON _u GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} urls ${i})
-  list(APPEND mumps_urls ${_u})
-endforeach()
+if(CMAKE_VERSION VERSION_LESS 3.19)
+  include(${CMAKE_CURRENT_LIST_DIR}/Modules/JsonParse.cmake)
+  sbeParseJson(meta json)
+  set(mumps_urls ${meta.mumps.${MUMPS_UPSTREAM_VERSION}.urls_0} ${meta.mumps.${MUMPS_UPSTREAM_VERSION}.urls_1})
+  set(mumps_sha256 ${meta.mumps.${MUMPS_UPSTREAM_VERSION}.sha256})
+else()
+  string(JSON N LENGTH ${json} mumps ${MUMPS_UPSTREAM_VERSION} urls)
+  math(EXPR N "${N}-1")
+  foreach(i RANGE ${N})
+    string(JSON _u GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} urls ${i})
+    list(APPEND mumps_urls ${_u})
+  endforeach()
+
+  string(JSON mumps_sha256 GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} sha256)
+endif()
 
 if(NOT mumps_urls)
   message(FATAL_ERROR "unknown MUMPS_UPSTREAM_VERSION ${MUMPS_UPSTREAM_VERSION}.
@@ -29,13 +38,12 @@ endif()
 
 message(DEBUG "MUMPS archive source URLs: ${mumps_urls}")
 
-string(JSON mumps_sha256 GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} sha256)
 
 FetchContent_Declare(mumps
 URL "${mumps_urls}"
 URL_HASH SHA256=${mumps_sha256}
-INACTIVITY_TIMEOUT 60
 TLS_VERIFY true
+INACTIVITY_TIMEOUT 60
 )
 
 FetchContent_Populate(mumps)

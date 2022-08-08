@@ -75,7 +75,7 @@ References
 * MKL LAPACKE (C, C++): https://software.intel.com/en-us/mkl-linux-developer-guide-calling-lapack-blas-and-cblas-routines-from-c-c-language-environments
 #]=======================================================================]
 
-include(CheckSourceCompiles)
+include(CheckFortranSourceCompiles)
 
 # clear to avoid endless appending on subsequent calls
 set(LAPACK_LIBRARY)
@@ -393,7 +393,7 @@ set(CMAKE_REQUIRED_LINK_OPTIONS)
 set(CMAKE_REQUIRED_INCLUDES)
 set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARY})
 
-check_source_compiles(Fortran
+check_fortran_source_compiles(
 "program check_lapack
 use, intrinsic :: iso_fortran_env, only : real32
 implicit none (type, external)
@@ -401,9 +401,10 @@ real(real32), external :: snrm2
 print *, snrm2(1, [0._real32], 1)
 end program"
 LAPACK_s_FOUND
+SRC_EXT f90
 )
 
-check_source_compiles(Fortran
+check_fortran_source_compiles(
 "program check_lapack
 use, intrinsic :: iso_fortran_env, only : real64
 implicit none (type, external)
@@ -411,6 +412,7 @@ real(real64), external :: dnrm2
 print *, dnrm2(1, [0._real64], 1)
 end program"
 LAPACK_d_FOUND
+SRC_EXT f90
 )
 
 if(LAPACK_s_FOUND OR LAPACK_d_FOUND)
