@@ -239,12 +239,12 @@ set(_mkl_libs ${ARGV})
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND
   CMAKE_Fortran_COMPILER_ID STREQUAL "GNU"
 )
-  list(PREPEND _mkl_libs mkl_gf_${_mkl_bitflag}lp64)
+  list(INSERT _mkl_libs 0 mkl_gf_${_mkl_bitflag}lp64)
 else()
   if(WIN32 AND BUILD_SHARED_LIBS)
-    list(PREPEND _mkl_libs mkl_intel_${_mkl_bitflag}lp64_dll)
+    list(INSERT _mkl_libs 0 mkl_intel_${_mkl_bitflag}lp64_dll)
   else()
-    list(PREPEND _mkl_libs mkl_intel_${_mkl_bitflag}lp64)
+    list(INSERT _mkl_libs 0 mkl_intel_${_mkl_bitflag}lp64)
   endif()
 endif()
 
