@@ -43,7 +43,8 @@ FetchContent_Declare(mumps
 URL "${mumps_urls}"
 URL_HASH SHA256=${mumps_sha256}
 TLS_VERIFY true
-INACTIVITY_TIMEOUT 60
+UPDATE_DISCONNECTED true
+INACTIVITY_TIMEOUT 15
 )
 
 FetchContent_Populate(mumps)

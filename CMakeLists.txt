@@ -64,13 +64,7 @@ if(parallel)
     find_package(OpenMP COMPONENTS C Fortran REQUIRED)
     list(APPEND NUMERIC_LIBS OpenMP::OpenMP_Fortran OpenMP::OpenMP_C)
   endif()
-else(parallel)
-  configure_file(libseq/CMakeLists.txt ${mumps_SOURCE_DIR}/libseq/ COPYONLY)
-  add_subdirectory(${mumps_SOURCE_DIR}/libseq ${mumps_BINARY_DIR}/libseq)
-  set(NUMERIC_LIBS mpiseq)
-endif(parallel)
-
-list(APPEND NUMERIC_LIBS LAPACK::LAPACK ${CMAKE_THREAD_LIBS_INIT})
+endif()
 
 # --- ordering libs
 
@@ -101,11 +95,25 @@ include(cmake/mumps_src.cmake)
 
 # --- MUMPS build
 
-configure_file(PORD/lib/CMakeLists.txt ${mumps_SOURCE_DIR}/PORD/lib/ COPYONLY)
-add_subdirectory(${mumps_SOURCE_DIR}/PORD/lib ${mumps_BINARY_DIR}/PORD/lib)
+if(NOT parallel)
+  configure_file(libseq/CMakeLists.txt ${mumps_SOURCE_DIR}/libseq/ COPYONLY)
+  add_subdirectory(${mumps_SOURCE_DIR}/libseq ${mumps_BINARY_DIR}/libseq)
+  set(NUMERIC_LIBS mpiseq)
+endif()
+
+list(APPEND NUMERIC_LIBS LAPACK::LAPACK ${CMAKE_THREAD_LIBS_INIT})
+
+
+configure_file(pord/lib/CMakeLists.txt ${mumps_SOURCE_DIR}/PORD/lib/ COPYONLY)
+add_subdirectory(${mumps_SOURCE_DIR}/PORD/lib ${mumps_BINARY_DIR}/pord/lib)
 
 configure_file(src/CMakeLists.txt ${mumps_SOURCE_DIR}/src/ COPYONLY)
 add_subdirectory(${mumps_SOURCE_DIR}/src ${mumps_BINARY_DIR}/src)
+
+if(matlab OR octave)
+  configure_file(matlab/CMakeLists.txt ${mumps_SOURCE_DIR}/MATLAB/ COPYONLY)
+  add_subdirectory(${mumps_SOURCE_DIR}/MATLAB ${mumps_BINARY_DIR}/matlab)
+endif()
 
 
 if(${PROJECT_NAME}_BUILD_TESTING)

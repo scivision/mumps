@@ -1,14 +1,23 @@
 message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION}  CMake ${CMAKE_VERSION}")
 
-option(parallel "parallel or sequential (non-MPI, non-Scalapack)" ON)
 option(intsize64 "use 64-bit integers in C and Fortran")
 
 option(scotch "use Scotch" OFF)
 option(openmp "use OpenMP" OFF)
 
+option(matlab "Matlab interface" OFF)
+option(octave "GNU Octave interface" OFF)
+
+if(matlab OR octave)
+  option(parallel "parallel (use MPI)" OFF)
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+else()
+  option(parallel "parallel (use MPI)" ON)
+endif()
+
 # --- other options
 
-if(NOT arith)
+if(NOT DEFINED arith)
   set(arith "s;d")
 endif()
 
@@ -21,8 +30,6 @@ endif()
 include(GNUInstallDirs)
 
 set(CMAKE_TLS_VERIFY true)
-
-set(FETCHCONTENT_UPDATES_DISCONNECTED true)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 

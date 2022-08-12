@@ -80,12 +80,11 @@ RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# -- Mumps
-set(_ifc_libs)
+# --- MUMPS::MUMPS exported target
+# MUMPS::MUMPS is the target most users will link to.
+add_library(MUMPS INTERFACE)
 
-foreach(a ${arith})
-
-list(APPEND _ifc_libs ${a}mumps)
+foreach(a IN LISTS arith)
 
 set(SRC
 "$<$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},5.0>:${a}ana_aux.F;${a}ana_aux_par.F;${a}ana_lr.F;${a}fac_asm_master_ELT_m.F;${a}fac_asm_master_m.F;${a}fac_front_aux.F;${a}fac_front_LU_type1.F;${a}fac_front_LU_type2.F;${a}fac_front_LDLT_type1.F;${a}fac_front_LDLT_type2.F;${a}fac_front_type2_aux.F;${a}fac_lr.F;${a}fac_omp_m.F;${a}fac_par_m.F;${a}lr_core.F;${a}mumps_lr_data_m.F;${a}omp_tps_m.F;${a}static_ptr_m.F>"
@@ -152,6 +151,8 @@ EXPORT_NAME ${aup}MUMPS
 VERSION ${MUMPS_VERSION}
 )
 
+target_link_libraries(MUMPS INTERFACE ${a}mumps)
+
 install(TARGETS ${a}mumps EXPORT ${PROJECT_NAME}-targets
 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -178,14 +179,7 @@ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 # We do not need the .mod files due to the way MUMPS is interfaced
 # install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/ TYPE INCLUDE)
 
-# --- MUMPS::MUMPS exported target
-# MUMPS::MUMPS is the target most users will link to.
-# It knows all the include directories.
-
-add_library(MUMPS INTERFACE)
-target_link_libraries(MUMPS INTERFACE ${_ifc_libs}
-$<$<NOT:$<BOOL:${parallel}>>:mpiseq>
-)
+target_link_libraries(MUMPS INTERFACE $<$<NOT:$<BOOL:${parallel}>>:mpiseq>)
 
 install(TARGETS MUMPS EXPORT ${PROJECT_NAME}-targets
 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

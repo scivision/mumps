@@ -39,11 +39,7 @@ jobs:
     - name: config
       run: cmake -B build -Darith=d -Dparallel:BOOL=false -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
-    - name: print config log
-      if: ${{ failure() }}
-      run: cat build/CMakeFiles/CMakeError.log
-
-    - run: cmake --build build --parallel
+    - run: cmake --build build --parallel || cmake --build build -v
 
     - run: ctest --test-dir build --preset default
 

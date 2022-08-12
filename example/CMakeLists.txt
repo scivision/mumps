@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19...3.24)
+cmake_minimum_required(VERSION 3.13...3.25)
 
 project(MUMPSExamples
 LANGUAGES C Fortran
@@ -8,24 +8,12 @@ enable_testing()
 
 option(parallel "use MPI" true)
 
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR} CACHE PATH "Install top-level directory" FORCE)
+# --- auto-ignore build directory
+if(NOT EXISTS ${PROJECT_BINARY_DIR}/.gitignore)
+  file(WRITE ${PROJECT_BINARY_DIR}/.gitignore "*")
 endif()
 
-if(parallel)
-  find_package(MUMPS REQUIRED)
-else()
-  find_package(MUMPS COMPONENTS mpiseq REQUIRED)
-endif()
-
-if(parallel)
-  target_link_libraries(MUMPS::MUMPS INTERFACE SCALAPACK::SCALAPACK MPI::MPI_Fortran MPI::MPI_C)
-else()
-  add_library(MPI::MPI_C ALIAS MUMPS::MPISEQ)
-  add_library(MPI::MPI_Fortran ALIAS MUMPS::MPISEQ)
-endif()
-target_link_libraries(MUMPS::MUMPS INTERFACE LAPACK::LAPACK)
-
+find_package(MUMPS CONFIG REQUIRED)
 
 # --- Examples from MUMPS itself
 set(_sfilename input_simpletest_real)
@@ -33,8 +21,14 @@ set(_dfilename input_simpletest_real)
 set(_cfilename input_simpletest_cmplx)
 set(_zfilename input_simpletest_cmplx)
 
+get_property(mumps_incdir TARGET MUMPS::COMMON PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+
 foreach(a s d)
-  if(NOT MUMPS_${a}_FOUND)
+  find_file(${a}_inc NAMES ${a}mumps_struc.h
+  HINTS ${mumps_incdir}
+  NO_DEFAULT_PATH
+  )
+  if(NOT ${a}_inc)
     continue()
   endif()
 
@@ -56,7 +50,7 @@ foreach(a s d)
   endif()
 endforeach()
 
-if(MUMPS_d_FOUND)
+if(d_inc)
   add_executable(c_example c_example.c)
   target_link_libraries(c_example PRIVATE MUMPS::MUMPS)
   set_property(TARGET c_example PROPERTY LINKER_LANGUAGE Fortran)
@@ -75,10 +69,7 @@ endif()
 get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 
 set_property(TEST ${test_names} PROPERTY TIMEOUT 10)
-
-if(parallel)
-  set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
-endif()
+set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
 
 if(WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.22)
   set_property(TEST ${test_names} PROPERTY

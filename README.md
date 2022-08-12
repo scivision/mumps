@@ -4,7 +4,7 @@
 [![ci_windows](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml)
 [![intel-oneapi](https://github.com/scivision/mumps/actions/workflows/intel-oneapi.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/intel-oneapi.yml)
 
-CMake downloads the source tarfile from MUMPS developer websites and builds in parallel.
+CMake downloads the source tarfile from MUMPS developer websites and builds.
 CMake builds MUMPS in parallel faster and more conveniently than the original Makefiles.
 CMake allows easy reuse of MUMPS in external projects via CMake
 [FetchContent](https://github.com/scivision/mumps-fetchcontent)
@@ -29,43 +29,30 @@ Platforms known to work with MUMPS and CMake include:
   * NVIDIA HPC SDK
 * Cray
 
+The MUMPS project is distinct from this CMake script wrapper.
+See the
+[MUMPS Users email list](https://listes.ens-lyon.fr/sympa/subscribe/mumps-users)
+for any questions about MUMPS itself.
+
 ## Build
 
-After "git clone" this repo:
+From this repo's top directory:
 
 ```sh
 cmake -B build
 cmake --build build
 ```
 
-For Windows in general (including with Intel compiler) use Ninja:
-
-```sh
-cmake -G Ninja -B build
-```
-
-or GNU Make:
-
-```sh
-cmake -G "MinGW Makefiles" -B build
-```
-
-For Visual Studio, from Intel oneAPI command prompt:
-
-```sh
-cmake -B build -G Ninja -DCMAKE_C_COMPILER=cl
-```
-
 With the default options, under the build/ directory this results in library binaries:
 
 ```
-# Linux/MacOS/MSYS2
+# Linux / MacOS / MSYS2
 libdmumps.a
 libmumps_common.a
 libpord.a
 libsmumps.a
 
-# Windows oneAPI
+# Windows oneAPI / Visual Studio
 dmumps.lib
 mumps_common.lib
 pord.lib
@@ -89,7 +76,7 @@ The MUMPS version defaults to a recent release.
 For reproducibility, benchmarking and other purposes, one may select the version of MUMPS to build like:
 
 ```sh
-cmake -B build -DMUMPS_UPSTREAM_VERSION=5.3.5
+cmake -B build -DMUMPS_UPSTREAM_VERSION=5.5.1
 ```
 
 The MUMPS_UPSTREAM_VERSION works for MUMPS versions in
@@ -100,7 +87,7 @@ The MUMPS_UPSTREAM_VERSION works for MUMPS versions in
 Numerous build options are available as in the following sections.
 Most users can just use the defaults.
 
-###  MPI
+### MPI
 
 For systems where MPI, BLACS and SCALAPACK are not available, or where non-parallel execution is suitable, the default parallel can be disabled at CMake configure time by option `cmake -Dparallel=false`.
 
@@ -120,6 +107,20 @@ may be optionally specified:
 -Darith=c  # complex64
 -Darith=z  # complex128
 ```
+
+### Matlab / GNU Octave
+
+Matlab / GNU Octave MEX interface may be built (one or the other) by EITHER:
+
+```sh
+-Dmatlab=on
+-Doctave=on
+```
+
+These require `-Dparallel=off`.
+These Matlab scripts seems to have been developed ~ 2006 and may not fully work anymore.
+Ask the MUMPS Users List if you need such scripts.
+We present them mainly as an example of compiling MEX libraries for Octave and Matlab with CMake.
 
 ### ordering
 
