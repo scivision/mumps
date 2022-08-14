@@ -27,7 +27,7 @@ jobs:
         int64: [true, false]
         shared: [true, false]
         img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev},
-               {os: macos-latest, cmd: brew install lapack scalapack open-mpi}
+               {os: macos-latest, cmd: brew install lapack scalapack open-mpi && brew reinstall gcc}
         ]
         exclude:
           - shared: true
@@ -49,17 +49,13 @@ jobs:
     - name: Install prereqs
       run: ${{ matrix.img.cmd }}
 
-    - name: install gfortran
-      if: runner.os == 'macOS'
-      run: brew reinstall gcc
-
     - uses: actions/checkout@v3
 
     # - name: configure with scotch
     #   if: runner.os == 'Linux'
     #   run: cmake -B build -Darith=d -Dscotch:BOOL=true -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
-    - name: configure int64=${{ matrix.int64 }}
+    - name: configure int64=${{ matrix.int64 }} shared=${{ matrix.shared }}
       run: cmake -B build -Darith=d -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }} -Dintsize64:BOOL=${{ matrix.int64 }}
 
     - name: build release

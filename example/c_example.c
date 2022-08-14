@@ -1,7 +1,7 @@
 /*
  *
- *  This file is part of MUMPS 5.3.5, released
- *  on Thu Oct 22 09:29:08 UTC 2020
+ *  This file is part of MUMPS 5.5.1, released
+ *  on Tue Jul 12 13:17:24 UTC 2022
  *
  */
 /* Example program using the C interface to the
@@ -17,28 +17,9 @@
 #define JOB_END -2
 #define USE_COMM_WORLD -987654
 
-#if defined(MAIN_COMP)
-/*
- * Some Fortran compilers (COMPAQ fort) define "main" in
- * their runtime library while a Fortran program translates
- * to MAIN_ or MAIN__ which is then called from "main".
- * We defined argc/argv arbitrarily in that case.
- */
-int MAIN__();
-int MAIN_()
-  {
-    return MAIN__();
-  }
 
-int MAIN__()
-{
-  int argc=1;
-  char * name = "c_example";
-  char ** argv ;
-#else
 int main(int argc, char ** argv)
 {
-#endif
   DMUMPS_STRUC_C id;
   MUMPS_INT n = 2;
   MUMPS_INT8 nnz = 2;
@@ -51,11 +32,8 @@ int main(int argc, char ** argv)
    ilp64 versions may still require standard int for C interface. */
 /* MUMPS_INT myid, ierr; */
   int myid, ierr;
-
   int error = 0;
-#if defined(MAIN_COMP)
-  argv = &name;
-#endif
+
   ierr = MPI_Init(&argc, &argv);
   ierr = MPI_Comm_rank(MPI_COMM_WORLD, &myid);
   /* Define A and rhs */
