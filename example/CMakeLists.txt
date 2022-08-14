@@ -6,8 +6,6 @@ LANGUAGES C Fortran
 
 enable_testing()
 
-option(parallel "use MPI" true)
-
 # --- auto-ignore build directory
 if(NOT EXISTS ${PROJECT_BINARY_DIR}/.gitignore)
   file(WRITE ${PROJECT_BINARY_DIR}/.gitignore "*")
@@ -22,6 +20,11 @@ set(_cfilename input_simpletest_cmplx)
 set(_zfilename input_simpletest_cmplx)
 
 get_property(mumps_incdir TARGET MUMPS::COMMON PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+if(MUMPS_mpiseq_FOUND)
+  set(parallel false)
+else()
+  set(parallel true)
+endif()
 
 foreach(a s d)
   find_file(${a}_inc NAMES ${a}mumps_struc.h
@@ -53,8 +56,6 @@ endforeach()
 if(d_inc)
   add_executable(c_example c_example.c)
   target_link_libraries(c_example PRIVATE MUMPS::MUMPS)
-  set_property(TARGET c_example PROPERTY LINKER_LANGUAGE Fortran)
-  # GCC needs Fortran
 
   if(parallel)
     add_test(NAME example_C

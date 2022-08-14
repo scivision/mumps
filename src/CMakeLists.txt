@@ -179,8 +179,6 @@ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 # We do not need the .mod files due to the way MUMPS is interfaced
 # install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/ TYPE INCLUDE)
 
-target_link_libraries(MUMPS INTERFACE $<$<NOT:$<BOOL:${parallel}>>:mpiseq>)
-
 install(TARGETS MUMPS EXPORT ${PROJECT_NAME}-targets
 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
