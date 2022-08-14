@@ -27,11 +27,7 @@ else()
 endif()
 
 foreach(a s d)
-  find_file(${a}_inc NAMES ${a}mumps_struc.h
-  HINTS ${mumps_incdir}
-  NO_DEFAULT_PATH
-  )
-  if(NOT ${a}_inc)
+  if(NOT MUMPS_${a}_FOUND)
     continue()
   endif()
 

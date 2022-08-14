@@ -8,6 +8,13 @@ find_dependency(LAPACK)
 
 include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
 
+foreach(a S D C Z)
+  if(TARGET MUMPS::${a}MUMPS)
+    string(TOLOWER ${a} al)
+    set(MUMPS_${al}_FOUND true)
+  endif()
+endforeach()
+
 if(TARGET MUMPS::MPISEQ)
   set(MUMPS_mpiseq_FOUND true)
 else()
