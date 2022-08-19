@@ -1,14 +1,14 @@
 {
   "lapack": {
     "git": "https://github.com/scivision/lapack.git",
-    "tag": "v3.10.1.3"
+    "tag": "v3.10.1.4"
   },
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
-    "tag": "v2.2.1.0"
+    "tag": "v2.2.1.1"
   },
 
-  "mumps": {
+  "mumps_src": {
     "4.8.4": {
       "sha256": "cda022a12ce632ae753dcffc06411b2569647fafa01db947cc6a280d465acb2d",
       "urls": [

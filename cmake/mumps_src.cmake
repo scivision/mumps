@@ -3,48 +3,71 @@
 
 include(FetchContent)
 
-set(FETCHCONTENT_QUIET no)
+string(TOLOWER ${PROJECT_NAME}_src name)
+
+if(local)
+
+find_file(${name}_archive
+NAMES ${name}.tar.bz2 ${name}.tar.gz ${name}.tar ${name}.zip ${name}.zstd ${name}.tar.xz
+HINTS ${local}
+NO_DEFAULT_PATH
+)
+
+if(NOT ${name}_archive)
+message(FATAL_ERROR "Archive file for ${name} does not exist under ${local}")
+endif()
+
+message(STATUS "${name}: using source archive ${${name}_archive}")
+
+FetchContent_Declare(${PROJECT_NAME}
+URL ${${name}_archive}
+)
+
+else()
 
 if(NOT MUMPS_UPSTREAM_VERSION)
   message(FATAL_ERROR "please specify MUMPS_UPSTREAM_VERSION")
 endif()
 
-file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
+set(urls)
+set(sha256)
 
-set(mumps_urls)
-set(mumps_sha256)
+file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 
 if(CMAKE_VERSION VERSION_LESS 3.19)
   include(${CMAKE_CURRENT_LIST_DIR}/Modules/JsonParse.cmake)
   sbeParseJson(meta json)
-  set(mumps_urls ${meta.mumps.${MUMPS_UPSTREAM_VERSION}.urls_0} ${meta.mumps.${MUMPS_UPSTREAM_VERSION}.urls_1})
-  set(mumps_sha256 ${meta.mumps.${MUMPS_UPSTREAM_VERSION}.sha256})
+  set(urls ${meta.${name}.${MUMPS_UPSTREAM_VERSION}.urls_0} ${meta.${name}.${MUMPS_UPSTREAM_VERSION}.urls_1})
+  set(sha256 ${meta.${name}.${MUMPS_UPSTREAM_VERSION}.sha256})
 else()
-  string(JSON N LENGTH ${json} mumps ${MUMPS_UPSTREAM_VERSION} urls)
+  string(JSON N LENGTH ${json} ${name} ${MUMPS_UPSTREAM_VERSION} urls)
   math(EXPR N "${N}-1")
   foreach(i RANGE ${N})
-    string(JSON _u GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} urls ${i})
-    list(APPEND mumps_urls ${_u})
+    string(JSON _u GET ${json} ${name} ${MUMPS_UPSTREAM_VERSION} urls ${i})
+    list(APPEND urls ${_u})
   endforeach()
 
-  string(JSON mumps_sha256 GET ${json} mumps ${MUMPS_UPSTREAM_VERSION} sha256)
+  string(JSON sha256 GET ${json} ${name} ${MUMPS_UPSTREAM_VERSION} sha256)
 endif()
 
-if(NOT mumps_urls)
+if(NOT urls)
   message(FATAL_ERROR "unknown MUMPS_UPSTREAM_VERSION ${MUMPS_UPSTREAM_VERSION}.
   Make a GitHub issue to request this in ${CMAKE_CURRENT_LIST_DIR}/libraries.json
   ")
 endif()
 
-message(DEBUG "MUMPS archive source URLs: ${mumps_urls}")
+message(DEBUG "MUMPS archive source URLs: ${urls}")
 
+set(FETCHCONTENT_QUIET no)
 
-FetchContent_Declare(mumps
-URL "${mumps_urls}"
-URL_HASH SHA256=${mumps_sha256}
-TLS_VERIFY true
+FetchContent_Declare(${PROJECT_NAME}
+URL ${urls}
+URL_HASH SHA256=${sha256}
 UPDATE_DISCONNECTED true
-INACTIVITY_TIMEOUT 15
+INACTIVITY_TIMEOUT 60
+TLS_VERIFY true
 )
 
-FetchContent_Populate(mumps)
+endif()
+
+FetchContent_Populate(${PROJECT_NAME})
