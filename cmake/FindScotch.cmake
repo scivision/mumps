@@ -57,13 +57,13 @@ PATH_SUFFIXES scotch openmpi openmpi-x86_64 mpich-x86_64
 # need plain scotch when using ptscotch
 set(scotch_names scotch scotcherr)
 if(ESMUMPS IN_LIST Scotch_FIND_COMPONENTS)
-  list(PREPEND scotch_names esmumps)
+  list(INSERT scotch_names 0 esmumps)
 endif()
 
 if(parallel IN_LIST Scotch_FIND_COMPONENTS)
-  list(PREPEND scotch_names ptscotch ptscotcherr)
+  list(INSERT scotch_names 0 ptscotch ptscotcherr)
   if(ESMUMPS IN_LIST Scotch_FIND_COMPONENTS)
-    list(PREPEND scotch_names ptesmumps)
+    list(INSERT scotch_names 0 ptesmumps)
   endif()
 endif()
 
