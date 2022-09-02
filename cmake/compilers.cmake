@@ -36,7 +36,15 @@ if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
       add_compile_options($<$<COMPILE_LANGUAGE:C>:-xHost>)
     endif()
   endif()
+
+  if(openmp AND NOT WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.15)
+    add_compile_options(
+    $<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:-fiopenmp>
+    $<$<COMPILE_LANG_AND_ID:C,Intel>:-qopenmp>
+    )
+  endif()
 endif()
+
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
   add_compile_options(
@@ -50,6 +58,13 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
     else()
       add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:-xHost>)
     endif()
+  endif()
+
+  if(openmp AND NOT WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.15)
+    add_compile_options(
+    $<$<COMPILE_LANG_AND_ID:Fortran,IntelLLVM>:-fiopenmp>
+    $<$<COMPILE_LANG_AND_ID:Fortran,Intel>:-qopenmp>
+    )
   endif()
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   add_compile_options(
