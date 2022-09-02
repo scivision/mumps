@@ -88,18 +88,21 @@ function(atlas_libs)
 find_library(ATLAS_LIB
 NAMES atlas
 PATH_SUFFIXES atlas
+DOC "ATLAS library"
 )
 
 find_library(LAPACK_ATLAS
 NAMES ptlapack lapack_atlas lapack
 NAMES_PER_DIR
 PATH_SUFFIXES atlas
+DOC "LAPACK ATLAS library"
 )
 
 find_library(BLAS_LIBRARY
 NAMES ptf77blas f77blas blas
 NAMES_PER_DIR
 PATH_SUFFIXES atlas
+DOC "BLAS ATLAS library"
 )
 
 # === C ===
@@ -107,10 +110,12 @@ find_library(BLAS_C_ATLAS
 NAMES ptcblas cblas
 NAMES_PER_DIR
 PATH_SUFFIXES atlas
+DOC "BLAS C ATLAS library"
 )
 
 find_path(LAPACK_INCLUDE_DIR
 NAMES cblas-atlas.h cblas.h clapack.h
+DOC "ATLAS headers"
 )
 
 #===========
@@ -133,11 +138,13 @@ if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
   NAMES f95_lapack.mod
   HINTS ${LAPACK95_ROOT} ENV LAPACK95_ROOT
   PATH_SUFFIXES include
+  DOC "LAPACK95 Fortran module"
   )
 
   find_library(LAPACK95_LIBRARY
   NAMES lapack95
   HINTS ${LAPACK95_ROOT} ENV LAPACK95_ROOT
+  DOC "LAPACK95 library"
   )
 
   if(NOT (LAPACK95_LIBRARY AND LAPACK95_INCLUDE_DIR))
@@ -151,6 +158,7 @@ endif(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
 find_library(LAPACK_LIBRARY
 NAMES lapack
 PATH_SUFFIXES lapack lapack/lib
+DOC "LAPACK library"
 )
 if(NOT LAPACK_LIBRARY)
   return()
@@ -184,6 +192,7 @@ find_library(BLAS_LIBRARY
 NAMES refblas blas
 NAMES_PER_DIR
 PATH_SUFFIXES lapack lapack/lib blas
+DOC "BLAS library"
 )
 
 if(NOT BLAS_LIBRARY)
@@ -205,12 +214,14 @@ function(openblas_libs)
 find_library(LAPACK_LIBRARY
 NAMES lapack
 PATH_SUFFIXES openblas
+DOC "LAPACK library"
 )
 
 find_library(BLAS_LIBRARY
 NAMES openblas blas
 NAMES_PER_DIR
 PATH_SUFFIXES openblas
+DOC "BLAS library"
 )
 
 find_path(LAPACK_INCLUDE_DIR
@@ -251,10 +262,12 @@ endif()
 foreach(s ${_mkl_libs})
   find_library(LAPACK_${s}_LIBRARY
   NAMES ${s}
-  PATHS ${MKLROOT}
-  PATH_SUFFIXES lib lib/intel64
+  PATHS ${MKLROOT}/lib ${MKLROOT}/lib/intel64 ${oneapi_libdir}
   NO_DEFAULT_PATH
+  DOC "Intel MKL ${s} library"
   )
+  # ${MKLROOT}/[lib[/intel64]]: general MKL libraries
+  # oneapi_libdir: openmp library
 
   if(NOT LAPACK_${s}_LIBRARY)
     return()
@@ -268,6 +281,7 @@ NAMES mkl_lapack.h
 HINTS ${MKLROOT}
 PATH_SUFFIXES include
 NO_DEFAULT_PATH
+DOC "Intel MKL header"
 )
 
 if(NOT LAPACK_INCLUDE_DIR)
@@ -306,6 +320,17 @@ if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
   # double-quotes are necessary per CMake to_cmake_path docs.
   file(TO_CMAKE_PATH "$ENV{MKLROOT}" MKLROOT)
 
+  file(TO_CMAKE_PATH "$ENV{ONEAPI_ROOT}" ONEAPI_ROOT)
+  # oneapi_libdir is where iomp5 is located
+  set(oneapi_libdir ${ONEAPI_ROOT}/compiler/latest/)
+  if(WIN32)
+    string(APPEND oneapi_libdir "windows/compiler/lib/intel64_win")
+  elseif(APPLE)
+    string(APPEND oneapi_libdir "mac/compiler/lib")
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    string(APPEND oneapi_libdir "linux/compiler/lib/intel64_lin")
+  endif()
+
   if(MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
     set(_mkl_bitflag i)
   else()
@@ -328,9 +353,10 @@ if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
     list(APPEND _mkl_libs mkl_tbb_thread mkl_core)
     set(_tbb tbb stdc++)
   elseif(OpenMP IN_LIST LAPACK_FIND_COMPONENTS)
-    set(_mp iomp5)
     if(WIN32)
       set(_mp libiomp5md)
+    else()
+      set(_mp iomp5)
     endif()
     if(WIN32 AND BUILD_SHARED_LIBS)
       list(APPEND _mkl_libs mkl_intel_thread_dll mkl_core_dll ${_mp})
