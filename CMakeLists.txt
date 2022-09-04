@@ -7,7 +7,7 @@ endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.5.1.5
+VERSION 5.5.1.6
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "http://mumps-solver.org/"
 )
@@ -122,6 +122,8 @@ endif()
 
 
 # --- feature summary
+
+message(STATUS "Configured MUMPS ${MUMPS_UPSTREAM_VERSION} source in ${mumps_SOURCE_DIR}")
 
 include(cmake/summary.cmake)
 

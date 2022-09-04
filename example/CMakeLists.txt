@@ -30,7 +30,7 @@ endif()
 get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 
 set_property(TEST ${test_names} PROPERTY TIMEOUT 10)
-if(MUMPS_paralllel)
+if(MUMPS_parallel)
   set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
 endif()
 

@@ -78,7 +78,7 @@ list(APPEND CMAKE_REQUIRED_LIBRARIES LAPACK::LAPACK MPI::MPI_Fortran)
 check_fortran_source_compiles(
 "program test
 use, intrinsic :: iso_fortran_env, only : real64
-implicit none (type, external)
+implicit none
 real(real64), external :: pdlamch
 integer :: ictxt
 print *, pdlamch(ictxt, 'E')
@@ -90,7 +90,7 @@ SRC_EXT f90
 check_fortran_source_compiles(
 "program test
 use, intrinsic :: iso_fortran_env, only : real32
-implicit none (type, external)
+implicit none
 real(real32), external :: pslamch
 integer :: ictxt
 print *, pslamch(ictxt, 'E')

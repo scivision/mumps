@@ -1,6 +1,6 @@
 set_property(DIRECTORY PROPERTY LABELS matlab)
 
-if(NOT d IN_LIST arith)
+if(NOT "d" IN_LIST arith)
   message(STATUS "Matlab requires arith=d be present.")
   return()
 endif()

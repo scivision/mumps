@@ -50,7 +50,7 @@ endif()
 
 check_fortran_source_compiles(
 "program test_omp
-implicit none (type, external)
+implicit none
 external :: mumps_ana_omp_return, MUMPS_ICOPY_32TO64_64C
 call mumps_ana_omp_return()
 call MUMPS_ICOPY_32TO64_64C()
@@ -80,7 +80,7 @@ list(APPEND CMAKE_REQUIRED_LIBRARIES ${Scotch_LIBRARIES} ${METIS_LIBRARIES})
 
 check_fortran_source_compiles(
 "program test_scotch
-implicit none (type, external)
+implicit none
 external :: mumps_scotch
 call mumps_scotch()
 end program"
@@ -94,7 +94,7 @@ endfunction(mumps_scotch_check)
 function(mumps_check)
 
 if(NOT (MUMPS_LIBRARY AND MUMPS_INCLUDE_DIR))
-  message(STATUS "MUMPS: skip checks as not found")
+  message(VERBOSE "MUMPS: skip checks as not found")
   return()
 endif()
 
@@ -123,7 +123,7 @@ foreach(c IN LISTS MUMPS_FIND_COMPONENTS)
 
   check_fortran_source_compiles(
   "program test_mumps
-  implicit none (type, external)
+  implicit none
   include '${c}mumps_struc.h'
   external :: ${c}mumps
   type(${c}mumps_struc) :: mumps_par

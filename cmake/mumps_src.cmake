@@ -8,13 +8,13 @@ string(TOLOWER ${PROJECT_NAME}_src name)
 if(local)
 
 find_file(${name}_archive
-NAMES ${name}.tar.bz2 ${name}.tar.gz ${name}.tar ${name}.zip ${name}.zstd ${name}.tar.xz
+NAMES ${name}.tar.bz2 ${name}.tar.gz ${name}.tar ${name}.zip ${name}.tar.zstd ${name}.tar.xz ${name}.tar.lz
 HINTS ${local}
 NO_DEFAULT_PATH
 )
 
 if(NOT ${name}_archive)
-message(FATAL_ERROR "Archive file for ${name} does not exist under ${local}")
+  message(FATAL_ERROR "Archive file for ${name} does not exist under ${local}")
 endif()
 
 message(STATUS "${name}: using source archive ${${name}_archive}")

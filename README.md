@@ -32,6 +32,8 @@ Platforms known to work with MUMPS and CMake include:
 The MUMPS project is distinct from this CMake script wrapper.
 See the
 [MUMPS Users email list](https://listes.ens-lyon.fr/sympa/subscribe/mumps-users)
+and
+[MUMPS User Guide](http://mumps.enseeiht.fr/index.php?page=doc)
 for any questions about MUMPS itself.
 
 ## Build

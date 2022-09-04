@@ -10,6 +10,8 @@ if(local)
   endif()
 endif()
 
+option(gemmt "GEMMT is recommended in User Manual if available" ON)
+
 option(intsize64 "use 64-bit integers in C and Fortran")
 
 option(scotch "use Scotch" OFF)
