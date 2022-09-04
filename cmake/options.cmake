@@ -37,6 +37,8 @@ endif()
 
 set(CMAKE_TLS_VERIFY true)
 
+set(FETCHCONTENT_UPDATES_DISCONNECTED true)
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
 # Rpath options necessary for shared library install to work correctly in user projects
