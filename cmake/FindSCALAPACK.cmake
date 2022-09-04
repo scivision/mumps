@@ -132,8 +132,34 @@ NO_DEFAULT_PATH
 # pc_mkl_INCLUDE_DIRS on Windows injects breaking garbage
 
 if(SCALAPACK_LIBRARY AND BLACS_LIBRARY AND SCALAPACK_INCLUDE_DIR)
-  set(SCALAPACK_MKL_FOUND true PARENT_SCOPE)
+  set(SCALAPACK_MKL_FOUND true)
 endif()
+
+if(MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
+  set(SCALAPACK_MKL64_FOUND ${SCALAPACK_MKL_FOUND})
+
+  if(DEFINED ENV{I_MPI_ROOT})
+    file(TO_CMAKE_PATH "$ENV{I_MPI_ROOT}" I_MPI_ROOT)
+
+    if(MSVC)
+      set(CMAKE_FIND_LIBRARY_PREFIXES lib)
+    endif()
+
+    find_library(SCALAPACK_MPI_LIB64
+    NAMES mpi_ilp64
+    HINTS ${I_MPI_ROOT}
+    NO_DEFAULT_PATH
+    PATH_SUFFIXES lib lib/release
+    )
+
+    if(NOT SCALAPACK_MPI_LIB64)
+      set(SCALAPACK_MKL64_FOUND false)
+    endif()
+  endif()
+endif()
+
+set(SCALAPACK_MKL_FOUND ${SCALAPACK_MKL_FOUND} PARENT_SCOPE)
+set(SCALAPACK_MKL64_FOUND ${SCALAPACK_MKL64_FOUND} PARENT_SCOPE)
 
 endfunction(scalapack_mkl)
 
@@ -150,7 +176,7 @@ if(NOT scalapack_cray)
   endif()
 endif()
 
-if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS)
+if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS OR MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
   # we have to sanitize MKLROOT if it has Windows backslashes (\) otherwise it will break at build time
   # double-quotes are necessary per CMake to_cmake_path docs.
   file(TO_CMAKE_PATH "$ENV{MKLROOT}" MKLROOT)
@@ -172,10 +198,6 @@ if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS)
     scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_mpich_${_mkl_bitflag}lp64)
   else()
     scalapack_mkl(mkl_scalapack_${_mkl_bitflag}lp64 mkl_blacs_intelmpi_${_mkl_bitflag}lp64)
-  endif()
-
-  if(MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
-    set(SCALAPACK_MKL64_FOUND ${SCALAPACK_MKL_FOUND})
   endif()
 
 elseif(scalapack_cray)
@@ -225,6 +247,10 @@ if(SCALAPACK_FOUND)
   if(BLACS_LIBRARY)
     list(APPEND SCALAPACK_LIBRARIES ${BLACS_LIBRARY})
   endif()
+  if(SCALAPACK_MPI_LIB64)
+    list(APPEND SCALAPACK_LIBRARIES ${SCALAPACK_MPI_LIB64})
+  endif()
+
   set(SCALAPACK_INCLUDE_DIRS ${SCALAPACK_INCLUDE_DIR})
 
   if(NOT TARGET SCALAPACK::SCALAPACK)

@@ -45,16 +45,6 @@ if(parallel)
   include(cmake/scalapack.cmake)
 
   set(NUMERIC_LIBS SCALAPACK::SCALAPACK)
-  if(intsize64 AND DEFINED ENV{I_MPI_ROOT})
-    find_library(IMPI_LIB64
-    NAMES mpi_ilp64 libmpi_ilp64
-    HINTS ENV I_MPI_ROOT
-    NO_DEFAULT_PATH
-    PATH_SUFFIXES lib lib/release
-    REQUIRED
-    )
-    list(APPEND NUMERIC_LIBS ${IMPI_LIB64})
-  endif()
 
   # avoid MPICH -fallow flag leakage
   set(NUMERIC_INC ${MPI_Fortran_INCLUDE_DIRS})

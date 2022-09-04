@@ -315,7 +315,7 @@ find_package(Threads)
 
 # ==== generic MKL variables ====
 
-if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
+if(MKL IN_LIST LAPACK_FIND_COMPONENTS OR MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
   # we have to sanitize MKLROOT if it has Windows backslashes (\) otherwise it will break at build time
   # double-quotes are necessary per CMake to_cmake_path docs.
   file(TO_CMAKE_PATH "$ENV{MKLROOT}" MKLROOT)
