@@ -35,12 +35,6 @@ if(NOT arith)
   set(arith "s;d")
 endif()
 
-if(intsize64)
-  add_compile_definitions(INTSIZE64
-  $<$<COMPILE_LANG_AND_ID:Fortran,Intel,IntelLLVM>:WORKAROUNDINTELILP64MPI2INTEGER>
-  )
-endif()
-
 set(CMAKE_TLS_VERIFY true)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})

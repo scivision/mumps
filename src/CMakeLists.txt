@@ -61,9 +61,6 @@ $<INSTALL_INTERFACE:include>
 )
 
 target_compile_definitions(mumps_common PRIVATE ${ORDERING_DEFS})
-# if(WIN32)
-#   target_compile_definitions(mumps_common PRIVATE MUMPS_WIN32)
-# endif()
 set_target_properties(mumps_common PROPERTIES
 Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include
 LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
@@ -131,9 +128,6 @@ if(_memfree LESS 1000)  # < 1GB RAM free
   set_property(TARGET ${a}mumps PROPERTY JOB_POOL_COMPILE Njobs)
 endif()
 target_compile_definitions(${a}mumps PRIVATE MUMPS_ARITH=MUMPS_ARITH_${a} ${ORDERING_DEFS})
-# if(WIN32)
-#   target_compile_definitions(${a}mumps PRIVATE MUMPS_WIN32)
-# endif()
 target_include_directories(${a}mumps PUBLIC
 "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${CMAKE_CURRENT_BINARY_DIR}/include;${NUMERIC_INC}>"
 $<INSTALL_INTERFACE:include>

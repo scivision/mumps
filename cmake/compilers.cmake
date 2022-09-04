@@ -21,12 +21,14 @@ if(NOT abi_ok)
   endif()
 endif()
 
-# --- compiler check
+# --- compiler options
 
 add_compile_definitions("$<$<COMPILE_LANGUAGE:C>:Add_>")
 # "Add_" works for all modern compilers we tried.
 
 add_compile_definitions($<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${MSVC}>>:_CRT_SECURE_NO_WARNINGS>)
+
+add_compile_definitions("$<$<BOOL:${intsize64}>:INTSIZE64;PORD_INTSIZE64>")
 
 if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
   if(NOT CMAKE_CROSSCOMPILING)
@@ -66,6 +68,11 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
     $<$<COMPILE_LANG_AND_ID:Fortran,Intel>:-qopenmp>
     )
   endif()
+
+  if(intsize64)
+    add_compile_definitions($<$<COMPILE_LANGUAGE:Fortran>:WORKAROUNDINTELILP64MPI2INTEGER>)
+  endif()
+
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   add_compile_options(
   $<$<COMPILE_LANGUAGE:Fortran>:-fimplicit-none>
