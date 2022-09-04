@@ -10,7 +10,9 @@ if(local)
   endif()
 endif()
 
-option(gemmt "GEMMT is recommended in User Manual if available" ON)
+if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
+  option(gemmt "GEMMT is recommended in User Manual if available" ON)
+endif()
 
 option(intsize64 "use 64-bit integers in C and Fortran")
 

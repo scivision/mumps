@@ -110,6 +110,15 @@ may be optionally specified:
 -Darith=z  # complex128
 ```
 
+### GEMMT symmetric matrix-matrix multiplication
+
+For MUMPS &ge; 5.2.0, GEMMT symmetric matrix-matrix multiplication is recommended by the MUMPS User Guide if available.
+By default GEMMT is ON, but may be disabed like:
+
+```sh
+cmake -Dgemmt=off
+```
+
 ### Matlab / GNU Octave
 
 Matlab / GNU Octave MEX interface may be built (one or the other) by EITHER:
