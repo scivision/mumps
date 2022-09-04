@@ -23,6 +23,12 @@ endif()
 
 # --- compiler options
 
+if(DEFINED ENV{CRAYPE_VERSION})
+  set(CRAY true)
+else()
+  set(CRAY false)
+endif()
+
 add_compile_definitions("$<$<COMPILE_LANGUAGE:C>:Add_>")
 # "Add_" works for all modern compilers we tried.
 
@@ -31,7 +37,7 @@ add_compile_definitions($<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${MSVC}>>:_CRT_SECU
 add_compile_definitions("$<$<BOOL:${intsize64}>:INTSIZE64;PORD_INTSIZE64>")
 
 if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
-  if(NOT CMAKE_CROSSCOMPILING)
+  if(NOT CMAKE_CROSSCOMPILING AND NOT CRAY)
     if(WIN32)
       add_compile_options($<$<COMPILE_LANGUAGE:C>:/QxHost>)
     else()
@@ -54,7 +60,7 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
   $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<BOOL:${intsize64}>>:-i8>
   )
 
-  if(NOT CMAKE_CROSSCOMPILING)
+  if(NOT CMAKE_CROSSCOMPILING AND NOT CRAY)
     if(WIN32)
       add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:/QxHost>)
     else()
@@ -81,7 +87,7 @@ elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   )
   # MS-MPI emits extreme amounts of nuisance warnings
 
-  if(NOT CMAKE_CROSSCOMPILING)
+  if(NOT CMAKE_CROSSCOMPILING AND NOT CRAY)
     add_compile_options(-mtune=native)
   endif()
 
