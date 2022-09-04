@@ -60,7 +60,7 @@ target_include_directories(mumps_common PUBLIC
 $<INSTALL_INTERFACE:include>
 )
 
-target_compile_definitions(mumps_common PRIVATE ${ORDERING_FLAGS})
+target_compile_definitions(mumps_common PRIVATE ${ORDERING_DEFS})
 # if(WIN32)
 #   target_compile_definitions(mumps_common PRIVATE MUMPS_WIN32)
 # endif()
@@ -130,7 +130,7 @@ add_library(${a}mumps ${CINT_SRC} ${SRC} ${SRC_OTHER})
 if(_memfree LESS 1000)  # < 1GB RAM free
   set_property(TARGET ${a}mumps PROPERTY JOB_POOL_COMPILE Njobs)
 endif()
-target_compile_definitions(${a}mumps PRIVATE MUMPS_ARITH=MUMPS_ARITH_${a} ${ORDERING_FLAGS})
+target_compile_definitions(${a}mumps PRIVATE MUMPS_ARITH=MUMPS_ARITH_${a} ${ORDERING_DEFS})
 # if(WIN32)
 #   target_compile_definitions(${a}mumps PRIVATE MUMPS_WIN32)
 # endif()

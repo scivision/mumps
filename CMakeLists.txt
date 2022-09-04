@@ -69,14 +69,14 @@ endif()
 # --- ordering libs
 
 set(ORDERING_LIBS)
-set(ORDERING_FLAGS -Dpord)
+set(ORDERING_DEFS pord)
 if(scotch)
   find_package(Scotch COMPONENTS ESMUMPS REQUIRED)
-  list(APPEND ORDERING_FLAGS -Dscotch)
+  list(APPEND ORDERING_DEFS scotch)
   list(APPEND ORDERING_LIBS Scotch::Scotch)
   # Scotch and METIS go together
   find_package(METIS REQUIRED)
-  list(APPEND ORDERING_FLAGS -Dmetis)
+  list(APPEND ORDERING_DEFS metis)
   list(APPEND ORDERING_LIBS METIS::METIS)
 endif()
 list(APPEND ORDERING_LIBS pord)
