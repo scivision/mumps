@@ -10,7 +10,9 @@ Note that MUMPS generally requires SCALAPACK and LAPACK as well.
 PORD is always used, in addition to the optional Scotch + METIS.
 
 COMPONENTS
-  s d c z   list one or more. Default is "s d"
+  s d c z   list one or more. Default is "s d". s: real32, d: real64, c: complex32, z: complex64
+  Scotch  MUMPS built with Scotch + METIS
+  OpenMP  MUMPS build with OpenMP support
 
 Result Variables
 ^^^^^^^^^^^^^^^^
@@ -20,12 +22,6 @@ MUMPS_LIBRARIES
 
 MUMPS_INCLUDE_DIRS
   dirs to be included
-
-MUMPS_HAVE_OPENMP
-  MUMPS is using OpenMP and thus user programs must link OpenMP as well.
-
-MUMPS_HAVE_Scotch
-  MUMPS is using Scotch/METIS and thus user programs must link Scotch/METIS as well.
 
 #]=======================================================================]
 
@@ -42,11 +38,15 @@ function(mumps_openmp_check)
 # so we do this indirect test to see if MUMPS needs OpenMP to link.
 
 find_package(OpenMP COMPONENTS C Fortran)
-if(OpenMP_FOUND)
-  list(APPEND CMAKE_REQUIRED_FLAGS ${OpenMP_Fortran_FLAGS} ${OpenMP_C_FLAGS})
-  list(APPEND CMAKE_REQUIRED_INCLUDES ${OpenMP_Fortran_INCLUDE_DIRS} ${OpenMP_C_INCLUDE_DIRS})
-  list(APPEND CMAKE_REQUIRED_LIBRARIES ${OpenMP_Fortran_LIBRARIES} ${OpenMP_C_LIBRARIES})
+
+if(NOT OpenMP_FOUND)
+  return()
 endif()
+
+list(APPEND CMAKE_REQUIRED_FLAGS ${OpenMP_Fortran_FLAGS} ${OpenMP_C_FLAGS})
+list(APPEND CMAKE_REQUIRED_INCLUDES ${OpenMP_Fortran_INCLUDE_DIRS} ${OpenMP_C_INCLUDE_DIRS})
+list(APPEND CMAKE_REQUIRED_LIBRARIES ${OpenMP_Fortran_LIBRARIES} ${OpenMP_C_LIBRARIES})
+
 
 check_fortran_source_compiles(
 "program test_omp
@@ -58,6 +58,8 @@ end program"
 MUMPS_HAVE_OPENMP
 SRC_EXT f90
 )
+
+set(MUMPS_OpenMP_FOUND true PARENT_SCOPE)
 
 endfunction(mumps_openmp_check)
 
@@ -88,6 +90,8 @@ MUMPS_HAVE_Scotch
 SRC_EXT f90
 )
 
+set(MUMPS_Scotch_FOUND true PARENT_SCOPE)
+
 endfunction(mumps_scotch_check)
 
 
@@ -111,10 +115,13 @@ find_package(LAPACK)
 set(CMAKE_REQUIRED_INCLUDES ${MUMPS_INCLUDE_DIR} ${SCALAPACK_INCLUDE_DIRS} ${LAPACK_INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS} ${MPI_C_INCLUDE_DIRS})
 set(CMAKE_REQUIRED_LIBRARIES ${MUMPS_LIBRARY} ${SCALAPACK_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_Fortran_LIBRARIES} ${MPI_C_LIBRARIES})
 
-mumps_openmp_check()
+if(OpenMP IN LISTS MUMPS_FIND_COMPONENTS)
+  mumps_openmp_check()
+endif()
 
-mumps_scotch_check()
-
+if(Scotch IN LISTS MUMPS_FIND_COMPONENTS)
+  mumps_scotch_check()
+endif()
 
 foreach(c IN LISTS MUMPS_FIND_COMPONENTS)
   if(NOT c IN_LIST mumps_ariths)
@@ -232,7 +239,7 @@ if(NOT PORD)
 endif()
 
 foreach(c IN LISTS MUMPS_FIND_COMPONENTS)
-  if(NOT "${c}" IN_LIST mumps_ariths)
+  if(NOT c IN_LIST mumps_ariths)
     continue()
   endif()
 
