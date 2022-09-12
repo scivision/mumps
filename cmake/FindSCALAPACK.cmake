@@ -14,7 +14,7 @@ mklvars.sh beforehand.
 
 This module does NOT find LAPACK.
 
-Parameters
+COMPONENTS
 ^^^^^^^^^^
 
 ``MKL``
@@ -23,6 +23,10 @@ Parameters
 
 ``MKL64``
   MKL only: 64-bit integers  (default is 32-bit integers)
+
+``STATIC``
+  Library search default on non-Windows is shared then static. On Windows default search is static only.
+  Specifying STATIC component searches for static libraries only.
 
 Result Variables
 ^^^^^^^^^^^^^^^^
@@ -76,7 +80,8 @@ if(BLACS_LIBRARY)
 endif()
 list(APPEND CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES} ${MPI_Fortran_LIBRARIES})
 
-if(find_static AND NOT WIN32 AND
+if(STATIC IN_LIST SCALAPACK_FIND_COMPONENTS AND
+  NOT WIN32 AND
   MKL IN_LIST SCALAPACK_FIND_COMPONENTS AND
   CMAKE_VERSION VERSION_GREATER_EQUAL 3.24
   )
@@ -189,6 +194,11 @@ if(NOT scalapack_cray)
   endif()
 endif()
 
+if(STATIC IN_LIST SCALAPACK_FIND_COMPONENTS)
+  set(_orig_suff ${CMAKE_FIND_LIBRARY_SUFFIXES})
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
+endif()
+
 if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS OR MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
   # we have to sanitize MKLROOT if it has Windows backslashes (\) otherwise it will break at build time
   # double-quotes are necessary per CMake to_cmake_path docs.
@@ -234,6 +244,13 @@ else()
   DOC "BLACS library"
   )
 
+endif()
+
+if(STATIC IN_LIST SCALAPACK_FIND_COMPONENTS)
+  if(SCALAPACK_LIBRARY)
+    set(SCALAPACK_STATIC_FOUND true)
+  endif()
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ${_orig_suff})
 endif()
 
 # --- Check that Scalapack links

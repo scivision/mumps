@@ -16,13 +16,10 @@ if(MKL IN_LIST LAPACK_COMPONENTS)
 endif()
 
 if(find_static)
-  set(_orig_suff ${CMAKE_FIND_LIBRARY_SUFFIXES})
-  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
+  list(APPEND LAPACK_COMPONENTS STATIC)
 endif()
+
 find_package(LAPACK REQUIRED COMPONENTS ${LAPACK_COMPONENTS})
-if(find_static)
-  set(CMAKE_FIND_LIBRARY_SUFFIXES ${_orig_suff})
-endif()
 
 # GEMMT is recommeded in MUMPS User Manual if available
 if(gemmt)

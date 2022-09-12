@@ -51,6 +51,10 @@ COMPONENTS default to Netlib LAPACK / LapackE, otherwise:
 ``LAPACK95``
   get Lapack95 interfaces for MKL or Netlib (must also specify one of MKL, Netlib)
 
+``STATIC``
+  Library search default on non-Windows is shared then static. On Windows default search is static only.
+  Specifying STATIC component searches for static libraries only.
+
 
 Result Variables
 ^^^^^^^^^^^^^^^^
@@ -316,6 +320,11 @@ endif()
 
 find_package(Threads)
 
+if(STATIC IN_LIST LAPACK_FIND_COMPONENTS)
+  set(_orig_suff ${CMAKE_FIND_LIBRARY_SUFFIXES})
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
+endif()
+
 # ==== generic MKL variables ====
 
 if(MKL IN_LIST LAPACK_FIND_COMPONENTS OR MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
@@ -405,6 +414,13 @@ elseif(OpenBLAS IN_LIST LAPACK_FIND_COMPONENTS)
   openblas_libs()
 elseif(lapack_cray)
   # LAPACK is implicitly part of Cray PE LibSci, use Cray compiler wrapper.
+endif()
+
+if(STATIC IN_LIST LAPACK_FIND_COMPONENTS)
+  if(LAPACK_LIBRARY)
+    set(LAPACK_STATIC_FOUND true)
+  endif()
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ${_orig_suff})
 endif()
 
 # -- verify library works
