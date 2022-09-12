@@ -29,7 +29,9 @@ METIS_INCLUDE_DIRS
 if(parallel IN_LIST METIS_FIND_COMPONENTS)
   find_library(PARMETIS_LIBRARY
     NAMES parmetis
-    PATH_SUFFIXES METIS libmetis)
+    PATH_SUFFIXES METIS libmetis
+    DOC "ParMETIS library"
+    )
   if(PARMETIS_LIBRARY)
     set(METIS_parallel_FOUND true)
   endif()
@@ -37,7 +39,9 @@ endif()
 
 find_library(METIS_LIBRARY
   NAMES metis
-  PATH_SUFFIXES METIS libmetis)
+  PATH_SUFFIXES METIS libmetis
+  DOC "METIS library"
+  )
 
 if(parallel IN_LIST METIS_FIND_COMPONENTS)
   set(metis_inc parmetis.h)
@@ -46,13 +50,16 @@ else()
 endif()
 
 find_path(METIS_INCLUDE_DIR
-  NAMES ${metis_inc}
-  PATH_SUFFIXES METIS openmpi-x86_64 mpich-x86_64)
+NAMES ${metis_inc}
+PATH_SUFFIXES METIS openmpi-x86_64 mpich-x86_64
+DOC "METIS include directory"
+)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(METIS
-    REQUIRED_VARS METIS_LIBRARY METIS_INCLUDE_DIR
-    HANDLE_COMPONENTS)
+REQUIRED_VARS METIS_LIBRARY METIS_INCLUDE_DIR
+HANDLE_COMPONENTS
+)
 
 if(METIS_FOUND)
 

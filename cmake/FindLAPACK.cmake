@@ -169,12 +169,14 @@ if(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
   find_library(LAPACKE_LIBRARY
   NAMES lapacke
   PATH_SUFFIXES lapack lapack/lib
+  DOC "LAPACKE library"
   )
 
   # lapack/include for Homebrew
   find_path(LAPACKE_INCLUDE_DIR
   NAMES lapacke.h
   PATH_SUFFIXES lapack lapack/include
+  DOC "LAPACKE include directory"
   )
   if(NOT (LAPACKE_LIBRARY AND LAPACKE_INCLUDE_DIR))
     return()
@@ -226,6 +228,7 @@ DOC "BLAS library"
 
 find_path(LAPACK_INCLUDE_DIR
 NAMES cblas-openblas.h cblas.h f77blas.h openblas_config.h
+DOC "LAPACK include directory"
 )
 
 if(NOT (LAPACK_LIBRARY AND BLAS_LIBRARY))

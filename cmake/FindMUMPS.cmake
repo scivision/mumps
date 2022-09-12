@@ -102,15 +102,18 @@ if(NOT (MUMPS_LIBRARY AND MUMPS_INCLUDE_DIR))
   return()
 endif()
 
-
-find_package(SCALAPACK)
+if(NOT SCALAPACK_FOUND)
+  find_package(SCALAPACK)
+endif()
 
 if(NOT (MPI_C_FOUND AND MPI_Fortran_FOUND))
   # factory FindMPI re-searches, slowing down configure, especialy when many subprojects use MPI
   find_package(MPI COMPONENTS C Fortran)
 endif()
 
-find_package(LAPACK)
+if(NOT LAPACK_FOUND)
+  find_package(LAPACK)
+endif()
 
 set(CMAKE_REQUIRED_INCLUDES ${MUMPS_INCLUDE_DIR} ${SCALAPACK_INCLUDE_DIRS} ${LAPACK_INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS} ${MPI_C_INCLUDE_DIRS})
 set(CMAKE_REQUIRED_LIBRARIES ${MUMPS_LIBRARY} ${SCALAPACK_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_Fortran_LIBRARIES} ${MPI_C_LIBRARIES})
@@ -224,14 +227,14 @@ if(DEFINED ENV{MKLROOT})
   NO_DEFAULT_PATH
   HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT ${CMAKE_PREFIX_PATH} ENV CMAKE_PREFIX_PATH
   PATH_SUFFIXES lib
-  DOC "simplest MUMPS ordering library"
+  DOC "PORD ordering library"
   )
 else()
   find_library(PORD
   NAMES pord mumps_pord
   NAMES_PER_DIR
   PATH_SUFFIXES openmpi/lib mpich/lib
-  DOC "simplest MUMPS ordering library"
+  DOC "PORD ordering library"
   )
 endif()
 if(NOT PORD)

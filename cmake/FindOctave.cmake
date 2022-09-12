@@ -114,7 +114,7 @@ if(Development IN_LIST Octave_FIND_COMPONENTS)
   find_library(Octave_INTERP_LIBRARY
   NAMES octinterp
   HINTS ${Octave_OCTLIBDIR} ${Octave_LIBDIR}
-  DOC "Octave Interpolation"
+  DOC "Octave Interpolation library"
   )
   find_library(Octave_OCTAVE_LIBRARY
   NAMES octave
@@ -135,6 +135,7 @@ if(Interpreter IN_LIST Octave_FIND_COMPONENTS)
   HINTS ${Octave_BINARY_DIR} ${_hint} ${_hint_dir}
   PATHS ${_path}
   PATH_SUFFIXES ${_suff}
+  DOC "Octave CLI"
   )
 
   if(Octave_EXECUTABLE)

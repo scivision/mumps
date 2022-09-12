@@ -6,7 +6,7 @@
 FindSCALAPACK
 -------------
 
-by Michael Hirsch, Ph.D. www.scivision.dev
+authored by SciVision: www.scivision.dev
 
 Finds SCALAPACK libraries for MKL, OpenMPI and MPICH.
 Intel MKL relies on having environment variable MKLROOT set, typically by sourcing
@@ -122,6 +122,7 @@ NAMES ${scalapack_name}
 HINTS ${MKLROOT}
 PATH_SUFFIXES lib lib/intel64
 NO_DEFAULT_PATH
+DOC "SCALAPACK library"
 )
 
 find_library(BLACS_LIBRARY
@@ -129,6 +130,7 @@ NAMES ${blacs_name}
 HINTS ${MKLROOT}
 PATH_SUFFIXES lib lib/intel64
 NO_DEFAULT_PATH
+DOCS "BLACS library"
 )
 
 find_path(SCALAPACK_INCLUDE_DIR
@@ -136,6 +138,7 @@ NAMES mkl_scalapack.h
 HINTS ${MKLROOT}
 PATH_SUFFIXES include
 NO_DEFAULT_PATH
+DOC "SCALAPACK include directory"
 )
 
 # pc_mkl_INCLUDE_DIRS on Windows injects breaking garbage
@@ -159,6 +162,7 @@ if(MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
     HINTS ${I_MPI_ROOT}
     NO_DEFAULT_PATH
     PATH_SUFFIXES lib lib/release
+    DOC "MPI 64-bit library"
     )
 
     if(NOT SCALAPACK_MPI_LIB64)
@@ -217,6 +221,7 @@ else()
   NAMES scalapack scalapack-openmpi scalapack-mpich
   NAMES_PER_DIR
   PATH_SUFFIXES openmpi/lib mpich/lib
+  DOC "SCALAPACK library"
   )
 
   # some systems have libblacs as a separate file, instead of being subsumed in libscalapack.
@@ -226,6 +231,7 @@ else()
   NAMES blacs
   NO_DEFAULT_PATH
   HINTS ${BLACS_ROOT}
+  DOC "BLACS library"
   )
 
 endif()

@@ -52,6 +52,7 @@ set(Scotch_LIBRARIES)
 find_path(Scotch_INCLUDE_DIR
 NAMES scotch.h
 PATH_SUFFIXES scotch openmpi openmpi-x86_64 mpich-x86_64
+DOC "Scotch include directory"
 )
 
 # need plain scotch when using ptscotch
@@ -71,6 +72,7 @@ foreach(l IN LISTS scotch_names)
   find_library(Scotch_${l}_LIBRARY
   NAMES ${l}
   PATH_SUFFIXES openmpi/lib mpich/lib
+  DOC "Scotch library"
   )
 
   list(APPEND Scotch_LIBRARIES ${Scotch_${l}_LIBRARY})
