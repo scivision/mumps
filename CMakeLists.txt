@@ -44,10 +44,17 @@ if(parallel)
   find_package(MPI COMPONENTS C Fortran REQUIRED)
   include(cmake/scalapack.cmake)
 
-  set(NUMERIC_LIBS SCALAPACK::SCALAPACK)
+  set(NUMERIC_LIBS ${SCALAPACK_LIBRARIES} ${LAPACK_LIBRARIES})
+
+  if(find_static AND NOT WIN32 AND
+    MKL IN_LIST LAPACK_COMPONENTS AND
+    CMAKE_VERSION VERSION_GREATER_EQUAL 3.24
+    )
+    set(NUMERIC_LIBS $<LINK_GROUP:RESCAN,${NUMERIC_LIBS}>)
+  endif()
 
   # avoid MPICH -fallow flag leakage
-  set(NUMERIC_INC ${MPI_Fortran_INCLUDE_DIRS})
+  set(NUMERIC_INC ${SCALAPACK_INCLUDE_DIRS} ${LAPACK_INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS})
   list(APPEND NUMERIC_LIBS ${MPI_Fortran_LIBRARIES} MPI::MPI_C)
 
   if(openmp)
@@ -88,10 +95,10 @@ include(cmake/mumps_src.cmake)
 if(NOT parallel)
   configure_file(libseq/CMakeLists.txt ${mumps_SOURCE_DIR}/libseq/ COPYONLY)
   add_subdirectory(${mumps_SOURCE_DIR}/libseq ${mumps_BINARY_DIR}/libseq)
-  set(NUMERIC_LIBS mpiseq)
+  set(NUMERIC_LIBS mpiseq LAPACK::LAPACK)
 endif()
 
-list(APPEND NUMERIC_LIBS LAPACK::LAPACK ${CMAKE_THREAD_LIBS_INIT})
+list(APPEND NUMERIC_LIBS ${CMAKE_THREAD_LIBS_INIT})
 
 
 configure_file(pord/lib/CMakeLists.txt ${mumps_SOURCE_DIR}/PORD/lib/ COPYONLY)

@@ -2,6 +2,8 @@ include(GNUInstallDirs)
 
 message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION}  CMake ${CMAKE_VERSION}  Toolchain ${CMAKE_TOOLCHAIN_FILE}")
 
+option(find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
+
 if(local)
   get_filename_component(local ${local} ABSOLUTE)
 
