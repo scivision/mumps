@@ -97,6 +97,9 @@ HANDLE_COMPONENTS
 if(Scotch_FOUND)
 set(Scotch_INCLUDE_DIRS ${Scotch_INCLUDE_DIR})
 
+message(VERBOSE "Scotch libraries: ${Scotch_LIBRARIES}
+Scotch include directories: ${Scotch_INCLUDE_DIRS}")
+
 if(NOT TARGET Scotch::Scotch)
   add_library(Scotch::Scotch INTERFACE IMPORTED)
   set_property(TARGET Scotch::Scotch PROPERTY INTERFACE_LINK_LIBRARIES "${Scotch_LIBRARIES}")
