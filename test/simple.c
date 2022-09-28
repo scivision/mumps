@@ -1,9 +1,3 @@
-/*
- *
- *  This file is part of MUMPS 5.2.1, released
- *  on Fri Jun 14 14:46:05 UTC 2019
- *
- */
 /* Example program using the C interface to the
  * double real arithmetic version of MUMPS, dmumps_c.
  * We solve the system A x = RHS with
@@ -30,7 +24,11 @@ int main(int argc, char ** argv)
   double a[2];
   double rhs[2];
 
-  MUMPS_INT myid, ierr;
+/* When compiling with -DINTSIZE64, MUMPS_INT is 64-bit but MPI
+   ilp64 versions may still require standard int for C interface. */
+/* MUMPS_INT myid, ierr; */
+  int myid, ierr;
+  int error = 0;
 
   ierr = MPI_Init(&argc, &argv);
   if (ierr != 0) {
