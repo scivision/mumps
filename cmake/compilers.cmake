@@ -37,6 +37,8 @@ add_compile_definitions($<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${MSVC}>>:_CRT_SECU
 add_compile_definitions("$<$<BOOL:${intsize64}>:INTSIZE64;PORD_INTSIZE64>")
 
 if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
+  add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration>)
+
   if(NOT CMAKE_CROSSCOMPILING AND NOT CRAY)
     if(WIN32)
       add_compile_options($<$<COMPILE_LANGUAGE:C>:/QxHost>)
@@ -51,6 +53,8 @@ if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
     $<$<COMPILE_LANG_AND_ID:C,Intel>:-qopenmp>
     )
   endif()
+elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang|GNU")
+  add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration>)
 endif()
 
 
