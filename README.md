@@ -145,12 +145,16 @@ Scotch can be built from [source via CMake](https://gitlab.inria.fr/scotch/scotc
 
 ```sh
 cmake -S scripts -B sripts/build -DCMAKE_INSTALL_PREFIX=~/mumps
-cmake --build scripts/build
-cmake --install build
+cmake --build scripts/build -t scotch
+cmake --install scripts/build
 
 # now build MUMPS itself
-cmake -Bbuild -DCMAKE_PREFIX_PATH=~/mumps
+cmake -Bbuild -DCMAKE_PREFIX_PATH=~/mumps -Dscotch=on
 cmake --build build
+
+# now build MUMPS example
+cmake -S example -B example/build -Dscotch=on
+cmake --build example/build
 ---
 
 If 64-bit integers are needed, use:

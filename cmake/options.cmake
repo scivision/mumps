@@ -18,8 +18,8 @@ endif()
 
 option(intsize64 "use 64-bit integers in C and Fortran")
 
-option(scotch "use Scotch" OFF)
-option(openmp "use OpenMP" OFF)
+option(scotch "use Scotch")
+option(openmp "use OpenMP")
 
 option(matlab "Matlab interface" OFF)
 option(octave "GNU Octave interface" OFF)
