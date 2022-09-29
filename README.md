@@ -146,7 +146,6 @@ Scotch can be built from source via CMake before MUMPS:
 ```sh
 cmake -S scripts -B scripts/build -DCMAKE_INSTALL_PREFIX=~/mumps
 cmake --build scripts/build -t scotch
-cmake --install scripts/build
 
 # now build MUMPS itself
 cmake -Bbuild -DCMAKE_PREFIX_PATH=~/mumps -Dscotch=on

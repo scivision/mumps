@@ -104,7 +104,10 @@ endfunction()
 bison_homebrew()
 
 
-set(scotch_cmake_args ${cmake_args})
+set(scotch_cmake_args ${cmake_args}
+-DINSTALL_METIS_HEADERS:BOOL=false
+-DBUILD_LIBSCOTCHMETIS:BOOL=false
+)
 if(BISON_ROOT)
   list(APPEND scotch_cmake_args -DCMAKE_PREFIX_PATH:ROOT=${BISON_ROOT})
 endif()
