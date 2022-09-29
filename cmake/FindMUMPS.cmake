@@ -55,11 +55,9 @@ external :: mumps_ana_omp_return, MUMPS_ICOPY_32TO64_64C
 call mumps_ana_omp_return()
 call MUMPS_ICOPY_32TO64_64C()
 end program"
-MUMPS_HAVE_OPENMP
+MUMPS_OpenMP_FOUND
 SRC_EXT f90
 )
-
-set(MUMPS_OpenMP_FOUND true PARENT_SCOPE)
 
 endfunction(mumps_openmp_check)
 
@@ -86,11 +84,9 @@ implicit none
 external :: mumps_scotch
 call mumps_scotch()
 end program"
-MUMPS_HAVE_Scotch
+MUMPS_Scotch_FOUND
 SRC_EXT f90
 )
-
-set(MUMPS_Scotch_FOUND true PARENT_SCOPE)
 
 endfunction(mumps_scotch_check)
 

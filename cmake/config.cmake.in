@@ -23,14 +23,14 @@ else()
   set(MUMPS_mpiseq_FOUND true)
 endif()
 
-set(MUMPS_HAVE_Scotch @scotch@)
-if(MUMPS_HAVE_Scotch)
+set(MUMPS_Scotch_FOUND @scotch@)
+if(MUMPS_Scotch_FOUND)
   find_dependency(Scotch COMPONENTS ESMUMPS)
   find_dependency(METIS)
 endif()
 
-set(MUMPS_HAVE_OPENMP @openmp@)
-if(MUMPS_HAVE_OPENMP)
+set(MUMPS_OpenMP_FOUND @openmp@)
+if(MUMPS_OpenMP_FOUND)
   find_dependency(OpenMP)
 endif()
 

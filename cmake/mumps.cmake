@@ -14,12 +14,12 @@ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
 
   find_package(MUMPS COMPONENTS ${mumps_comp} REQUIRED)
 
-  if(MUMPS_HAVE_Scotch)
+  if(MUMPS_Scotch_FOUND)
     find_package(Scotch COMPONENTS ESMUMPS REQUIRED)
     find_package(METIS REQUIRED)
   endif()
 
-  if(MUMPS_HAVE_OPENMP)
+  if(MUMPS_OpenMP_FOUND)
     find_package(OpenMP COMPONENTS C Fortran REQUIRED)
     target_link_libraries(MUMPS::MUMPS INTERFACE OpenMP::OpenMP_Fortran OpenMP::OpenMP_C)
   endif()
