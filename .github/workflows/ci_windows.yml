@@ -9,6 +9,7 @@ on:
       - "**.cmake"
       - "**/CMakeLists.txt"
       - ".github/workflows/ci_windows.yml"
+      - "!scripts/*"
 
 
 jobs:

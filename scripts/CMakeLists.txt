@@ -5,7 +5,7 @@ project(MumpsPrereqs LANGUAGES C Fortran)
 include(ExternalProject)
 
 file(MAKE_DIRECTORY ${CMAKE_INSTALL_PREFIX})
-message(STATUS "Installingn MUMPS prerequisites to ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "Installing MUMPS prerequisites to ${CMAKE_INSTALL_PREFIX}")
 
 if(NOT DEFINED arith)
   set(arith "s;d")
@@ -73,6 +73,42 @@ INACTIVITY_TIMEOUT 60
 
 # Scotch
 
+function(bison_homebrew)
+
+find_program(brew NAMES brew)
+if(NOT brew)
+  return()
+endif()
+
+execute_process(COMMAND ${brew} --prefix
+RESULT_VARIABLE ret
+OUTPUT_VARIABLE out OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+if(NOT ret EQUAL 0)
+  return()
+endif()
+
+find_program(bison NAMES bison HINTS ${out} PATH_SUFFIXES opt/bison/bin)
+if(NOT bison)
+  return()
+endif()
+
+message(STATUS "Bison found: ${bison}")
+get_filename_component(bison_root ${bison} DIRECTORY)
+
+set(BISON_ROOT ${bison_root} PARENT_SCOPE)
+
+endfunction()
+
+bison_homebrew()
+
+
+set(scotch_cmake_args ${cmake_args})
+if(BISON_ROOT)
+  list(APPEND scotch_cmake_args -DCMAKE_PREFIX_PATH:ROOT=${BISON_ROOT})
+endif()
+
 string(JSON scotch_url GET ${json} scotch git)
 string(JSON scotch_tag GET ${json} scotch tag)
 
@@ -80,7 +116,7 @@ ExternalProject_Add(scotch
 GIT_REPOSITORY ${scotch_url}
 GIT_TAG ${scotch_tag}
 GIT_SHALLOW true
-CMAKE_ARGS ${cmake_args}
+CMAKE_ARGS ${scotch_cmake_args}
 INACTIVITY_TIMEOUT 60
 DEPENDS metis
 )

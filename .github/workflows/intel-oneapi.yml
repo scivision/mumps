@@ -15,7 +15,7 @@ on:
       - "**.cmake"
       - "**/CMakeLists.txt"
       - ".github/workflows/intel-oneapi.yml"
-
+      - "!scripts/*"
 
 jobs:
 

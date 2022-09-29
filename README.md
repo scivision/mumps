@@ -141,10 +141,10 @@ To use Scotch and METIS (requires MUMPS >= 5.0 and Scotch built with libesmumps)
 cmake -Dscotch=true
 ```
 
-Scotch can be built from [source via CMake](https://gitlab.inria.fr/scotch/scotch.git) (before MUMPS):
+Scotch can be built from source via CMake before MUMPS:
 
 ```sh
-cmake -S scripts -B sripts/build -DCMAKE_INSTALL_PREFIX=~/mumps
+cmake -S scripts -B scripts/build -DCMAKE_INSTALL_PREFIX=~/mumps
 cmake --build scripts/build -t scotch
 cmake --install scripts/build
 
