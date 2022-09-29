@@ -6,8 +6,6 @@ LANGUAGES C Fortran
 
 enable_testing()
 
-option(scotch "use Scotch")
-
 if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU|Intel")
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration>)
 endif()
@@ -17,11 +15,7 @@ if(NOT EXISTS ${PROJECT_BINARY_DIR}/.gitignore)
   file(WRITE ${PROJECT_BINARY_DIR}/.gitignore "*")
 endif()
 
-if(scotch)
-  find_package(MUMPS CONFIG COMPONENTS Scotch REQUIRED)
-else()
-  find_package(MUMPS CONFIG REQUIRED)
-endif()
+find_package(MUMPS CONFIG REQUIRED)
 
 foreach(arith d z)
 
