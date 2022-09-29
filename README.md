@@ -135,11 +135,23 @@ We present them mainly as an example of compiling MEX libraries for Octave and M
 
 ### ordering
 
-To use Scotch and METIS (requires MUMPS >= 5.0):
+To use Scotch and METIS (requires MUMPS >= 5.0 and Scotch built with libesmumps):
 
 ```sh
 cmake -Dscotch=true
 ```
+
+Scotch can be built from [source via CMake](https://gitlab.inria.fr/scotch/scotch.git) (before MUMPS):
+
+```sh
+cmake -S scripts -B sripts/build -DCMAKE_INSTALL_PREFIX=~/mumps
+cmake --build scripts/build
+cmake --install build
+
+# now build MUMPS itself
+cmake -Bbuild -DCMAKE_PREFIX_PATH=~/mumps
+cmake --build build
+---
 
 If 64-bit integers are needed, use:
 

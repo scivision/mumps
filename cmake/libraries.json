@@ -7,6 +7,14 @@
     "git": "https://github.com/scivision/scalapack.git",
     "tag": "v2.2.1.2"
   },
+  "metis": {
+    "git": "https://github.com/scivision/METIS.git",
+    "tag": "v5.1.0.2"
+  },
+  "scotch": {
+    "git": "https://gitlab.inria.fr/scotch/scotch.git",
+    "tag": "v7.0.1",
+  },
 
   "mumps_src": {
     "4.8.4": {
