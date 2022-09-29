@@ -62,7 +62,7 @@ jobs:
       if: ${{ matrix.scotch }}
       run: |
         cmake -S scripts -B scripts/build -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}
-        cmake --build scripts/build -t scotch
+        cmake --build scripts/build -t scotch --parallel
 
     - name: configure int64=${{ matrix.int64 }} shared=${{ matrix.shared }}
       run: cmake -B build -Darith=d -DCMAKE_PREFIX_PATH=${{ runner.temp}} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -Dscotch:BOOL=${{ matrix.scotch }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }} -Dintsize64:BOOL=${{ matrix.int64 }}
