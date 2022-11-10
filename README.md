@@ -2,7 +2,7 @@
 
 [![ci](https://github.com/scivision/mumps/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci.yml)
 [![ci_windows](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml)
-[![intel-oneapi](https://github.com/scivision/mumps/actions/workflows/intel-oneapi.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/intel-oneapi.yml)
+[![oneapi-linux](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml)
 
 CMake downloads the source tarfile from MUMPS developer websites and builds.
 CMake builds MUMPS in parallel faster and more conveniently than the original Makefiles.

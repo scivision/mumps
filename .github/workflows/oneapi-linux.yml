@@ -1,0 +1,106 @@
+name: oneapi-linux
+
+env:
+  CMAKE_GENERATOR: Ninja
+  CC: icx
+  FC: ifx
+  LINUX_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/18852/l_BaseKit_p_2022.3.0.8767_offline.sh
+  LINUX_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/18856/l_HPCKit_p_2022.3.0.8751_offline.sh
+  LINUX_CPP_COMPONENTS: intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+  LINUX_FORTRAN_COMPONENTS: intel-oneapi-compiler-fortran
+  LINUX_MKL_COMPONENTS: "intel-oneapi-mkl intel-oneapi-mkl-devel"
+  LINUX_MPI_COMPONENTS: "intel-oneapi-mpi intel-oneapi-mpi-devel"
+# https://github.com/oneapi-src/oneapi-ci/blob/master/.github/workflows/build_all.yml
+
+
+on:
+  push:
+    paths:
+      - "**.c"
+      - "**.f"
+      - "**.F"
+      - "**.f90"
+      - "**.F90"
+      - "**.cmake"
+      - "**/CMakeLists.txt"
+      - ".github/workflows/oneapi-linux.yml"
+      - "!scripts/*"
+
+jobs:
+
+  linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      matrix:
+        int64: [true, false]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: cache install oneAPI
+      id: cache-install
+      uses: actions/cache@v3
+      with:
+        path: |
+          /opt/intel/oneapi
+        key: install-${{ env.LINUX_HPCKIT_URL }}-${{ env.LINUX_CPP_COMPONENTS }}-${{ env.LINUX_FORTRAN_COMPONENTS }}-compiler
+
+    - name: non-cache install oneAPI
+      if: steps.cache-install.outputs.cache-hit != 'true'
+      timeout-minutes: 5
+      run: |
+        .github/workflows/oneapi_setup_apt_repo_linux.sh
+        sudo apt install ${{ env.LINUX_CPP_COMPONENTS }} ${{ env.LINUX_FORTRAN_COMPONENTS }} ${{ env.LINUX_MKL_COMPONENTS }} ${{ env.LINUX_MPI_COMPONENTS }}
+
+    - name: Setup Intel oneAPI environment
+      run: |
+        source /opt/intel/oneapi/setvars.sh
+        printenv >> $GITHUB_ENV
+
+    - name: install Ninja
+      run: sudo apt install ninja-build
+# install ninja needs to be own step as not cached by design
+
+    - name: CMake Configure intsize64=${{ matrix.int64 }}
+      run: >-
+        cmake
+        --preset default
+        -Dintsize64=${{ matrix.int64 }}
+        -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}
+
+    - name: print config log
+      if: ${{ failure() }}
+      run: cat build/CMakeFiles/CMakeError.log
+
+    - name: CMake build
+      run: cmake --build --preset default
+
+    - name: unit test
+      run: ctest --preset default
+
+    - name: install package
+      run: cmake --install build
+
+    - name: configure example
+      run: >-
+        cmake
+        -S example
+        -B example/build
+        -DCMAKE_PREFIX_PATH=${{ runner.temp }}
+
+    - name: print config log
+      if: ${{ failure() }}
+      run: cat example/build/CMakeFiles/CMakeError.log
+
+    - name: build example
+      run: cmake --build example/build
+
+    - name: test example
+      run: ctest --test-dir example/build -V
+
+
+    - name: exclude unused files from cache
+      if: steps.cache-install.outputs.cache-hit != 'true'
+      run: .github/workflows/oneapi_cache_exclude_linux.sh

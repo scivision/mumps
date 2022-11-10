@@ -3,22 +3,29 @@
 
 "configurePresets": [
 {
-  "name": "phony"
+  "name": "default",
+  "binaryDir": "${sourceDir}/build"
 }
+],
+"buildPresets": [
+  {
+    "name": "default",
+    "configurePreset": "default"
+  }
 ],
 "testPresets": [
 {
   "name": "default",
-  "configurePreset": "phony",
+  "configurePreset": "default",
   "output": {
     "outputOnFailure": true,
-    "verbosity": "default"
+    "verbosity": "verbose"
   },
   "execution": {
     "noTestsAction": "error",
     "scheduleRandom": true,
     "stopOnFailure": false,
-    "timeout": 10
+    "timeout": 60
   }
 }
 ]
