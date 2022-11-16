@@ -38,11 +38,11 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: config
-      run: cmake -B build -Darith=d -Dparallel:BOOL=false -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+      run: cmake --preset default -Darith=d -Dparallel:BOOL=false -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
-    - run: cmake --build build --parallel || cmake --build build -v
+    - run: cmake --build --preset default --parallel
 
-    - run: ctest --test-dir build --preset default
+    - run: ctest --preset default
 
     - name: install package
       run: cmake --install build

@@ -65,13 +65,13 @@ jobs:
         cmake --build scripts/build -t scotch --parallel
 
     - name: configure int64=${{ matrix.int64 }} shared=${{ matrix.shared }}
-      run: cmake -B build -Darith=d -DCMAKE_PREFIX_PATH=${{ runner.temp}} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -Dscotch:BOOL=${{ matrix.scotch }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }} -Dintsize64:BOOL=${{ matrix.int64 }}
+      run: cmake --preset default -Darith=d -DCMAKE_PREFIX_PATH=${{ runner.temp}} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -Dscotch:BOOL=${{ matrix.scotch }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }} -Dintsize64:BOOL=${{ matrix.int64 }}
 
     - name: build release
-      run: cmake --build build --parallel
+      run: cmake --build --preset default --parallel
 
     - name: test release
-      run: ctest --test-dir build --preset default
+      run: ctest --preset default
 
     - name: install package
       run: cmake --install build
@@ -102,9 +102,9 @@ jobs:
     - name: build,install lapack, scalapack
       run: cmake --build scripts/build --parallel
 
-    - run: cmake -B build -Darith=d --install-prefix=${{ runner.temp }} -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
-    - run: cmake --build build --parallel
-    - run: ctest --test-dir build --preset default
+    - run: cmake --preset default -Darith=d --install-prefix=${{ runner.temp }} -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+    - run: cmake --build --preset default --parallel
+    - run: ctest --preset default
 
     - run: cmake --install build
 
