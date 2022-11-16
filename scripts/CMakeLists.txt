@@ -37,7 +37,11 @@ GIT_REPOSITORY ${lapack_url}
 GIT_TAG ${lapack_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${cmake_args}
-CMAKE_CACHE_ARGS -Darith:STRING=${arith}
+CMAKE_CACHE_ARGS
+"-DBUILD_SINGLE:BOOL=$<IN_LIST:s,${arith}>"
+"-DBUILD_DOUBLE:BOOL=$<IN_LIST:d,${arith}>"
+"-DBUILD_COMPLEX:BOOL=$<IN_LIST:c,${arith}>"
+"-DBUILD_COMPLEX16:BOOL=$<IN_LIST:z,${arith}>"
 INACTIVITY_TIMEOUT 60
 )
 
