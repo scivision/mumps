@@ -10,7 +10,7 @@ endif()
 
 endfunction(mumps_test)
 
-if("d" IN_LIST arith AND LAPACK_d_FOUND)
+if(BUILD_DOUBLE AND LAPACK_d_FOUND)
   add_executable(mumpscfg test_mumps.f90)
   target_link_libraries(mumpscfg PRIVATE MUMPS::MUMPS)
 
@@ -21,14 +21,14 @@ if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.1)
   return()
 endif()
 
-if("s" IN_LIST arith AND LAPACK_s_FOUND)
+if(BUILD_SINGLE AND LAPACK_s_FOUND)
   add_executable(s_simple s_simple.f90)
   target_link_libraries(s_simple PRIVATE MUMPS::MUMPS)
 
   mumps_test(SimpleReal32 s_simple)
 endif()
 
-if("d" IN_LIST arith AND LAPACK_d_FOUND)
+if(BUILD_DOUBLE AND LAPACK_d_FOUND)
   add_executable(d_simple d_simple.f90)
   target_link_libraries(d_simple PRIVATE MUMPS::MUMPS)
 

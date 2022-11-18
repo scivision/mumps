@@ -17,28 +17,35 @@ endif()
 
 find_package(MUMPS CONFIG REQUIRED)
 
-foreach(arith d z)
+function(precision_ex a)
 
-  if(NOT MUMPS_${arith}_FOUND)
-    continue()
+  if(NOT MUMPS_${a}_FOUND)
+    return()
   endif()
 
-  add_executable(${arith}_example ${arith}_example.c)
-  target_link_libraries(${arith}_example PRIVATE MUMPS::MUMPS)
+  add_executable(${a}_example ${a}_example.c)
+  target_link_libraries(${a}_example PRIVATE MUMPS::MUMPS)
 
   if(MUMPS_parallel)
-    add_test(NAME ${arith}_example_C
-      COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:${arith}_example>)
+    add_test(NAME ${a}_example_C
+      COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:${a}_example>)
   else()
-    add_test(NAME ${arith}_example_C COMMAND ${arith}_example)
+    add_test(NAME ${a}_example_C COMMAND ${a}_example)
   endif()
 
-endforeach()
+endfunction()
+
+if(BUILD_DOUBLE)
+  precision_ex("d")
+endif()
+if(BUILD_COMPLEX16)
+  precision_ex("z")
+endif()
+
 
 # test properties
 get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 
-set_property(TEST ${test_names} PROPERTY TIMEOUT 10)
 if(MUMPS_parallel)
   set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
 endif()

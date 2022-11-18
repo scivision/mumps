@@ -284,7 +284,7 @@ endfunction(mumps_libs)
 
 # --- main
 
-# need to have at least one arith precision component
+# need to have at least one precision component
 set(mumps_ariths s d c z)
 
 set(mumps_need_default true)

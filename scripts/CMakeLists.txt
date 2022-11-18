@@ -7,9 +7,10 @@ include(ExternalProject)
 file(MAKE_DIRECTORY ${CMAKE_INSTALL_PREFIX})
 message(STATUS "Installing MUMPS prerequisites to ${CMAKE_INSTALL_PREFIX}")
 
-if(NOT DEFINED arith)
-  set(arith "s;d")
-endif()
+option(BUILD_SINGLE "Build single precision real" ON)
+option(BUILD_DOUBLE "Build double precision real" ON)
+option(BUILD_COMPLEX "Build single precision complex")
+option(BUILD_COMPLEX16 "Build double precision complex")
 
 set(CMAKE_TLS_VERIFY true)
 
@@ -24,6 +25,10 @@ set(cmake_args
 -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
 -DCMAKE_BUILD_TYPE=Release
 -DBUILD_TESTING:BOOL=false
+-DBUILD_SINGLE:BOOL=${BUILD_SINGLE}
+-DBUILD_DOUBLE:BOOL=${BUILD_DOUBLE}
+-DBUILD_COMPLEX:BOOL=${BUILD_COMPLEX}
+-DBUILD_COMPLEX16:BOOL=${BUILD_COMPLEX16}
 )
 
 # Lapack
@@ -37,11 +42,6 @@ GIT_REPOSITORY ${lapack_url}
 GIT_TAG ${lapack_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${cmake_args}
-CMAKE_CACHE_ARGS
-"-DBUILD_SINGLE:BOOL=$<IN_LIST:s,${arith}>"
-"-DBUILD_DOUBLE:BOOL=$<IN_LIST:d,${arith}>"
-"-DBUILD_COMPLEX:BOOL=$<IN_LIST:c,${arith}>"
-"-DBUILD_COMPLEX16:BOOL=$<IN_LIST:z,${arith}>"
 INACTIVITY_TIMEOUT 60
 )
 
@@ -57,7 +57,6 @@ GIT_REPOSITORY ${scalapack_url}
 GIT_TAG ${scalapack_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${cmake_args}
-CMAKE_CACHE_ARGS -Darith:STRING=${arith}
 INACTIVITY_TIMEOUT 60
 DEPENDS lapack
 )

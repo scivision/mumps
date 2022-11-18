@@ -95,19 +95,13 @@ For systems where MPI, BLACS and SCALAPACK are not available, or where non-paral
 
 ### Precision
 
-The default precision is "s;d" covering float64 and float32.
+The default precision is float64 and float32.
 
-```sh
-cmake -Darith="s;d"
-```
-
-may be optionally specified:
-
-```
--Darith=s  # real32
--Darith=d  # real64
--Darith=c  # complex64
--Darith=z  # complex128
+```cmake
+option(BUILD_SINGLE "Build single precision real" ON)
+option(BUILD_DOUBLE "Build double precision real" ON)
+option(BUILD_COMPLEX "Build single precision complex")
+option(BUILD_COMPLEX16 "Build double precision complex")
 ```
 
 ### GEMMT symmetric matrix-matrix multiplication

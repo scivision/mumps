@@ -33,9 +33,10 @@ endif()
 
 # --- other options
 
-if(NOT arith)
-  set(arith "s;d")
-endif()
+option(BUILD_SINGLE "Build single precision real" ON)
+option(BUILD_DOUBLE "Build double precision real" ON)
+option(BUILD_COMPLEX "Build single precision complex")
+option(BUILD_COMPLEX16 "Build double precision complex")
 
 set(CMAKE_TLS_VERIFY true)
 

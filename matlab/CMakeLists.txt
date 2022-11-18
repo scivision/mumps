@@ -1,7 +1,7 @@
 set_property(DIRECTORY PROPERTY LABELS matlab)
 
-if(NOT "d" IN_LIST arith)
-  message(STATUS "Matlab requires arith=d be present.")
+if(BUILD_DOUBLE)
+  message(STATUS "Matlab requires real64: `cmake -DBUILD_DOUBLE=true`")
   return()
 endif()
 

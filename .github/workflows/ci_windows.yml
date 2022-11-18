@@ -38,7 +38,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: config
-      run: cmake --preset default -Darith=d -Dparallel:BOOL=false -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+      run: cmake --preset default -DBUILD_SINGLE:BOOL=false -Dparallel:BOOL=false -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
     - run: cmake --build --preset default --parallel
 

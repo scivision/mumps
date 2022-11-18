@@ -37,7 +37,7 @@ endif()
 
 set(BLAS_HAVE_GEMMT true)
 
-if("d" IN_LIST arith AND BLAS_HAVE_GEMMT)
+if(BUILD_DOUBLE AND BLAS_HAVE_GEMMT)
 check_fortran_source_compiles(
 "program check
 use, intrinsic :: iso_fortran_env, only : real64
@@ -54,7 +54,7 @@ if(NOT BLAS_HAVE_dGEMMT)
 endif()
 endif()
 
-if("s" IN_LIST arith AND BLAS_HAVE_GEMMT)
+if(BUILD_SINGLE AND BLAS_HAVE_GEMMT)
 check_fortran_source_compiles(
 "program check
 use, intrinsic :: iso_fortran_env, only : real32
@@ -71,7 +71,7 @@ if(NOT BLAS_HAVE_sGEMMT)
 endif()
 endif()
 
-if("c" IN_LIST arith AND BLAS_HAVE_GEMMT)
+if(BUILD_COMPLEX AND BLAS_HAVE_GEMMT)
 check_fortran_source_compiles(
 "program check
 use, intrinsic :: iso_fortran_env, only : real32
@@ -88,7 +88,7 @@ if(NOT BLAS_HAVE_cGEMMT)
 endif()
 endif()
 
-if("z" IN_LIST arith AND BLAS_HAVE_GEMMT)
+if(BUILD_COMPLEX16 AND BLAS_HAVE_GEMMT)
 check_fortran_source_compiles(
 "program check
 use, intrinsic :: iso_fortran_env, only : real64

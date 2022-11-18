@@ -81,7 +81,7 @@ INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 # MUMPS::MUMPS is the target most users will link to.
 add_library(MUMPS INTERFACE)
 
-foreach(a IN LISTS arith)
+function(precision_source a)
 
 set(SRC
 "$<$<VERSION_GREATER_EQUAL:${MUMPS_UPSTREAM_VERSION},5.0>:${a}ana_aux.F;${a}ana_aux_par.F;${a}ana_lr.F;${a}fac_asm_master_ELT_m.F;${a}fac_asm_master_m.F;${a}fac_front_aux.F;${a}fac_front_LU_type1.F;${a}fac_front_LU_type2.F;${a}fac_front_LDLT_type1.F;${a}fac_front_LDLT_type2.F;${a}fac_front_type2_aux.F;${a}fac_lr.F;${a}fac_omp_m.F;${a}fac_par_m.F;${a}lr_core.F;${a}mumps_lr_data_m.F;${a}omp_tps_m.F;${a}static_ptr_m.F>"
@@ -162,7 +162,21 @@ ${mumps_SOURCE_DIR}/include/mumps_int_def.h
 DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-endforeach()
+endfunction(precision_source)
+
+if(BUILD_SINGLE)
+  precision_source("s")
+endif()
+if(BUILD_DOUBLE)
+  precision_source("d")
+endif()
+if(BUILD_COMPLEX)
+  precision_source("c")
+endif()
+if(BUILD_COMPLEX16)
+  precision_source("z")
+endif()
+
 
 install(FILES
 ${mumps_SOURCE_DIR}/include/mumps_c_types.h
