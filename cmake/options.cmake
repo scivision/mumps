@@ -24,6 +24,8 @@ option(openmp "use OpenMP")
 option(matlab "Matlab interface" OFF)
 option(octave "GNU Octave interface" OFF)
 
+option(BUILD_SHARED_LIBS "Build shared libraries")
+
 if(matlab OR octave)
   option(parallel "parallel (use MPI)" OFF)
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
