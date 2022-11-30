@@ -1,8 +1,8 @@
 name: ci
 
 env:
-  CMAKE_BUILD_TYPE: Release
   HOMEBREW_NO_INSTALL_CLEANUP: 1
+  CMAKE_GENERATOR: Ninja
 
 on:
   push:
@@ -27,8 +27,8 @@ jobs:
         scotch: [false]
         int64: [true, false]
         shared: [true, false]
-        img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev},
-               {os: macos-latest, cmd: brew install lapack scalapack open-mpi && brew reinstall gcc}
+        img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev},
+               {os: macos-latest, cmd: brew install ninja lapack scalapack open-mpi && brew reinstall gcc}
         ]
         exclude:
           - shared: true
@@ -40,7 +40,7 @@ jobs:
           - scotch: true
             shared: false
             int64: false
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev}
+            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev}
 
 
     runs-on: ${{ matrix.img.os }}
@@ -56,16 +56,13 @@ jobs:
       if: ${{ matrix.scotch }}
       run: |
         cmake -S scripts -B scripts/build -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}
-        cmake --build scripts/build -t scotch --parallel
+        cmake --build scripts/build -t scotch
 
     - name: configure int64=${{ matrix.int64 }} shared=${{ matrix.shared }}
-      run: cmake --preset default -DBUILD_SINGLE:BOOL=false -DCMAKE_PREFIX_PATH=${{ runner.temp}} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -Dscotch:BOOL=${{ matrix.scotch }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }} -Dintsize64:BOOL=${{ matrix.int64 }}
+      run: cmake --preset default -DCMAKE_PREFIX_PATH=${{ runner.temp}} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -Dscotch:BOOL=${{ matrix.scotch }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }} -Dintsize64:BOOL=${{ matrix.int64 }}
 
-    - name: build release
-      run: cmake --build --preset default --parallel
-
-    - name: test release
-      run: ctest --preset default
+    - name: build, test release
+      run: cmake --workflow --preset default
 
     - name: install package
       run: cmake --install build
@@ -74,7 +71,7 @@ jobs:
       run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
     - name: build example
-      run: cmake --build example/build --parallel || cmake --build example/build -v
+      run: cmake --build example/build
 
     - name: test example
       run: ctest --test-dir example/build -V
@@ -89,16 +86,22 @@ jobs:
     - name: Install prereqs
       run: |
         sudo apt update
-        sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin
+        sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin
 
     - name: configure lapack, scalapack
-      run: cmake -S scripts -B scripts/build -DBUILD_SINGLE:BOOL=false --install-prefix=${{ runner.temp }}
-    - name: build,install lapack, scalapack
-      run: cmake --build scripts/build --parallel
+      run: >-
+        cmake -S scripts -B scripts/build
+        -DBUILD_SINGLE:BOOL=false -DBUILD_DOUBLE:BOOL=true -DBUILD_COMPLEX:BOOL=false -DBUILD_COMPLEX16:BOOL=false
+        --install-prefix=${{ runner.temp }}
 
-    - run: cmake --preset default -DBUILD_SINGLE:BOOL=false --install-prefix=${{ runner.temp }} -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
-    - run: cmake --build --preset default --parallel
-    - run: ctest --preset default
+    - name: build,install lapack, scalapack
+      run: cmake --build scripts/build -t scalapack
+
+    - name: configure
+      run: cmake --preset default --install-prefix=${{ runner.temp }} -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+
+    - name: build, test release
+      run: cmake --workflow --preset default
 
     - run: cmake --install build
 
@@ -106,6 +109,6 @@ jobs:
     # - name: configure example
     #   run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
     # - name: build example
-    #   run: cmake --build example/build --parallel || cmake --build example/build -v
+    #   run: cmake --build example/build
     # - name: test example
     #   run: ctest --test-dir example/build -V
