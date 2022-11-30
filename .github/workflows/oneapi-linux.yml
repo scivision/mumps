@@ -1,11 +1,10 @@
 name: oneapi-linux
 
 env:
-  CMAKE_GENERATOR: Ninja
   CC: icx
   FC: ifx
-  LINUX_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/18852/l_BaseKit_p_2022.3.0.8767_offline.sh
-  LINUX_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/18856/l_HPCKit_p_2022.3.0.8751_offline.sh
+  LINUX_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/18970/l_BaseKit_p_2022.3.1.17310_offline.sh
+  LINUX_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/18975/l_HPCKit_p_2022.3.1.16997_offline.sh
   LINUX_CPP_COMPONENTS: intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
   LINUX_FORTRAN_COMPONENTS: intel-oneapi-compiler-fortran
   LINUX_MKL_COMPONENTS: "intel-oneapi-mkl intel-oneapi-mkl-devel"
@@ -65,8 +64,7 @@ jobs:
 
     - name: CMake Configure intsize64=${{ matrix.int64 }}
       run: >-
-        cmake
-        --preset default
+        cmake --preset default
         -Dintsize64=${{ matrix.int64 }}
         -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}
 
@@ -74,11 +72,8 @@ jobs:
       if: ${{ failure() }}
       run: cat build/CMakeFiles/CMakeError.log
 
-    - name: CMake build
-      run: cmake --build --preset default
-
-    - name: unit test
-      run: ctest --preset default
+    - name: CMake build, test
+      run: cmake --workflow --preset default
 
     - name: install package
       run: cmake --install build
