@@ -1,10 +1,18 @@
 {
-  "version": 3,
+  "version": 6,
 
 "configurePresets": [
 {
   "name": "default",
-  "binaryDir": "${sourceDir}/build"
+  "binaryDir": "${sourceDir}/build",
+  "generator": "Ninja",
+  "cacheVariables": {
+    "BUILD_SINGLE": false,
+    "BUILD_DOUBLE": true,
+    "BUILD_COMPLEX": false,
+    "BUILD_COMPLEX16": false,
+    "CMAKE_BUILD_TYPE": "Release"
+  }
 }
 ],
 "buildPresets": [
@@ -28,5 +36,24 @@
     "timeout": 60
   }
 }
+],
+"workflowPresets": [
+  {
+    "name": "default",
+    "steps": [
+      {
+        "type": "configure",
+        "name": "default"
+      },
+      {
+        "type": "build",
+        "name": "default"
+      },
+      {
+        "type": "test",
+        "name": "default"
+      }
+    ]
+  }
 ]
 }

@@ -1,8 +1,5 @@
 name: ci_windows
 
-env:
-  CMAKE_BUILD_TYPE: Release
-
 on:
   push:
     paths:
@@ -17,8 +14,6 @@ jobs:
   windows:
     runs-on: windows-latest
     timeout-minutes: 15
-    env:
-      CMAKE_GENERATOR: MinGW Makefiles
 
     strategy:
       matrix:
@@ -31,6 +26,7 @@ jobs:
         install: >-
           mingw-w64-x86_64-gcc-fortran
           mingw-w64-x86_64-lapack
+          mingw-w64-x86_64-ninja
 
     - name: Put MSYS2_MinGW64 on PATH
       run: echo "${{ runner.temp }}/msys64/mingw64/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
@@ -38,11 +34,10 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: config
-      run: cmake --preset default -DBUILD_SINGLE:BOOL=false -Dparallel:BOOL=false -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+      run: cmake --preset default -Dparallel:BOOL=false --install-prefix=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
-    - run: cmake --build --preset default --parallel
-
-    - run: ctest --preset default
+    - name: build, test
+      run: cmake --workflow --preset default
 
     - name: install package
       run: cmake --install build
@@ -55,7 +50,7 @@ jobs:
       run: cat example/build/CMakeFiles/CMakeError.log
 
     - name: build example
-      run: cmake --build example/build --parallel || cmake --build example/build -v
+      run: cmake --build example/build
 
     - name: test example
       run: ctest --test-dir example/build -V

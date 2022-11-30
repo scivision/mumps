@@ -1,12 +1,11 @@
 # https://oneapi-src.github.io/oneapi-ci/
-# https://github.com/oneapi-src/oneapi-ci/runs/6472039626?check_suite_focus=true
+# https://github.com/oneapi-src/oneapi-ci/blob/master/.github/workflows/list_components.yml
 
 name: oneapi-windows
 
 env:
-  CMAKE_GENERATOR: "MinGW Makefiles"
-  WINDOWS_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/18851/w_BaseKit_p_2022.3.0.9573_offline.exe
-  WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/18857/w_HPCKit_p_2022.3.0.9564_offline.exe
+  WINDOWS_BASEKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/18969/w_BaseKit_p_2022.3.1.19798.exe
+  WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/irc_nas/18976/w_HPCKit_p_2022.3.1.19755.exe
   WINDOWS_CPP_COMPONENTS: intel.oneapi.win.cpp-compiler
   WINDOWS_FORTRAN_COMPONENTS: intel.oneapi.win.ifort-compiler
   WINDOWS_MKL_COMPONENTS: intel.oneapi.win.mkl.devel
@@ -14,7 +13,6 @@ env:
   CC: icx
   CXX: icx
   FC: ifx
-  CMAKE_BUILD_TYPE: Release
   # Release is necessary to avoid ITERATOR_DEBUG_LEVEL mismatch with libstdc++
 
 on:
@@ -36,6 +34,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - run: pip install ninja
 
     # - name: cache install oneAPI
     #   timeout-minutes: 10

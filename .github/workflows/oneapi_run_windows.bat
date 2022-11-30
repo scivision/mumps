@@ -13,12 +13,8 @@ if %errorlevel% neq 0 (
   type build\CMakeFiles\CMakeError.log & exit /b %errorlevel%
 )
 
-echo "build %GITHUB_REPOSITORY%"
-cmake --build --preset default --parallel
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-echo "test %GITHUB_REPOSITORY%"
-ctest --preset default
+echo "build, test %GITHUB_REPOSITORY%"
+cmake --workflow --preset default
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo "install project"
