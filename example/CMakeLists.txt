@@ -19,10 +19,6 @@ find_package(MUMPS CONFIG REQUIRED)
 
 function(precision_ex a)
 
-  if(NOT MUMPS_${a}_FOUND)
-    return()
-  endif()
-
   add_executable(${a}_example ${a}_example.c)
   target_link_libraries(${a}_example PRIVATE MUMPS::MUMPS)
 
@@ -35,10 +31,10 @@ function(precision_ex a)
 
 endfunction()
 
-if(BUILD_DOUBLE)
+if(MUMPS_d_FOUND)
   precision_ex("d")
 endif()
-if(BUILD_COMPLEX16)
+if(MUMPS_z_FOUND)
   precision_ex("z")
 endif()
 
