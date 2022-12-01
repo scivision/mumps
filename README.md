@@ -65,7 +65,7 @@ If the system doesn't have LAPACK and SCALAPACK, first build and install them:
 
 ```sh
 cmake -S scripts -B scripts/build -DCMAKE_INSTALL_PREFIX=~/mylibs
-cmake --build build
+cmake --build build -t scalapack
 
 # mumps
 cmake -B build -DCMAKE_PREFIX_PATH=~/mylibs
@@ -135,7 +135,8 @@ To use Scotch and METIS (requires MUMPS >= 5.0 and Scotch built with libesmumps)
 cmake -Dscotch=true
 ```
 
-Scotch can be built from source via CMake before MUMPS:
+Scotch can be built from source via CMake before MUMPS.
+NOTE: the "-Dintsize64" must be the same for Scotch and MUMPS -- default is "off" for Scotch and MUMPS.
 
 ```sh
 cmake -S scripts -B scripts/build -DCMAKE_INSTALL_PREFIX=~/mumps

@@ -11,6 +11,7 @@ option(BUILD_SINGLE "Build single precision real" ON)
 option(BUILD_DOUBLE "Build double precision real" ON)
 option(BUILD_COMPLEX "Build single precision complex")
 option(BUILD_COMPLEX16 "Build double precision complex")
+option(intsize64 "use 64-bit integers in C and Fortran--Scotch must be consistent with MUMPS")
 
 set(CMAKE_TLS_VERIFY true)
 
@@ -25,14 +26,15 @@ set(cmake_args
 -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
 -DCMAKE_BUILD_TYPE=Release
 -DBUILD_TESTING:BOOL=false
+)
+
+# Lapack
+set(lapack_cmake_args ${cmake_args}
 -DBUILD_SINGLE:BOOL=${BUILD_SINGLE}
 -DBUILD_DOUBLE:BOOL=${BUILD_DOUBLE}
 -DBUILD_COMPLEX:BOOL=${BUILD_COMPLEX}
 -DBUILD_COMPLEX16:BOOL=${BUILD_COMPLEX16}
 )
-
-# Lapack
-set(lapack_cmake_args ${cmake_args})
 
 string(JSON lapack_url GET ${json} lapack git)
 string(JSON lapack_tag GET ${json} lapack tag)
@@ -41,13 +43,15 @@ ExternalProject_Add(lapack
 GIT_REPOSITORY ${lapack_url}
 GIT_TAG ${lapack_tag}
 GIT_SHALLOW true
-CMAKE_ARGS ${cmake_args}
+CMAKE_ARGS ${lapack_cmake_args}
 INACTIVITY_TIMEOUT 60
+TLS_VERIFY true
+CONFIGURE_HANDLED_BY_BUILD true
 )
 
 # Scalapack
 
-set(scalapack_cmake_args ${cmake_args})
+set(scalapack_cmake_args ${lapack_cmake_args})
 
 string(JSON scalapack_url GET ${json} scalapack git)
 string(JSON scalapack_tag GET ${json} scalapack tag)
@@ -56,12 +60,17 @@ ExternalProject_Add(scalapack
 GIT_REPOSITORY ${scalapack_url}
 GIT_TAG ${scalapack_tag}
 GIT_SHALLOW true
-CMAKE_ARGS ${cmake_args}
+CMAKE_ARGS ${scalapack_cmake_args}
 INACTIVITY_TIMEOUT 60
 DEPENDS lapack
+TLS_VERIFY true
+CONFIGURE_HANDLED_BY_BUILD true
 )
 
 # METIS
+
+set(metis_cmake_args ${cmake_args})
+# METIS doesn't use INTSIZE64 like Scotch
 
 string(JSON metis_url GET ${json} metis git)
 string(JSON metis_tag GET ${json} metis tag)
@@ -70,8 +79,10 @@ ExternalProject_Add(metis
 GIT_REPOSITORY ${metis_url}
 GIT_TAG ${metis_tag}
 GIT_SHALLOW true
-CMAKE_ARGS ${cmake_args}
+CMAKE_ARGS ${metis_cmake_args}
 INACTIVITY_TIMEOUT 60
+TLS_VERIFY true
+CONFIGURE_HANDLED_BY_BUILD true
 )
 
 # Scotch
@@ -106,11 +117,15 @@ endfunction()
 
 bison_homebrew()
 
-
+# https://gitlab.inria.fr/scotch/scotch/-/blob/master/CMakeLists.txt
 set(scotch_cmake_args ${cmake_args}
 -DINSTALL_METIS_HEADERS:BOOL=false
 -DBUILD_LIBSCOTCHMETIS:BOOL=false
+-DBUILD_LIBESMUMPS:BOOL=true
+-DINTSIZE=$<IF:$<BOOL:${intsize64}>,64,32>
 )
+#https://gitlab.inria.fr/scotch/scotch/-/blob/master/src/CMakeLists.txt#L84
+
 if(BISON_ROOT)
   list(APPEND scotch_cmake_args -DCMAKE_PREFIX_PATH:ROOT=${BISON_ROOT})
 endif()
@@ -125,4 +140,6 @@ GIT_SHALLOW true
 CMAKE_ARGS ${scotch_cmake_args}
 INACTIVITY_TIMEOUT 60
 DEPENDS metis
+TLS_VERIFY true
+CONFIGURE_HANDLED_BY_BUILD true
 )
