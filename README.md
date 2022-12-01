@@ -139,14 +139,13 @@ Scotch can be built from source via CMake before MUMPS.
 NOTE: the "-Dintsize64" must be the same for Scotch and MUMPS -- default is "off" for Scotch and MUMPS.
 
 ```sh
-cmake -S scripts -B scripts/build -DCMAKE_INSTALL_PREFIX=~/mumps
-cmake --build scripts/build -t scotch
+cmake -Dprefix=~/mumps -P scripts/build_scotch.cmake
 
-# now build MUMPS itself
+# build MUMPS itself
 cmake -Bbuild -DCMAKE_PREFIX_PATH=~/mumps -Dscotch=on
 cmake --build build
 
-# now build MUMPS example
+# build MUMPS example
 cmake -S example -B example/build -Dscotch=on
 cmake --build example/build
 ---
