@@ -35,6 +35,10 @@ endif()
 set(MUMPS_Scotch_FOUND @scotch@)
 if(MUMPS_Scotch_FOUND)
   find_dependency(Scotch COMPONENTS ESMUMPS)
+endif()
+
+set(MUMPS_METIS_FOUND @metis@)
+if(MUMPS_METIS_FOUND)
   find_dependency(METIS)
 endif()
 
