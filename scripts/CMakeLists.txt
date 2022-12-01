@@ -127,7 +127,7 @@ set(scotch_cmake_args ${cmake_args}
 #https://gitlab.inria.fr/scotch/scotch/-/blob/master/src/CMakeLists.txt#L84
 
 if(BISON_ROOT)
-  list(APPEND scotch_cmake_args -DCMAKE_PREFIX_PATH:ROOT=${BISON_ROOT})
+  list(APPEND scotch_cmake_args -DCMAKE_PREFIX_PATH:PATH=${BISON_ROOT})
 endif()
 
 string(JSON scotch_url GET ${json} scotch git)
