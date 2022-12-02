@@ -17,11 +17,13 @@ if(NOT EXISTS ${PROJECT_BINARY_DIR}/.gitignore)
   file(WRITE ${PROJECT_BINARY_DIR}/.gitignore "*")
 endif()
 
+find_package(Threads)
+find_package(Scotch REQUIRED COMPONENTS ESMUMPS)
 find_package(MUMPS REQUIRED COMPONENTS Scotch)
 
 function(precision_ex a)
   add_executable(${a}_scotch ${a}_scotch.f90)
-  target_link_libraries(${a}_scotch PRIVATE MUMPS::MUMPS Scotch::Scotch)
+  target_link_libraries(${a}_scotch PRIVATE MUMPS::MUMPS Scotch::Scotch ${CMAKE_THREAD_LIBS_INIT})
   add_test(NAME ${a}_scotch COMMAND ${a}_scotch)
 endfunction()
 

@@ -71,7 +71,7 @@ if(NOT Scotch_FOUND)
 endif()
 
 list(APPEND CMAKE_REQUIRED_INCLUDES ${Scotch_INCLUDE_DIRS})
-list(APPEND CMAKE_REQUIRED_LIBRARIES ${Scotch_LIBRARIES})
+list(APPEND CMAKE_REQUIRED_LIBRARIES ${Scotch_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 check_fortran_source_compiles(
 "program test_scotch
