@@ -139,7 +139,6 @@ GIT_TAG ${scotch_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${scotch_cmake_args}
 INACTIVITY_TIMEOUT 60
-DEPENDS metis
 TLS_VERIFY true
 CONFIGURE_HANDLED_BY_BUILD true
 )

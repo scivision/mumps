@@ -25,6 +25,7 @@ jobs:
     strategy:
       matrix:
         scotch: [false]
+        metis: [false]
         int64: [true, false]
         shared: [true, false]
         img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev},
@@ -41,7 +42,10 @@ jobs:
             shared: false
             int64: false
             img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev}
-
+          - metis: true
+            shared: false
+            int64: false
+            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev}
 
     runs-on: ${{ matrix.img.os }}
 
@@ -52,12 +56,24 @@ jobs:
 
     - uses: actions/checkout@v3
 
+    - name: Build METIS
+      if: ${{ matrix.metis }}
+      run: cmake -Dprefix:PATH=${{ runner.temp }} -P scripts/build_metis.cmake
+
     - name: Build scotch
       if: ${{ matrix.scotch }}
       run: cmake -Dprefix:PATH=${{ runner.temp }} -P scripts/build_scotch.cmake
 
     - name: configure int64=${{ matrix.int64 }} shared=${{ matrix.shared }}
-      run: cmake --preset default -DCMAKE_PREFIX_PATH=${{ runner.temp}} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }} -Dscotch:BOOL=${{ matrix.scotch }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }} -Dintsize64:BOOL=${{ matrix.int64 }}
+      run: >-
+        cmake
+        --preset default
+        -DCMAKE_PREFIX_PATH=${{ runner.temp }}
+        -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}
+        -Dscotch:BOOL=${{ matrix.scotch }}
+        -Dmetis:BOOL=${{ matrix.metis }}
+        -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+        -Dintsize64:BOOL=${{ matrix.int64 }}
 
     - name: build, test release
       run: cmake --workflow --preset default
@@ -66,13 +82,38 @@ jobs:
       run: cmake --install build
 
     - name: configure example
-      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
 
     - name: build example
       run: cmake --build example/build
 
     - name: test example
       run: ctest --test-dir example/build -V
+
+    - name: Scotch example
+      if: ${{ matrix.scotch }}
+      run: |
+        cmake -S example/scotch -Bexample/scotch/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+        cmake --build example/scotch/build
+        ctest --test-dir example/scotch/build
+
+    - name: print config log
+      if: ${{ failure() && matrix.scotch }}
+      run: |
+        cat example/scotch/build/CMakeFiles/CMakeError.log
+
+    - name: METIS example
+      if: ${{ matrix.metis }}
+      run: |
+        cmake -S example/metis -Bexample/metis/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+        cmake --build example/metis/build
+        ctest --test-dir example/metis/build
+
+    - name: print config log
+      if: ${{ failure() && matrix.metis }}
+      run: |
+        cat example/metis/build/CMakeFiles/CMakeError.log
+
 
 
   linux-build:

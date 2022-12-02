@@ -7,11 +7,12 @@ FindMUMPS
 
 Finds the MUMPS library.
 Note that MUMPS generally requires SCALAPACK and LAPACK as well.
-PORD is always used, in addition to the optional Scotch + METIS.
+PORD is always used, in addition to the optional Scotch or METIS.
 
 COMPONENTS
   s d c z   list one or more. Default is "s d". s: real32, d: real64, c: complex32, z: complex64
-  Scotch  MUMPS built with Scotch + METIS
+  Scotch  MUMPS built with Scotch
+  METIS   MUMPS build with METIS
   OpenMP  MUMPS build with OpenMP support
 
 Result Variables
@@ -64,31 +65,50 @@ endfunction(mumps_openmp_check)
 
 function(mumps_scotch_check)
 
-# check if Scotch linked
 find_package(Scotch COMPONENTS ESMUMPS)
-# METIS is required when using Scotch
-if(Scotch_FOUND)
-  find_package(METIS)
-endif()
-
-if(NOT METIS_FOUND)
+if(NOT Scotch_FOUND)
   return()
 endif()
 
-list(APPEND CMAKE_REQUIRED_INCLUDES ${Scotch_INCLUDE_DIRS} ${METIS_INCLUDE_DIRS})
-list(APPEND CMAKE_REQUIRED_LIBRARIES ${Scotch_LIBRARIES} ${METIS_LIBRARIES})
+list(APPEND CMAKE_REQUIRED_INCLUDES ${Scotch_INCLUDE_DIRS})
+list(APPEND CMAKE_REQUIRED_LIBRARIES ${Scotch_LIBRARIES})
 
 check_fortran_source_compiles(
 "program test_scotch
 implicit none
-external :: mumps_scotch
-call mumps_scotch()
+external :: mumps_scotch_version
+integer :: vers
+call mumps_scotch_version(vers)
 end program"
 MUMPS_Scotch_FOUND
 SRC_EXT f90
 )
 
 endfunction(mumps_scotch_check)
+
+
+function(mumps_metis_check)
+
+find_package(METIS)
+if(NOT METIS_FOUND)
+  return()
+endif()
+
+list(APPEND CMAKE_REQUIRED_INCLUDES ${METIS_INCLUDE_DIRS})
+list(APPEND CMAKE_REQUIRED_LIBRARIES ${METIS_LIBRARIES})
+
+check_fortran_source_compiles(
+"program test_metis
+implicit none
+external :: mumps_metis_idxsize
+integer :: idxsize
+call mumps_metis_idxsize(idxsize)
+end program"
+MUMPS_METIS_FOUND
+SRC_EXT f90
+)
+
+endfunction(mumps_metis_check)
 
 
 function(mumps_check)
@@ -139,6 +159,10 @@ endif()
 
 if(Scotch IN_LIST MUMPS_FIND_COMPONENTS)
   mumps_scotch_check()
+endif()
+
+if(METIS IN_LIST MUMPS_FIND_COMPONENTS)
+  mumps_metis_check()
 endif()
 
 foreach(c IN LISTS MUMPS_FIND_COMPONENTS)
