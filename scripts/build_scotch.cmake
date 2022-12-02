@@ -19,10 +19,14 @@ if(NOT bindir)
   endif()
 endif()
 
-execute_process(COMMAND ${CMAKE_COMMAND} ${args}
+set(args -Dintsize64:BOOL=${intsize64})
+if(prefix)
+  list(APPEND args -DCMAKE_INSTALL_PREFIX:PATH=${prefix})
+endif()
+execute_process(COMMAND ${CMAKE_COMMAND}
 -B${bindir}
 -S${CMAKE_CURRENT_LIST_DIR}
--DCMAKE_INSTALL_PREFIX:PATH=${prefix}
+${args}
 RESULT_VARIABLE ret
 )
 

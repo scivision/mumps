@@ -9,7 +9,7 @@
   },
   "metis": {
     "git": "https://github.com/scivision/METIS.git",
-    "tag": "v5.1.0.2"
+    "tag": "v5.1.0.3"
   },
   "scotch": {
     "git": "https://gitlab.inria.fr/scotch/scotch.git",

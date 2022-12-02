@@ -69,8 +69,9 @@ CONFIGURE_HANDLED_BY_BUILD true
 
 # METIS
 
-set(metis_cmake_args ${cmake_args})
-# METIS doesn't use INTSIZE64 like Scotch
+set(metis_cmake_args ${cmake_args}
+-Dintsize=$<IF:$<BOOL:${intsize64}>,64,32>
+)
 
 string(JSON metis_url GET ${json} metis git)
 string(JSON metis_tag GET ${json} metis tag)
