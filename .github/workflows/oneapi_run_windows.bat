@@ -13,7 +13,7 @@ if %errorlevel% neq 0 (
   type build\CMakeFiles\CMakeError.log & exit /b %errorlevel%
 )
 
-echo "build, test %GITHUB_REPOSITORY%"
+echo "workflow %GITHUB_REPOSITORY%"
 cmake --workflow --preset default
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -21,14 +21,8 @@ echo "install project"
 cmake --install build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-echo "Example config"
-cmake -B example/build -S example -DCMAKE_PREFIX_PATH=%RUNNER_TEMP%
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-echo "Example build"
-cmake --build example/build
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-echo "Example test"
-ctest --test-dir example/build -V
+echo "Example config, build, test"
+cd example
+set CMAKE_PREFIX_PATH=%RUNNER_TEMP%
+cmake --workflow --preset default
 if %errorlevel% neq 0 exit /b %errorlevel%
