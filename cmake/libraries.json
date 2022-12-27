@@ -13,7 +13,7 @@
   },
   "scotch": {
     "git": "https://gitlab.inria.fr/scotch/scotch.git",
-    "tag": "v7.0.1"
+    "tag": "v7.0.2"
   },
 
   "mumps_src": {
