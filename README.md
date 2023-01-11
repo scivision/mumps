@@ -65,7 +65,7 @@ If the system doesn't have LAPACK and SCALAPACK, first build and install them:
 
 ```sh
 cmake -S scripts -B scripts/build -DCMAKE_INSTALL_PREFIX=~/mylibs
-cmake --build build -t scalapack
+cmake --build scripts/build -t scalapack
 
 # mumps
 cmake -B build -DCMAKE_PREFIX_PATH=~/mylibs
