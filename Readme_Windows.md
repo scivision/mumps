@@ -8,6 +8,9 @@ generator.
 Windows must use Ninja or Make. That is, specify `cmake -G Ninja` or `cmake -G "MinGW Makefiles"`.
 The CMake Windows default generator "Visual Studio 17 2022" does not work, even when using MSVC compiler.
 
+NOTE: on Windows, Intel oneAPI MKL only supports oneAPI compiler.
+This is distinct from Linux, where oneMKL supports oneAPI and GCC compilers.
+
 Windows compilers known to work:
 
 * Intel oneAPI (recommended) -- requires oneAPI Base Toolkit and oneAPI HPC Toolkit for Lapack and Scalapack
