@@ -18,6 +18,11 @@ Windows compilers known to work:
 * Windows Subsystem for Linux (GCC)
 * Visual Studio (C code) + oneAPI (Fortran code)  (more difficult, use only if needed)
 
+If using **oneAPI**, be sure to use the oneAPI command prompt.
+Under Windows Start menu look for "Intel oneAPI command prompt for Intel 64 for Visual Studio".
+Alternatively, use the oneAPI [setvars.bat](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+On any code project on Windows, having the correct command prompt and environment variables is essential.
+
 ```sh
 cmake -G Ninja -B build -DBUILD_SINGLE=yes -DBUILD_DOUBLE=yes -DBUILD_COMPLEX=yes -DBUILD_COMPLEX16=yes
 ```
