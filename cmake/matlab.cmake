@@ -1,8 +1,5 @@
-set_property(DIRECTORY PROPERTY LABELS matlab)
-
-if(BUILD_DOUBLE)
-  message(STATUS "Matlab requires real64: `cmake -DBUILD_DOUBLE=true`")
-  return()
+if(NOT BUILD_DOUBLE)
+  message(FATAL_ERROR "Matlab requires real64: `cmake -DBUILD_DOUBLE=true`")
 endif()
 
 if(parallel)
@@ -21,14 +18,13 @@ if(matlab)
 
 matlab_add_mex(NAME dmumpsmex
 SHARED
-SRC mumpsmex.c
+SRC ${mumps_SOURCE_DIR}/matlab/mumpsmex.c
 LINK_TO MUMPS::MUMPS
 )
 
 add_test(NAME matlabMEX
 COMMAND ${Matlab_MAIN_PROGRAM} -batch "addpath('${PROJECT_BINARY_DIR}', '${mumps_matlab_path}', '${PROJECT_SOURCE_DIR}/matlab'), example"
 )
-set_property(TEST matlabMEX PROPERTY TIMEOUT 90)
 
 elseif(octave)
 
@@ -42,11 +38,6 @@ add_test(NAME octaveMEX
 COMMAND ${Octave_EXECUTABLE} --eval "addpath('${PROJECT_BINARY_DIR}', '${mumps_matlab_path}', '${PROJECT_SOURCE_DIR}/matlab'), example"
 )
 
-set_property(TEST octaveMEX PROPERTY TIMEOUT 15)
-
 endif()
 
 target_compile_definitions(dmumpsmex PRIVATE MUMPS_ARITH=MUMPS_ARITH_d)
-
-set_property(TARGET dmumpsmex PROPERTY RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-set_property(TARGET dmumpsmex PROPERTY LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
