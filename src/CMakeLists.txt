@@ -77,12 +77,7 @@ EXPORT_NAME COMMON
 VERSION ${MUMPS_VERSION}
 )
 
-install(TARGETS mumps_common EXPORT ${PROJECT_NAME}-targets
-LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+install(TARGETS mumps_common EXPORT ${PROJECT_NAME}-targets)
 
 # --- MUMPS::MUMPS exported target
 # MUMPS::MUMPS is the target most users will link to.
@@ -154,19 +149,14 @@ VERSION ${MUMPS_VERSION}
 
 target_link_libraries(MUMPS INTERFACE ${a}mumps)
 
-install(TARGETS ${a}mumps EXPORT ${PROJECT_NAME}-targets
-LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+install(TARGETS ${a}mumps EXPORT ${PROJECT_NAME}-targets)
 
 install(FILES
 ${mumps_SOURCE_DIR}/include/${a}mumps_c.h
 ${mumps_SOURCE_DIR}/include/${a}mumps_root.h
 ${mumps_SOURCE_DIR}/include/${a}mumps_struc.h
 ${mumps_SOURCE_DIR}/include/mumps_int_def.h
-DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+TYPE INCLUDE
 )
 
 endfunction(precision_source)
@@ -188,18 +178,13 @@ endif()
 install(FILES
 ${mumps_SOURCE_DIR}/include/mumps_c_types.h
 ${mumps_SOURCE_DIR}/include/mumps_compat.h
-DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+TYPE INCLUDE
 )
 
 # We do not need the .mod files due to the way MUMPS is interfaced
 # install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/ TYPE INCLUDE)
 
-install(TARGETS MUMPS EXPORT ${PROJECT_NAME}-targets
-LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+install(TARGETS MUMPS EXPORT ${PROJECT_NAME}-targets)
 
 # target for FetchContent
 # this must NOT be an ALIAS or linking in other packages breaks.

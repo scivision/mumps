@@ -86,10 +86,8 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   add_compile_options(
   $<$<COMPILE_LANGUAGE:Fortran>:-fimplicit-none>
-  $<$<BOOL:${MINGW}>:-w>
   "$<$<AND:$<VERSION_GREATER_EQUAL:${CMAKE_Fortran_COMPILER_VERSION},10>,$<COMPILE_LANGUAGE:Fortran>>:-fallow-argument-mismatch;-fallow-invalid-boz>"
   )
-  # MS-MPI emits extreme amounts of nuisance warnings
 
   if(NOT CMAKE_CROSSCOMPILING AND NOT CRAY)
     add_compile_options(-mtune=native)
