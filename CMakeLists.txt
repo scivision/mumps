@@ -104,8 +104,8 @@ list(APPEND NUMERIC_LIBS ${CMAKE_THREAD_LIBS_INIT})
 # --- PORD (always used)
 include(cmake/pord.cmake)
 
-configure_file(src/CMakeLists.txt ${mumps_SOURCE_DIR}/src/ COPYONLY)
-add_subdirectory(${mumps_SOURCE_DIR}/src ${mumps_BINARY_DIR}/src)
+# --- MUMPS itself
+include(cmake/mumps.cmake)
 
 if(matlab OR octave)
   include(cmake/matlab.cmake)
