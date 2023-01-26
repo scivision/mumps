@@ -16,6 +16,7 @@ if(NOT EXISTS ${PROJECT_BINARY_DIR}/.gitignore)
 endif()
 
 find_package(MUMPS CONFIG REQUIRED)
+message(STATUS "MUMPS_DIR: ${MUMPS_DIR}")
 
 function(precision_ex a)
 
@@ -52,6 +53,6 @@ if(WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.22)
     get_filename_component(imp_mumps_dir ${imp_mumps} DIRECTORY)
   endif()
   set_property(TEST ${test_names} PROPERTY
-  ENVIRONMENT_MODIFICATION "PATH=path_list_append:${imp_mumps_dir};PATH=path_list_append:${CMAKE_PREFIX_PATH}/bin;PATH=path_list_append:${PROJECT_BINARY_DIR}"
+  ENVIRONMENT_MODIFICATION "PATH=path_list_append:${imp_mumps_dir};PATH=path_list_append:${CMAKE_PREFIX_PATH}/bin"
   )
 endif()
