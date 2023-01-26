@@ -116,6 +116,8 @@ if(BLAS_HAVE_sGEMMT OR BLAS_HAVE_dGEMMT OR BLAS_HAVE_cGEMMT OR BLAS_HAVE_zGEMMT)
 endif()
 set_property(TARGET mumps_common PROPERTY EXPORT_NAME COMMON)
 set_property(TARGET mumps_common PROPERTY VERSION ${MUMPS_VERSION})
+# MUMPS doesn't yet publicly use Fortran .mod files, but does need them somewhere
+set_property(TARGET mumps_common PROPERTY Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 install(TARGETS mumps_common EXPORT ${PROJECT_NAME}-targets)
 
@@ -196,7 +198,7 @@ ${ORDERING_DEFS}
 $<$<AND:$<BOOL:${BLAS_HAVE_${a}GEMMT}>,$<COMPILE_LANGUAGE:Fortran>>:GEMMT_AVAILABLE>
 )
 target_include_directories(${a}mumps PUBLIC
-"$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
+"$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${NUMERIC_INC};${CMAKE_CURRENT_BINARY_DIR}/include>"
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(${a}mumps PUBLIC mumps_common)
