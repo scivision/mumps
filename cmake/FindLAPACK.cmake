@@ -33,13 +33,15 @@ Parameters
 COMPONENTS default to Netlib LAPACK / LapackE, otherwise:
 
 ``MKL``
-  Intel MKL for MSVC, ICL, ICC, GCC and PGCC -- sequential by default, or add TBB or MPI as well
+  Intel MKL -- sequential by default, or add TBB or MPI as well
+``MKL64``
+  MKL only: 64-bit integers  (default is 32-bit integers)
 ``OpenMP``
   Intel MPI with OpenMP threading addition to MKL
 ``TBB``
   Intel MPI + TBB for MKL
-``MKL64``
-  MKL only: 64-bit integers  (default is 32-bit integers)
+``AOCL``
+  AMD Optimizing CPU Libraries
 
 ``LAPACKE``
   Netlib LapackE for C / C++
@@ -248,6 +250,68 @@ set(LAPACK_LIBRARY ${LAPACK_LIBRARY} PARENT_SCOPE)
 
 endfunction(openblas_libs)
 
+
+function(aocl_libs)
+
+set(_names flame)
+if(WIN32)
+  if(BUILD_SHARED_LIBS)
+    list(APPEND _names AOCL-LibFlame-Win-MT-dll AOCL-LibFlame-Win-dll)
+  else()
+    list(APPEND _names AOCL-LibFlame-Win-MT AOCL-LibFlame-Win)
+  endif()
+endif()
+
+find_library(LAPACK_LIBRARY
+NAMES ${_names}
+NAMES_PER_DIR
+PATH_SUFFIXES LP64
+DOC "LAPACK Flame library"
+)
+
+set(_names blis-mt blis)
+if(WIN32)
+  if(BUILD_SHARED_LIBS)
+    list(APPEND _names AOCL-LibBlis-Win-MT-dll AOCL-LibBlis-Win-dll)
+  else()
+    list(APPEND _names AOCL-LibBlis-Win-MT AOCL-LibBlis-Win)
+  endif()
+endif()
+
+find_library(BLAS_LIBRARY
+NAMES ${_names}
+NAMES_PER_DIR
+PATH_SUFFIXES LP64
+DOC "BLAS Blis library"
+)
+
+if(NOT (LAPACK_LIBRARY AND BLAS_LIBRARY))
+  return()
+endif()
+
+find_path(LAPACK_INCLUDE_DIR
+NAMES FLAME.h
+PATH_SUFFIXES LP64
+DOC "Flame header"
+)
+
+find_path(BLAS_INCLUDE_DIR
+NAMES blis.h
+PATH_SUFFIXES LP64
+DOC "Blis header"
+)
+
+if(NOT (LAPACK_INCLUDE_DIR AND BLAS_INCLUDE_DIR))
+  return()
+endif()
+
+
+set(LAPACK_AOCL_FOUND true PARENT_SCOPE)
+set(LAPACK_LIBRARY ${LAPACK_LIBRARY} ${BLAS_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} PARENT_SCOPE)
+set(LAPACK_INCLUDE_DIR ${LAPACK_INCLUDE_DIR} ${BLAS_INCLUDE_DIR} PARENT_SCOPE)
+
+endfunction(aocl_libs)
+
 #===============================
 
 function(find_mkl_libs)
@@ -310,7 +374,8 @@ if(NOT (lapack_cray
   OR OpenBLAS IN_LIST LAPACK_FIND_COMPONENTS
   OR Netlib IN_LIST LAPACK_FIND_COMPONENTS
   OR Atlas IN_LIST LAPACK_FIND_COMPONENTS
-  OR MKL IN_LIST LAPACK_FIND_COMPONENTS))
+  OR MKL IN_LIST LAPACK_FIND_COMPONENTS
+  OR AOCL IN_LIST LAPACK_FIND_COMPONENTS))
   if(DEFINED ENV{MKLROOT})
     list(APPEND LAPACK_FIND_COMPONENTS MKL)
   else()
@@ -412,6 +477,8 @@ elseif(Netlib IN_LIST LAPACK_FIND_COMPONENTS)
   netlib_libs()
 elseif(OpenBLAS IN_LIST LAPACK_FIND_COMPONENTS)
   openblas_libs()
+elseif(AOCL IN_LIST LAPACK_FIND_COMPONENTS)
+  aocl_libs()
 elseif(lapack_cray)
   # LAPACK is implicitly part of Cray PE LibSci, use Cray compiler wrapper.
 endif()
