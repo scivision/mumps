@@ -88,8 +88,12 @@ ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindMUMPS.cmake
 DESTINATION cmake
 )
 
+message(STATUS "MUMPS ORDERING_DEFS: ${ORDERING_DEFS}")
+message(STATUS "MUMPS ORDERING_LIBS: ${ORDERING_LIBS}")
+
 # --- download MUMPS source
 include(cmake/mumps_src.cmake)
+message(VERBOSE "MUMPS ${MUMPS_UPSTREAM_VERSION} source directory: ${mumps_SOURCE_DIR}")
 
 # --- MUMPS build
 
