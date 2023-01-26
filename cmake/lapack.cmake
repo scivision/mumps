@@ -35,9 +35,7 @@ else()
   set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES})
 endif()
 
-set(BLAS_HAVE_GEMMT true)
-
-if(BUILD_DOUBLE AND BLAS_HAVE_GEMMT)
+if(BUILD_DOUBLE)
 check_fortran_source_compiles(
 "program check
 use, intrinsic :: iso_fortran_env, only : real64
@@ -49,12 +47,9 @@ end program"
 BLAS_HAVE_dGEMMT
 SRC_EXT f90
 )
-if(NOT BLAS_HAVE_dGEMMT)
-  set(BLAS_HAVE_GEMMT false)
-endif()
 endif()
 
-if(BUILD_SINGLE AND BLAS_HAVE_GEMMT)
+if(BUILD_SINGLE)
 check_fortran_source_compiles(
 "program check
 use, intrinsic :: iso_fortran_env, only : real32
@@ -66,12 +61,9 @@ end program"
 BLAS_HAVE_sGEMMT
 SRC_EXT f90
 )
-if(NOT BLAS_HAVE_sGEMMT)
-  set(BLAS_HAVE_GEMMT false)
-endif()
 endif()
 
-if(BUILD_COMPLEX AND BLAS_HAVE_GEMMT)
+if(BUILD_COMPLEX)
 check_fortran_source_compiles(
 "program check
 use, intrinsic :: iso_fortran_env, only : real32
@@ -83,12 +75,9 @@ end program"
 BLAS_HAVE_cGEMMT
 SRC_EXT f90
 )
-if(NOT BLAS_HAVE_cGEMMT)
-  set(BLAS_HAVE_GEMMT false)
-endif()
 endif()
 
-if(BUILD_COMPLEX16 AND BLAS_HAVE_GEMMT)
+if(BUILD_COMPLEX16)
 check_fortran_source_compiles(
 "program check
 use, intrinsic :: iso_fortran_env, only : real64
@@ -100,13 +89,6 @@ end program"
 BLAS_HAVE_zGEMMT
 SRC_EXT f90
 )
-if(NOT BLAS_HAVE_zGEMMT)
-  set(BLAS_HAVE_GEMMT false)
-endif()
-endif()
-
-if(BLAS_HAVE_GEMMT)
-  add_compile_definitions($<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>)
 endif()
 
 endif(gemmt)

@@ -111,6 +111,9 @@ $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_compile_definitions(mumps_common PRIVATE ${ORDERING_DEFS})
+if(BLAS_HAVE_sGEMMT OR BLAS_HAVE_dGEMMT OR BLAS_HAVE_cGEMMT OR BLAS_HAVE_zGEMMT)
+  target_compile_definitions(mumps_common PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>)
+endif()
 set_property(TARGET mumps_common PROPERTY EXPORT_NAME COMMON)
 set_property(TARGET mumps_common PROPERTY VERSION ${MUMPS_VERSION})
 
@@ -187,7 +190,11 @@ add_library(${a}mumps ${CINT_SRC} ${SRC} ${SRC_OTHER})
 if(_memfree LESS 1000)  # < 1GB RAM free
   set_property(TARGET ${a}mumps PROPERTY JOB_POOL_COMPILE Njobs)
 endif()
-target_compile_definitions(${a}mumps PRIVATE MUMPS_ARITH=MUMPS_ARITH_${a} ${ORDERING_DEFS})
+target_compile_definitions(${a}mumps PRIVATE
+MUMPS_ARITH=MUMPS_ARITH_${a}
+${ORDERING_DEFS}
+$<$<AND:$<BOOL:${BLAS_HAVE_${a}GEMMT}>,$<COMPILE_LANGUAGE:Fortran>>:GEMMT_AVAILABLE>
+)
 target_include_directories(${a}mumps PUBLIC
 "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
