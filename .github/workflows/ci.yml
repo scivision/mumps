@@ -3,6 +3,7 @@ name: ci
 env:
   HOMEBREW_NO_INSTALL_CLEANUP: 1
   CMAKE_GENERATOR: Ninja
+  CTEST_NO_TESTS_ACTION: error
 
 on:
   push:
