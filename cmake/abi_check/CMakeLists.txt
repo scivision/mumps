@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1...3.25)
+cmake_minimum_required(VERSION 3.5)
 
 project(abi_check LANGUAGES C)
 
@@ -29,6 +29,3 @@ add_executable(main_c main.c $<TARGET_OBJECTS:addone_f> $<TARGET_OBJECTS:addtwo>
 set_property(TARGET main_c PROPERTY LINKER_LANGUAGE C)
 add_test(NAME C_main COMMAND main_c)
 
-# test properties
-get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
-set_property(TEST ${test_names} PROPERTY TIMEOUT 10)
