@@ -10,10 +10,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU|Intel")
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration>)
 endif()
 
-# --- auto-ignore build directory
-if(NOT EXISTS ${PROJECT_BINARY_DIR}/.gitignore)
-  file(WRITE ${PROJECT_BINARY_DIR}/.gitignore "*")
-endif()
+file(GENERATE OUTPUT .gitignore CONTENT "*")
 
 find_package(MUMPS CONFIG REQUIRED)
 message(STATUS "MUMPS_DIR: ${MUMPS_DIR}")
