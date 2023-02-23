@@ -46,7 +46,7 @@ jobs:
 
     - name: non-cache install oneAPI
       if: steps.cache-install.outputs.cache-hit != 'true'
-      timeout-minutes: 5
+      timeout-minutes: 10
       run: |
         .github/workflows/oneapi_setup_apt_repo_linux.sh
         sudo apt install ${{ env.LINUX_CPP_COMPONENTS }} ${{ env.LINUX_FORTRAN_COMPONENTS }} ${{ env.LINUX_MKL_COMPONENTS }} ${{ env.LINUX_MPI_COMPONENTS }}
