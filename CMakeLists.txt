@@ -30,7 +30,7 @@ if(MSVC AND BUILD_SHARED_LIBS)
 endif()
 
 # --- user options
-include(cmake/options.cmake)
+include(options.cmake)
 include(cmake/compilers.cmake)
 
 # --- dependencies
