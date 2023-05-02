@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14...3.25)
+cmake_minimum_required(VERSION 3.14...3.26)
 
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(NOT is_multi_config AND NOT (CMAKE_BUILD_TYPE OR DEFINED ENV{CMAKE_BUILD_TYPE}))
@@ -7,7 +7,7 @@ endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.5.1.11
+VERSION 5.6.0.0
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "http://mumps-solver.org/"
 )
@@ -20,7 +20,7 @@ else()
 endif()
 
 if(NOT MUMPS_UPSTREAM_VERSION)
-  set(MUMPS_UPSTREAM_VERSION 5.5.1)
+  set(MUMPS_UPSTREAM_VERSION 5.6.0)
 endif()
 
 if(MSVC AND BUILD_SHARED_LIBS)
