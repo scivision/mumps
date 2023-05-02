@@ -12,7 +12,9 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU|Intel")
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration>)
 endif()
 
-file(GENERATE OUTPUT .gitignore CONTENT "*")
+if(NOT PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
+  file(GENERATE OUTPUT .gitignore CONTENT "*")
+endif()
 
 find_package(Threads)
 find_package(Scotch REQUIRED COMPONENTS ESMUMPS)
