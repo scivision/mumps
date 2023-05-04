@@ -1,5 +1,1 @@
-extern int addone(int);
-
-int addone(int N){
-  return N + 1;
-}
+int addone(int N){ return N + 1; }

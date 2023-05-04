@@ -18,5 +18,6 @@ add_test(NAME Fortran_main COMMAND main_f)
 # This can be an issue mixing Clang and Gfortran
 
 add_executable(main_c main.c $<TARGET_OBJECTS:addone_f> $<TARGET_OBJECTS:addtwo>)
+target_include_directories(main_c PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 set_property(TARGET main_c PROPERTY LINKER_LANGUAGE C)
 add_test(NAME C_main COMMAND main_c)

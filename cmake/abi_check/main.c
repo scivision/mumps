@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern int addone(int);
-extern int addtwo(int);
-
+#include "abi_check.h"
 
 int main(void) {
 
