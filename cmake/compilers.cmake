@@ -51,7 +51,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
     )
   endif()
 elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang|GNU")
-  add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration>)
+  add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration;-fno-strict-aliasing>)
 endif()
 
 
@@ -83,7 +83,7 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   add_compile_options(
   $<$<COMPILE_LANGUAGE:Fortran>:-fimplicit-none>
-  "$<$<AND:$<VERSION_GREATER_EQUAL:${CMAKE_Fortran_COMPILER_VERSION},10>,$<COMPILE_LANGUAGE:Fortran>>:-fallow-argument-mismatch;-fallow-invalid-boz>"
+  "$<$<AND:$<VERSION_GREATER_EQUAL:${CMAKE_Fortran_COMPILER_VERSION},10>,$<COMPILE_LANGUAGE:Fortran>>:-fallow-argument-mismatch;-fallow-invalid-boz;-fno-strict-aliasing>"
   )
 
   if(NOT CMAKE_CROSSCOMPILING AND NOT CRAY)
