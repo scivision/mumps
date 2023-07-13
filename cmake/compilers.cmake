@@ -109,5 +109,10 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS true)
 
 # allow CMAKE_PREFIX_PATH with ~ expand
 if(CMAKE_PREFIX_PATH)
-  get_filename_component(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ABSOLUTE)
+  set(prefix_path "")
+  foreach(path ${CMAKE_PREFIX_PATH})
+    get_filename_component(path "${path}" ABSOLUTE)
+    list(APPEND prefix_path "${path}")
+  endforeach()
+  set(CMAKE_PREFIX_PATH "${prefix_path}")
 endif()
