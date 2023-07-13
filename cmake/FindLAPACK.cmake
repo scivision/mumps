@@ -220,7 +220,7 @@ endfunction(netlib_libs)
 function(openblas_libs)
 
 find_library(LAPACK_LIBRARY
-NAMES lapack
+NAMES openblas
 PATH_SUFFIXES openblas
 DOC "LAPACK library"
 )
