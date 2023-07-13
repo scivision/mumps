@@ -117,8 +117,10 @@ $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_compile_definitions(mumps_common PRIVATE ${ORDERING_DEFS})
+set(BLAS_HAVE_GEMMT FALSE)
 if(BLAS_HAVE_sGEMMT OR BLAS_HAVE_dGEMMT OR BLAS_HAVE_cGEMMT OR BLAS_HAVE_zGEMMT)
   target_compile_definitions(mumps_common PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>)
+  set(BLAS_HAVE_GEMMT TRUE)
 endif()
 set_property(TARGET mumps_common PROPERTY EXPORT_NAME COMMON)
 set_property(TARGET mumps_common PROPERTY VERSION ${MUMPS_VERSION})
