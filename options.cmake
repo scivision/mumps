@@ -16,32 +16,39 @@ if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
   option(gemmt "GEMMT is recommended in User Manual if available" ON)
 endif()
 
+
+option(parallel "parallel (use MPI)" ON)
+
 option(intsize64 "use 64-bit integers in C and Fortran")
 
 option(scotch "use Scotch orderings ")
-option(metis "use METIS ordering")
+
+option(parmetis "use parallel METIS ordering")
+option(metis "use sequential METIS ordering")
+if(parmetis AND NOT parallel)
+  message(FATAL_ERROR "parmetis requires parallel=on")
+endif()
 
 option(openmp "use OpenMP")
 
 option(matlab "Matlab interface" OFF)
 option(octave "GNU Octave interface" OFF)
+if((matlab OR octave) AND parallel)
+  message(FATAL_ERROR "Matlab / Octave requires parallel=off")
+endif()
 
 option(BUILD_SHARED_LIBS "Build shared libraries")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-if(matlab OR octave)
-  option(parallel "parallel (use MPI)" OFF)
-else()
-  option(parallel "parallel (use MPI)" ON)
-endif()
+
+option(BUILD_SINGLE "Build single precision float32 real" ON)
+option(BUILD_DOUBLE "Build double precision float64 real" ON)
+option(BUILD_COMPLEX "Build single precision complex")
+option(BUILD_COMPLEX16 "Build double precision complex")
 
 # --- other options
 
-option(BUILD_SINGLE "Build single precision real" ON)
-option(BUILD_DOUBLE "Build double precision real" ON)
-option(BUILD_COMPLEX "Build single precision complex")
-option(BUILD_COMPLEX16 "Build double precision complex")
 
 set(CMAKE_TLS_VERIFY true)
 

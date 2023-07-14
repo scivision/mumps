@@ -65,11 +65,6 @@ endfunction(mumps_openmp_check)
 
 function(mumps_scotch_check)
 
-find_package(Scotch COMPONENTS ESMUMPS)
-if(NOT Scotch_FOUND)
-  return()
-endif()
-
 list(APPEND CMAKE_REQUIRED_INCLUDES ${Scotch_INCLUDE_DIRS})
 list(APPEND CMAKE_REQUIRED_LIBRARIES ${Scotch_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
@@ -88,11 +83,6 @@ endfunction(mumps_scotch_check)
 
 
 function(mumps_metis_check)
-
-find_package(METIS)
-if(NOT METIS_FOUND)
-  return()
-endif()
 
 list(APPEND CMAKE_REQUIRED_INCLUDES ${METIS_INCLUDE_DIRS})
 list(APPEND CMAKE_REQUIRED_LIBRARIES ${METIS_LIBRARIES})

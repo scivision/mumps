@@ -1,15 +1,29 @@
 # MUMPS ordering
 
-To use Scotch and METIS (requires MUMPS >= 5.0 and Scotch built with libesmumps):
+To use Scotch (requires MUMPS >= 5.0 and Scotch built with libesmumps):
 
 ```sh
 cmake -Dscotch=yes
 ```
 
-Scotch can be built from source via CMake before MUMPS.
-NOTE: the "-Dintsize64" must be the same for Scotch and MUMPS -- default is "off" for Scotch and MUMPS.
+To use METIS:
 
-Note that as in general for CMake, the path to METIS and Scotch can be specified via variables METIS_ROOT and Scotch_ROOT, respectively.
+```sh
+cmake -Dmetis=yes
+```
+
+To use parMETIS:
+
+```sh
+cmake -Dparmetis=yes
+```
+
+The path to METIS and Scotch can be specified via variables METIS_ROOT and Scotch_ROOT, respectively.
+
+## Build Scotch
+
+Optionally, Scotch can be built from source via CMake before MUMPS.
+NOTE: the "-Dintsize64" must be the same for Scotch and MUMPS -- default is "off" for Scotch and MUMPS.
 
 ```sh
 cmake -Dprefix=~/mumps -P scripts/build_scotch.cmake

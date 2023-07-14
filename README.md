@@ -33,7 +33,8 @@ Platforms known to work with MUMPS and CMake include:
   * Cray
 
 By default PORD ordering is used.
-[Scotch and METIS ordering](./Readme_ordering.md) can be used.
+[Scotch, METIS, and parMETIS ordering](./Readme_ordering.md)
+can be used.
 
 Several [LAPACK vendors](./Readme_LAPACK.md) are supported.
 

@@ -67,16 +67,23 @@ endif()
 
 set(ORDERING_LIBS)
 set(ORDERING_DEFS pord)
+
 if(scotch)
   find_package(Scotch COMPONENTS ESMUMPS REQUIRED)
   list(APPEND ORDERING_DEFS scotch)
   list(APPEND ORDERING_LIBS Scotch::Scotch)
 endif()
-if(metis)
+
+if(parmetis)
+  find_package(METIS REQUIRED COMPONENTS parallel)
+  list(APPEND ORDERING_DEFS parmetis metis)
+  list(APPEND ORDERING_LIBS METIS::METIS)
+elseif(metis)
   find_package(METIS REQUIRED)
   list(APPEND ORDERING_DEFS metis)
   list(APPEND ORDERING_LIBS METIS::METIS)
 endif()
+
 list(APPEND ORDERING_LIBS pord)
 
 install(FILES

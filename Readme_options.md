@@ -2,7 +2,7 @@
 
 By default PORD ordering is used.
 For large matrix systems,
-[Scotch and METIS ordering](./Readme_ordering.md)
+[Scotch, METIS, parMETIS ordering](./Readme_ordering.md)
 can be used for possible performance enhancements.
 
 ## Precision

@@ -16,6 +16,7 @@ if(NOT PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   file(GENERATE OUTPUT .gitignore CONTENT "*")
 endif()
 
+find_package(METIS REQUIRED)
 find_package(MPI REQUIRED COMPONENTS C Fortran)
 find_package(LAPACK REQUIRED)
 find_package(SCALAPACK REQUIRED)
