@@ -38,7 +38,7 @@ The MUMPS project is distinct from this CMake script wrapper.
 See the
 [MUMPS Users email list](https://listes.ens-lyon.fr/sympa/subscribe/mumps-users)
 and
-[MUMPS User Guide](https://graal.ens-lyon.fr/MUMPS/index.php?page=doc)
+[MUMPS User Guide](https://mumps-solver.org/index.php?page=doc)
 for any questions about MUMPS itself.
 
 ## Build
@@ -75,7 +75,6 @@ cmake --build build
 ```
 
 Numerous MUMPS [build options are available](./Readme_options.md).
-
 
 ## Self test
 

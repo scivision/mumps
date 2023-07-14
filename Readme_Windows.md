@@ -1,19 +1,31 @@
 # MUMPS on Windows
 
-MUMPS builds on Windows as well as other operating systems.
-We suggest Intel oneAPI for the simplest and performant experience, using the
+MUMPS builds on native Windows as well as other operating systems, including Windows Subsystem for Linux.
+For native Windows builds, we strongly suggest
+[Intel oneAPI](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html?operatingsystem=linux)
+using the
 [Ninja](https://github.com/ninja-build/ninja/releases)
-generator.
+build system with CMake.
 
-Windows must use Ninja or Make. That is, specify `cmake -G Ninja` or `cmake -G "MinGW Makefiles"`.
-The CMake Windows default generator "Visual Studio 17 2022" does not work, even when using MSVC compiler.
+Windows CMake for MUMPS must use Ninja or Make as the build system backend.
+That is, specify at CMake configure:
+
+```sh
+cmake -G Ninja
+
+# or
+
+cmake -G "MinGW Makefiles"
+```
+
+The CMake Windows default generator "Visual Studio 17 2022" **does not work**, even when using MSVC compiler.
 
 NOTE: on Windows, Intel oneAPI MKL only supports oneAPI compiler.
 This is distinct from Linux, where oneMKL supports oneAPI and GCC compilers.
 
 Windows compilers known to work:
 
-* Intel oneAPI (recommended) -- requires oneAPI Base Toolkit and oneAPI HPC Toolkit for Lapack and Scalapack
+* Intel oneAPI (recommended) -- requires oneAPI Base Toolkit and oneAPI HPC Toolkit for LAPACK and ScaLAPACK
 * MSYS2 (GCC)
 * Windows Subsystem for Linux (GCC)
 * Visual Studio (C code) + oneAPI (Fortran code)  (more difficult, use only if needed)
@@ -76,7 +88,7 @@ Configure output includes:
 ```
 
 Observe that Intel oneAPI Base Toolkit MKL LAPACK and Intel oneAPI HPC toolkit SCALAPACK are used.
-Do not try to build Lapack and Scalapack with oneAPI, the build will fail.
+Do not try to build LAPACK and ScaLAPACK with oneAPI, the build will fail.
 
 Build by:
 
@@ -101,7 +113,6 @@ libmumps_common.a
 libpord.a
 libsmumps.a
 ```
-
 
 ## Self test
 
