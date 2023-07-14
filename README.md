@@ -1,6 +1,7 @@
 # MUMPS sparse solver
 
 [![ci](https://github.com/scivision/mumps/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci.yml)
+[![ci_build](https://github.com/scivision/mumps/actions/workflows/ci_build.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci_build.yml)
 [![ci_windows](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml)
 [![oneapi-linux](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml)
 

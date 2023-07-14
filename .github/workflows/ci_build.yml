@@ -1,0 +1,50 @@
+name: ci
+
+env:
+  CMAKE_GENERATOR: Ninja
+  CTEST_NO_TESTS_ACTION: error
+
+on:
+  push:
+    paths:
+      - "scripts/CMakeLists.txt"
+      - ".github/workflows/ci_build.yml"
+      - "scripts/*.cmake"
+
+jobs:
+
+  linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install prereqs
+      run: |
+        sudo apt update
+        sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin
+
+    - name: configure lapack, scalapack
+      run: >-
+        cmake -S scripts -B scripts/build
+        -DBUILD_SINGLE:BOOL=false -DBUILD_DOUBLE:BOOL=true -DBUILD_COMPLEX:BOOL=false -DBUILD_COMPLEX16:BOOL=false
+        --install-prefix=${{ runner.temp }}
+
+    - name: build,install lapack, scalapack
+      run: cmake --build scripts/build -t scalapack
+
+    - name: configure
+      run: cmake --preset default --install-prefix=${{ runner.temp }} -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+
+    - name: build, test release
+      run: cmake --workflow --preset default
+
+    - run: cmake --install build
+
+# builds fine on local machine
+    # - name: configure example
+    #   run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+    # - name: build example
+    #   run: cmake --build example/build
+    # - name: test example
+    #   run: ctest --test-dir example/build -V
