@@ -51,7 +51,7 @@ jobs:
 
     - name: print config log
       if: ${{ failure() }}
-      run: cat example/build/CMakeFiles/CMakeError.log
+      run: cat example/build/CMakeFiles/CMakeConfigureLog.yaml
 
     - name: build example
       run: cmake --build example/build

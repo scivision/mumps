@@ -68,7 +68,7 @@ jobs:
 
     - name: print config log
       if: ${{ failure() }}
-      run: cat build/CMakeFiles/CMakeError.log
+      run: cat build/CMakeFiles/CMakeConfigureLog.yaml
 
     - name: CMake build, test
       run: cmake --workflow --preset default
@@ -85,7 +85,7 @@ jobs:
 
     - name: print config log
       if: ${{ failure() }}
-      run: cat example/build/CMakeFiles/CMakeError.log
+      run: cat example/build/CMakeFiles/CMakeConfigureLog.yaml
 
     - name: build example
       run: cmake --build example/build

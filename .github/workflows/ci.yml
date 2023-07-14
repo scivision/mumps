@@ -101,7 +101,7 @@ jobs:
     - name: print config log
       if: ${{ failure() && matrix.scotch }}
       run: |
-        cat example/scotch/build/CMakeFiles/CMakeError.log
+        cat example/scotch/build/CMakeFiles/CMakeConfigureLog.yaml
 
     - name: METIS example
       if: ${{ matrix.metis }}
@@ -113,7 +113,7 @@ jobs:
     - name: print config log
       if: ${{ failure() && matrix.metis }}
       run: |
-        cat example/metis/build/CMakeFiles/CMakeError.log
+        cat example/metis/build/CMakeFiles/CMakeConfigureLog.yaml
 
 
 
