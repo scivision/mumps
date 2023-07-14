@@ -33,7 +33,9 @@ Platforms known to work with MUMPS and CMake include:
   * Cray
 
 By default PORD ordering is used.
-For large systems, [Scotch and METIS ordering](./Readme_ordering.md) can be used.
+[Scotch and METIS ordering](./Readme_ordering.md) can be used.
+
+Several [LAPACK vendors](./Readme_LAPACK.md) are supported.
 
 The MUMPS project is distinct from this CMake script wrapper.
 See the
@@ -59,20 +61,6 @@ libdmumps.a
 libmumps_common.a
 libpord.a
 libsmumps.a
-```
-
-Intel oneAPI Base Toolkit MKL LAPACK and Intel oneAPI HPC toolkit SCALAPACK are used.
-Do not try to build Lapack and Scalapack with oneAPI, the build will fail.
-
-If the non-oneAPI compiler doesn't have LAPACK and SCALAPACK, first build and install them:
-
-```sh
-cmake -S scripts -B scripts/build -DCMAKE_INSTALL_PREFIX=~/mylibs
-cmake --build scripts/build -t scalapack
-
-# mumps
-cmake -B build -DCMAKE_PREFIX_PATH=~/mylibs
-cmake --build build
 ```
 
 Numerous MUMPS [build options are available](./Readme_options.md).

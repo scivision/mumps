@@ -36,41 +36,6 @@ cmake -B build -DMUMPS_UPSTREAM_VERSION=5.6.1
 The MUMPS_UPSTREAM_VERSION works for MUMPS versions in
 [cmake/libraries.json](./cmake/libraries.json).
 
-## LAPACK options
-
-The underlying "LAPACK" interface is available from several different libraries.
-By default, CMake for MUMPS searchs for Intel MKL if environment variables MKLROOT is set.
-Otherwise, the generic LAPACK library "lapack" is searched for.
-
-To specify a different LAPACK library, use CMake configure variable "LAPACK_VENDOR" using one of the following vendors:
-
-* AOCL  [AMD Optimizing CPU Libraries](https://www.amd.com/en/developer/aocl.html)
-* Atlas [Automatically Tuned Linear Algebra Software](http://math-atlas.sourceforge.net/)
-* MKL  [Intel oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html)
-* Netlib [Netlib LAPACK](http://www.netlib.org/lapack/)  (default)
-* OpenBLAS [OpenBLAS](https://www.openblas.net/)
-
-For example, to use OpenBLAS:
-
-```sh
-cmake -DLAPACK_VENDOR=OpenBLAS
-```
-
-Optionally, hint the location the LAPACK library like:
-
-```sh
-cmake -DLAPACK_ROOT=/path/to/lapack
-```
-
-### GEMMT symmetric matrix-matrix multiplication
-
-For MUMPS &ge; 5.2.0, GEMMT symmetric matrix-matrix multiplication is recommended by the MUMPS User Guide if available.
-By default GEMMT is ON, but may be disabled like:
-
-```sh
-cmake -Dgemmt=off
-```
-
 ## Matlab / GNU Octave
 
 Matlab / GNU Octave MEX interface may be built (one or the other) by EITHER:
