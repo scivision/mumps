@@ -220,28 +220,22 @@ endfunction(netlib_libs)
 function(openblas_libs)
 
 find_library(LAPACK_LIBRARY
-NAMES lapack
+NAMES openblas
 PATH_SUFFIXES openblas
-DOC "LAPACK library"
-)
-
-find_library(BLAS_LIBRARY
-NAMES openblas blas
-NAMES_PER_DIR
-PATH_SUFFIXES openblas
-DOC "BLAS library"
+DOC "OpenBLAS library"
 )
 
 find_path(LAPACK_INCLUDE_DIR
-NAMES cblas-openblas.h cblas.h f77blas.h openblas_config.h
-DOC "LAPACK include directory"
+NAMES openblas_config.h cblas-openblas.h
+DOC "OpenBLAS include directory"
 )
 
-if(NOT (LAPACK_LIBRARY AND BLAS_LIBRARY))
+if(NOT LAPACK_LIBRARY)
   return()
 endif()
 
-list(APPEND LAPACK_LIBRARY ${BLAS_LIBRARY})
+set(BLAS_LIBRARY ${LAPACK_LIBRARY} CACHE FILEPATH "OpenBLAS library")
+
 set(LAPACK_OpenBLAS_FOUND true PARENT_SCOPE)
 
 list(APPEND LAPACK_LIBRARY ${CMAKE_THREAD_LIBS_INIT})
