@@ -4,11 +4,17 @@
 [![ci_windows](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml)
 [![oneapi-linux](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml)
 
-CMake downloads the source tarfile from MUMPS developer websites and builds.
+CMake downloads the unmodified source tarfile from MUMPS developers and builds.
 CMake builds MUMPS in parallel faster and more conveniently than the original Makefiles.
 CMake allows easy reuse of MUMPS in external projects via CMake
 [FetchContent](https://github.com/scivision/mumps-fetchcontent)
 or ExternalProject or `cmake --install`.
+
+[MUMPS CeCILL-C license](https://mumps-solver.org/index.php?page=dwnld#license)
+is distinct from this CMake script license.
+MUMPS teams typically make new
+[releases](https://mumps-solver.org/index.php?page=dwnld#cl)
+each year.
 
 Many compilers and systems are supported by CMake build system on Windows, MacOS and Linux.
 Static (default) or Shared `cmake -DBUILD_SHARED_LIBS=on` MUMPS builds are supported.

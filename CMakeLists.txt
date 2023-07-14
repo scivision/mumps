@@ -7,7 +7,7 @@ endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.6.0.0
+VERSION 5.6.1.0
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "http://mumps-solver.org/"
 )
@@ -20,7 +20,7 @@ else()
 endif()
 
 if(NOT MUMPS_UPSTREAM_VERSION)
-  set(MUMPS_UPSTREAM_VERSION 5.6.0)
+  set(MUMPS_UPSTREAM_VERSION 5.6.1)
 endif()
 
 if(MSVC AND BUILD_SHARED_LIBS)
