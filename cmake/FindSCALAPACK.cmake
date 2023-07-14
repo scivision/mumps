@@ -58,18 +58,6 @@ set(SCALAPACK_LIBRARY)  # avoids appending to prior FindScalapack
 
 function(scalapack_check)
 
-if(NOT (MPI_C_FOUND AND MPI_Fortran_FOUND))
-  find_package(MPI COMPONENTS C Fortran)
-endif()
-
-if(NOT LAPACK_FOUND)
-  # otherwise can cause 32-bit lapack when 64-bit wanted
-  find_package(LAPACK)
-endif()
-if(NOT (MPI_Fortran_FOUND AND LAPACK_FOUND))
-  return()
-endif()
-
 # some OpenMPI builds need -pthread
 find_package(Threads)
 

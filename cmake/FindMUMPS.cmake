@@ -118,31 +118,6 @@ if(NOT (MUMPS_LIBRARY AND MUMPS_INCLUDE_DIR))
   return()
 endif()
 
-if(NOT SCALAPACK_FOUND)
-  find_package(SCALAPACK)
-endif()
-if(NOT SCALAPACK_FOUND)
-  message(VERBOSE "MUMPS: skip checks as SCALAPACK not found")
-  return()
-endif()
-
-if(NOT (MPI_C_FOUND AND MPI_Fortran_FOUND))
-  # factory FindMPI re-searches, slowing down configure, especialy when many subprojects use MPI
-  find_package(MPI COMPONENTS C Fortran)
-endif()
-if(NOT MPI_FOUND)
-  message(VERBOSE "MUMPS: skip link check as MPI not found")
-  return()
-endif()
-
-if(NOT LAPACK_FOUND)
-  find_package(LAPACK)
-endif()
-if(NOT LAPACK_FOUND)
-  message(VERBOSE "MUMPS: skip link check as LAPACK not found")
-  return()
-endif()
-
 # some OpenMPI builds need -pthread
 find_package(Threads)
 
