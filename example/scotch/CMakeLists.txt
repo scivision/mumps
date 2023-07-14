@@ -18,6 +18,8 @@ endif()
 
 find_package(Threads)
 find_package(Scotch REQUIRED COMPONENTS ESMUMPS)
+find_package(LAPACK REQUIRED)
+find_package(SCALAPACK REQUIRED)
 find_package(MUMPS REQUIRED COMPONENTS Scotch)
 
 function(precision_ex a)

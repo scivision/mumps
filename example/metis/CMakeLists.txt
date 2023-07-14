@@ -16,6 +16,8 @@ if(NOT PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   file(GENERATE OUTPUT .gitignore CONTENT "*")
 endif()
 
+find_package(LAPACK REQUIRED)
+find_package(SCALAPACK REQUIRED)
 find_package(MUMPS REQUIRED COMPONENTS METIS)
 
 function(precision_ex a)
