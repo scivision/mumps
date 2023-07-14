@@ -29,8 +29,9 @@ jobs:
         metis: [false]
         int64: [true, false]
         shared: [true, false]
-        img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev},
-               {os: macos-latest, cmd: brew install ninja lapack scalapack open-mpi && brew reinstall gcc}
+        lapack_vendor: [""]
+        img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin libscalapack-mpi-dev},
+               {os: macos-latest, cmd: brew install ninja scalapack open-mpi && brew reinstall gcc}
         ]
         exclude:
           - shared: true
@@ -42,11 +43,15 @@ jobs:
           - scotch: true
             shared: false
             int64: false
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev}
+            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin libscalapack-mpi-dev}
           - metis: true
             shared: false
             int64: false
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin liblapack-dev libscalapack-mpi-dev}
+            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin libscalapack-mpi-dev}
+          - lapack_vendor: "OpenBLAS"
+            shared: false
+            int64: false
+            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin libopenblas-dev libscalapack-mpi-dev}
 
     runs-on: ${{ matrix.img.os }}
 
@@ -73,6 +78,7 @@ jobs:
         -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}
         -Dscotch:BOOL=${{ matrix.scotch }}
         -Dmetis:BOOL=${{ matrix.metis }}
+        -DLAPACK_VENDOR=${{ matrix.lapack_vendor }}
         -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
         -Dintsize64:BOOL=${{ matrix.int64 }}
 
