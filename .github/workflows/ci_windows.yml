@@ -19,10 +19,6 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 15
 
-    strategy:
-      matrix:
-        shared: [true, false]
-
     steps:
     - uses: msys2/setup-msys2@v2
       with:
@@ -38,7 +34,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: config
-      run: cmake --preset default -Dparallel:BOOL=false --install-prefix=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+      run: cmake --preset default -Dparallel:BOOL=false --install-prefix=${{ runner.temp }}
 
     - name: build, test
       run: cmake --workflow --preset default
@@ -47,7 +43,7 @@ jobs:
       run: cmake --install build
 
     - name: configure example
-      run: cmake -S example -B example/build -Dparallel:BOOL=false -DCMAKE_PREFIX_PATH=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+      run: cmake -S example -B example/build -Dparallel:BOOL=false -DCMAKE_PREFIX_PATH=${{ runner.temp }}
 
     - name: print config log
       if: ${{ failure() }}
