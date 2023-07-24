@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13...3.25)
+cmake_minimum_required(VERSION 3.22)
 
 project(MUMPSExamples
 LANGUAGES C Fortran
@@ -46,7 +46,7 @@ if(MUMPS_parallel)
   set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
 endif()
 
-if(WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.22)
+if(WIN32)
   get_property(imp_mumps TARGET MUMPS::COMMON PROPERTY IMPORTED_LOCATION_RELEASE)
   if(imp_mumps)
     get_filename_component(imp_mumps_dir ${imp_mumps} DIRECTORY)
