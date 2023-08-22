@@ -6,12 +6,6 @@ if(NOT DEFINED LAPACK_VENDOR AND DEFINED ENV{MKLROOT})
   set(LAPACK_VENDOR MKL)
 endif()
 
-if(MKL IN_LIST LAPACK_VENDOR)
-  if(intsize64)
-    list(APPEND LAPACK_VENDOR MKL64)
-  endif()
-endif()
-
 if(find_static)
   list(APPEND LAPACK_VENDOR STATIC)
 endif()

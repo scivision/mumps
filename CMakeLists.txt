@@ -36,7 +36,10 @@ include(cmake/compilers.cmake)
 # --- dependencies
 find_package(Threads)
 
-include(cmake/lapack.cmake)
+if(NOT (DEFINED ENV{MKLROOT} OR MKL IN_LIST SCALAPACK_VENDOR))
+# using oneAPI MKLConfig.cmake, we must only search once in FindScalapack.cmake
+  include(cmake/lapack.cmake)
+endif()
 
 # -- Scalapack / MPI
 
