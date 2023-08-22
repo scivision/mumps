@@ -36,8 +36,6 @@ COMPONENTS default to Netlib LAPACK / LapackE, otherwise:
   Intel MKL -- sequential by default, or add TBB or MPI as well
 ``MKL64``
   MKL only: 64-bit integers  (default is 32-bit integers)
-``OpenMP``
-  Intel MPI with OpenMP threading addition to MKL
 ``TBB``
   Intel MPI + TBB for MKL
 ``AOCL``
@@ -308,54 +306,51 @@ endfunction(aocl_libs)
 
 #===============================
 
-function(find_mkl_libs)
-# https://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
+macro(find_mkl_libs)
+# https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/cmake-config-for-onemkl.html
 
-set(_mkl_libs ${ARGV})
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND
-  CMAKE_Fortran_COMPILER_ID STREQUAL "GNU"
-)
-  list(INSERT _mkl_libs 0 mkl_gf_${_mkl_bitflag}lp64)
-else()
-  if(WIN32 AND BUILD_SHARED_LIBS)
-    list(INSERT _mkl_libs 0 mkl_intel_${_mkl_bitflag}lp64_dll)
-  else()
-    list(INSERT _mkl_libs 0 mkl_intel_${_mkl_bitflag}lp64)
-  endif()
+set(MKL_INTERFACE "lp64")
+if(MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
+  string(PREPEND MKL_INTERFACE "i")
 endif()
 
-foreach(s ${_mkl_libs})
-  find_library(LAPACK_${s}_LIBRARY
-  NAMES ${s}
-  PATHS ${MKLROOT}/lib ${MKLROOT}/lib/intel64 ${oneapi_libdir}
-  NO_DEFAULT_PATH
-  DOC "Intel MKL ${s} library"
-  )
-  # ${MKLROOT}/[lib[/intel64]]: general MKL libraries
-  # oneapi_libdir: openmp library
+if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
+  set(ENABLE_BLAS95 true)
+  set(ENABLE_LAPACK95 true)
+endif()
 
-  if(NOT LAPACK_${s}_LIBRARY)
-    return()
-  endif()
+# MKL_THREADING default: "intel_thread" which is Intel OpenMP
+if(TBB IN_LIST LAPACK_FIND_COMPONENTS)
+  set(MKL_THREADING "tbb_thread")
+endif()
 
-  list(APPEND LAPACK_LIBRARY ${LAPACK_${s}_LIBRARY})
-endforeach()
+# default: dynamic
+if(STATIC IN_LIST LAPACK_FIND_COMPONENTS)
+  set(MKL_LINK "static")
+endif()
 
-find_path(LAPACK_INCLUDE_DIR
-NAMES mkl_lapack.h
-HINTS ${MKLROOT}
-PATH_SUFFIXES include
-NO_DEFAULT_PATH
-DOC "Intel MKL header"
-)
+find_package(MKL CONFIG HINTS $ENV{MKLROOT})
 
-if(NOT LAPACK_INCLUDE_DIR)
+if(NOT MKL_FOUND)
   return()
 endif()
 
-set(LAPACK_LIBRARY ${LAPACK_LIBRARY} PARENT_SCOPE)
+# get_property(LAPACK_COMPILE_OPTIONS TARGET MKL::MKL PROPERTY INTERFACE_COMPILE_OPTIONS)
+# flags are empty generator expressions that trip up check_source_compiles
 
-endfunction(find_mkl_libs)
+get_property(LAPACK_INCLUDE_DIR TARGET MKL::MKL PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+get_property(LAPACK_LIBRARY TARGET MKL::MKL PROPERTY INTERFACE_LINK_LIBRARIES)
+
+
+set(LAPACK_MKL_FOUND true)
+
+foreach(c IN ITEMS TBB LAPACK95 MKL64)
+  if(${c} IN_LIST LAPACK_FIND_COMPONENTS)
+    set(LAPACK_${c}_FOUND true)
+  endif()
+endforeach()
+
+endmacro(find_mkl_libs)
 
 # ========== main program
 
@@ -384,87 +379,8 @@ if(STATIC IN_LIST LAPACK_FIND_COMPONENTS)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
 endif()
 
-# ==== generic MKL variables ====
-
 if(MKL IN_LIST LAPACK_FIND_COMPONENTS OR MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
-  # we have to sanitize MKLROOT if it has Windows backslashes (\) otherwise it will break at build time
-  # double-quotes are necessary per CMake to_cmake_path docs.
-  file(TO_CMAKE_PATH "$ENV{MKLROOT}" MKLROOT)
-
-  file(TO_CMAKE_PATH "$ENV{ONEAPI_ROOT}" ONEAPI_ROOT)
-  # oneapi_libdir is where iomp5 is located
-  set(oneapi_libdir ${ONEAPI_ROOT}/compiler/latest/)
-  if(WIN32)
-    string(APPEND oneapi_libdir "windows/compiler/lib/intel64_win")
-  elseif(APPLE)
-    string(APPEND oneapi_libdir "mac/compiler/lib")
-  elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    string(APPEND oneapi_libdir "linux/compiler/lib/intel64_lin")
-  endif()
-
-  if(MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
-    set(_mkl_bitflag i)
-  else()
-    set(_mkl_bitflag)
-  endif()
-
-  set(_mkl_libs)
-  if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
-    find_mkl_libs(mkl_blas95_${_mkl_bitflag}lp64 mkl_lapack95_${_mkl_bitflag}lp64)
-    if(LAPACK_LIBRARY)
-      set(LAPACK95_LIBRARY ${LAPACK_LIBRARY})
-      set(LAPACK_LIBRARY)
-      set(LAPACK95_INCLUDE_DIR ${LAPACK_INCLUDE_DIR})
-      set(LAPACK_LAPACK95_FOUND true)
-    endif()
-  endif()
-
-  set(_tbb)
-  if(TBB IN_LIST LAPACK_FIND_COMPONENTS)
-    list(APPEND _mkl_libs mkl_tbb_thread mkl_core)
-    set(_tbb tbb stdc++)
-  elseif(OpenMP IN_LIST LAPACK_FIND_COMPONENTS)
-    if(WIN32)
-      set(_mp libiomp5md)
-    else()
-      set(_mp iomp5)
-    endif()
-    if(WIN32 AND BUILD_SHARED_LIBS)
-      list(APPEND _mkl_libs mkl_intel_thread_dll mkl_core_dll ${_mp})
-    else()
-      list(APPEND _mkl_libs mkl_intel_thread mkl_core ${_mp})
-    endif()
-  else()
-    if(WIN32 AND BUILD_SHARED_LIBS)
-      list(APPEND _mkl_libs mkl_sequential_dll mkl_core_dll)
-    else()
-      list(APPEND _mkl_libs mkl_sequential mkl_core)
-    endif()
-  endif()
-
-  find_mkl_libs(${_mkl_libs})
-
-  if(LAPACK_LIBRARY)
-
-    if(NOT WIN32)
-      list(APPEND LAPACK_LIBRARY ${_tbb} ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS} m)
-    endif()
-
-    set(LAPACK_MKL_FOUND true)
-
-    if(MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
-      set(LAPACK_MKL64_FOUND true)
-    endif()
-
-    if(OpenMP IN_LIST LAPACK_FIND_COMPONENTS)
-      set(LAPACK_OpenMP_FOUND true)
-    endif()
-
-    if(TBB IN_LIST LAPACK_FIND_COMPONENTS)
-      set(LAPACK_TBB_FOUND true)
-    endif()
-  endif()
-
+  find_mkl_libs()
 elseif(Atlas IN_LIST LAPACK_FIND_COMPONENTS)
   atlas_libs()
 elseif(Netlib IN_LIST LAPACK_FIND_COMPONENTS)
@@ -565,6 +481,7 @@ endif()
 
 if(NOT TARGET LAPACK::LAPACK)
   add_library(LAPACK::LAPACK INTERFACE IMPORTED)
+  set_property(TARGET LAPACK::LAPACK PROPERTY INTERFACE_COMPILE_OPTIONS "${LAPACK_COMPILE_OPTIONS}")
   set_property(TARGET LAPACK::LAPACK PROPERTY INTERFACE_LINK_LIBRARIES "${LAPACK_LIBRARY}")
   set_property(TARGET LAPACK::LAPACK PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${LAPACK_INCLUDE_DIR}")
 endif()
