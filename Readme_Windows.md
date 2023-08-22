@@ -20,7 +20,8 @@ cmake -G "MinGW Makefiles"
 
 The CMake Windows default generator "Visual Studio 17 2022" **does not work**, even when using MSVC compiler.
 
-NOTE: on Windows, Intel oneAPI MKL only supports oneAPI compiler.
+NOTE: on Windows, Intel oneAPI MKL only supports oneAPI compiler and
+[oneMKL >= 2021.3](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/cmake-config-for-onemkl.html)
 This is distinct from Linux, where oneMKL supports oneAPI and GCC compilers.
 
 Windows compilers known to work:

@@ -7,7 +7,7 @@ To specify a particular LAPACK library, use CMake configure variable "LAPACK_VEN
 
 * AOCL  [AMD Optimizing CPU Libraries](https://www.amd.com/en/developer/aocl.html)
 * Atlas [Automatically Tuned Linear Algebra Software](http://math-atlas.sourceforge.net/)
-* MKL  [Intel oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html)
+* MKL  [Intel oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html): requires [oneMKL >= 2021.3](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/cmake-config-for-onemkl.html)
 * Netlib [Netlib LAPACK](http://www.netlib.org/lapack/)  (default)
 * OpenBLAS [OpenBLAS](https://www.openblas.net/)
 
@@ -25,10 +25,10 @@ cmake -DLAPACK_ROOT=/path/to/lapack
 
 ## Intel MKL
 
-CMake searchs for Intel oneMKL if environment variables MKLROOT is set.
+CMake searchs for Intel oneMKL if environment variables MKLROOT is set:
 
-Intel oneAPI Base Toolkit MKL LAPACK and Intel oneAPI HPC toolkit SCALAPACK are used.
-
+* Base Toolkit: MKL LAPACK
+* HPC toolkit: SCALAPACK.
 
 ## GEMMT symmetric matrix-matrix multiplication
 
