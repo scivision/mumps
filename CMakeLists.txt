@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14...3.26)
+cmake_minimum_required(VERSION 3.19...3.27)
 
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(NOT is_multi_config AND NOT (CMAKE_BUILD_TYPE OR DEFINED ENV{CMAKE_BUILD_TYPE}))

@@ -44,11 +44,8 @@ if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
     endif()
   endif()
 
-  if(openmp AND NOT WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.15)
-    add_compile_options(
-    $<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:-fiopenmp>
-    $<$<COMPILE_LANG_AND_ID:C,Intel>:-qopenmp>
-    )
+  if(NOT WIN32)
+    add_compile_options($<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:-fiopenmp>)
   endif()
 elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang|GNU")
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration;-fno-strict-aliasing>)
