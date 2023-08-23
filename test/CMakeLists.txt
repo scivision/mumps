@@ -10,7 +10,7 @@ endif()
 
 endfunction(mumps_test)
 
-if(BUILD_DOUBLE AND LAPACK_d_FOUND)
+if(BUILD_DOUBLE)
   add_executable(mumpscfg test_mumps.f90)
   target_link_libraries(mumpscfg PRIVATE MUMPS::MUMPS)
 
@@ -21,14 +21,14 @@ if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.1)
   return()
 endif()
 
-if(BUILD_SINGLE AND LAPACK_s_FOUND)
+if(BUILD_SINGLE)
   add_executable(s_simple s_simple.f90)
   target_link_libraries(s_simple PRIVATE MUMPS::MUMPS)
 
   mumps_test(SimpleReal32 s_simple)
 endif()
 
-if(BUILD_DOUBLE AND LAPACK_d_FOUND)
+if(BUILD_DOUBLE)
   add_executable(d_simple d_simple.f90)
   target_link_libraries(d_simple PRIVATE MUMPS::MUMPS)
 
@@ -49,7 +49,7 @@ get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
 set_property(TEST ${test_names} PROPERTY TIMEOUT 30)
 
-if(WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.22)
+if(WIN32 AND BUILD_SHARED_LIBS)
   set_property(TEST ${test_names} PROPERTY
   ENVIRONMENT_MODIFICATION "PATH=path_list_append:${CMAKE_INSTALL_FULL_BINDIR};PATH=path_list_append:${CMAKE_PREFIX_PATH}/bin;PATH=path_list_append:${PROJECT_BINARY_DIR}"
   )

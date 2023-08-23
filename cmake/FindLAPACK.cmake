@@ -443,8 +443,7 @@ endif()
 
 endfunction(lapack_check)
 
-# --- Check that Scalapack links
-
+# --- Check library links
 if(lapack_cray OR LAPACK_LIBRARY)
   lapack_check()
 endif()

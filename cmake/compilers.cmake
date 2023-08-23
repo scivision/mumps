@@ -29,7 +29,9 @@ endif()
 add_compile_definitions("$<$<COMPILE_LANGUAGE:C>:Add_>")
 # "Add_" works for all modern compilers we tried.
 
-add_compile_definitions($<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${MSVC}>>:_CRT_SECURE_NO_WARNINGS>)
+add_compile_definitions(
+  "$<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${MSVC}>>:_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS>"
+)
 
 add_compile_definitions("$<$<BOOL:${intsize64}>:INTSIZE64;PORD_INTSIZE64>")
 
@@ -37,17 +39,11 @@ if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration>)
 
   if(NOT CMAKE_CROSSCOMPILING AND NOT CRAY)
-    if(WIN32)
-      add_compile_options($<$<COMPILE_LANGUAGE:C>:/QxHost>)
-    else()
-      add_compile_options($<$<COMPILE_LANGUAGE:C>:-xHost>)
-    endif()
+    add_compile_options($<$<COMPILE_LANGUAGE:C>:$<IF:$<BOOL:${WIN32}>,/QxHost,-xHost>>)
   endif()
 
-  if(NOT WIN32)
-    add_compile_options($<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:-fiopenmp>)
-  endif()
-elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang|GNU")
+  add_compile_options($<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/Qopenmp,-fiopenmp>>)
+ elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang|GNU")
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration;-fno-strict-aliasing>)
 endif()
 
@@ -59,19 +55,10 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
   )
 
   if(NOT CMAKE_CROSSCOMPILING AND NOT CRAY)
-    if(WIN32)
-      add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:/QxHost>)
-    else()
-      add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:-xHost>)
-    endif()
+    add_compile_options($<$<COMPILE_LANGUAGE:C>:$<IF:$<BOOL:${WIN32}>,/QxHost,-xHost>>)
   endif()
 
-  if(openmp AND NOT WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.15)
-    add_compile_options(
-    $<$<COMPILE_LANG_AND_ID:Fortran,IntelLLVM>:-fiopenmp>
-    $<$<COMPILE_LANG_AND_ID:Fortran,Intel>:-qopenmp>
-    )
-  endif()
+  add_compile_options($<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/Qopenmp,-fiopenmp>>)
 
   if(intsize64)
     add_compile_definitions($<$<COMPILE_LANGUAGE:Fortran>:WORKAROUNDINTELILP64MPI2INTEGER>)
