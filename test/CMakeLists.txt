@@ -38,9 +38,6 @@ if(BUILD_DOUBLE)
   target_link_libraries(Csimple PRIVATE MUMPS::MUMPS)
 
   mumps_test(CsimpleReal64 Csimple)
-
-  set_property(TEST CsimpleReal64 PROPERTY DISABLED $<BOOL:${intsize64}>)
-
 endif()
 
 # Windows DLL
