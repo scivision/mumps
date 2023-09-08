@@ -7,7 +7,7 @@ endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.6.1.1
+VERSION 5.6.1.2
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "http://mumps-solver.org/"
 )
@@ -36,7 +36,7 @@ include(cmake/compilers.cmake)
 # --- dependencies
 find_package(Threads)
 
-if(NOT (DEFINED ENV{MKLROOT} OR MKL IN_LIST SCALAPACK_VENDOR))
+if(NOT parallel OR NOT (DEFINED ENV{MKLROOT} OR MKL IN_LIST SCALAPACK_VENDOR))
 # using oneAPI MKLConfig.cmake, we must only search once in FindScalapack.cmake
   include(cmake/lapack.cmake)
 endif()
