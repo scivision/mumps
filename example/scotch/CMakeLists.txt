@@ -12,10 +12,6 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU|Intel")
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration>)
 endif()
 
-if(NOT PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
-  file(GENERATE OUTPUT .gitignore CONTENT "*")
-endif()
-
 find_package(Threads)
 find_package(MPI REQUIRED COMPONENTS C Fortran)
 find_package(Scotch REQUIRED COMPONENTS ESMUMPS)
@@ -32,3 +28,5 @@ endfunction()
 if(MUMPS_d_FOUND)
   precision_ex("d")
 endif()
+
+file(GENERATE OUTPUT .gitignore CONTENT "*")

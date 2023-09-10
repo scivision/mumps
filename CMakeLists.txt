@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.19...3.27)
 
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+  message(FATAL_ERROR "Please use out of source build:
+  cmake -B build")
+endif()
+
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(NOT is_multi_config AND NOT (CMAKE_BUILD_TYPE OR DEFINED ENV{CMAKE_BUILD_TYPE}))
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Release default")
@@ -36,16 +41,15 @@ include(cmake/compilers.cmake)
 # --- dependencies
 find_package(Threads)
 
-if(NOT parallel OR NOT (DEFINED ENV{MKLROOT} OR MKL IN_LIST SCALAPACK_VENDOR))
-# using oneAPI MKLConfig.cmake, we must only search once in FindScalapack.cmake
-  include(cmake/lapack.cmake)
-endif()
-
 # -- Scalapack / MPI
 
 if(parallel)
   find_package(MPI COMPONENTS C Fortran REQUIRED)
   include(cmake/scalapack.cmake)
+  if(NOT MKL_FOUND)
+    # oneMKL MKLConfig.cmake must be invoked only once
+    include(cmake/lapack.cmake)
+  endif()
 
   set(NUMERIC_LIBS ${SCALAPACK_LIBRARIES} ${LAPACK_LIBRARIES})
 
@@ -64,6 +68,8 @@ if(parallel)
     find_package(OpenMP COMPONENTS C Fortran REQUIRED)
     list(APPEND NUMERIC_LIBS OpenMP::OpenMP_Fortran OpenMP::OpenMP_C)
   endif()
+else()
+  include(cmake/lapack.cmake)
 endif()
 
 # --- ordering libs
@@ -139,6 +145,4 @@ include(cmake/summary.cmake)
 
 include(cmake/install.cmake)
 
-if(NOT PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
-  file(GENERATE OUTPUT .gitignore CONTENT "*")
-endif()
+file(GENERATE OUTPUT .gitignore CONTENT "*")
