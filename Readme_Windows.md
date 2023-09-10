@@ -7,18 +7,33 @@ using the
 [Ninja](https://github.com/ninja-build/ninja/releases)
 build system with CMake.
 
+## CMake generator
+
 Windows CMake for MUMPS must use Ninja or Make as the build system backend.
 That is, specify at CMake configure:
 
 ```sh
-cmake -G Ninja
+cmake -G Ninja -B build
 
 # or
 
-cmake -G "MinGW Makefiles"
+cmake -G "MinGW Makefiles" -B build
+```
+
+If you get an error like:
+
+> CMake Error: CMake was unable to find a build program corresponding to "Ninja". CMAKE_MAKE_PROGRAM is not set.
+
+then download Ninja (linked above) and add it to Windows environment variable `PATH`.
+Alternatively, tell CMake the full path to Ninja like:
+
+```sh
+cmake -G Ninja -B build -DCMAKE_MAKE_PROGRAM=C:/path/to/ninja.exe
 ```
 
 The CMake Windows default generator "Visual Studio 17 2022" **does not work**, even when using MSVC compiler.
+
+## Compiler
 
 NOTE: on Windows, Intel oneAPI MKL only supports oneAPI compiler and
 [oneMKL >= 2021.3](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/cmake-config-for-onemkl.html)
@@ -42,7 +57,7 @@ cmake -G Ninja -B build -DBUILD_SINGLE=yes -DBUILD_DOUBLE=yes -DBUILD_COMPLEX=ye
 
 To speed up MUMPS build and reduce binary size, feel free to omit (set to `no`) unneeded precisions in the command above.
 
-Configure output includes:
+## CMake configure output
 
 ```
 -- Building for: Ninja
@@ -91,7 +106,7 @@ Configure output includes:
 Observe that Intel oneAPI Base Toolkit MKL LAPACK and Intel oneAPI HPC toolkit SCALAPACK are used.
 Do not try to build LAPACK and ScaLAPACK with oneAPI, the build will fail.
 
-Build by:
+## CMake build
 
 ```sh
 cmake --build build
