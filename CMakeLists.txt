@@ -25,7 +25,7 @@ else()
 endif()
 
 if(NOT MUMPS_UPSTREAM_VERSION)
-  set(MUMPS_UPSTREAM_VERSION 5.6.1)
+  set(MUMPS_UPSTREAM_VERSION 5.6.2)
 endif()
 
 if(MSVC AND BUILD_SHARED_LIBS)
@@ -37,6 +37,9 @@ endif()
 # --- user options
 include(options.cmake)
 include(cmake/compilers.cmake)
+
+message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION} upstream ${MUMPS_UPSTREAM_VERSION} install prefix: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "CMake ${CMAKE_VERSION}  Toolchain ${CMAKE_TOOLCHAIN_FILE}")
 
 # --- dependencies
 find_package(Threads)
@@ -51,7 +54,7 @@ if(parallel)
     include(cmake/lapack.cmake)
   endif()
 
-  set(NUMERIC_LIBS ${SCALAPACK_LIBRARIES} ${LAPACK_LIBRARIES})
+  set(NUMERIC_LIBS SCALAPACK::SCALAPACK ${LAPACK_LIBRARIES})
 
   if(find_static AND NOT WIN32 AND
     MKL IN_LIST LAPACK_VENDOR AND
@@ -61,7 +64,7 @@ if(parallel)
   endif()
 
   # avoid MPICH -fallow flag leakage
-  set(NUMERIC_INC ${SCALAPACK_INCLUDE_DIRS} ${LAPACK_INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS})
+  set(NUMERIC_INC ${LAPACK_INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS})
   list(APPEND NUMERIC_LIBS ${MPI_Fortran_LIBRARIES} MPI::MPI_C)
 
   if(openmp)

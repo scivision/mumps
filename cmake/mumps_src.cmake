@@ -67,4 +67,7 @@ INACTIVITY_TIMEOUT 60
 
 endif()
 
-FetchContent_Populate(${PROJECT_NAME})
+FetchContent_GetProperties(${PROJECT_NAME})
+if(NOT ${PROJECT_NAME}_POPULATED)
+  FetchContent_Populate(${PROJECT_NAME})
+endif()

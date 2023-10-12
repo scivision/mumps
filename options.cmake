@@ -1,7 +1,5 @@
 include(GNUInstallDirs)
 
-message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION}  CMake ${CMAKE_VERSION}  Toolchain ${CMAKE_TOOLCHAIN_FILE}")
-
 option(find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
 
 if(local)
@@ -53,3 +51,7 @@ option(BUILD_COMPLEX16 "Build double precision complex")
 set(CMAKE_TLS_VERIFY true)
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED true)
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/local" CACHE PATH "default install path" FORCE)
+endif()
