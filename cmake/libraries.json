@@ -96,6 +96,12 @@
       "urls": [
         "https://mumps-solver.org/MUMPS_5.6.1.tar.gz"
       ]
+    },
+    "5.6.2": {
+      "sha256": "13a2c1aff2bd1aa92fe84b7b35d88f43434019963ca09ef7e8c90821a8f1d59a",
+      "urls": [
+        "https://mumps-solver.org/MUMPS_5.6.2.tar.gz"
+      ]
     }
   }
 }

@@ -30,7 +30,7 @@ The MUMPS version defaults to a recent release.
 For reproducibility, benchmarking and other purposes, one may select the version of MUMPS to build like:
 
 ```sh
-cmake -B build -DMUMPS_UPSTREAM_VERSION=5.6.1
+cmake -B build -DMUMPS_UPSTREAM_VERSION=5.6.2
 ```
 
 The MUMPS_UPSTREAM_VERSION works for MUMPS versions in
