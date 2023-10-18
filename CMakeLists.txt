@@ -54,7 +54,7 @@ if(parallel)
     include(cmake/lapack.cmake)
   endif()
 
-  set(NUMERIC_LIBS SCALAPACK::SCALAPACK ${LAPACK_LIBRARIES})
+  set(NUMERIC_LIBS SCALAPACK::SCALAPACK LAPACK::LAPACK)
 
   if(find_static AND NOT WIN32 AND
     MKL IN_LIST LAPACK_VENDOR AND
@@ -64,7 +64,7 @@ if(parallel)
   endif()
 
   # avoid MPICH -fallow flag leakage
-  set(NUMERIC_INC ${LAPACK_INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS})
+  set(NUMERIC_INC ${MPI_Fortran_INCLUDE_DIRS})
   list(APPEND NUMERIC_LIBS ${MPI_Fortran_LIBRARIES} MPI::MPI_C)
 
   if(openmp)
