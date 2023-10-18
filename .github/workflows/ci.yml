@@ -29,21 +29,24 @@ jobs:
         metis: [false]
         int64: [true, false]
         lapack_vendor: [""]
-        img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin libscalapack-mpi-dev},
-               {os: macos-latest, cmd: brew install ninja scalapack open-mpi && brew reinstall gcc}
+        img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin},
+               {os: macos-latest, cmd: brew install ninja open-mpi}
         ]
         include:
           - scotch: true
             int64: false
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin libscalapack-mpi-dev}
+            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin}
           - metis: true
             int64: false
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin libscalapack-mpi-dev}
+            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin}
           - lapack_vendor: "OpenBLAS"
             int64: false
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin libopenblas-dev libscalapack-mpi-dev}
+            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin libopenblas-dev}
 
     runs-on: ${{ matrix.img.os }}
+
+    env:
+      FC: gfortran-12
 
     steps:
 
