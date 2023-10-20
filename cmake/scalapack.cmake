@@ -36,6 +36,7 @@ set(scalapack_cmake_args
 -DCMAKE_Fortran_COMPILER:PATH=${CMAKE_Fortran_COMPILER}
 -DBUILD_TESTING:BOOL=off
 -DCMAKE_BUILD_TYPE:STRING=Release
+-DCMAKE_TLS_VERIFY:BOOL=${CMAKE_TLS_VERIFY}
 )
 
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
