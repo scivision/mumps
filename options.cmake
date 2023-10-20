@@ -47,8 +47,7 @@ option(BUILD_COMPLEX16 "Build double precision complex")
 
 # --- other options
 
-
-set(CMAKE_TLS_VERIFY true)
+option(CMAKE_TLS_VERIFY "Verify TLS certificates" ON)
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED true)
 

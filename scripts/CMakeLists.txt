@@ -13,7 +13,7 @@ option(BUILD_COMPLEX "Build single precision complex")
 option(BUILD_COMPLEX16 "Build double precision complex")
 option(intsize64 "use 64-bit integers in C and Fortran--Scotch must be consistent with MUMPS")
 
-set(CMAKE_TLS_VERIFY true)
+option(CMAKE_TLS_VERIFY "Verify TLS certificates when downloading" ON)
 
 set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED true)
 
@@ -45,7 +45,6 @@ GIT_TAG ${lapack_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${lapack_cmake_args}
 INACTIVITY_TIMEOUT 60
-TLS_VERIFY true
 CONFIGURE_HANDLED_BY_BUILD true
 )
 
@@ -63,7 +62,6 @@ GIT_SHALLOW true
 CMAKE_ARGS ${scalapack_cmake_args}
 INACTIVITY_TIMEOUT 60
 DEPENDS lapack
-TLS_VERIFY true
 CONFIGURE_HANDLED_BY_BUILD true
 )
 
@@ -82,7 +80,6 @@ GIT_TAG ${metis_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${metis_cmake_args}
 INACTIVITY_TIMEOUT 60
-TLS_VERIFY true
 CONFIGURE_HANDLED_BY_BUILD true
 )
 
@@ -140,6 +137,5 @@ GIT_TAG ${scotch_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${scotch_cmake_args}
 INACTIVITY_TIMEOUT 60
-TLS_VERIFY true
 CONFIGURE_HANDLED_BY_BUILD true
 )
