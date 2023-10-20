@@ -1,6 +1,6 @@
 # Handle options for finding LAPACK
 
-include(CheckFortranSourceCompiles)
+include(CheckSourceCompiles)
 
 if(NOT DEFINED LAPACK_VENDOR AND DEFINED ENV{MKLROOT})
   set(LAPACK_VENDOR MKL)
@@ -27,7 +27,7 @@ else()
 endif()
 
 if(BUILD_DOUBLE)
-check_fortran_source_compiles(
+check_source_compiles(Fortran
 "program check
 use, intrinsic :: iso_fortran_env, only : real64
 implicit none
@@ -36,12 +36,11 @@ real(real64), dimension(2,2) :: A, B, C
 CALL DGEMMT( 'U', 'N', 'T',  2 , 1 , 1._real64 , A , 2 , B , 2 , 1._real64 , C , 2 )
 end program"
 BLAS_HAVE_dGEMMT
-SRC_EXT f90
 )
 endif()
 
 if(BUILD_SINGLE)
-check_fortran_source_compiles(
+check_source_compiles(Fortran
 "program check
 use, intrinsic :: iso_fortran_env, only : real32
 implicit none
@@ -50,12 +49,11 @@ real(real32), dimension(2,2) :: A, B, C
 CALL SGEMMT( 'U', 'N', 'T',  2 , 1 , 1._real32 , A , 2 , B , 2 , 1._real32 , C , 2 )
 end program"
 BLAS_HAVE_sGEMMT
-SRC_EXT f90
 )
 endif()
 
 if(BUILD_COMPLEX)
-check_fortran_source_compiles(
+check_source_compiles(Fortran
 "program check
 use, intrinsic :: iso_fortran_env, only : real32
 implicit none
@@ -64,12 +62,11 @@ complex(real32), dimension(2,2) :: A, B, C
 CALL CGEMMT( 'U', 'N', 'T',  2 , 1 , 1._real32 , A , 2 , B , 2 , 1._real32 , C , 2 )
 end program"
 BLAS_HAVE_cGEMMT
-SRC_EXT f90
 )
 endif()
 
 if(BUILD_COMPLEX16)
-check_fortran_source_compiles(
+check_source_compiles(Fortran
 "program check
 use, intrinsic :: iso_fortran_env, only : real64
 implicit none
@@ -78,7 +75,6 @@ complex(real64), dimension(2,2) :: A, B, C
 CALL ZGEMMT( 'U', 'N', 'T',  2 , 1 , 1._real64 , A , 2 , B , 2 , 1._real64 , C , 2 )
 end program"
 BLAS_HAVE_zGEMMT
-SRC_EXT f90
 )
 endif()
 
