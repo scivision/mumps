@@ -1,5 +1,3 @@
-include(GNUInstallDirs)
-
 option(find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
 
 if(local)
@@ -35,6 +33,8 @@ if((matlab OR octave) AND parallel)
   message(FATAL_ERROR "Matlab / Octave requires parallel=off")
 endif()
 
+option(find "find [SCA]LAPACK" on)
+
 option(BUILD_SHARED_LIBS "Build shared libraries")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -48,6 +48,8 @@ option(BUILD_COMPLEX16 "Build double precision complex")
 # --- other options
 
 option(CMAKE_TLS_VERIFY "Verify TLS certificates" ON)
+
+set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED true)
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED true)
 

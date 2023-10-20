@@ -1,6 +1,8 @@
 include(ExternalProject)
 include(GNUInstallDirs)
 
+if(find)
+
 if(NOT DEFINED SCALAPACK_VENDOR AND DEFINED ENV{MKLROOT})
   set(SCALAPACK_VENDOR MKL)
 endif()
@@ -16,6 +18,8 @@ if(find_static)
 endif()
 
 find_package(SCALAPACK COMPONENTS ${SCALAPACK_VENDOR})
+
+endif()
 
 if(SCALAPACK_FOUND)
   return()
@@ -60,6 +64,7 @@ GIT_REPOSITORY ${scalapack_url}
 GIT_TAG ${scalapack_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${scalapack_cmake_args}
+TEST_COMMAND ""
 INACTIVITY_TIMEOUT 60
 BUILD_BYPRODUCTS ${SCALAPACK_LIBRARIES}
 CONFIGURE_HANDLED_BY_BUILD true
