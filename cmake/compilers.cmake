@@ -1,23 +1,3 @@
-# --- abi check
-
-# check C and Fortran compiler ABI compatibility
-
-if(NOT abi_ok)
-  message(CHECK_START "checking that C and Fortran compilers can link")
-  try_compile(abi_ok
-  ${CMAKE_CURRENT_BINARY_DIR}/abi_check ${CMAKE_CURRENT_LIST_DIR}/abi_check
-  abi_check
-  )
-  if(abi_ok)
-    message(CHECK_PASS "OK")
-  else()
-    message(FATAL_ERROR "ABI-incompatible compilers:
-    C compiler ${CMAKE_C_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION}
-    Fortran compiler ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}"
-    )
-  endif()
-endif()
-
 # --- compiler options
 
 if(DEFINED ENV{CRAYPE_VERSION})
@@ -85,13 +65,3 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
 # Necessary for shared library with Visual Studio / Windows oneAPI
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS true)
-
-# allow CMAKE_PREFIX_PATH with ~ expand
-if(CMAKE_PREFIX_PATH)
-  set(_prefix_path)
-  foreach(_p IN LISTS CMAKE_PREFIX_PATH)
-    get_filename_component(_p "${_p}" ABSOLUTE)
-    list(APPEND _prefix_path "${_p}")
-  endforeach()
-  set(CMAKE_PREFIX_PATH "${_prefix_path}")
-endif()
