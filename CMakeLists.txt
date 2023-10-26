@@ -12,7 +12,7 @@ endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.6.2.1
+VERSION 5.6.2.2
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "http://mumps-solver.org/"
 )
@@ -48,11 +48,11 @@ find_package(Threads)
 
 if(parallel)
   find_package(MPI COMPONENTS C Fortran REQUIRED)
-  include(cmake/scalapack.cmake)
-  if(NOT MKL_FOUND)
+  if(NOT DEFINED ENV{MKLROOT})
     # oneMKL MKLConfig.cmake must be invoked only once
     include(cmake/lapack.cmake)
   endif()
+  include(cmake/scalapack.cmake)
 
   set(NUMERIC_LIBS SCALAPACK::SCALAPACK LAPACK::LAPACK)
 
