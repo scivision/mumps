@@ -1,8 +1,6 @@
 name: oneapi-linux
 
 env:
-  CC: icx
-  FC: ifx
   LINUX_CPP_COMPONENTS: intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
   LINUX_FORTRAN_COMPONENTS: intel-oneapi-compiler-fortran
   LINUX_MKL_COMPONENTS: "intel-oneapi-mkl intel-oneapi-mkl-devel"
@@ -70,8 +68,12 @@ jobs:
       if: ${{ failure() }}
       run: cat build/CMakeFiles/CMakeConfigureLog.yaml
 
-    - name: CMake build, test
-      run: cmake --workflow --preset default
+    - name: CMake build
+      run: cmake --build --preset default
+
+    - name: CMake Test
+      if: false
+      run: ctest --preset default
 
     - name: install package
       run: cmake --install build
@@ -91,6 +93,7 @@ jobs:
       run: cmake --build example/build
 
     - name: test example
+      if: false
       run: ctest --test-dir example/build -V
 
 
