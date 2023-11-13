@@ -39,6 +39,10 @@ set(scalapack_cmake_args
 -DCMAKE_TLS_VERIFY:BOOL=${CMAKE_TLS_VERIFY}
 )
 
+if (LAPACK_ROOT)
+  list(APPEND scalapack_cmake_args -DLAPACK_ROOT:PATH=${LAPACK_ROOT})
+endif()
+
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 
 string(JSON scalapack_url GET ${json} scalapack git)
