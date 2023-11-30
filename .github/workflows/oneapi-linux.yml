@@ -46,7 +46,7 @@ jobs:
       if: steps.cache-install.outputs.cache-hit != 'true'
       timeout-minutes: 10
       run: |
-        .github/workflows/oneapi_setup_apt_repo_linux.sh
+        sh -c .github/workflows/oneapi_setup_apt_repo_linux.sh
         sudo apt install ${{ env.LINUX_CPP_COMPONENTS }} ${{ env.LINUX_FORTRAN_COMPONENTS }} ${{ env.LINUX_MKL_COMPONENTS }} ${{ env.LINUX_MPI_COMPONENTS }}
 
     - name: Setup Intel oneAPI environment
@@ -99,4 +99,4 @@ jobs:
 
     - name: exclude unused files from cache
       if: steps.cache-install.outputs.cache-hit != 'true'
-      run: .github/workflows/oneapi_cache_exclude_linux.sh
+      run: sh -c .github/workflows/oneapi_cache_exclude_linux.sh
