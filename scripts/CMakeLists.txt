@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.19)
 
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+  message(FATAL_ERROR "please use out of source build
+    cmake -Bbuild")
+endif()
+
+
 project(MumpsPrereqs LANGUAGES C Fortran)
 
 include(ExternalProject)
@@ -139,3 +145,5 @@ CMAKE_ARGS ${scotch_cmake_args}
 INACTIVITY_TIMEOUT 60
 CONFIGURE_HANDLED_BY_BUILD true
 )
+
+file(GENERATE OUTPUT .gitignore CONTENT "*")

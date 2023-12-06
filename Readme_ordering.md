@@ -12,7 +12,7 @@ To use METIS:
 cmake -Dmetis=yes
 ```
 
-To use parMETIS:
+To use parMETIS (metis option is ignored (overridden) by parmetis=yes):
 
 ```sh
 cmake -Dparmetis=yes
