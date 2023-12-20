@@ -53,26 +53,31 @@ FindOctave checks the environment variable OCTAVE_EXECUTABLE for the
 Octave interpreter.
 #]=======================================================================]
 
-get_filename_component(_hint "$ENV{OCTAVE_EXECUTABLE}" DIRECTORY)
+get_filename_component(_hint_dirs "$ENV{OCTAVE_EXECUTABLE}" DIRECTORY)
 
 unset(_hint_dir)
-unset(_path)
-unset(_suff)
+unset(_paths)
+unset(_req)
+
 if(WIN32)
-  set(_suff mingw64/bin)
-  set(_path "$ENV{ProgramFiles}/GNU Octave")
-  if(IS_DIRECTORY ${_path})
-    file(GLOB_RECURSE _hint_dir "${_path}/Octave-*/${_suff}/octave-cli.exe")
-  else()
-    unset(_path)
-  endif()
+  set(_arch mingw64)
+  # currently the only arch distributed by GNU Octave team for Windows
+  set(_paths "$ENV{LOCALAPPDATA}/Programs/GNU Octave" "$ENV{ProgramFiles}/GNU Octave")
+  foreach(_p IN LISTS _paths)
+    file(GLOB _g "${_p}/Octave-*/${_arch}/bin/octave-config.exe")
+    foreach(_h IN LISTS _g)
+      get_filename_component(_h "${_h}" DIRECTORY)
+      list(APPEND _hint_dirs "${_h}")
+    endforeach()
+  endforeach()
 endif()
+
+message(VERBOSE "Octave hints: ${_hint_dirs}")
 
 find_program(Octave_CONFIG_EXECUTABLE
 NAMES octave-config
-HINTS ${_hint} ${_hint_dir}
-PATHS ${_path}
-PATH_SUFFIXES ${_suff}
+HINTS "${_hint_dirs}"
+PATHS "${_paths}"
 DOC "Octave configuration helper"
 )
 
@@ -81,26 +86,28 @@ if(Octave_CONFIG_EXECUTABLE)
   OUTPUT_VARIABLE Octave_BINARY_DIR
   ERROR_QUIET
   OUTPUT_STRIP_TRAILING_WHITESPACE
-  TIMEOUT 5
+  TIMEOUT 10
   )
 
   execute_process(COMMAND ${Octave_CONFIG_EXECUTABLE} -p VERSION
   OUTPUT_VARIABLE Octave_VERSION
   ERROR_QUIET
   OUTPUT_STRIP_TRAILING_WHITESPACE
-  TIMEOUT 5
+  TIMEOUT 10
   )
 endif()
 
 if(Development IN_LIST Octave_FIND_COMPONENTS)
 
+  set(_req Octave_INCLUDE_DIR Octave_OCTAVE_LIBRARY)
+
   if(Octave_CONFIG_EXECUTABLE)
-    foreach(p OCTINCLUDEDIR OCTLIBDIR LIBDIR)
+    foreach(p IN ITEMS OCTINCLUDEDIR OCTLIBDIR LIBDIR)
       execute_process(COMMAND ${Octave_CONFIG_EXECUTABLE} -p ${p}
       OUTPUT_VARIABLE Octave_${p}
       ERROR_QUIET
       OUTPUT_STRIP_TRAILING_WHITESPACE
-      TIMEOUT 5
+      TIMEOUT 10
       )
     endforeach()
   endif(Octave_CONFIG_EXECUTABLE)
@@ -109,17 +116,20 @@ if(Development IN_LIST Octave_FIND_COMPONENTS)
   NAMES oct.h
   HINTS ${Octave_OCTINCLUDEDIR}
   DOC "Octave header"
+  NO_DEFAULT_PATH
   )
 
   find_library(Octave_INTERP_LIBRARY
   NAMES octinterp
   HINTS ${Octave_OCTLIBDIR} ${Octave_LIBDIR}
-  DOC "Octave Interpolation library"
+  DOC "Octave Interpolation"
+  NO_DEFAULT_PATH
   )
   find_library(Octave_OCTAVE_LIBRARY
   NAMES octave
   HINTS ${Octave_OCTLIBDIR} ${Octave_LIBDIR}
   DOC "Core Octave library"
+  NO_DEFAULT_PATH
   )
 
   if(Octave_INCLUDE_DIR AND Octave_INTERP_LIBRARY AND Octave_OCTAVE_LIBRARY)
@@ -132,21 +142,23 @@ if(Interpreter IN_LIST Octave_FIND_COMPONENTS)
 
   find_program(Octave_EXECUTABLE
   NAMES octave-cli octave
-  HINTS ${Octave_BINARY_DIR} ${_hint} ${_hint_dir}
-  PATHS ${_path}
-  PATH_SUFFIXES ${_suff}
-  DOC "Octave CLI"
+  HINTS ${Octave_BINARY_DIR} "${_hint_dirs}"
+  PATHS "${_paths}"
+  NO_DEFAULT_PATH
   )
 
   if(Octave_EXECUTABLE)
     set(Octave_Interpreter_FOUND true)
   endif(Octave_EXECUTABLE)
 
+  list(APPEND _req Octave_EXECUTABLE)
+
 endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Octave
 VERSION_VAR Octave_VERSION
+REQUIRED_VARS ${_req}
 HANDLE_COMPONENTS
 HANDLE_VERSION_RANGE
 )
