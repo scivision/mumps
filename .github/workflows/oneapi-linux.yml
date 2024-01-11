@@ -1,12 +1,16 @@
 name: oneapi-linux
 
 env:
-  LINUX_CPP_COMPONENTS: intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+  LINUX_CPP_COMPONENTS: intel-oneapi-compiler-dpcpp-cpp
   LINUX_FORTRAN_COMPONENTS: intel-oneapi-compiler-fortran
   LINUX_MKL_COMPONENTS: "intel-oneapi-mkl intel-oneapi-mkl-devel"
   LINUX_MPI_COMPONENTS: "intel-oneapi-mpi intel-oneapi-mpi-devel"
 # https://github.com/oneapi-src/oneapi-ci/blob/master/.github/workflows/build_all.yml
   CTEST_NO_TESTS_ACTION: error
+  CC: icx
+  FC: ifx
+  CMAKE_BUILD_TYPE: Release
+  CMAKE_BUILD_PARALLEL_LEVEL: 4
 
 on:
   push:
@@ -53,10 +57,6 @@ jobs:
       run: |
         source /opt/intel/oneapi/setvars.sh
         printenv >> $GITHUB_ENV
-
-    - name: install Ninja
-      run: sudo apt install ninja-build
-# install ninja needs to be own step as not cached by design
 
     - name: CMake Configure intsize64=${{ matrix.int64 }}
       run: >-

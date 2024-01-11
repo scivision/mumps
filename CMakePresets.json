@@ -5,7 +5,6 @@
 {
   "name": "default",
   "binaryDir": "${sourceDir}/build",
-  "generator": "Ninja",
   "cacheVariables": {
     "BUILD_SINGLE": false,
     "BUILD_DOUBLE": true,
