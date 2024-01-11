@@ -55,7 +55,6 @@ Octave interpreter.
 
 get_filename_component(_hint_dirs "$ENV{OCTAVE_EXECUTABLE}" DIRECTORY)
 
-unset(_hint_dir)
 unset(_paths)
 unset(_req)
 
@@ -84,14 +83,12 @@ DOC "Octave configuration helper"
 if(Octave_CONFIG_EXECUTABLE)
   execute_process(COMMAND ${Octave_CONFIG_EXECUTABLE} -p BINDIR
   OUTPUT_VARIABLE Octave_BINARY_DIR
-  ERROR_QUIET
   OUTPUT_STRIP_TRAILING_WHITESPACE
   TIMEOUT 10
   )
 
   execute_process(COMMAND ${Octave_CONFIG_EXECUTABLE} -p VERSION
   OUTPUT_VARIABLE Octave_VERSION
-  ERROR_QUIET
   OUTPUT_STRIP_TRAILING_WHITESPACE
   TIMEOUT 10
   )
@@ -105,7 +102,6 @@ if(Development IN_LIST Octave_FIND_COMPONENTS)
     foreach(p IN ITEMS OCTINCLUDEDIR OCTLIBDIR LIBDIR)
       execute_process(COMMAND ${Octave_CONFIG_EXECUTABLE} -p ${p}
       OUTPUT_VARIABLE Octave_${p}
-      ERROR_QUIET
       OUTPUT_STRIP_TRAILING_WHITESPACE
       TIMEOUT 10
       )
