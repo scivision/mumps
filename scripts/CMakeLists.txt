@@ -50,7 +50,6 @@ GIT_REPOSITORY ${lapack_url}
 GIT_TAG ${lapack_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${lapack_cmake_args}
-INACTIVITY_TIMEOUT 60
 CONFIGURE_HANDLED_BY_BUILD true
 )
 
@@ -66,7 +65,6 @@ GIT_REPOSITORY ${scalapack_url}
 GIT_TAG ${scalapack_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${scalapack_cmake_args}
-INACTIVITY_TIMEOUT 60
 DEPENDS lapack
 CONFIGURE_HANDLED_BY_BUILD true
 )
@@ -85,7 +83,6 @@ GIT_REPOSITORY ${metis_url}
 GIT_TAG ${metis_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${metis_cmake_args}
-INACTIVITY_TIMEOUT 60
 CONFIGURE_HANDLED_BY_BUILD true
 )
 
@@ -142,7 +139,6 @@ GIT_REPOSITORY ${scotch_url}
 GIT_TAG ${scotch_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${scotch_cmake_args}
-INACTIVITY_TIMEOUT 60
 CONFIGURE_HANDLED_BY_BUILD true
 )
 

@@ -40,12 +40,12 @@ if(BUILD_DOUBLE)
   mumps_test(CsimpleReal64 Csimple)
 endif()
 
-# Windows DLL
 get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 
 set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
 set_property(TEST ${test_names} PROPERTY TIMEOUT 30)
 
+# Windows DLL
 if(WIN32 AND BUILD_SHARED_LIBS)
   set_property(TEST ${test_names} PROPERTY
   ENVIRONMENT_MODIFICATION "PATH=path_list_append:${CMAKE_INSTALL_FULL_BINDIR};PATH=path_list_append:${CMAKE_PREFIX_PATH}/bin;PATH=path_list_append:${PROJECT_BINARY_DIR}"
