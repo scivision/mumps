@@ -36,8 +36,9 @@ option(find "find [SCA]LAPACK" on)
 
 option(BUILD_SHARED_LIBS "Build shared libraries")
 
+include(CheckPIESupported)
+check_pie_supported()
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 
 option(BUILD_SINGLE "Build single precision float32 real" ON)
 option(BUILD_DOUBLE "Build double precision float64 real" ON)
