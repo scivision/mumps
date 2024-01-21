@@ -1,7 +1,6 @@
 {
   "lapack": {
-    "git": "https://github.com/Reference-LAPACK/lapack.git",
-    "tag": "v3.11.0"
+    "git": "https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v3.12.0.tar.gz"
   },
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",

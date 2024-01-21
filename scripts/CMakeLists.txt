@@ -43,12 +43,9 @@ set(lapack_cmake_args ${cmake_args}
 )
 
 string(JSON lapack_url GET ${json} lapack git)
-string(JSON lapack_tag GET ${json} lapack tag)
 
 ExternalProject_Add(lapack
-GIT_REPOSITORY ${lapack_url}
-GIT_TAG ${lapack_tag}
-GIT_SHALLOW true
+URL ${lapack_url}
 CMAKE_ARGS ${lapack_cmake_args}
 CONFIGURE_HANDLED_BY_BUILD true
 )
