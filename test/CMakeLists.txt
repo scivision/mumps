@@ -1,20 +1,15 @@
 set_property(DIRECTORY PROPERTY LABELS "unit;mumps")
 
-function(mumps_test name tgt)
-
-if(parallel)
-  add_test(NAME ${name} COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:${tgt}>)
-else()
-  add_test(NAME ${name} COMMAND ${tgt})
-endif()
-
-endfunction(mumps_test)
+include(${PROJECT_SOURCE_DIR}/cmake/launcher.cmake)
 
 if(BUILD_DOUBLE)
-  add_executable(mumpscfg test_mumps.f90)
-  target_link_libraries(mumpscfg PRIVATE MUMPS::MUMPS)
+  add_executable(test_mumps_config test_mumps.f90)
+  target_link_libraries(test_mumps_config PRIVATE MUMPS::MUMPS)
+  add_test(NAME test_mumps_config COMMAND test_mumps_config)
 
-  mumps_test(Cfg mumpscfg)
+  if(parallel)
+    test_mpi_launcher(test_mumps_config 2)
+  endif()
 endif()
 
 if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.1)
@@ -22,28 +17,36 @@ if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.1)
 endif()
 
 if(BUILD_SINGLE)
-  add_executable(s_simple s_simple.f90)
-  target_link_libraries(s_simple PRIVATE MUMPS::MUMPS)
+  add_executable(test_mumps_simple32 s_simple.f90)
+  target_link_libraries(test_mumps_simple32 PRIVATE MUMPS::MUMPS)
+  add_test(NAME test_mumps_simple32 COMMAND test_mumps_simple32)
 
-  mumps_test(SimpleReal32 s_simple)
+  if(parallel)
+    test_mpi_launcher(test_mumps_simple32 2)
+  endif()
 endif()
 
 if(BUILD_DOUBLE)
-  add_executable(d_simple d_simple.f90)
-  target_link_libraries(d_simple PRIVATE MUMPS::MUMPS)
+  add_executable(test_mumps_simple64 d_simple.f90)
+  target_link_libraries(test_mumps_simple64 PRIVATE MUMPS::MUMPS)
+  add_test(NAME test_mumps_simple64 COMMAND test_mumps_simple64)
 
-  mumps_test(SimpleReal64 d_simple)
+  if(parallel)
+    test_mpi_launcher(test_mumps_simple64 2)
+  endif()
 
-  add_executable(Csimple simple.c)
-  target_link_libraries(Csimple PRIVATE MUMPS::MUMPS)
+  add_executable(test_mumps_complex128 simple.c)
+  target_link_libraries(test_mumps_complex128 PRIVATE MUMPS::MUMPS)
+  add_test(NAME test_mumps_complex128 COMMAND test_mumps_complex128)
 
-  mumps_test(CsimpleReal64 Csimple)
+  if(parallel)
+    test_mpi_launcher(test_mumps_complex128 2)
+  endif()
 endif()
 
 get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 
 set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
-set_property(TEST ${test_names} PROPERTY TIMEOUT 30)
 
 # Windows DLL
 if(WIN32 AND BUILD_SHARED_LIBS)
