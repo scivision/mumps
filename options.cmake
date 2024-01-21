@@ -1,17 +1,8 @@
 option(find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
 
-if(local)
-  get_filename_component(local ${local} ABSOLUTE)
-
-  if(NOT IS_DIRECTORY ${local})
-    message(FATAL_ERROR "Local directory ${local} does not exist")
-  endif()
-endif()
-
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
   option(gemmt "GEMMT is recommended in User Manual if available" ON)
 endif()
-
 
 option(parallel "parallel (use MPI)" ON)
 
@@ -53,6 +44,13 @@ set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED true)
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED true)
 
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+if(CMAKE_VERSION VERSION_LESS 3.21)
+  get_property(_not_top DIRECTORY PROPERTY PARENT_DIRECTORY)
+  if(NOT _not_top)
+    set(PROJECT_IS_TOP_LEVEL true)
+  endif()
+endif()
+
+if(PROJECT_IS_TOP_LEVEL AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/local" CACHE PATH "default install path" FORCE)
 endif()

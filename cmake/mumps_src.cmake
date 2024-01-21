@@ -11,11 +11,8 @@ find_file(${name}_archive
 NAMES ${name}.tar.bz2 ${name}.tar.gz ${name}.tar ${name}.zip ${name}.tar.zstd ${name}.tar.xz ${name}.tar.lz
 HINTS ${local}
 NO_DEFAULT_PATH
+REQUIRED
 )
-
-if(NOT ${name}_archive)
-  message(FATAL_ERROR "Archive file for ${name} does not exist under ${local}")
-endif()
 
 message(STATUS "${name}: using source archive ${${name}_archive}")
 
@@ -34,7 +31,7 @@ set(sha256)
 
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 
-string(JSON N LENGTH ${json} ${name} ${MUMPS_UPSTREAM_VERSION} urls)
+string(JSON N LENGTH ${json} ${name} ${MUMPS_UPSTREAM_VERSION} "urls")
 if(NOT "${N}")
   message(FATAL_ERROR "MUMPS ${MUMPS_UPSTREAM_VERSION} not found in ${CMAKE_CURRENT_LIST_DIR}/libraries.json
   ${N}")
