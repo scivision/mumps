@@ -28,9 +28,8 @@ endif()
 option(openmp "use OpenMP")
 
 option(matlab "Matlab interface" OFF)
-option(octave "GNU Octave interface" OFF)
-if((matlab OR octave) AND parallel)
-  message(FATAL_ERROR "Matlab / Octave requires parallel=off")
+if(matlab AND parallel)
+  message(FATAL_ERROR "Matlab requires parallel=off")
 endif()
 
 option(find "find [SCA]LAPACK" on)

@@ -36,19 +36,18 @@ cmake -B build -DMUMPS_UPSTREAM_VERSION=5.6.2
 The MUMPS_UPSTREAM_VERSION works for MUMPS versions in
 [cmake/libraries.json](./cmake/libraries.json).
 
-## Matlab / GNU Octave
+## Matlab
 
-Matlab / GNU Octave MEX interface may be built (one or the other) by EITHER:
+Matlab MEX interface may be built:
 
 ```sh
--Dmatlab=on
--Doctave=on
+cmake -Dmatlab=on
 ```
 
 These require `-Dparallel=off`.
 These Matlab scripts seems to have been developed ~ 2006 and may not fully work anymore.
 Ask the MUMPS Users List if you need such scripts.
-We present them mainly as an example of compiling MEX libraries for Octave and Matlab with CMake.
+We present them mainly as an example of compiling MEX libraries for Matlab with CMake.
 
 ## OpenMP
 
