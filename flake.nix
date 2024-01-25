@@ -13,15 +13,15 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
       perSystem = { config, self', inputs', pkgs, system, ... }:
-        let deps = with pkgs; [ cmake gfortran openmpi lapack lapack.dev scalapack scalapack.dev ]; in {
+        let deps = with pkgs; [ cmake gfortran lapack lapack.dev ]; in {
           devShells.default = pkgs.mkShell {
             nativeBuildInputs = deps;
           };
           packages = rec {
-            mumps = pkgs.stdenv.mkDerivation {
+            mumps-32-seq = pkgs.stdenv.mkDerivation {
               name = "mumps";
               src = ./.;
-              outputs = [ "out"];
+              outputs = [ "out" ];
               nativeBuildInputs = deps;
               patchPhase = ''
                 rm -fr build/mumps_src 
@@ -36,7 +36,7 @@
                 "-D FETCHCONTENT_SOURCE_DIR_MUMPS=mumps_src"
                 "-D MUMPS_UPSTREAM_VERSION=5.6.2"
                 "-D BUILD_DOUBLE=on"
-                "-D parallel=true"
+                "-D parallel=off"
                 "-D intsize64=off"
               ];
               doCheck = false;
@@ -45,7 +45,7 @@
                 cp --recursive cmake $out/include
               '';
             };
-            default = mumps;
+            default = mumps-32-seq;
             build = pkgs.writeShellApplication {
               name = "default";
 
