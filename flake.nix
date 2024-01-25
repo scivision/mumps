@@ -38,6 +38,7 @@
                 "-D BUILD_DOUBLE=on"
                 "-D parallel=off"
                 "-D intsize64=off"
+                "-D BUILD_SHARED_LIBS=on"
               ];
               doCheck = false;
               preInstall = ''

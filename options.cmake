@@ -35,7 +35,7 @@ endif()
 
 option(find "find [SCA]LAPACK" on)
 
-option(BUILD_SHARED_LIBS "Build shared libraries")
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
