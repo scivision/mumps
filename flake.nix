@@ -37,7 +37,7 @@
                 "-D MUMPS_UPSTREAM_VERSION=5.6.2"
                 "-D BUILD_DOUBLE=on"
                 "-D parallel=true"
-                "-D intsize64=on"
+                "-D intsize64=off"
               ];
               doCheck = false;
               preInstall = ''
