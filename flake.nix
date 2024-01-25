@@ -39,13 +39,17 @@
                 "-D parallel=off"
                 "-D matlab=off"
                 "-D octave=off"
+                "-D openmp=off"
                 "-D intsize64=off"
                 "-D BUILD_SHARED_LIBS=on"
               ];
               doCheck = false;
               preInstall = ''
                 mkdir --parents $out/include
-                cp --recursive cmake $out/include
+                cp --recursive cmake $out/include                
+              '';
+              postInstall = ''                
+                cp --dereference --no-preserve=mode,ownership --recursive --force $out/lib/libdmumps.so $out/lib/libcoinmumps.so
               '';
             };
             default = mumps-32-seq;
