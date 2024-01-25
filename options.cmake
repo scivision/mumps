@@ -15,9 +15,9 @@ endif()
 
 option(parallel "parallel (use MPI)" ON)
 
-option(intsize64 "use 64-bit integers in C and Fortran")
+option(intsize64 "use 64-bit integers in C and Fortran" OFF)
 
-option(scotch "use Scotch orderings ")
+option(scotch "use Scotch orderings " OFF)
 
 option(parmetis "use parallel METIS ordering")
 option(metis "use sequential METIS ordering")
@@ -25,24 +25,24 @@ if(parmetis AND NOT parallel)
   message(FATAL_ERROR "parmetis requires parallel=on")
 endif()
 
-option(openmp "use OpenMP")
+option(openmp "use OpenMP" OFF)
 
 option(matlab "Matlab interface" OFF)
 if(matlab AND parallel)
   message(FATAL_ERROR "Matlab requires parallel=off")
 endif()
 
-option(find "find [SCA]LAPACK" on)
+option(find "find [SCA]LAPACK" ON)
 
-option(BUILD_SHARED_LIBS "Build shared libraries")
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 
 option(BUILD_SINGLE "Build single precision float32 real" ON)
 option(BUILD_DOUBLE "Build double precision float64 real" ON)
-option(BUILD_COMPLEX "Build single precision complex")
-option(BUILD_COMPLEX16 "Build double precision complex")
+option(BUILD_COMPLEX "Build single precision complex" OFF)
+option(BUILD_COMPLEX16 "Build double precision complex" OFF)
 
 # --- other options
 
