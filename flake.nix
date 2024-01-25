@@ -37,6 +37,8 @@
                 "-D MUMPS_UPSTREAM_VERSION=5.6.2"
                 "-D BUILD_DOUBLE=on"
                 "-D parallel=off"
+                "-D matlab=off"
+                "-D octave=off"
                 "-D intsize64=off"
                 "-D BUILD_SHARED_LIBS=on"
               ];
