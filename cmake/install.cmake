@@ -32,7 +32,7 @@ set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/package)
 
 # not .gitignore as its regex syntax is more advanced than CMake
-set(CPACK_SOURCE_IGNORE_FILES .git/ .github/ .vscode/ _CPack_Packages/
+set(CPACK_SOURCE_IGNORE_FILES .git/ .github/ .vscode/ _CPack_Packages/ .DS_Store
 ${CMAKE_BINARY_DIR}/ ${PROJECT_BINARY_DIR}/
 )
 

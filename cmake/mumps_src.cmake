@@ -58,9 +58,9 @@ message(DEBUG "MUMPS archive source URLs: ${urls}")
 set(FETCHCONTENT_QUIET no)
 
 FetchContent_Declare(${PROJECT_NAME}
+SOURCE_DIR ${PROJECT_SOURCE_DIR}/mumps/${MUMPS_UPSTREAM_VERSION}
 URL ${urls}
 URL_HASH SHA256=${sha256}
-GIT_REMOTE_UPDATE_STRATEGY "CHECKOUT"
 )
 
 endif()

@@ -73,3 +73,13 @@ Optionally, run self-tests:
 ```sh
 ctest --test-dir build
 ```
+
+## Packaging
+
+If you want to create an offline-installable package for MUMPS source, do:
+
+```sh
+cmake -Bbuild
+
+cpack --config build/CPackSourceConfig.cmake
+```
