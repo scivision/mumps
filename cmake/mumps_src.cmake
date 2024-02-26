@@ -5,23 +5,6 @@ include(FetchContent)
 
 string(TOLOWER ${PROJECT_NAME}_src name)
 
-if(local)
-
-find_file(${name}_archive
-NAMES ${name}.tar.bz2 ${name}.tar.gz ${name}.tar ${name}.zip ${name}.tar.zstd ${name}.tar.xz ${name}.tar.lz
-HINTS ${local}
-NO_DEFAULT_PATH
-REQUIRED
-)
-
-message(STATUS "${name}: using source archive ${${name}_archive}")
-
-FetchContent_Declare(${PROJECT_NAME}
-URL ${${name}_archive}
-)
-
-else()
-
 if(NOT MUMPS_UPSTREAM_VERSION)
   message(FATAL_ERROR "please specify MUMPS_UPSTREAM_VERSION")
 endif()
@@ -59,8 +42,6 @@ SOURCE_DIR ${PROJECT_SOURCE_DIR}/mumps/${MUMPS_UPSTREAM_VERSION}
 URL ${urls}
 URL_HASH SHA256=${sha256}
 )
-
-endif()
 
 FetchContent_GetProperties(${PROJECT_NAME})
 if(NOT ${PROJECT_NAME}_POPULATED)
