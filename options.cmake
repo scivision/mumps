@@ -1,3 +1,5 @@
+option(${PROJECT_NAME}_BUILD_TESTING "Build tests" ${PROJECT_IS_TOP_LEVEL})
+
 option(find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
 
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)

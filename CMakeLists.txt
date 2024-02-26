@@ -18,11 +18,6 @@ HOMEPAGE_URL "http://mumps-solver.org/"
 )
 
 enable_testing()
-if(DEFINED BUILD_TESTING)
-  set(${PROJECT_NAME}_BUILD_TESTING ${BUILD_TESTING})
-else()
-  set(${PROJECT_NAME}_BUILD_TESTING true)
-endif()
 
 if(NOT MUMPS_UPSTREAM_VERSION)
   set(MUMPS_UPSTREAM_VERSION 5.6.2)
