@@ -51,6 +51,6 @@ set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
 # Windows DLL
 if(WIN32 AND BUILD_SHARED_LIBS)
   set_property(TEST ${test_names} PROPERTY
-  ENVIRONMENT_MODIFICATION "PATH=path_list_append:${CMAKE_INSTALL_FULL_BINDIR};PATH=path_list_append:${CMAKE_PREFIX_PATH}/bin;PATH=path_list_append:${PROJECT_BINARY_DIR}"
+  ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${CMAKE_INSTALL_FULL_BINDIR};PATH=path_list_prepend:${CMAKE_PREFIX_PATH}/bin;PATH=path_list_prepend:${PROJECT_BINARY_DIR}"
   )
 endif()

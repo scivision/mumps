@@ -48,7 +48,7 @@ if(WIN32)
     get_filename_component(imp_mumps_dir ${imp_mumps} DIRECTORY)
   endif()
   set_property(TEST ${test_names} PROPERTY
-  ENVIRONMENT_MODIFICATION "PATH=path_list_append:${imp_mumps_dir};PATH=path_list_append:${CMAKE_PREFIX_PATH}/bin"
+  ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${imp_mumps_dir};PATH=path_list_prepend:${CMAKE_PREFIX_PATH}/bin"
   )
 endif()
 
