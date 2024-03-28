@@ -12,7 +12,7 @@ endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.6.2.2
+VERSION 5.6.2.3
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "http://mumps-solver.org/"
 )
@@ -51,13 +51,6 @@ if(parallel)
 
   set(NUMERIC_LIBS SCALAPACK::SCALAPACK LAPACK::LAPACK)
 
-  if(find_static AND NOT WIN32 AND
-    MKL IN_LIST LAPACK_VENDOR AND
-    CMAKE_VERSION VERSION_GREATER_EQUAL 3.24
-    )
-    set(NUMERIC_LIBS $<LINK_GROUP:RESCAN,${NUMERIC_LIBS}>)
-  endif()
-
   # avoid MPICH -fallow flag leakage
   set(NUMERIC_INC ${MPI_Fortran_INCLUDE_DIRS})
   list(APPEND NUMERIC_LIBS ${MPI_Fortran_LIBRARIES} MPI::MPI_C)
@@ -68,6 +61,11 @@ if(parallel)
   endif()
 else()
   include(cmake/lapack.cmake)
+endif()
+
+# GEMMT is recommeded in MUMPS User Manual if available
+if(gemmt)
+  include(cmake/gemmt.cmake)
 endif()
 
 # --- ordering libs
