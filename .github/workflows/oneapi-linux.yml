@@ -40,7 +40,7 @@ jobs:
 
     - name: cache install oneAPI
       id: cache-install
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           /opt/intel/oneapi
@@ -64,8 +64,7 @@ jobs:
         -Dintsize64=${{ matrix.int64 }}
         -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}
 
-    - name: print config log
-      if: ${{ failure() }}
+    - name: print config log CMake
       run: cat build/CMakeFiles/CMakeConfigureLog.yaml
 
     - name: CMake build
