@@ -7,7 +7,7 @@ using the
 [Ninja](https://github.com/ninja-build/ninja/releases)
 build system with CMake.
 
-## CMake generator
+## CMake Generator
 
 Windows CMake for MUMPS must use Ninja or Make as the build system backend.
 That is, specify at CMake configure:
@@ -20,7 +20,7 @@ cmake -G Ninja -B build
 cmake -G "MinGW Makefiles" -B build
 ```
 
-If you get an error like:
+### Troubleshooting generator
 
 > CMake Error: CMake was unable to find a build program corresponding to "Ninja". CMAKE_MAKE_PROGRAM is not set.
 
@@ -35,29 +35,19 @@ The CMake Windows default generator "Visual Studio 17 2022" **does not work**, e
 
 ## Compiler
 
-NOTE: on Windows, Intel oneAPI MKL only supports oneAPI compiler and
-[oneMKL >= 2021.3](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/cmake-config-for-onemkl.html)
-This is distinct from Linux, where oneMKL supports oneAPI and GCC compilers.
-
 Windows compilers known to work:
 
-* Intel oneAPI (recommended) -- requires oneAPI Base Toolkit and oneAPI HPC Toolkit for LAPACK and ScaLAPACK
+* Intel [oneAPI](./Readme_oneapi.md) (recommended) -- requires oneAPI Base Toolkit and oneAPI HPC Toolkit for LAPACK and ScaLAPACK
 * MSYS2 (GCC)
 * Windows Subsystem for Linux (GCC)
-* Visual Studio (C code) + oneAPI (Fortran code)  (more difficult, use only if needed)
 
-If using **oneAPI**, be sure to use the oneAPI command prompt.
-Under Windows Start menu look for "Intel oneAPI command prompt for Intel 64 for Visual Studio".
-Alternatively, use the oneAPI [setvars.bat](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-On any code project on Windows, having the correct command prompt and environment variables is essential.
+## CMake configure output
 
 ```sh
 cmake -G Ninja -B build -DBUILD_SINGLE=yes -DBUILD_DOUBLE=yes -DBUILD_COMPLEX=yes -DBUILD_COMPLEX16=yes
 ```
 
 To speed up MUMPS build and reduce binary size, feel free to omit (set to `no`) unneeded precisions in the command above.
-
-## CMake configure output
 
 ```
 -- Building for: Ninja

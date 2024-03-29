@@ -24,10 +24,9 @@ Platforms known to work with MUMPS and CMake include:
 * [Windows](./Readme_Windows.md)
 * MacOS
   * GCC (Homebrew)
-  * Intel oneAPI
 * Linux
   * GCC
-  * Intel oneAPI
+  * Intel [oneAPI](./Readme_oneapi.md)
   * NVIDIA HPC SDK
   * Cray
 
