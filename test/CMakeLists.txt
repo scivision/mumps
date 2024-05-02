@@ -49,8 +49,18 @@ get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
 
 # Windows DLL
-if(WIN32 AND BUILD_SHARED_LIBS)
-  set_property(TEST ${test_names} PROPERTY
-  ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${CMAKE_INSTALL_FULL_BINDIR};PATH=path_list_prepend:${CMAKE_PREFIX_PATH}/bin;PATH=path_list_prepend:${PROJECT_BINARY_DIR}"
-  )
+if(BUILD_SHARED_LIBS AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.22)
+  if(WIN32)
+    set_property(TEST ${test_names} PROPERTY
+    ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${CMAKE_INSTALL_FULL_BINDIR};PATH=path_list_prepend:${CMAKE_PREFIX_PATH}/bin;PATH=path_list_prepend:${PROJECT_BINARY_DIR}"
+    )
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set_property(TEST ${test_names} PROPERTY
+    ENVIRONMENT_MODIFICATION "LIBRARY_PATH=path_list_prepend:${CMAKE_INSTALL_FULL_LIBDIR};LIBRARY_PATH=path_list_prepend:${PROJECT_BINARY_DIR}"
+    )
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set_property(TEST ${test_names} PROPERTY
+    ENVIRONMENT_MODIFICATION "LD_LIBRARY_PATH=path_list_prepend:${CMAKE_INSTALL_FULL_LIBDIR};LD_LIBRARY_PATH=path_list_prepend:${PROJECT_BINARY_DIR}"
+    )
+  endif()
 endif()
