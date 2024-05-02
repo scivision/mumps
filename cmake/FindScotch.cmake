@@ -18,7 +18,7 @@
 #  COMPONENTS:
 #
 #  * ESMUMPS: detect Scotch esmumps interface
-#  * parallel: detect parallel (MPI) Scotch
+#  * PTScotch: detect parallel (MPI) Scotch
 #
 # This module finds headers and scotch library.
 # Results are reported in variables:
@@ -61,7 +61,7 @@ if(ESMUMPS IN_LIST Scotch_FIND_COMPONENTS)
   list(INSERT scotch_names 0 esmumps)
 endif()
 
-if(parallel IN_LIST Scotch_FIND_COMPONENTS)
+if(PTScotch IN_LIST Scotch_FIND_COMPONENTS)
   list(INSERT scotch_names 0 ptscotch ptscotcherr)
   if(ESMUMPS IN_LIST Scotch_FIND_COMPONENTS)
     list(INSERT scotch_names 0 ptesmumps)
@@ -79,10 +79,10 @@ foreach(l IN LISTS scotch_names)
   mark_as_advanced(Scotch_${l}_LIBRARY)
 endforeach()
 
-if(parallel IN_LIST Scotch_FIND_COMPONENTS)
+if(PTScotch IN_LIST Scotch_FIND_COMPONENTS)
   if(Scotch_ptesmumps_LIBRARY AND Scotch_ptscotch_LIBRARY)
     set(Scotch_ESMUMPS_FOUND true)
-    set(Scotch_parallel_FOUND true)
+    set(Scotch_PTScotch_FOUND true)
   endif()
 elseif(Scotch_esmumps_LIBRARY)
   set(Scotch_ESMUMPS_FOUND true)
@@ -95,16 +95,16 @@ HANDLE_COMPONENTS
 )
 
 if(Scotch_FOUND)
-set(Scotch_INCLUDE_DIRS ${Scotch_INCLUDE_DIR})
+  set(Scotch_INCLUDE_DIRS ${Scotch_INCLUDE_DIR})
 
-message(VERBOSE "Scotch libraries: ${Scotch_LIBRARIES}
-Scotch include directories: ${Scotch_INCLUDE_DIRS}")
+  message(VERBOSE "Scotch libraries: ${Scotch_LIBRARIES}
+  Scotch include directories: ${Scotch_INCLUDE_DIRS}")
 
-if(NOT TARGET Scotch::Scotch)
-  add_library(Scotch::Scotch INTERFACE IMPORTED)
-  set_property(TARGET Scotch::Scotch PROPERTY INTERFACE_LINK_LIBRARIES "${Scotch_LIBRARIES}")
-  set_property(TARGET Scotch::Scotch PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${Scotch_INCLUDE_DIR}")
-endif()
+  if(NOT TARGET Scotch::Scotch)
+    add_library(Scotch::Scotch INTERFACE IMPORTED)
+    set_property(TARGET Scotch::Scotch PROPERTY INTERFACE_LINK_LIBRARIES "${Scotch_LIBRARIES}")
+    set_property(TARGET Scotch::Scotch PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${Scotch_INCLUDE_DIR}")
+  endif()
 endif(Scotch_FOUND)
 
 mark_as_advanced(Scotch_INCLUDE_DIR)

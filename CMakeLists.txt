@@ -83,7 +83,7 @@ if(scotch)
 endif()
 
 if(parmetis)
-  find_package(METIS REQUIRED COMPONENTS parallel)
+  find_package(METIS REQUIRED COMPONENTS ParMETIS)
   list(APPEND ORDERING_DEFS parmetis metis)
   list(APPEND ORDERING_LIBS METIS::METIS)
 elseif(metis)
