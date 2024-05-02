@@ -16,6 +16,19 @@ option(BUILD_COMPLEX "Build single precision complex")
 option(BUILD_COMPLEX16 "Build double precision complex")
 ```
 
+## Integer size
+
+The default integer size is 32-bit.
+64-bit integers can be enabled with:
+
+```cmake
+cmake -Dintsize64=on
+```
+
+HOWEVER, this requires all libraries INCLUDING MPI to be compiled with 64-bit integers.
+Otherwise, the program will crash at runtime with MPI errors.
+For example, oneAPI / oneMPI work, but default system installs of OpenMPI / MPICH will generally fail--the user will need to specially compile an MPI library with 64-bit integers.
+
 ## MPI
 
 For systems where MPI, BLACS and SCALAPACK are not available, or where non-parallel execution is suitable, the default parallel can be disabled at CMake configure time by option:

@@ -54,7 +54,7 @@ elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
     add_compile_options(-mtune=native)
   endif()
 
-  if(intsize64 AND DEFINED ENV{I_MPI_ROOT})
+  if(intsize64)
     add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:-fdefault-integer-8>)
   endif()
 endif()

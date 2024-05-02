@@ -27,20 +27,16 @@ jobs:
       matrix:
         scotch: [false]
         metis: [false]
-        int64: [true, false]
         lapack_vendor: [""]
         img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin},
                {os: macos-latest, cmd: brew install ninja open-mpi}
         ]
         include:
           - scotch: true
-            int64: false
             img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin}
           - metis: true
-            int64: false
             img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin}
           - lapack_vendor: "OpenBLAS"
-            int64: false
             img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin libopenblas-dev}
 
     runs-on: ${{ matrix.img.os }}
@@ -63,7 +59,7 @@ jobs:
       if: ${{ matrix.scotch }}
       run: cmake -Dprefix:PATH=${{ runner.temp }} -P scripts/build_scotch.cmake
 
-    - name: configure int64=${{ matrix.int64 }}
+    - name: configure
       run: >-
         cmake
         --preset default
@@ -72,7 +68,6 @@ jobs:
         -Dscotch:BOOL=${{ matrix.scotch }}
         -Dmetis:BOOL=${{ matrix.metis }}
         -DLAPACK_VENDOR=${{ matrix.lapack_vendor }}
-        -Dintsize64:BOOL=${{ matrix.int64 }}
 
     - name: build, test release
       run: cmake --workflow --preset default
