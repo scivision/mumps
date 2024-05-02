@@ -13,23 +13,5 @@
   "scotch": {
     "git": "https://gitlab.inria.fr/scotch/scotch.git",
     "tag": "v7.0.4"
-  },
-
-  "mumps_src": {
-    "4.8.4": "https://graal.ens-lyon.fr/MUMPS/MUMPS_4.8.4.tar.gz",
-    "4.9.2": "https://graal.ens-lyon.fr/MUMPS/MUMPS_4.9.2.tar.gz",
-    "4.10.0": "https://graal.ens-lyon.fr/MUMPS/MUMPS_4.10.0.tar.gz",
-    "5.0.2": "https://graal.ens-lyon.fr/MUMPS/MUMPS_5.0.2.tar.gz",
-    "5.1.2": "https://graal.ens-lyon.fr/MUMPS/MUMPS_5.1.2.tar.gz",
-    "5.2.1": "https://graal.ens-lyon.fr/MUMPS/MUMPS_5.2.1.tar.gz",
-    "5.3.1": "https://graal.ens-lyon.fr/MUMPS/MUMPS_5.3.1.tar.gz",
-    "5.3.5": "https://graal.ens-lyon.fr/MUMPS/MUMPS_5.3.5.tar.gz",
-    "5.4.1": "https://graal.ens-lyon.fr/MUMPS/MUMPS_5.4.1.tar.gz",
-    "5.5.0": "https://graal.ens-lyon.fr/MUMPS/MUMPS_5.5.0.tar.gz",
-    "5.5.1": "https://graal.ens-lyon.fr/MUMPS/MUMPS_5.5.1.tar.gz",
-    "5.6.0": "https://mumps-solver.org/MUMPS_5.6.0.tar.gz",
-    "5.6.1": "https://mumps-solver.org/MUMPS_5.6.1.tar.gz",
-    "5.6.2": "https://mumps-solver.org/MUMPS_5.6.2.tar.gz",
-    "5.7.0": "https://mumps-solver.org/MUMPS_5.7.0.tar.gz"
   }
 }

@@ -107,7 +107,23 @@ message(STATUS "MUMPS ORDERING_DEFS: ${ORDERING_DEFS}")
 message(STATUS "MUMPS ORDERING_LIBS: ${ORDERING_LIBS}")
 
 # --- download MUMPS source
-include(cmake/mumps_src.cmake)
+include(FetchContent)
+
+set(url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
+
+set(FETCHCONTENT_QUIET no)
+
+FetchContent_Declare(${PROJECT_NAME}
+SOURCE_DIR ${PROJECT_SOURCE_DIR}/mumps/${MUMPS_UPSTREAM_VERSION}
+URL ${url}
+TLS_VERIFY ${CMAKE_TLS_VERIFY}
+)
+
+FetchContent_GetProperties(${PROJECT_NAME})
+if(NOT ${PROJECT_NAME}_POPULATED)
+  FetchContent_Populate(${PROJECT_NAME})
+endif()
+
 message(VERBOSE "MUMPS ${MUMPS_UPSTREAM_VERSION} source directory: ${mumps_SOURCE_DIR}")
 
 # --- MUMPS build
