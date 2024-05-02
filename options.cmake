@@ -15,7 +15,7 @@ if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.7 AND NOT scalapack)
   message(FATAL_ERROR "MUMPS version < 5.7 requires scalapack=on")
 endif()
 
-option(scotch "use Scotch orderings ")
+option(scotch "use Scotch orderings")
 
 option(parmetis "use parallel METIS ordering")
 option(metis "use sequential METIS ordering")
