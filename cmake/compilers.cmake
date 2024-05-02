@@ -55,11 +55,11 @@ elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   endif()
 
   if(intsize64)
+    # ALL libraries must be compiled with -fdefault-integer-8, including MPI or runtime fails
+    # See MUMPS 5.7.0 User manual about error -69
     add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:-fdefault-integer-8>)
   endif()
 endif()
-
-# Per MUMPS 5.4 manual section 9, not necessary to set default int64. Doing so causes problems at runtime.
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
