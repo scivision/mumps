@@ -122,7 +122,10 @@ target_include_directories(mumps_common PUBLIC
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_definitions(mumps_common PRIVATE ${ORDERING_DEFS})
+target_compile_definitions(mumps_common PRIVATE
+${ORDERING_DEFS}
+$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${scalapack}>>>:NOSCALAPACK>
+)
 set(BLAS_HAVE_GEMMT FALSE)
 if(BLAS_HAVE_sGEMMT OR BLAS_HAVE_dGEMMT OR BLAS_HAVE_cGEMMT OR BLAS_HAVE_zGEMMT)
   target_compile_definitions(mumps_common PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>)
@@ -216,6 +219,7 @@ target_compile_definitions(${a}mumps PRIVATE
 MUMPS_ARITH=MUMPS_ARITH_${a}
 ${ORDERING_DEFS}
 $<$<AND:$<BOOL:${BLAS_HAVE_${a}GEMMT}>,$<COMPILE_LANGUAGE:Fortran>>:GEMMT_AVAILABLE>
+$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${scalapack}>>>:NOSCALAPACK>
 )
 target_include_directories(${a}mumps PUBLIC
 "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${NUMERIC_INC};${CMAKE_CURRENT_BINARY_DIR}/include>"

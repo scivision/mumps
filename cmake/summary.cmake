@@ -3,6 +3,7 @@ add_feature_info(Parallel parallel "parallel MUMPS (using MPI and Scalapack)")
 add_feature_info(64-bit-integer intsize64 "use 64-bit integers in C and Fortran")
 add_feature_info(GEMMT BLAS_HAVE_GEMMT "use GEMMT for symmetric matrix-matrix multiplication")
 
+add_feature_info(ScalaPACK scalapack "Scalapack linear algebra library https://www.netlib.org/scalapack/")
 add_feature_info(METIS metis "METIS graph partitioning https://github.com/KarypisLab/METIS")
 add_feature_info(parMETIS parmetis "parMETIS parallel graph partitioning")
 

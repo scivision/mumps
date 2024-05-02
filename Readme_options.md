@@ -29,6 +29,15 @@ HOWEVER, this requires all libraries INCLUDING MPI to be compiled with 64-bit in
 Otherwise, the program will crash at runtime with MPI errors.
 For example, oneAPI / oneMPI work, but default system installs of OpenMPI / MPICH will generally fail--the user will need to specially compile an MPI library with 64-bit integers.
 
+## ScalaPACK
+
+ScalaPACK is only used for `parallel=on`.
+ScalaPACK can be omitted with MUMPS &ge; 5.7.0 by option:
+
+```sh
+cmake -Dscalapack=off
+```
+
 ## MPI
 
 For systems where MPI, BLACS and SCALAPACK are not available, or where non-parallel execution is suitable, the default parallel can be disabled at CMake configure time by option:

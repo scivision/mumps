@@ -10,6 +10,11 @@ option(parallel "parallel (use MPI)" ON)
 
 option(intsize64 "use 64-bit integers in C and Fortran")
 
+option(scalapack "Use ScalaPACK to speed up the solution of linear systems" ON)
+if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.7 AND NOT scalapack)
+  message(FATAL_ERROR "MUMPS version < 5.7 requires scalapack=on")
+endif()
+
 option(scotch "use Scotch orderings ")
 
 option(parmetis "use parallel METIS ordering")

@@ -43,13 +43,16 @@ find_package(Threads)
 
 if(parallel)
   find_package(MPI COMPONENTS C Fortran REQUIRED)
-  if(NOT DEFINED ENV{MKLROOT})
+  if(NOT DEFINED ENV{MKLROOT} OR NOT scalapack)
     # oneMKL MKLConfig.cmake must be invoked only once
     include(cmake/lapack.cmake)
   endif()
-  include(cmake/scalapack.cmake)
+  set(NUMERIC_LIBS LAPACK::LAPACK)
 
-  set(NUMERIC_LIBS SCALAPACK::SCALAPACK LAPACK::LAPACK)
+  if(scalapack)
+    include(cmake/scalapack.cmake)
+    list(PREPEND NUMERIC_LIBS SCALAPACK::SCALAPACK)
+  endif()
 
   # avoid MPICH -fallow flag leakage
   set(NUMERIC_INC ${MPI_Fortran_INCLUDE_DIRS})
