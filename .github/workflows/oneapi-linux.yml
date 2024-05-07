@@ -71,7 +71,7 @@ jobs:
       run: cmake --build --preset default
 
     - name: CMake Test
-      if: false
+      if: ${{ matrix.int64 == 'false' }}
       run: ctest --preset default
 
     - name: install package
@@ -92,7 +92,7 @@ jobs:
       run: cmake --build example/build
 
     - name: test example
-      if: false
+      if: ${{ matrix.int64 == 'false' }}
       run: ctest --test-dir example/build -V
 
 
