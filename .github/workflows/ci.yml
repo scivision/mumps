@@ -2,8 +2,9 @@ name: ci
 
 env:
   HOMEBREW_NO_INSTALL_CLEANUP: 1
-  CMAKE_GENERATOR: Ninja
   CTEST_NO_TESTS_ACTION: error
+  CMAKE_BUILD_PARALLEL_LEVEL: 4
+  CTEST_PARALLEL_LEVEL: 0
 
 on:
   push:
@@ -28,16 +29,16 @@ jobs:
         scotch: [false]
         metis: [false]
         lapack_vendor: [""]
-        img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin},
-               {os: macos-latest, cmd: brew install ninja open-mpi}
+        img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin},
+               {os: macos-latest, cmd: brew install open-mpi}
         ]
         include:
           - scotch: true
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin}
+            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin}
           - metis: true
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin}
+            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin}
           - lapack_vendor: "OpenBLAS"
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin libopenblas-dev}
+            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin libopenblas-dev}
 
     runs-on: ${{ matrix.img.os }}
 
@@ -53,18 +54,16 @@ jobs:
 
     - name: Build METIS
       if: ${{ matrix.metis }}
-      run: cmake -Dprefix:PATH=${{ runner.temp }} -P scripts/build_metis.cmake
+      run: cmake -P scripts/build_metis.cmake
 
     - name: Build scotch
       if: ${{ matrix.scotch }}
-      run: cmake -Dprefix:PATH=${{ runner.temp }} -P scripts/build_scotch.cmake
+      run: cmake -P scripts/build_scotch.cmake
 
     - name: configure
       run: >-
         cmake
         --preset default
-        -DCMAKE_PREFIX_PATH=${{ runner.temp }}
-        -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}
         -Dscotch:BOOL=${{ matrix.scotch }}
         -Dmetis:BOOL=${{ matrix.metis }}
         -DLAPACK_VENDOR=${{ matrix.lapack_vendor }}
@@ -76,7 +75,7 @@ jobs:
       run: cmake --install build
 
     - name: configure example
-      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+      run: cmake -S example -B example/build
 
     - name: build example
       run: cmake --build example/build
@@ -87,7 +86,7 @@ jobs:
     - name: Scotch example
       if: ${{ matrix.scotch }}
       run: |
-        cmake -S example/scotch -Bexample/scotch/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+        cmake -S example/scotch -Bexample/scotch/build
         cmake --build example/scotch/build
         ctest --test-dir example/scotch/build
 
@@ -99,7 +98,7 @@ jobs:
     - name: METIS example
       if: ${{ matrix.metis }}
       run: |
-        cmake -S example/metis -Bexample/metis/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+        cmake -S example/metis -Bexample/metis/build
         cmake --build example/metis/build
         ctest --test-dir example/metis/build
 
