@@ -3,12 +3,6 @@
 We require
 [oneMKL >= 2021.3](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/cmake-config-for-onemkl.html).
 
-We recommend using Ninja generator with oneAPI (and any other) compiler:
-
-```sh
-cmake -G Ninja -B build
-```
-
 Do not try to build LAPACK and ScaLAPACK with oneAPI, the build will fail--use the oneMKL libraries that provide LAPACK and SCALAPACK.
 
 ## Linux
@@ -23,7 +17,7 @@ If the oneAPI compiler is not found by CMake, try hinting its location like:
 export CC=$CMPLR_ROOT/bin/icx
 export FC=$CMPLR_ROOT/bin/ifx
 
-cmake -G Ninja -B build
+cmake -B build
 ```
 
 ## Windows

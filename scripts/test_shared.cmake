@@ -5,12 +5,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/tempdir.cmake)
 if(NOT bindir)
   get_temp_dir(bindir)
 endif()
-if(NOT prefix)
-  get_temp_dir(prefix)
-endif()
+
+get_temp_dir(prefix)
 
 message(STATUS "binary_dir: ${bindir}
-prefix: ${prefix}")
+temp install dir: ${prefix}")
 
 execute_process(
 COMMAND ${CMAKE_COMMAND}

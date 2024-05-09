@@ -11,6 +11,8 @@ env:
   FC: ifx
   CMAKE_BUILD_TYPE: Release
   CMAKE_BUILD_PARALLEL_LEVEL: 4
+  CMAKE_INSTALL_PREFIX: ~/libs
+  CMAKE_PREFIX_PATH: ~/libs
 
 on:
   push:
@@ -62,7 +64,6 @@ jobs:
       run: >-
         cmake --preset default
         -Dintsize64=${{ matrix.int64 }}
-        -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}
 
     - name: print config log CMake
       run: cat build/CMakeFiles/CMakeConfigureLog.yaml
@@ -82,7 +83,6 @@ jobs:
         cmake
         -S example
         -B example/build
-        -DCMAKE_PREFIX_PATH=${{ runner.temp }}
 
     - name: print config log
       if: ${{ failure() }}

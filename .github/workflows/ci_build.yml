@@ -1,8 +1,11 @@
 name: ci_build
 
 env:
-  CMAKE_GENERATOR: Ninja
   CTEST_NO_TESTS_ACTION: error
+  CMAKE_BUILD_PARALLEL_LEVEL: 4
+  CTEST_PARALLEL_LEVEL: 0
+  CMAKE_INSTALL_PREFIX: ~/libs
+  CMAKE_PREFIX_PATH: ~/libs
 
 on:
   push:
@@ -21,10 +24,10 @@ jobs:
     - name: Install prereqs
       run: |
         sudo apt update
-        sudo apt install --no-install-recommends ninja-build libopenmpi-dev openmpi-bin
+        sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin
 
     - name: configure
-      run: cmake --preset default --install-prefix=${{ runner.temp }}
+      run: cmake --preset default
 
     - name: build, test release
       run: cmake --workflow --preset default
@@ -33,7 +36,7 @@ jobs:
 
 # builds fine on local machine
     # - name: configure example
-    #   run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }} -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+    #   run: cmake -S example -B example/build -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
     # - name: build example
     #   run: cmake --build example/build
     # - name: test example
