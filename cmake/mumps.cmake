@@ -30,111 +30,190 @@ else()
 endif()
 
 # -- Mumps COMMON
-set(COMM_SRC ${_s}mumps_ooc_common.F ${_s}mumps_static_mapping.F)
+set(COMM_SRC_FORTRAN ${_s}mumps_ooc_common.F ${_s}mumps_static_mapping.F)
+set(COMM_SRC_C)
 if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.0)
-  list(APPEND COMM_SRC ${_s}mumps_part9.F)
+  list(APPEND COMM_SRC_FORTRAN ${_s}mumps_part9.F)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.0)
   foreach(i IN ITEMS ana_omp_m.F double_linked_list.F fac_asm_build_sort_index_ELT_m.F fac_asm_build_sort_index_m.F fac_descband_data_m.F fac_future_niv2_mod.F fac_ibct_data_m.F fac_maprow_data_m.F front_data_mgt_m.F mumps_comm_ibcast.F mumps_l0_omp_m.F omp_tps_common_m.F)
-    list(APPEND COMM_SRC ${_s}${i})
+    list(APPEND COMM_SRC_FORTRAN ${_s}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.1)
   foreach(i IN ITEMS ana_orderings_wrappers_m.F lr_common.F mumps_memory_mod.F)
-    list(APPEND COMM_SRC ${_s}${i})
+    list(APPEND COMM_SRC_FORTRAN ${_s}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
-  list(APPEND COMM_SRC  ${_s}mumps_mpitoomp_m.F)
+  list(APPEND COMM_SRC_FORTRAN ${_s}mumps_mpitoomp_m.F)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.3)
-  list(APPEND COMM_SRC ${_s}ana_blk_m.F)
+  list(APPEND COMM_SRC_FORTRAN ${_s}ana_blk_m.F)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.6)
-  list(APPEND COMM_SRC ${_s}mumps_pivnul_mod.F)
+  list(APPEND COMM_SRC_FORTRAN ${_s}mumps_pivnul_mod.F)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.7)
-  list(APPEND COMM_SRC ${_s}sol_ds_common_m.F)
+  list(APPEND COMM_SRC_FORTRAN ${_s}sol_ds_common_m.F)
 endif()
 
-set(COMM_OTHER_SRC)
+set(COMM_OTHER_SRC_C)
+set(COMM_OTHER_SRC_FORTRAN)
 foreach(i IN ITEMS mumps_common.c mumps_io_basic.c mumps_io_thread.c mumps_io_err.c mumps_io.c)
-  list(APPEND COMM_OTHER_SRC ${_s}${i})
+  list(APPEND COMM_OTHER_SRC_C ${_s}${i})
 endforeach()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 4.9 AND MUMPS_UPSTREAM_VERSION VERSION_LESS 5.6)
-  list(APPEND COMM_OTHER_SRC ${_s}mumps_size.c)
+  list(APPEND COMM_OTHER_SRC_C ${_s}mumps_size.c)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 4.9 AND MUMPS_UPSTREAM_VERSION VERSION_LESS 5.1)
-  list(APPEND COMM_OTHER_SRC ${_s}tools_common_mod.F)
+  list(APPEND COMM_OTHER_SRC_FORTRAN ${_s}tools_common_mod.F)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 4.10 AND MUMPS_UPSTREAM_VERSION VERSION_LESS 5.2)
-  list(APPEND COMM_OTHER_SRC ${_s}mumps_sol_es.F)
+  list(APPEND COMM_OTHER_SRC_FORTRAN ${_s}mumps_sol_es.F)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.6)
-  list(APPEND COMM_SRC ${_s}mumps_addr.c)
+  list(APPEND COMM_SRC_C ${_s}mumps_addr.c)
 endif()
 
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.0)
-  foreach(i IN ITEMS ana_orderings.F ana_set_ordering.F ana_AMDMF.F bcast_errors.F estim_flops.F mumps_type2_blocking.F mumps_version.F mumps_print_defined.F mumps_numa.c tools_common.F)
-    list(APPEND COMM_OTHER_SRC ${_s}${i})
+  foreach(i IN ITEMS ana_orderings.F ana_set_ordering.F ana_AMDMF.F bcast_errors.F estim_flops.F mumps_type2_blocking.F mumps_version.F mumps_print_defined.F tools_common.F)
+    list(APPEND COMM_OTHER_SRC_FORTRAN ${_s}${i})
   endforeach()
+  list(APPEND COMM_OTHER_SRC_C ${_s}mumps_numa.c)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.1)
-  list(APPEND COMM_OTHER_SRC ${_s}mumps_orderings.c)
+  list(APPEND COMM_OTHER_SRC_C ${_s}mumps_orderings.c)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.1)
   foreach(i IN ITEMS mumps_pord.c mumps_thread.c mumps_save_restore_C.c)
-    list(APPEND COMM_OTHER_SRC ${_s}${i})
+    list(APPEND COMM_OTHER_SRC_C ${_s}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
-  foreach(i IN ITEMS mumps_config_file_C.c mumps_thread_affinity.c sol_common.F)
-    list(APPEND COMM_OTHER_SRC ${_s}${i})
+  foreach(i IN ITEMS mumps_config_file_C.c mumps_thread_affinity.c)
+    list(APPEND COMM_OTHER_SRC_C ${_s}${i})
   endforeach()
+  list(APPEND COMM_OTHER_SRC_FORTRAN ${_s}sol_common.F)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.3)
-  list(APPEND COMM_OTHER_SRC ${_s}ana_blk.F)
+  list(APPEND COMM_OTHER_SRC_FORTRAN ${_s}ana_blk.F)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.3)
-  list(APPEND COMM_OTHER_SRC ${_s}mumps_register_thread.c)
+  list(APPEND COMM_OTHER_SRC_C ${_s}mumps_register_thread.c)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.0 AND MUMPS_UPSTREAM_VERSION VERSION_LESS 5.7)
-  list(APPEND COMM_OTHER_SRC ${_s}mumps_type_size.F)
+  list(APPEND COMM_OTHER_SRC_FORTRAN ${_s}mumps_type_size.F)
 endif()
 
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.1)
   if(scotch)
     foreach(i IN ITEMS mumps_scotch.c mumps_scotch64.c mumps_scotch_int.c)
-      list(APPEND COMM_OTHER_SRC ${_s}${i})
+      list(APPEND COMM_OTHER_SRC_C ${_s}${i})
     endforeach()
   endif()
   if(metis OR parmetis)
     foreach(i IN ITEMS mumps_metis.c mumps_metis64.c mumps_metis_int.c)
-      list(APPEND COMM_OTHER_SRC ${_s}${i})
+      list(APPEND COMM_OTHER_SRC_C ${_s}${i})
     endforeach()
   endif()
 endif()
 
-add_library(mumps_common ${COMM_SRC} ${COMM_OTHER_SRC})
-target_link_libraries(mumps_common PUBLIC ${ORDERING_LIBS} ${NUMERIC_LIBS})
-target_include_directories(mumps_common PUBLIC
+set(Fortran_MODULE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include")
+if (CMAKE_GENERATOR MATCHES "Visual Studio")
+  foreach(_config ${CMAKE_CONFIGURATION_TYPES})
+    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/${_config}")
+  endforeach()
+  set(Fortran_MODULE_DIRECTORY_FINAL "${Fortran_MODULE_DIRECTORY}/$<CONFIG>")
+else()
+  set(Fortran_MODULE_DIRECTORY_FINAL "${Fortran_MODULE_DIRECTORY}")
+endif()
+
+######################################################################
+# MUMPS COMMON C
+######################################################################
+
+add_library(mumps_common_C OBJECT ${COMM_SRC_C} ${COMM_OTHER_SRC_C})
+target_link_libraries(mumps_common_C PUBLIC ${ORDERING_LIBS} ${NUMERIC_LIBS})
+target_include_directories(mumps_common_C PUBLIC
 "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_definitions(mumps_common PRIVATE
+target_compile_definitions(mumps_common_C PRIVATE
+${ORDERING_DEFS}
+# $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${scalapack}>>>:NOSCALAPACK>
+)
+# set(BLAS_HAVE_GEMMT FALSE)
+# if(BLAS_HAVE_sGEMMT OR BLAS_HAVE_dGEMMT OR BLAS_HAVE_cGEMMT OR BLAS_HAVE_zGEMMT)
+#   target_compile_definitions(mumps_common_C PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>)
+#   set(BLAS_HAVE_GEMMT TRUE)
+# endif()
+# set_property(TARGET mumps_common_C PROPERTY EXPORT_NAME COMMON)
+# set_property(TARGET mumps_common_C PROPERTY VERSION ${MUMPS_VERSION})
+
+
+# MUMPS doesn't yet publicly use Fortran .mod files, but does need them somewhere
+# set_property(TARGET mumps_common_C PROPERTY Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
+
+# install(TARGETS mumps_common_C EXPORT ${PROJECT_NAME}-targets)
+
+######################################################################
+# MUMPS COMMON FORTRAN
+######################################################################
+
+add_library(mumps_common_FORTRAN ${COMM_SRC_FORTRAN} ${COMM_OTHER_SRC_FORTRAN})
+target_link_libraries(mumps_common_FORTRAN PUBLIC ${ORDERING_LIBS} ${NUMERIC_LIBS})
+target_include_directories(mumps_common_FORTRAN PUBLIC
+"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
+$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+target_compile_definitions(mumps_common_FORTRAN PRIVATE
 ${ORDERING_DEFS}
 $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${scalapack}>>>:NOSCALAPACK>
 )
 set(BLAS_HAVE_GEMMT FALSE)
 if(BLAS_HAVE_sGEMMT OR BLAS_HAVE_dGEMMT OR BLAS_HAVE_cGEMMT OR BLAS_HAVE_zGEMMT)
-  target_compile_definitions(mumps_common PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>)
+  target_compile_definitions(mumps_common_FORTRAN PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>)
   set(BLAS_HAVE_GEMMT TRUE)
 endif()
+# set_property(TARGET mumps_common_FORTRAN PROPERTY EXPORT_NAME COMMON)
+# set_property(TARGET mumps_common_FORTRAN PROPERTY VERSION ${MUMPS_VERSION})
+
+# MUMPS doesn't yet publicly use Fortran .mod files, but does need them somewhere
+set_property(TARGET mumps_common_FORTRAN PROPERTY Fortran_MODULE_DIRECTORY ${Fortran_MODULE_DIRECTORY})
+
+# install(TARGETS mumps_common_FORTRAN EXPORT ${PROJECT_NAME}-targets)
+
+######################################################################
+# MUMPS COMMON
+######################################################################
+
+add_library(mumps_common $<TARGET_OBJECTS:mumps_common_C> $<TARGET_OBJECTS:mumps_common_FORTRAN>)
+target_link_libraries(mumps_common PUBLIC ${ORDERING_LIBS} ${NUMERIC_LIBS}) # required
+# target_include_directories(mumps_common PUBLIC
+# "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
+# $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+# )
+
+# target_compile_definitions(mumps_common PRIVATE
+# ${ORDERING_DEFS}
+# $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${scalapack}>>>:NOSCALAPACK>
+# )
+# set(BLAS_HAVE_GEMMT FALSE)
+# if(BLAS_HAVE_sGEMMT OR BLAS_HAVE_dGEMMT OR BLAS_HAVE_cGEMMT OR BLAS_HAVE_zGEMMT)
+#   target_compile_definitions(mumps_common PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>)
+#   set(BLAS_HAVE_GEMMT TRUE)
+# endif()
 set_property(TARGET mumps_common PROPERTY EXPORT_NAME COMMON)
 set_property(TARGET mumps_common PROPERTY VERSION ${MUMPS_VERSION})
+
+add_dependencies(mumps_common mumps_common_C mumps_common_FORTRAN)
+
+
 # MUMPS doesn't yet publicly use Fortran .mod files, but does need them somewhere
-set_property(TARGET mumps_common PROPERTY Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
+set_property(TARGET mumps_common PROPERTY Fortran_MODULE_DIRECTORY ${Fortran_MODULE_DIRECTORY})
 
 install(TARGETS mumps_common EXPORT ${PROJECT_NAME}-targets)
 
@@ -144,35 +223,37 @@ add_library(MUMPS INTERFACE)
 
 function(precision_source a)
 
-set(SRC)
+set(SRC_C)
+set(SRC_FORTRAN)
 foreach(i IN ITEMS mumps_comm_buffer.F mumps_load.F mumps_ooc_buffer.F mumps_ooc.F mumps_struc_def.F)
-  list(APPEND SRC ${_s}${a}${i})
+  list(APPEND SRC_FORTRAN ${_s}${a}${i})
 endforeach()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.0)
   foreach(i IN ITEMS ana_aux.F ana_aux_par.F ana_lr.F fac_asm_master_ELT_m.F fac_asm_master_m.F fac_front_aux.F fac_front_LU_type1.F fac_front_LU_type2.F fac_front_LDLT_type1.F fac_front_LDLT_type2.F fac_front_type2_aux.F fac_lr.F fac_omp_m.F fac_par_m.F lr_core.F mumps_lr_data_m.F omp_tps_m.F static_ptr_m.F)
-    list(APPEND SRC ${_s}${a}${i})
+    list(APPEND SRC_FORTRAN ${_s}${a}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.1)
   foreach(i IN ITEMS lr_stats.F lr_type.F mumps_save_restore.F mumps_save_restore_files.F)
-    list(APPEND SRC ${_s}${a}${i})
+    list(APPEND SRC_FORTRAN ${_s}${a}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
   foreach(i IN ITEMS fac_mem_dynamic.F mumps_config_file.F mumps_sol_es.F sol_lr.F)
-    list(APPEND SRC ${_s}${a}${i})
+    list(APPEND SRC_FORTRAN ${_s}${a}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.3)
   foreach(i IN ITEMS fac_sispointers_m.F fac_sol_l0omp_m.F sol_omp_m.F)
-    list(APPEND SRC ${_s}${a}${i})
+    list(APPEND SRC_FORTRAN ${_s}${a}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.6)
-  list(APPEND SRC ${_s}${a}mumps_mpi3_mod.F)
+  list(APPEND SRC_FORTRAN ${_s}${a}mumps_mpi3_mod.F)
 endif()
 
-set(SRC_OTHER)
+set(SRC_OTHER_C)
+set(SRC_OTHER_FORTRAN)
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.0)
   foreach(i IN ITEMS
     ini_driver.F ana_driver.F fac_driver.F
@@ -194,38 +275,84 @@ if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.0)
     sol_aux.F sol_bwd_aux.F sol_bwd.F sol_c.F sol_fwd_aux.F sol_fwd.F sol_matvec.F
     sol_root_parallel.F tools.F type3_root.F
   )
-    list(APPEND SRC_OTHER ${_s}${a}${i})
+    list(APPEND SRC_OTHER_FORTRAN ${_s}${a}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
-  list(APPEND SRC_OTHER ${_s}${a}sol_distrhs.F ${_s}${a}mumps_gpu.c)
+  list(APPEND SRC_OTHER_FORTRAN ${_s}${a}sol_distrhs.F)
+  list(APPEND SRC_OTHER_C ${_s}${a}mumps_gpu.c)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.7)
-  list(APPEND SRC_OTHER ${_s}${a}sol_distsol.F ${_s}${a}fac_diag.F ${_s}${a}fac_dist_arrowheads_omp.F)
+  list(APPEND SRC_OTHER_FORTRAN ${_s}${a}sol_distsol.F ${_s}${a}fac_diag.F ${_s}${a}fac_dist_arrowheads_omp.F)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.0)
   foreach(i IN ITEMS mumps_part1.F mumps_part2.F mumps_part3.F mumps_part4.F mumps_part5.F mumps_part6.F mumps_part7.F mumps_part8.F)
-    list(APPEND SRC_OTHER ${_s}${a}${i})
+    list(APPEND SRC_OTHER_FORTRAN ${_s}${a}${i})
   endforeach()
 endif()
 
 set(CINT_SRC ${_s}mumps_c.c)
 
-add_library(${a}mumps ${CINT_SRC} ${SRC} ${SRC_OTHER})
+######################################################################
+# ${a}mumps C
+######################################################################
+
+add_library(${a}mumps_C OBJECT ${CINT_SRC} ${SRC_C} ${SRC_OTHER_C})
 if(_memfree LESS 1000)  # < 1GB RAM free
-  set_property(TARGET ${a}mumps PROPERTY JOB_POOL_COMPILE Njobs)
+  set_property(TARGET mumps_C PROPERTY JOB_POOL_COMPILE Njobs)
 endif()
-target_compile_definitions(${a}mumps PRIVATE
+target_compile_definitions(${a}mumps_C PRIVATE
+MUMPS_ARITH=MUMPS_ARITH_${a}
+${ORDERING_DEFS}
+# $<$<AND:$<BOOL:${BLAS_HAVE_${a}GEMMT}>,$<COMPILE_LANGUAGE:Fortran>>:GEMMT_AVAILABLE>
+# $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${scalapack}>>>:NOSCALAPACK>
+)
+target_include_directories(${a}mumps_C PUBLIC
+"$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${NUMERIC_INC};${Fortran_MODULE_DIRECTORY_FINAL}>"
+$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+add_dependencies(${a}mumps_C mumps_common)
+
+######################################################################
+# ${a}mumps FORTRAN
+######################################################################
+
+add_library(${a}mumps_FORTRAN OBJECT ${SRC_FORTRAN} ${SRC_OTHER_FORTRAN})
+if(_memfree LESS 1000)  # < 1GB RAM free
+  set_property(TARGET ${a}mumps_FORTRAN PROPERTY JOB_POOL_COMPILE Njobs)
+endif()
+target_compile_definitions(${a}mumps_FORTRAN PRIVATE
 MUMPS_ARITH=MUMPS_ARITH_${a}
 ${ORDERING_DEFS}
 $<$<AND:$<BOOL:${BLAS_HAVE_${a}GEMMT}>,$<COMPILE_LANGUAGE:Fortran>>:GEMMT_AVAILABLE>
 $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${scalapack}>>>:NOSCALAPACK>
 )
+target_include_directories(${a}mumps_FORTRAN PUBLIC
+"$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${NUMERIC_INC};${Fortran_MODULE_DIRECTORY_FINAL}>"
+$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+add_dependencies(${a}mumps_FORTRAN mumps_common)
+
+######################################################################
+# ${a}mumps
+######################################################################
+
+add_library(${a}mumps $<TARGET_OBJECTS:${a}mumps_C> $<TARGET_OBJECTS:${a}mumps_FORTRAN>)
+if(_memfree LESS 1000)  # < 1GB RAM free
+  set_property(TARGET ${a}mumps PROPERTY JOB_POOL_COMPILE Njobs)
+endif()
+# target_compile_definitions(${a}mumps PRIVATE
+# MUMPS_ARITH=MUMPS_ARITH_${a}
+# ${ORDERING_DEFS}
+# $<$<AND:$<BOOL:${BLAS_HAVE_${a}GEMMT}>,$<COMPILE_LANGUAGE:Fortran>>:GEMMT_AVAILABLE>
+# $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${scalapack}>>>:NOSCALAPACK>
+# )
 target_include_directories(${a}mumps PUBLIC
-"$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${NUMERIC_INC};${CMAKE_CURRENT_BINARY_DIR}/include>"
+"$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${NUMERIC_INC};${Fortran_MODULE_DIRECTORY_FINAL}>"
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(${a}mumps PUBLIC mumps_common)
+add_dependencies(${a}mumps ${a}mumps_C ${a}mumps_FORTRAN mumps_common)
 
 string(TOUPPER ${a} aup)
 

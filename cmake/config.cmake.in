@@ -15,14 +15,12 @@ set(MUMPS_d_FOUND @BUILD_DOUBLE@)
 set(MUMPS_c_FOUND @BUILD_COMPLEX@)
 set(MUMPS_z_FOUND @BUILD_COMPLEX16@)
 
-if(NOT DEFINED ENV{MKLROOT})
-  find_dependency(LAPACK)
-endif()
 
 if(MUMPS_parallel)
   find_dependency(MPI COMPONENTS C Fortran)
   find_dependency(SCALAPACK)
 else()
+  find_dependency(LAPACK)
   set(MUMPS_mpiseq_FOUND true)
 endif()
 

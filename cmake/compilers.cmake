@@ -23,8 +23,10 @@ if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
   endif()
 
   add_compile_options($<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/Qopenmp,-fiopenmp>>)
- elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang|GNU")
+elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang|GNU")
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration;-fno-strict-aliasing>)
+elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
+  add_compile_options($<$<COMPILE_LANGUAGE:C>:/openmp>)
 endif()
 
 
@@ -35,10 +37,10 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
   )
 
   if(NOT CMAKE_CROSSCOMPILING AND NOT CRAY)
-    add_compile_options($<$<COMPILE_LANGUAGE:C>:$<IF:$<BOOL:${WIN32}>,/QxHost,-xHost>>)
+    add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:$<IF:$<BOOL:${WIN32}>,/QxHost,-xHost>>)
   endif()
 
-  add_compile_options($<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/Qopenmp,-fiopenmp>>)
+  add_compile_options($<$<COMPILE_LANG_AND_ID:Fortran,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/Qopenmp,-fiopenmp>>)
 
   if(intsize64)
     add_compile_definitions($<$<COMPILE_LANGUAGE:Fortran>:WORKAROUNDINTELILP64MPI2INTEGER>)
