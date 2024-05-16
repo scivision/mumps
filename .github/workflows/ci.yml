@@ -7,6 +7,7 @@ env:
   CTEST_PARALLEL_LEVEL: 0
   CMAKE_INSTALL_PREFIX: ~/libs
   CMAKE_PREFIX_PATH: ~/libs
+  CMAKE_GENERATOR: Ninja
 
 on:
   push:
@@ -51,11 +52,11 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt update
-        sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-openmpi-dev
+        sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-openmpi-dev ninja-build
 
     - name: Install prereqs (macOS)
       if: runner.os == 'macOS'
-      run: brew install open-mpi
+      run: brew install open-mpi ninja
 
     - name: Install OpenBLAS (Linux)
       if: ${{ matrix.lapack_vendor == 'OpenBLAS' }}
