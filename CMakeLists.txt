@@ -50,7 +50,7 @@ if(parallel)
   set(NUMERIC_LIBS LAPACK::LAPACK)
 
   if(scalapack)
-    include(cmake/scalapack.cmake)
+    include(cmake/scalapack.cmake) # this will also create the LAPACK::LAPACK target
     list(PREPEND NUMERIC_LIBS SCALAPACK::SCALAPACK)
   endif()
 

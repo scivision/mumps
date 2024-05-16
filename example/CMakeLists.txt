@@ -8,6 +8,8 @@ enable_testing()
 
 if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU|Intel")
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration>)
+elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
+  add_link_options($<$<COMPILE_LANGUAGE:C>:/NODEFAULTLIB:MSVCRT>)
 endif()
 
 find_package(MUMPS CONFIG REQUIRED)
