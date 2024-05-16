@@ -23,8 +23,8 @@ if(CMAKE_C_COMPILER_ID MATCHES "^Intel")
   endif()
 
   add_compile_options($<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/Qopenmp,-fiopenmp>>)
- elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang|GNU")
-  add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration;-fno-strict-aliasing>)
+ elseif(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+  add_compile_options("$<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration;-fno-strict-aliasing>")
 endif()
 
 

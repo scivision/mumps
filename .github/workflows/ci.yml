@@ -31,26 +31,35 @@ jobs:
         scotch: [false]
         metis: [false]
         lapack_vendor: [""]
-        img: [ {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin},
-               {os: macos-latest, cmd: brew install open-mpi}
-        ]
+        os: [ubuntu-24.04, macos-latest]
         include:
           - scotch: true
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin}
+            os: ubuntu-24.04
           - metis: true
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin}
+            os: ubuntu-24.04
           - lapack_vendor: "OpenBLAS"
-            img: {os: ubuntu-latest, cmd: sudo apt update && sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin libopenblas-dev}
+            os: ubuntu-24.04
 
-    runs-on: ${{ matrix.img.os }}
+    runs-on: ${{ matrix.os }}
 
     env:
-      FC: gfortran-12
+      FC: gfortran-13
 
     steps:
 
-    - name: Install prereqs
-      run: ${{ matrix.img.cmd }}
+    - name: Install prereqs (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt update
+        sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-openmpi-dev
+
+    - name: Install prereqs (macOS)
+      if: runner.os == 'macOS'
+      run: brew install open-mpi
+
+    - name: Install OpenBLAS (Linux)
+      if: ${{ matrix.lapack_vendor == 'OpenBLAS' }}
+      run: sudo apt install --no-install-recommends libopenblas-dev
 
     - uses: actions/checkout@v4
 
