@@ -9,6 +9,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
 set(MUMPS_UPSTREAM_VERSION @MUMPS_UPSTREAM_VERSION@)
 set(MUMPS_intsize64 @intsize64@)
 set(MUMPS_parallel @parallel@)
+set(MUMPS_LAPACK_VENDOR @LAPACK_VENDOR@)
 
 set(MUMPS_s_FOUND @BUILD_SINGLE@)
 set(MUMPS_d_FOUND @BUILD_DOUBLE@)
@@ -16,7 +17,7 @@ set(MUMPS_c_FOUND @BUILD_COMPLEX@)
 set(MUMPS_z_FOUND @BUILD_COMPLEX16@)
 
 if(NOT DEFINED ENV{MKLROOT})
-  find_dependency(LAPACK)
+  find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})
 endif()
 
 if(MUMPS_parallel)
