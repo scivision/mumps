@@ -36,3 +36,21 @@ set FC=%CMPLR_ROOT%/bin/ifx.exe
 
 cmake -G Ninja -B build
 ```
+
+If Visual Studio generator is desired do like:
+
+```sh
+cmake -Bbuild -G "Visual Studio 17 2022" -T fortran=ifx
+```
+
+In any case, build like:
+
+```sh
+cmake --build build --config Release
+```
+
+Optionally, test:
+
+```sh
+ctest --test-dir build -C Release -V
+```

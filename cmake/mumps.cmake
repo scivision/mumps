@@ -154,35 +154,35 @@ add_library(MUMPS INTERFACE)
 
 function(precision_source a)
 
-set(SRC)
+set(SRC_Fortran)
+set(SRC_C)
 foreach(i IN ITEMS mumps_comm_buffer.F mumps_load.F mumps_ooc_buffer.F mumps_ooc.F mumps_struc_def.F)
-  list(APPEND SRC ${_s}${a}${i})
+  list(APPEND SRC_Fortran ${_s}${a}${i})
 endforeach()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.0)
   foreach(i IN ITEMS ana_aux.F ana_aux_par.F ana_lr.F fac_asm_master_ELT_m.F fac_asm_master_m.F fac_front_aux.F fac_front_LU_type1.F fac_front_LU_type2.F fac_front_LDLT_type1.F fac_front_LDLT_type2.F fac_front_type2_aux.F fac_lr.F fac_omp_m.F fac_par_m.F lr_core.F mumps_lr_data_m.F omp_tps_m.F static_ptr_m.F)
-    list(APPEND SRC ${_s}${a}${i})
+    list(APPEND SRC_Fortran ${_s}${a}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.1)
   foreach(i IN ITEMS lr_stats.F lr_type.F mumps_save_restore.F mumps_save_restore_files.F)
-    list(APPEND SRC ${_s}${a}${i})
+    list(APPEND SRC_Fortran ${_s}${a}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
   foreach(i IN ITEMS fac_mem_dynamic.F mumps_config_file.F mumps_sol_es.F sol_lr.F)
-    list(APPEND SRC ${_s}${a}${i})
+    list(APPEND SRC_Fortran ${_s}${a}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.3)
   foreach(i IN ITEMS fac_sispointers_m.F fac_sol_l0omp_m.F sol_omp_m.F)
-    list(APPEND SRC ${_s}${a}${i})
+    list(APPEND SRC_Fortran ${_s}${a}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.6)
-  list(APPEND SRC ${_s}${a}mumps_mpi3_mod.F)
+  list(APPEND SRC_Fortran ${_s}${a}mumps_mpi3_mod.F)
 endif()
 
-set(SRC_OTHER)
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.0)
   foreach(i IN ITEMS
     ini_driver.F ana_driver.F fac_driver.F
@@ -204,36 +204,45 @@ if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.0)
     sol_aux.F sol_bwd_aux.F sol_bwd.F sol_c.F sol_fwd_aux.F sol_fwd.F sol_matvec.F
     sol_root_parallel.F tools.F type3_root.F
   )
-    list(APPEND SRC_OTHER ${_s}${a}${i})
+    list(APPEND SRC_Fortran ${_s}${a}${i})
   endforeach()
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
-  list(APPEND SRC_OTHER ${_s}${a}sol_distrhs.F ${_s}${a}mumps_gpu.c)
+  list(APPEND SRC_Fortran ${_s}${a}sol_distrhs.F)
+  list(APPEND SRC_C ${_s}${a}mumps_gpu.c)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.7)
-  list(APPEND SRC_OTHER ${_s}${a}sol_distsol.F ${_s}${a}fac_diag.F ${_s}${a}fac_dist_arrowheads_omp.F)
+  list(APPEND SRC_Fortran ${_s}${a}sol_distsol.F ${_s}${a}fac_diag.F ${_s}${a}fac_dist_arrowheads_omp.F)
 endif()
 if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.0)
   foreach(i IN ITEMS mumps_part1.F mumps_part2.F mumps_part3.F mumps_part4.F mumps_part5.F mumps_part6.F mumps_part7.F mumps_part8.F)
-    list(APPEND SRC_OTHER ${_s}${a}${i})
+    list(APPEND SRC_Fortran ${_s}${a}${i})
   endforeach()
 endif()
 
 set(CINT_SRC ${_s}mumps_c.c)
 
-add_library(${a}mumps ${CINT_SRC} ${SRC} ${SRC_OTHER})
+add_library(${a}mumps_C OBJECT ${CINT_SRC} ${SRC_C})
+add_library(${a}mumps_Fortran OBJECT ${SRC_Fortran})
 
-target_compile_definitions(${a}mumps PRIVATE
-MUMPS_ARITH=MUMPS_ARITH_${a}
-${ORDERING_DEFS}
-$<$<AND:$<BOOL:${BLAS_HAVE_${a}GEMMT}>,$<COMPILE_LANGUAGE:Fortran>>:GEMMT_AVAILABLE>
-$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${scalapack}>>>:NOSCALAPACK>
-)
-target_include_directories(${a}mumps PUBLIC
-"$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
-$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
-target_link_libraries(${a}mumps PUBLIC mumps_common)
+add_library(${a}mumps $<TARGET_OBJECTS:${a}mumps_C> $<TARGET_OBJECTS:${a}mumps_Fortran>)
+
+foreach(t IN ITEMS ${a}mumps ${a}mumps_C ${a}mumps_Fortran)
+
+  target_compile_definitions(${t} PRIVATE
+  MUMPS_ARITH=MUMPS_ARITH_${a}
+  ${ORDERING_DEFS}
+  $<$<AND:$<BOOL:${BLAS_HAVE_${a}GEMMT}>,$<COMPILE_LANGUAGE:Fortran>>:GEMMT_AVAILABLE>
+  $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${scalapack}>>>:NOSCALAPACK>
+  )
+  target_include_directories(${t} PUBLIC
+  "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+  target_link_libraries(${t} PUBLIC mumps_common)
+
+endforeach()
+
 
 string(TOUPPER ${a} aup)
 

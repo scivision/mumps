@@ -1,7 +1,10 @@
 include(CheckSourceCompiles)
 
 if(TARGET MKL::MKL)
-  set(CMAKE_REQUIRED_LIBRARIES MKL::MKL MPI::MPI_Fortran)
+  set(CMAKE_REQUIRED_LIBRARIES MKL::MKL)
+  if(parallel)
+    list(APPEND CMAKE_REQUIRED_LIBRARIES MPI::MPI_Fortran)
+  endif()
 else()
   set(CMAKE_REQUIRED_LIBRARIES LAPACK::LAPACK)
 endif()
