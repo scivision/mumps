@@ -1,7 +1,3 @@
-set_property(GLOBAL PROPERTY JOB_POOLS Njobs=3)
-cmake_host_system_information(RESULT _memfree QUERY AVAILABLE_PHYSICAL_MEMORY)
-# for low memory systems
-
 set(_mi ${mumps_SOURCE_DIR}/include/)
 set(_s ${mumps_SOURCE_DIR}/src/)
 
@@ -226,9 +222,7 @@ endif()
 set(CINT_SRC ${_s}mumps_c.c)
 
 add_library(${a}mumps ${CINT_SRC} ${SRC} ${SRC_OTHER})
-if(_memfree LESS 1000)  # < 1GB RAM free
-  set_property(TARGET ${a}mumps PROPERTY JOB_POOL_COMPILE Njobs)
-endif()
+
 target_compile_definitions(${a}mumps PRIVATE
 MUMPS_ARITH=MUMPS_ARITH_${a}
 ${ORDERING_DEFS}
