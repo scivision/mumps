@@ -130,8 +130,8 @@ message(VERBOSE "MUMPS ${MUMPS_UPSTREAM_VERSION} source directory: ${mumps_SOURC
 
 # --- mpiseq (No MPI)
 if(NOT parallel)
+  set(NUMERIC_LIBS LAPACK::LAPACK)
   include(cmake/libseq.cmake)
-  set(NUMERIC_LIBS mpiseq LAPACK::LAPACK)
 endif()
 
 list(APPEND NUMERIC_LIBS ${CMAKE_THREAD_LIBS_INIT})
