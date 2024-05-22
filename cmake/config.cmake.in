@@ -24,6 +24,7 @@ if(MUMPS_parallel)
   find_dependency(MPI COMPONENTS C Fortran)
   find_dependency(SCALAPACK)
 else()
+  find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})
   set(MUMPS_mpiseq_FOUND true)
 endif()
 
