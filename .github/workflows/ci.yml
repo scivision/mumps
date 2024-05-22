@@ -32,6 +32,7 @@ jobs:
       matrix:
         scotch: [false]
         metis: [false]
+        parallel: [true]
         lapack_vendor: [""]
         os: [ubuntu-24.04, macos-latest]
         include:
@@ -40,6 +41,8 @@ jobs:
           - metis: true
             os: ubuntu-24.04
           - lapack_vendor: "OpenBLAS"
+            os: ubuntu-24.04
+          - parallel: false
             os: ubuntu-24.04
 
     runs-on: ${{ matrix.os }}
@@ -77,6 +80,7 @@ jobs:
       run: >-
         cmake
         --preset default
+        -Dparallel:BOOL=${{ matrix.parallel }}
         -Dscotch:BOOL=${{ matrix.scotch }}
         -Dmetis:BOOL=${{ matrix.metis }}
         -DLAPACK_VENDOR=${{ matrix.lapack_vendor }}
