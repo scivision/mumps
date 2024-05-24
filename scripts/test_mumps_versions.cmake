@@ -3,7 +3,7 @@
 include(${CMAKE_CURRENT_LIST_DIR}/tempdir.cmake)
 
 
-foreach(u IN ITEMS 4.8.4 4.9.2 5.0.2 5.1.2 5.2.1 5.3.5 5.4.1 5.5.1 5.6.2)
+foreach(u IN ITEMS 4.8.4 4.9.2 5.0.2 5.1.2 5.2.1 5.3.5 5.4.1 5.5.1 5.6.2 5.7.1)
   get_temp_dir(bindir)
   message(STATUS "Testing MUMPS ${u} in ${bindir}")
 
