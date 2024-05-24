@@ -33,9 +33,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
+    name: parallel=${{ matrix.parallel }} int64=${{ matrix.int64 }}
+
     strategy:
       matrix:
         int64: [true, false]
+        parallel: [true, false]
 
     steps:
     - uses: actions/checkout@v4
@@ -60,10 +63,11 @@ jobs:
         source /opt/intel/oneapi/setvars.sh
         printenv >> $GITHUB_ENV
 
-    - name: CMake Configure intsize64=${{ matrix.int64 }}
+    - name: CMake Configure
       run: >-
         cmake --preset default
         -Dintsize64=${{ matrix.int64 }}
+        -Dparallel:BOOL=${{ matrix.parallel }}
 
     - name: print config log CMake
       run: cat build/CMakeFiles/CMakeConfigureLog.yaml
