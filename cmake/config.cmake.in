@@ -16,12 +16,13 @@ set(MUMPS_d_FOUND @BUILD_DOUBLE@)
 set(MUMPS_c_FOUND @BUILD_COMPLEX@)
 set(MUMPS_z_FOUND @BUILD_COMPLEX16@)
 
-if(NOT DEFINED ENV{MKLROOT})
-  find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})
-endif()
-
 if(MUMPS_parallel)
   find_dependency(MPI COMPONENTS C Fortran)
+
+  if(NOT MUMPS_LAPACK_VENDOR MATCHES "^MKL")
+    find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})
+  endif()
+
   find_dependency(SCALAPACK)
 else()
   find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})

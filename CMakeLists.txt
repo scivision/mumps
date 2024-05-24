@@ -43,7 +43,7 @@ find_package(Threads)
 
 if(parallel)
   find_package(MPI COMPONENTS C Fortran REQUIRED)
-  if(NOT DEFINED ENV{MKLROOT} OR NOT scalapack)
+  if(NOT DEFINED ENV{MKLROOT} AND NOT LAPACK_VENDOR MATCHES "^MKL" OR NOT scalapack)
     # oneMKL MKLConfig.cmake must be invoked only once
     include(cmake/lapack.cmake)
   endif()
@@ -105,6 +105,8 @@ DESTINATION cmake
 
 message(STATUS "MUMPS ORDERING_DEFS: ${ORDERING_DEFS}")
 message(STATUS "MUMPS ORDERING_LIBS: ${ORDERING_LIBS}")
+message(STATUS "MUMPS LAPACK_VENDOR: ${LAPACK_VENDOR}")
+message(STATUS "MUMPS SCALAPACK_VENDOR: ${SCALAPACK_VENDOR}")
 
 # --- download MUMPS source
 include(FetchContent)
