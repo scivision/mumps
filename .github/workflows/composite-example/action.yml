@@ -1,0 +1,42 @@
+runs:
+  using: "composite"
+
+  steps:
+
+  - name: configure example
+    shell: bash
+    run: cmake -S example -B example/build
+
+  - name: build example
+    shell: bash
+    run: cmake --build example/build
+
+  - name: test example
+    shell: bash
+    run: ctest --test-dir example/build -V
+
+  - name: Scotch example
+    shell: bash
+    if: ${{ matrix.scotch }}
+    run: |
+      cmake -S example/scotch -Bexample/scotch/build
+      cmake --build example/scotch/build
+      ctest --test-dir example/scotch/build
+
+  - name: print config log
+    shell: bash
+    if: ${{ failure() && matrix.scotch }}
+    run: cat example/scotch/build/CMakeFiles/CMakeConfigureLog.yaml
+
+  - name: METIS example
+    shell: bash
+    if: ${{ matrix.metis }}
+    run: |
+      cmake -S example/metis -Bexample/metis/build
+      cmake --build example/metis/build
+      ctest --test-dir example/metis/build
+
+  - name: print config log
+    shell: bash
+    if: ${{ failure() && matrix.metis }}
+    run: cat example/metis/build/CMakeFiles/CMakeConfigureLog.yaml

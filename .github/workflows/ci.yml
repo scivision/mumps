@@ -52,74 +52,13 @@ jobs:
 
     steps:
 
-    - name: Install prereqs (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt update
-        sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-openmpi-dev ninja-build
-
-    - name: Install prereqs (macOS)
-      if: runner.os == 'macOS'
-      run: brew install open-mpi ninja scalapack
-
-    - name: Install OpenBLAS (Linux)
-      if: ${{ matrix.lapack_vendor == 'OpenBLAS' }}
-      run: sudo apt install --no-install-recommends libopenblas-dev
-
     - uses: actions/checkout@v4
 
-    - name: Build METIS
-      if: ${{ matrix.metis }}
-      run: cmake -P scripts/build_metis.cmake
+    - name: install prereqs
+      uses: ./.github/workflows/composite-deps
 
-    - name: Build scotch
-      if: ${{ matrix.scotch }}
-      run: cmake -P scripts/build_scotch.cmake
-
-    - name: configure
-      run: >-
-        cmake
-        --preset default
-        -Dparallel:BOOL=${{ matrix.parallel }}
-        -Dscotch:BOOL=${{ matrix.scotch }}
-        -Dmetis:BOOL=${{ matrix.metis }}
-        -DLAPACK_VENDOR=${{ matrix.lapack_vendor }}
-
-    - name: build, test release
-      run: cmake --workflow --preset default
-
-    - name: install package
-      run: cmake --install build
-
-    - name: configure example
-      run: cmake -S example -B example/build
+    - name: build and install
+      uses: ./.github/workflows/composite-build
 
     - name: build example
-      run: cmake --build example/build
-
-    - name: test example
-      run: ctest --test-dir example/build -V
-
-    - name: Scotch example
-      if: ${{ matrix.scotch }}
-      run: |
-        cmake -S example/scotch -Bexample/scotch/build
-        cmake --build example/scotch/build
-        ctest --test-dir example/scotch/build
-
-    - name: print config log
-      if: ${{ failure() && matrix.scotch }}
-      run: |
-        cat example/scotch/build/CMakeFiles/CMakeConfigureLog.yaml
-
-    - name: METIS example
-      if: ${{ matrix.metis }}
-      run: |
-        cmake -S example/metis -Bexample/metis/build
-        cmake --build example/metis/build
-        ctest --test-dir example/metis/build
-
-    - name: print config log
-      if: ${{ failure() && matrix.metis }}
-      run: |
-        cat example/metis/build/CMakeFiles/CMakeConfigureLog.yaml
+      uses: ./.github/workflows/composite-example

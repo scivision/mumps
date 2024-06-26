@@ -1,0 +1,31 @@
+runs:
+  using: "composite"
+
+  steps:
+
+  - name: Install prereqs (Linux)
+    shell: bash
+    if: runner.os == 'Linux'
+    run: |
+      sudo apt update
+      sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-openmpi-dev ninja-build
+
+  - name: Install prereqs (macOS)
+    shell: bash
+    if: runner.os == 'macOS'
+    run: brew install open-mpi ninja scalapack
+
+  - name: Install OpenBLAS (Linux)
+    shell: bash
+    if: ${{ matrix.lapack_vendor == 'OpenBLAS' }}
+    run: sudo apt install --no-install-recommends libopenblas-dev
+
+  - name: Build METIS
+    shell: bash
+    if: ${{ matrix.metis }}
+    run: cmake -P scripts/build_metis.cmake
+
+  - name: Build scotch
+    shell: bash
+    if: ${{ matrix.scotch }}
+    run: cmake -P scripts/build_scotch.cmake
