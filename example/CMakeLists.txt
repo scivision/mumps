@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
 project(MUMPSExamples
-LANGUAGES C Fortran
+LANGUAGES C CXX Fortran
 )
 
 enable_testing()
@@ -15,25 +15,26 @@ endif()
 find_package(MUMPS CONFIG REQUIRED)
 message(STATUS "MUMPS_DIR: ${MUMPS_DIR}")
 
-function(precision_ex a)
+function(precision_ex a lang)
 
-  add_executable(${a}_example ${a}_example.c)
-  target_link_libraries(${a}_example PRIVATE MUMPS::MUMPS)
+  add_executable(${a}_example_${lang} ${a}_example.${lang})
+  target_link_libraries(${a}_example_${lang} PRIVATE MUMPS::MUMPS)
 
   if(MUMPS_parallel)
-    add_test(NAME ${a}_example_C
-      COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:${a}_example>)
+    add_test(NAME ${a}_example_${lang}
+      COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 $<TARGET_FILE:${a}_example_${lang}>)
   else()
-    add_test(NAME ${a}_example_C COMMAND ${a}_example)
+    add_test(NAME ${a}_example_${lang} COMMAND ${a}_example_${lang})
   endif()
 
 endfunction()
 
 if(MUMPS_d_FOUND)
-  precision_ex("d")
+  precision_ex("d" c)
+  precision_ex("d" cpp)
 endif()
 if(MUMPS_z_FOUND)
-  precision_ex("z")
+  precision_ex("z" c)
 endif()
 
 

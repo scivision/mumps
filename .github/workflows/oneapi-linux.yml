@@ -8,6 +8,7 @@ env:
 # https://github.com/oneapi-src/oneapi-ci/blob/master/.github/workflows/build_all.yml
   CTEST_NO_TESTS_ACTION: error
   CC: icx
+  CXX: icpx
   FC: ifx
   CMAKE_BUILD_TYPE: Release
   CMAKE_BUILD_PARALLEL_LEVEL: 4
