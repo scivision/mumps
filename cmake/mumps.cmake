@@ -127,7 +127,7 @@ endif()
 
 foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   target_include_directories(${t} PUBLIC
-  "$<BUILD_INTERFACE:${mumps_SOURCE_DIR};${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
+  "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/src;${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 
