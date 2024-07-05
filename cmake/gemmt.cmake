@@ -9,6 +9,10 @@ else()
   set(CMAKE_REQUIRED_LIBRARIES LAPACK::LAPACK)
 endif()
 
+function(check_gemmt)
+
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "EXECUTABLE")
+
 if(BUILD_DOUBLE)
 check_source_compiles(Fortran
 "program check
@@ -60,3 +64,7 @@ end program"
 BLAS_HAVE_zGEMMT
 )
 endif()
+
+endfunction(check_gemmt)
+
+check_gemmt()
