@@ -52,14 +52,19 @@ cmake -B build
 cmake --build build
 ```
 
-With the default options, under the build/ directory this results in library binaries (for Linux / MacOS / MSYS2):
+Numerous MUMPS [build options are available](./Readme_options.md).
+
+With the default options the build/ directory contains library binaries ([Windows](./Readme_Windows.md) binaries have different names):
 
 * libdmumps.a (real64)
 * libsmumps.a (real32)
 * libmumps_common.a (common MUMPS routines)
 * libpord.a  (PORD library)
 
-Numerous MUMPS [build options are available](./Readme_options.md).
+These libraries can be linked into C, C++, Fortran, etc. programs, or even be used with appropriate interfaces from [Matlab](./Readme_matlab.md) and Python
+[PyMUMPS](https://pypi.org/project/PyMUMPS/)
+and
+[python-mumps](https://pypi.org/project/python-mumps/).
 
 ## Self test and examples
 
@@ -77,14 +82,4 @@ cmake --install build
 cmake -S example -B example/build -DMUMPS_ROOT=build/local
 
 cmake --build example/build
-```
-
-## Packaging
-
-If you want to create an offline-installable package for MUMPS source, do:
-
-```sh
-cmake -Bbuild
-
-cpack --config build/CPackSourceConfig.cmake
 ```

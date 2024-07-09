@@ -58,19 +58,6 @@ cmake -B build -DMUMPS_UPSTREAM_VERSION=5.6.2
 The MUMPS_UPSTREAM_VERSION works for MUMPS versions in
 [cmake/libraries.json](./cmake/libraries.json).
 
-## Matlab
-
-Matlab MEX interface may be built:
-
-```sh
-cmake -Dmatlab=on
-```
-
-These require `-Dparallel=off`.
-These Matlab scripts seems to have been developed ~ 2006 and may not fully work anymore.
-Ask the MUMPS Users List if you need such scripts.
-We present them mainly as an example of compiling MEX libraries for Matlab with CMake.
-
 ## OpenMP
 
 OpenMP can make MUMPS slower in certain situations.
@@ -80,3 +67,7 @@ Default is OpenMP OFF.
 ```sh
 cmake -Dopenmp=true
 ```
+
+---
+
+[Matlab](./Readme_matlab.md) can use MUMPS library as well.

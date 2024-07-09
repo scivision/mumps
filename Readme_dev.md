@@ -34,3 +34,13 @@ Change the default MUMPS_UPSTREAM_VERSION to the latest release.
 Upload the latest MUMPS source archive to Zenodo using "new version".
 Zenodo is faster and more reliable than MUMPS server hosting.
 Update cmake/libraries.json to point to the new source archive URLs.
+
+## Packaging
+
+If it's desired to create an offline-installable package for MUMPS source:
+
+```sh
+cmake -Bbuild
+
+cpack --config build/CPackSourceConfig.cmake
+```

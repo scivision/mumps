@@ -96,7 +96,7 @@ To speed up MUMPS build and reduce binary size, feel free to omit (set to `no`) 
 Observe that Intel oneAPI Base Toolkit MKL LAPACK and Intel oneAPI HPC toolkit SCALAPACK are used.
 Do not try to build LAPACK and ScaLAPACK with oneAPI, the build will fail.
 
-## CMake build
+## Build
 
 ```sh
 cmake --build build
