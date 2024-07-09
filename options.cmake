@@ -15,7 +15,7 @@ if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
   option(gemmt "GEMMT is recommended in User Manual if available" ON)
 endif()
 
-option(parallel "parallel (use MPI)" ON)
+option(MUMPS_parallel "parallel (use MPI)" ON)
 
 option(intsize64 "use 64-bit integers in C and Fortran")
 
@@ -28,15 +28,15 @@ option(scotch "use Scotch orderings")
 
 option(parmetis "use parallel METIS ordering")
 option(metis "use sequential METIS ordering")
-if(parmetis AND NOT parallel)
-  message(FATAL_ERROR "parmetis requires parallel=on")
+if(parmetis AND NOT MUMPS_parallel)
+  message(FATAL_ERROR "parmetis requires MUMPS_parallel=on")
 endif()
 
 option(openmp "use OpenMP")
 
 option(matlab "Matlab interface" OFF)
-if(matlab AND parallel)
-  message(FATAL_ERROR "Matlab requires parallel=off")
+if(matlab AND MUMPS_parallel)
+  message(FATAL_ERROR "Matlab requires -DMUMPS_parallel=off")
 endif()
 
 option(find "find [SCA]LAPACK" on)

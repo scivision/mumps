@@ -31,7 +31,7 @@ For example, oneAPI / oneMPI work, but default system installs of OpenMPI / MPIC
 
 ## ScalaPACK
 
-ScalaPACK is only used for `parallel=on`.
+ScalaPACK is only used for `MUMPS_parallel=on`.
 ScalaPACK can be omitted with MUMPS &ge; 5.7.0 by option:
 
 ```sh
@@ -40,10 +40,10 @@ cmake -Dscalapack=off
 
 ## MPI
 
-For systems where MPI, BLACS and SCALAPACK are not available, or where non-parallel execution is suitable, the default parallel can be disabled at CMake configure time by option:
+For systems where MPI, BLACS and SCALAPACK are not available, or where non-parallel execution is suitable, the default `MUMPS_parallel=true` can be disabled at CMake configure time by option:
 
 ```sh
-cmake -Dparallel=false
+cmake -DMUMPS_parallel=false
 ```
 
 ## MUMPS version selection

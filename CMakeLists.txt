@@ -41,7 +41,7 @@ find_package(Threads)
 
 # -- Scalapack / MPI
 
-if(parallel)
+if(MUMPS_parallel)
   find_package(MPI COMPONENTS C Fortran REQUIRED)
   if(NOT DEFINED ENV{MKLROOT} AND NOT LAPACK_VENDOR MATCHES "^MKL" OR NOT scalapack)
     # oneMKL MKLConfig.cmake must be invoked only once
@@ -126,7 +126,7 @@ message(VERBOSE "MUMPS ${MUMPS_UPSTREAM_VERSION} source directory: ${mumps_SOURC
 # --- MUMPS build
 
 # --- mpiseq (No MPI)
-if(NOT parallel)
+if(NOT MUMPS_parallel)
   set(NUMERIC_LIBS LAPACK::LAPACK)
   include(cmake/libseq.cmake)
 endif()

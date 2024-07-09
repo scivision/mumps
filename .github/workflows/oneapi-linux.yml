@@ -68,7 +68,7 @@ jobs:
       run: >-
         cmake --preset default
         -Dintsize64=${{ matrix.int64 }}
-        -Dparallel:BOOL=${{ matrix.parallel }}
+        -DMUMPS_parallel:BOOL=${{ matrix.parallel }}
 
     - name: print config log CMake
       run: cat build/CMakeFiles/CMakeConfigureLog.yaml

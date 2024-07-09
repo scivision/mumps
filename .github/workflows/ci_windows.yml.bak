@@ -38,7 +38,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: config
-      run: cmake --preset default -Dparallel:BOOL=false --install-prefix=${{ runner.temp }}
+      run: cmake --preset default -DMUMPS_parallel:BOOL=false --install-prefix=${{ runner.temp }}
 
     - name: build, test
       run: cmake --workflow --preset default
@@ -47,7 +47,7 @@ jobs:
       run: cmake --install build
 
     - name: configure example
-      run: cmake -S example -B example/build -Dparallel:BOOL=false -DCMAKE_PREFIX_PATH=${{ runner.temp }}
+      run: cmake -S example -B example/build -DMUMPS_parallel:BOOL=false -DCMAKE_PREFIX_PATH=${{ runner.temp }}
 
     - name: print config log
       if: ${{ failure() }}

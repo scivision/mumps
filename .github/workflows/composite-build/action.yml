@@ -8,7 +8,7 @@ runs:
     run: >-
       cmake
       --preset default
-      -Dparallel:BOOL=${{ matrix.parallel }}
+      -DMUMPS_parallel:BOOL=${{ matrix.parallel }}
       -Dscotch:BOOL=${{ matrix.scotch }}
       -Dmetis:BOOL=${{ matrix.metis }}
       -DLAPACK_VENDOR=${{ matrix.lapack_vendor }}
