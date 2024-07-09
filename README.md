@@ -52,24 +52,31 @@ cmake -B build
 cmake --build build
 ```
 
-With the default options, under the build/ directory this results in library binaries:
+With the default options, under the build/ directory this results in library binaries (for Linux / MacOS / MSYS2):
 
-```
-# Linux / MacOS / MSYS2
-libdmumps.a
-libmumps_common.a
-libpord.a
-libsmumps.a
-```
+* libdmumps.a (real64)
+* libsmumps.a (real32)
+* libmumps_common.a (common MUMPS routines)
+* libpord.a  (PORD library)
 
 Numerous MUMPS [build options are available](./Readme_options.md).
 
-## Self test
+## Self test and examples
 
 Optionally, run self-tests:
 
 ```sh
 ctest --test-dir build
+```
+
+To build the example, first "install" the MUMPS package-the default install location is under the MUMPS build/local directory:
+
+```sh
+cmake --install build
+
+cmake -S example -B example/build -DMUMPS_ROOT=build/local
+
+cmake --build example/build
 ```
 
 ## Packaging

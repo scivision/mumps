@@ -32,8 +32,11 @@ cmake -Dprefix=~/mumps -P scripts/build_scotch.cmake
 cmake -Bbuild -DMETIS_ROOT=~/mumps -DScotch_ROOT=~/mumps -Dscotch=on
 
 cmake --build build
+```
 
-# build MUMPS example
+Build MUMPS example:
+
+```sh
 cmake -S example -B example/build -Dscotch=on
 cmake --build example/build
 ```
