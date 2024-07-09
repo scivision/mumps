@@ -83,3 +83,12 @@ cmake -S example -B example/build -DMUMPS_ROOT=build/local
 
 cmake --build example/build
 ```
+
+## Using binary libraries
+
+Linking the MUMPS binaries into a user-program is project-dependent.
+An example using the examples in this project with GNU GCC, using the "mpicxx" MPI compiler wrapper:
+
+```sh
+mpicxx ./example/d_example.cpp -I./build/local/include -L./build/local/lib -ldmumps -lmumps_common -lpord -lscalapack -lblacs -llapack -lgfortran
+```
