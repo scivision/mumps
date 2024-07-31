@@ -52,7 +52,7 @@ endif()
 if(WIN32)
   get_property(imp_mumps TARGET MUMPS::COMMON PROPERTY IMPORTED_LOCATION_RELEASE)
   if(imp_mumps)
-    get_filename_component(imp_mumps_dir ${imp_mumps} DIRECTORY)
+    cmake_path(GET imp_mumps PARENT_PATH imp_mumps_dir)
   endif()
   set_property(TEST ${test_names} PROPERTY
   ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${imp_mumps_dir};PATH=path_list_prepend:${CMAKE_PREFIX_PATH}/bin"

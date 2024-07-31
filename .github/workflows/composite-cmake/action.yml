@@ -3,17 +3,23 @@ runs:
   using: "composite"
 
   steps:
+  - name: environment
+    shell: bash
+    run: |
+      echo "osarch=linux-x86_64" >> $GITHUB_ENV
+      echo "archive=linux-x86_64.tar.gz" >> $GITHUB_ENV
+
   - name: Install CMake ${{ matrix.cmake_version }}
     shell: bash
     run: |
-      curl -LO "https://github.com/Kitware/CMake/releases/download/v${{ matrix.cmake_version }}/cmake-${{ matrix.cmake_version }}-linux-x86_64.tar.gz"
-      tar -xf cmake-${{ matrix.cmake_version }}-linux-x86_64.tar.gz
+      curl -LO "https://github.com/Kitware/CMake/releases/download/v${{ matrix.cmake_version }}/cmake-${{ matrix.cmake_version }}-$archive"
+      tar -xf cmake-${{ matrix.cmake_version }}-$archive
 
   - name: CMake path
     shell: bash
     run: |
-      echo "CMAKE=$GITHUB_WORKSPACE/cmake-${{ matrix.cmake_version }}-linux-x86_64/bin/cmake" >> $GITHUB_ENV
-      echo "CTEST=$GITHUB_WORKSPACE/cmake-${{ matrix.cmake_version }}-linux-x86_64/bin/ctest" >> $GITHUB_ENV
+      echo "CMAKE=$GITHUB_WORKSPACE/cmake-${{ matrix.cmake_version }}-$osarch/bin/cmake" >> $GITHUB_ENV
+      echo "CTEST=$GITHUB_WORKSPACE/cmake-${{ matrix.cmake_version }}-$osarch/bin/ctest" >> $GITHUB_ENV
 
   - name: echo CMake version
     shell: bash

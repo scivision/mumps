@@ -65,10 +65,10 @@ jobs:
       uses: ./.github/workflows/composite-example
 
 
-  cmake-320:
+  cmake-older:
     timeout-minutes: 30
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
