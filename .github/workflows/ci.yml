@@ -20,6 +20,7 @@ on:
       - "**.cmake"
       - "**.cmake.in"
       - "**.txt"
+      - "cmake/libraries.json"
       - ".github/workflows/ci.yml"
       - "!scripts/*"
 
@@ -85,7 +86,7 @@ jobs:
     - uses: ./.github/workflows/composite-cmake
 
     - name: configure
-      run: $CMAKE -Bbuild
+      run: $CMAKE -Bbuild -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/build/local
 
     - name: build
       run: $CMAKE --build build

@@ -1,7 +1,7 @@
 include(ExternalProject)
 include(GNUInstallDirs)
 
-if(find)
+if(find AND NOT TARGET SCALAPACK::SCALAPACK)
 
 if(NOT DEFINED SCALAPACK_VENDOR)
   if(LAPACK_VENDOR MATCHES "^MKL")
@@ -27,7 +27,7 @@ find_package(SCALAPACK COMPONENTS ${SCALAPACK_VENDOR})
 
 endif()
 
-if(SCALAPACK_FOUND)
+if(SCALAPACK_FOUND OR TARGET SCALAPACK::SCALAPACK)
   return()
 endif()
 
