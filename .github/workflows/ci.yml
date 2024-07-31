@@ -8,6 +8,7 @@ env:
   CMAKE_INSTALL_PREFIX: ~/local
   CMAKE_PREFIX_PATH: ~/local
   CMAKE_GENERATOR: Ninja
+  CMAKE_TLS_VERIFY: true
 
 on:
   push:

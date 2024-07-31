@@ -1,13 +1,4 @@
-if(CMAKE_VERSION VERSION_LESS 3.21)
-  get_property(not_top DIRECTORY PROPERTY PARENT_DIRECTORY)
-  if(not_top)
-    set(${PROJECT_NAME}_IS_TOP_LEVEL false)
-  else()
-    set(${PROJECT_NAME}_IS_TOP_LEVEL true)
-  endif()
-endif()
-
-option(${PROJECT_NAME}_BUILD_TESTING "Build tests" ${${PROJECT_NAME}_IS_TOP_LEVEL})
+option(MUMPS_BUILD_TESTING "Build tests" ${MUMPS_IS_TOP_LEVEL})
 
 option(find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
 
@@ -54,13 +45,11 @@ option(BUILD_COMPLEX16 "Build double precision complex")
 
 # --- other options
 
-option(CMAKE_TLS_VERIFY "Verify TLS certificates" ON)
-
 set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED true)
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED true)
 
 # this is for convenience of those needing scalapaack, lapack built
-if(${${PROJECT_NAME}_IS_TOP_LEVEL} AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+if(MUMPS_IS_TOP_LEVEL AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "${PROJECT_BINARY_DIR}/local")
 endif()

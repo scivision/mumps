@@ -19,8 +19,6 @@ option(BUILD_COMPLEX "Build single precision complex")
 option(BUILD_COMPLEX16 "Build double precision complex")
 option(intsize64 "use 64-bit integers in C and Fortran--Scotch must be consistent with MUMPS")
 
-option(CMAKE_TLS_VERIFY "Verify TLS certificates when downloading" ON)
-
 set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED true)
 
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/libraries.json json)
