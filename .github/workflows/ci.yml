@@ -7,7 +7,6 @@ env:
   CTEST_PARALLEL_LEVEL: 0
   CMAKE_INSTALL_PREFIX: ~/local
   CMAKE_PREFIX_PATH: ~/local
-  CMAKE_GENERATOR: Ninja
   CMAKE_TLS_VERIFY: true
 
 on:
@@ -63,3 +62,36 @@ jobs:
 
     - name: build example
       uses: ./.github/workflows/composite-example
+
+
+  cmake-320:
+    timeout-minutes: 30
+
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        cmake_version: ["3.20.6"]
+
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - name: prereqs except scalapack
+      run: |
+        sudo apt-get update
+        sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev
+
+    - uses: ./.github/workflows/composite-cmake
+
+    - name: configure
+      run: $CMAKE -Bbuild
+
+    - name: build
+      run: $CMAKE --build build
+
+    - name: test
+      run: $CTEST --test-dir build
+
+    - name: install package
+      run: $CMAKE --install build

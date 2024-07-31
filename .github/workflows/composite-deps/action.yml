@@ -8,12 +8,12 @@ runs:
     if: runner.os == 'Linux'
     run: |
       sudo apt update
-      sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-openmpi-dev ninja-build
+      sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-openmpi-dev
 
   - name: Install prereqs (macOS)
     shell: bash
     if: runner.os == 'macOS'
-    run: brew install open-mpi ninja scalapack
+    run: brew install open-mpi scalapack
 
   - name: Install OpenBLAS (Linux)
     shell: bash
