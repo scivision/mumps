@@ -1,9 +1,9 @@
-option(intsize64 "use 64-bit integers in C and Fortran--Scotch must be consistent with MUMPS")
+option(intsize64 "use 64-bit integers in C and Fortran--Scalapack must be consistent with MUMPS")
 
 # -Dprefix is where to install
 # -Dbindir is where to build
 
-set(target "scotch")
+set(target "scalapack")
 
 set(args -Dintsize64:BOOL=${intsize64})
 if(prefix)

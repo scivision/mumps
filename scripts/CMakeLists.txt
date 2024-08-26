@@ -6,10 +6,11 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     cmake -Bbuild")
 endif()
 
-
 project(MumpsPrereqs LANGUAGES C Fortran)
 
 include(ExternalProject)
+
+get_filename_component(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} ABSOLUTE)
 
 file(MAKE_DIRECTORY ${CMAKE_INSTALL_PREFIX})
 message(STATUS "Installing MUMPS prerequisites to ${CMAKE_INSTALL_PREFIX}")
