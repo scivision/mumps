@@ -115,12 +115,7 @@ set(url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
 
 set(FETCHCONTENT_QUIET no)
 
-FetchContent_Populate(${PROJECT_NAME}
-SOURCE_DIR ${PROJECT_SOURCE_DIR}/mumps/${MUMPS_UPSTREAM_VERSION}
-URL ${url}
-)
-
-message(VERBOSE "MUMPS ${MUMPS_UPSTREAM_VERSION} source directory: ${mumps_SOURCE_DIR}")
+FetchContent_Populate(${PROJECT_NAME} URL ${url})
 
 # --- MUMPS build
 
