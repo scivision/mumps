@@ -1,11 +1,5 @@
 # --- compiler options
 
-if(DEFINED ENV{CRAYPE_VERSION})
-  set(CRAY true)
-else()
-  set(CRAY false)
-endif()
-
 add_compile_definitions("$<$<COMPILE_LANGUAGE:C>:Add_>")
 # "Add_" works for all modern compilers we tried.
 

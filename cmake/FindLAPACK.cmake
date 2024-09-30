@@ -354,12 +354,11 @@ endmacro(find_mkl_libs)
 
 # ========== main program
 
-set(lapack_cray false)
-if(DEFINED ENV{CRAYPE_VERSION})
-  set(lapack_cray true)
+if(NOT DEFINED LAPACK_CRAY AND DEFINED ENV{CRAYPE_VERSION})
+  set(LAPACK_CRAY true)
 endif()
 
-if(NOT (lapack_cray
+if(NOT (LAPACK_CRAY
   OR OpenBLAS IN_LIST LAPACK_FIND_COMPONENTS
   OR Netlib IN_LIST LAPACK_FIND_COMPONENTS
   OR Atlas IN_LIST LAPACK_FIND_COMPONENTS
@@ -390,7 +389,7 @@ elseif(OpenBLAS IN_LIST LAPACK_FIND_COMPONENTS)
   openblas_libs()
 elseif(AOCL IN_LIST LAPACK_FIND_COMPONENTS)
   aocl_libs()
-elseif(lapack_cray)
+elseif(LAPACK_CRAY)
   # LAPACK is implicitly part of Cray PE LibSci, use Cray compiler wrapper.
 endif()
 
@@ -445,14 +444,14 @@ endif()
 endfunction(lapack_check)
 
 # --- Check library links
-if(lapack_cray OR LAPACK_LIBRARY)
+if(LAPACK_CRAY OR LAPACK_LIBRARY)
   lapack_check()
 endif()
 
 
 include(FindPackageHandleStandardArgs)
 
-if(lapack_cray)
+if(LAPACK_CRAY)
   find_package_handle_standard_args(LAPACK HANDLE_COMPONENTS
   REQUIRED_VARS LAPACK_links
   )

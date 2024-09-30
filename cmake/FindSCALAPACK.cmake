@@ -188,12 +188,11 @@ endfunction(scalapack_lib)
 
 # === main
 
-set(scalapack_cray false)
-if(DEFINED ENV{CRAYPE_VERSION})
-  set(scalapack_cray true)
+if(NOT DEFINED SCALAPACK_CRAY AND DEFINED ENV{CRAYPE_VERSION})
+  set(SCALAPACK_CRAY true)
 endif()
 
-if(NOT scalapack_cray)
+if(NOT SCALAPACK_CRAY)
   if(NOT MKL IN_LIST SCALAPACK_FIND_COMPONENTS AND DEFINED ENV{MKLROOT} AND IS_DIRECTORY "$ENV{MKLROOT}")
     list(APPEND SCALAPACK_FIND_COMPONENTS MKL)
   endif()
@@ -206,7 +205,7 @@ endif()
 
 if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS OR MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
   scalapack_mkl()
-elseif(scalapack_cray)
+elseif(SCALAPACK_CRAY)
   # Cray PE has Scalapack build into LibSci. Use Cray compiler wrapper.
 else()
   scalapack_lib()
@@ -221,7 +220,7 @@ endif()
 
 # --- Check that Scalapack links
 
-if(scalapack_cray OR SCALAPACK_LIBRARY)
+if(SCALAPACK_CRAY OR SCALAPACK_LIBRARY)
   scalapack_check()
 endif()
 
@@ -229,7 +228,7 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 
-if(scalapack_cray)
+if(SCALAPACK_CRAY)
   find_package_handle_standard_args(SCALAPACK HANDLE_COMPONENTS
   REQUIRED_VARS SCALAPACK_links
   )
