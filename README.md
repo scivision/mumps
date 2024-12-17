@@ -19,16 +19,7 @@ each year.
 Many compilers and systems are supported by CMake build system on Windows, MacOS and Linux.
 Static (default) or Shared `cmake -DBUILD_SHARED_LIBS=on` MUMPS builds are supported.
 
-Platforms known to work with MUMPS and CMake include:
-
-* [Windows](./Readme_Windows.md)
-* MacOS
-  * GCC (Homebrew)
-* Linux
-  * GCC
-  * Intel [oneAPI](./Readme_oneapi.md)
-  * NVIDIA HPC SDK
-  * Cray
+Virtually all contemporary compilers work, including GCC, Clang/Flang, oneAPI, NVHPC, AOCC, Cray, etc.
 
 By default PORD ordering is used.
 [Scotch, METIS, and parMETIS ordering](./Readme_ordering.md)
