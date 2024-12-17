@@ -54,6 +54,23 @@ cmake --build build
 
 Numerous MUMPS [build options are available](./Readme_options.md).
 
+The default precision is float64 and float32.
+To build all precisions including complex64, complex128 do:
+
+```sh
+cmake -Bbuild -DBUILD_SINGLE=on -DBUILD_DOUBLE=on -DBUILD_COMPLEX=on -DBUILD_COMPLEX16=on
+
+cmake --build build
+```
+
+The headers and library are optionally installed to an install prefix:
+
+```sh
+cmake -Bbuild --install-prefix /path/to/install/mumps
+
+cmake --install build
+```
+
 With the default options the build/ directory contains library binaries ([Windows](./Readme_Windows.md) binaries have different names):
 
 * libdmumps.a (real64)
