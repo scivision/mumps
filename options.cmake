@@ -10,9 +10,9 @@ option(MUMPS_parallel "parallel (use MPI)" ON)
 
 option(intsize64 "use 64-bit integers in C and Fortran")
 
-option(scalapack "Use ScalaPACK to speed up the solution of linear systems" ON)
-if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.7 AND NOT scalapack)
-  message(FATAL_ERROR "MUMPS version < 5.7 requires scalapack=on")
+option(MUMPS_scalapack "Use ScalaPACK to speed up the solution of linear systems" ON)
+if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.7 AND NOT MUMPS_scalapack)
+  message(FATAL_ERROR "MUMPS version < 5.7 requires MUMPS_scalapack=on")
 endif()
 
 option(scotch "use Scotch orderings")
@@ -23,7 +23,7 @@ if(parmetis AND NOT MUMPS_parallel)
   message(FATAL_ERROR "parmetis requires MUMPS_parallel=on")
 endif()
 
-option(openmp "use OpenMP")
+option(MUMPS_openmp "use OpenMP")
 
 option(matlab "Matlab interface" OFF)
 if(matlab AND MUMPS_parallel)

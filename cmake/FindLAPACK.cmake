@@ -38,6 +38,10 @@ COMPONENTS default to Netlib LAPACK / LapackE, otherwise:
   MKL only: 64-bit integers  (default is 32-bit integers)
 ``TBB``
   Intel MPI + TBB for MKL
+``OpenMP``
+  MKL only: use OpenMP (default is sequential)
+
+
 ``AOCL``
   AMD Optimizing CPU Libraries
 
@@ -306,8 +310,10 @@ endfunction(aocl_libs)
 
 #===============================
 
-macro(find_mkl_libs)
-# https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/cmake-config-for-onemkl.html
+macro(lapack_mkl)
+# https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2025-0/cmake-config-for-onemkl.html
+
+set(MKL_ARCH "intel64")
 
 set(MKL_INTERFACE "lp64")
 if(MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
@@ -320,8 +326,13 @@ if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
 endif()
 
 # MKL_THREADING default: "intel_thread" which is Intel OpenMP
-if(TBB IN_LIST LAPACK_FIND_COMPONENTS)
+# some systems have messed up OpenMP, so sequential unless requested
+if(TBB IN_LIST SCALAPACK_FIND_COMPONENTS)
   set(MKL_THREADING "tbb_thread")
+elseif(OpenMP IN_LIST SCALAPACK_FIND_COMPONENTS)
+  set(MKL_THREADING "intel_thread")
+else()
+  set(MKL_THREADING "sequential")
 endif()
 
 # default: dynamic
@@ -344,13 +355,13 @@ get_property(LAPACK_LIBRARY TARGET MKL::MKL PROPERTY INTERFACE_LINK_LIBRARIES)
 
 set(LAPACK_MKL_FOUND true)
 
-foreach(c IN ITEMS TBB LAPACK95 MKL64)
+foreach(c IN ITEMS TBB LAPACK95 MKL64 OpenMP)
   if(${c} IN_LIST LAPACK_FIND_COMPONENTS)
     set(LAPACK_${c}_FOUND true)
   endif()
 endforeach()
 
-endmacro(find_mkl_libs)
+endmacro()
 
 # ========== main program
 
@@ -380,7 +391,7 @@ if(STATIC IN_LIST LAPACK_FIND_COMPONENTS)
 endif()
 
 if(MKL IN_LIST LAPACK_FIND_COMPONENTS OR MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
-  find_mkl_libs()
+  lapack_mkl()
 elseif(Atlas IN_LIST LAPACK_FIND_COMPONENTS)
   atlas_libs()
 elseif(Netlib IN_LIST LAPACK_FIND_COMPONENTS)

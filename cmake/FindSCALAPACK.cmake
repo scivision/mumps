@@ -24,6 +24,12 @@ COMPONENTS
 ``MKL64``
   MKL only: 64-bit integers  (default is 32-bit integers)
 
+``TBB``
+  Intel MPI + TBB for MKL (default is sequential)
+
+``OpenMP``
+  MKL only: use OpenMP (default is sequential)
+
 ``STATIC``
   Library search default on non-Windows is shared then static. On Windows default search is static only.
   Specifying STATIC component searches for static libraries only.
@@ -112,10 +118,12 @@ endfunction(scalapack_check)
 
 
 macro(scalapack_mkl)
-
-# https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/cmake-config-for-onemkl.html
+# https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2025-0/cmake-config-for-onemkl.html
 
 set(ENABLE_SCALAPACK true)
+set(ENABLE_BLAS true)
+
+set(MKL_ARCH "intel64")
 
 set(MKL_INTERFACE "lp64")
 if(MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
@@ -123,8 +131,13 @@ if(MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
 endif()
 
 # MKL_THREADING default: "intel_thread" which is Intel OpenMP
+# some systems have messed up OpenMP, so sequential unless requested
 if(TBB IN_LIST SCALAPACK_FIND_COMPONENTS)
   set(MKL_THREADING "tbb_thread")
+elseif(OpenMP IN_LIST SCALAPACK_FIND_COMPONENTS)
+  set(MKL_THREADING "intel_thread")
+else()
+  set(MKL_THREADING "sequential")
 endif()
 
 # default: dynamic
@@ -146,14 +159,13 @@ get_property(SCALAPACK_LIBRARY TARGET MKL::MKL PROPERTY INTERFACE_LINK_LIBRARIES
 
 set(SCALAPACK_MKL_FOUND true)
 
-foreach(c IN ITEMS TBB LAPACK95 MKL64)
+foreach(c IN ITEMS TBB LAPACK95 MKL64 OpenMP)
   if(${c} IN_LIST SCALAPACK_FIND_COMPONENTS)
     set(SCALAPACK_${c}_FOUND true)
   endif()
 endforeach()
 
-
-endmacro(scalapack_mkl)
+endmacro()
 
 
 function(scalapack_lib)

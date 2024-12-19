@@ -48,13 +48,13 @@ find_package(Threads)
 
 if(MUMPS_parallel)
   find_package(MPI COMPONENTS C Fortran REQUIRED)
-  if(NOT DEFINED ENV{MKLROOT} AND NOT LAPACK_VENDOR MATCHES "^MKL" OR NOT scalapack)
+  if(NOT DEFINED ENV{MKLROOT} AND NOT LAPACK_VENDOR MATCHES "^MKL" OR NOT MUMPS_scalapack)
     # oneMKL MKLConfig.cmake must be invoked only once
     include(cmake/lapack.cmake)
   endif()
   set(NUMERIC_LIBS LAPACK::LAPACK)
 
-  if(scalapack)
+  if(MUMPS_scalapack)
     include(cmake/scalapack.cmake) # this will also create the LAPACK::LAPACK target
     list(PREPEND NUMERIC_LIBS SCALAPACK::SCALAPACK)
   endif()
@@ -63,7 +63,7 @@ if(MUMPS_parallel)
   set(NUMERIC_INC ${MPI_Fortran_INCLUDE_DIRS})
   list(APPEND NUMERIC_LIBS ${MPI_Fortran_LIBRARIES} MPI::MPI_C)
 
-  if(openmp)
+  if(MUMPS_openmp)
     find_package(OpenMP COMPONENTS C Fortran REQUIRED)
     list(APPEND NUMERIC_LIBS OpenMP::OpenMP_Fortran OpenMP::OpenMP_C)
   endif()

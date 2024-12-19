@@ -5,18 +5,17 @@ add_compile_definitions("$<$<COMPILE_LANGUAGE:C>:Add_>")
 
 add_compile_definitions("$<$<BOOL:${intsize64}>:INTSIZE64;PORD_INTSIZE64>")
 
-# --- C options
+if(MUMPS_openmp)
+  add_compile_options(
+  "$<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/Qopenmp,-fiopenmp>>"
+  "$<$<COMPILE_LANG_AND_ID:C,MSVC>:/openmp>"
+  "$<$<COMPILE_LANG_AND_ID:Fortran,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/Qopenmp,-fiopenmp>>"
+  )
+endif()
+
+add_compile_options("$<$<COMPILE_LANG_AND_ID:C,AppleClang,Clang,GNU,IntelLLVM>:-Werror-implicit-function-declaration;-fno-strict-aliasing>")
 
 add_compile_options(
-"$<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/Qopenmp,-fiopenmp>>"
-"$<$<COMPILE_LANG_AND_ID:C,AppleClang,Clang,GNU,IntelLLVM>:-Werror-implicit-function-declaration;-fno-strict-aliasing>"
-"$<$<COMPILE_LANG_AND_ID:C,MSVC>:/openmp>"
-)
-
-# --- Fortran options
-
-add_compile_options(
-"$<$<COMPILE_LANG_AND_ID:Fortran,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/Qopenmp,-fiopenmp>>"
 "$<$<COMPILE_LANG_AND_ID:Fortran,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/warn:declarations;/heap-arrays,-implicitnone>>"
 "$<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-fimplicit-none>"
 "$<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-fno-strict-aliasing>"

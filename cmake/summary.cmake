@@ -3,13 +3,13 @@ add_feature_info(Parallel MUMPS_parallel "parallel MUMPS (using MPI and Scalapac
 add_feature_info(64-bit-integer intsize64 "use 64-bit integers in C and Fortran")
 add_feature_info(GEMMT BLAS_HAVE_GEMMT "use GEMMT for symmetric matrix-matrix multiplication")
 
-add_feature_info(ScalaPACK scalapack "Scalapack linear algebra library https://www.netlib.org/scalapack/")
+add_feature_info(ScalaPACK MUMPS_scalapack "Scalapack linear algebra library https://www.netlib.org/scalapack/")
 add_feature_info(METIS metis "METIS graph partitioning https://github.com/KarypisLab/METIS")
 add_feature_info(parMETIS parmetis "parMETIS parallel graph partitioning")
 
 add_feature_info(Scotch scotch "Scotch graph partitioning https://www.labri.fr/perso/pelegrin/scotch/")
 
-add_feature_info(Openmp openmp "OpenMP API https://www.openmp.org/")
+add_feature_info(Openmp MUMPS_openmp "OpenMP API https://www.openmp.org/")
 
 add_feature_info(real32 ${BUILD_SINGLE} "Build with single precision")
 add_feature_info(real64 ${BUILD_DOUBLE} "Build with double precision")

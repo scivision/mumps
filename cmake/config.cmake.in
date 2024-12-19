@@ -40,7 +40,7 @@ if(MUMPS_METIS_FOUND)
   find_dependency(METIS)
 endif()
 
-set(MUMPS_OpenMP_FOUND @openmp@)
+set(MUMPS_OpenMP_FOUND @MUMPS_openmp@)
 if(MUMPS_OpenMP_FOUND)
   find_dependency(OpenMP)
 endif()

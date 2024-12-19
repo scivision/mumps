@@ -35,7 +35,7 @@ ScalaPACK is only used for `MUMPS_parallel=on`.
 ScalaPACK can be omitted with MUMPS &ge; 5.7.0 by option:
 
 ```sh
-cmake -Dscalapack=off
+cmake -DMUMPS_scalapack=off
 ```
 
 ## MPI
@@ -65,7 +65,7 @@ Try with and without OpenMP to see which is faster for your situation.
 Default is OpenMP OFF.
 
 ```sh
-cmake -Dopenmp=on
+cmake -DMUMPS_openmp=on
 ```
 
 ---
