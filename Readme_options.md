@@ -65,7 +65,7 @@ Try with and without OpenMP to see which is faster for your situation.
 Default is OpenMP OFF.
 
 ```sh
-cmake -Dopenmp=true
+cmake -Dopenmp=on
 ```
 
 ---
