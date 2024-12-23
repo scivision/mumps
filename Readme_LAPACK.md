@@ -25,7 +25,7 @@ cmake -DLAPACK_ROOT=/path/to/lapack
 
 ## Intel MKL
 
-CMake searchs for Intel oneMKL if environment variables MKLROOT is set:
+CMake searches for Intel oneMKL if environment variables MKLROOT is set:
 
 * Base Toolkit: MKL LAPACK
 * HPC toolkit: SCALAPACK.
