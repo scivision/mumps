@@ -71,7 +71,7 @@ else()
   include(cmake/lapack.cmake)
 endif()
 
-# GEMMT is recommeded in MUMPS User Manual if available
+# GEMMT is recommended in MUMPS User Manual if available
 if(gemmt)
   include(cmake/gemmt.cmake)
 endif()

@@ -71,7 +71,7 @@ int main(int argc, char ** argv)
     if (!error)
       std::cout << "Solution is : (" << rhs[0] << "  " << rhs[1] << ")\n";
     else
-      std::cerr << "An error has occured, please check error code returned by MUMPS.\n";
+      std::cerr << "An error has occurred, please check error code returned by MUMPS.\n";
   }
   ierr = MPI_Finalize();
   return 0;

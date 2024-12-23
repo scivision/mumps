@@ -71,7 +71,7 @@ int main(int argc, char ** argv)
     if (!error) {
       printf("Solution is : (%8.2f  %8.2f)\n", rhs[0],rhs[1]);
     } else {
-      printf("An error has occured, please check error code returned by MUMPS.\n");
+      printf("An error has occurred, please check error code returned by MUMPS.\n");
     }
   }
   ierr = MPI_Finalize();
