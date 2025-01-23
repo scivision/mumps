@@ -1,0 +1,98 @@
+{
+    "comm_Fortran": [
+        {"min": "5.0", "less": "",
+         "src": ["mumps_ooc_common.F", "mumps_static_mapping.F", "ana_omp_m.F", "double_linked_list.F", "fac_asm_build_sort_index_ELT_m.F", "fac_asm_build_sort_index_m.F", "fac_descband_data_m.F", "fac_future_niv2_mod.F", "fac_ibct_data_m.F", "fac_maprow_data_m.F", "front_data_mgt_m.F", "mumps_comm_ibcast.F", "mumps_l0_omp_m.F", "omp_tps_common_m.F"]
+        },
+        {"min": "5.1", "less": "",
+         "src": ["ana_orderings_wrappers_m.F", "lr_common.F", "mumps_memory_mod.F"]
+        },
+        {"min": "5.2", "less": "",
+         "src": ["mumps_mpitoomp_m.F"]
+        },
+        {"min": "5.3", "less": "",
+         "src": ["ana_blk_m.F"]
+        },
+        {"min": "5.6", "less": "",
+         "src": ["mumps_pivnul_mod.F"]
+        },
+        {"min": "5.7", "less": "",
+         "src": ["sol_ds_common_m.F"]
+        }
+    ],
+    "comm_other_C": [
+        {"min": "5.0", "less": "",
+         "src": ["mumps_common.c", "mumps_io_basic.c", "mumps_io_thread.c", "mumps_io_err.c", "mumps_io.c", "mumps_numa.c"]
+        },
+        {"min": "5.0", "less": "5.6",
+         "src": ["mumps_size.c"]
+        },
+        {"min": "5.6", "less": "",
+         "src": ["mumps_addr.c"]
+        },
+        {"min": "5.1", "less": "",
+         "src": ["mumps_pord.c", "mumps_thread.c", "mumps_save_restore_C.c"]
+        },
+        {"min": "5.2", "less": "",
+         "src": ["mumps_config_file_C.c", "mumps_thread_affinity.c"]
+        },
+        {"min": "5.3", "less": "",
+         "src": ["mumps_register_thread.c"]
+    }
+    ],
+    "comm_other_Fortran": [
+        {"min": "5.0", "less": "",
+         "src": ["ana_orderings.F", "ana_set_ordering.F", "ana_AMDMF.F", "bcast_errors.F", "estim_flops.F", "mumps_type2_blocking.F", "mumps_version.F", "mumps_print_defined.F", "tools_common.F"]
+        },
+        {"min": "5.0", "less": "5.1",
+         "src": ["tools_common_mod.F", "mumps_orderings.c"]
+        },
+        {"min": "5.0", "less": "5.2",
+         "src": ["mumps_sol_es.F"]
+        },
+        {"min": "5.2", "less": "",
+         "src": ["sol_common.F"]
+        },
+        {"min": "5.3", "less": "",
+         "src": ["ana_blk.F"]
+        },
+        {"min": "5.0", "less": "5.7",
+         "src": ["mumps_type_size.F"]
+        }
+    ],
+    "metis": [
+        {"min": "5.1", "less": "",
+         "src": ["mumps_metis.c", "mumps_metis64.c", "mumps_metis_int.c"]
+        }
+    ],
+    "scotch": [
+        {"min": "5.1", "less": "",
+         "src": ["mumps_scotch.c", "mumps_scotch64.c", "mumps_scotch_int.c"]
+        }
+    ],
+    "mumps_C": [
+        {"min": "5.2", "less": "",
+         "src": ["mumps_gpu.c"]
+    }
+    ],
+    "mumps_Fortran": [
+        {"min": "5.0", "less": "",
+         "src": ["mumps_comm_buffer.F", "mumps_load.F", "mumps_ooc_buffer.F", "mumps_ooc.F", "mumps_struc_def.F", "ana_aux.F", "ana_aux_par.F", "ana_lr.F", "fac_asm_master_ELT_m.F", "fac_asm_master_m.F", "fac_front_aux.F", "fac_front_LU_type1.F", "fac_front_LU_type2.F", "fac_front_LDLT_type1.F", "fac_front_LDLT_type2.F", "fac_front_type2_aux.F", "fac_lr.F", "fac_omp_m.F", "fac_par_m.F", "lr_core.F", "mumps_lr_data_m.F", "omp_tps_m.F", "static_ptr_m.F",
+         "ini_driver.F", "ana_driver.F", "fac_driver.F", "sol_driver.F", "end_driver.F", "ana_aux_ELT.F", "ana_dist_m.F", "ana_LDLT_preprocess.F", "ana_reordertree.F", "arrowheads.F", "bcast_int.F", "fac_asm_ELT.F", "fac_asm.F", "fac_b.F", "fac_distrib_distentry.F", "fac_distrib_ELT.F", "fac_lastrtnelind.F", "fac_mem_alloc_cb.F", "fac_mem_compress_cb.F", "fac_mem_free_block_cb.F", "fac_mem_stack_aux.F", "fac_mem_stack.F", "fac_process_band.F", "fac_process_blfac_slave.F", "fac_process_blocfacto_LDLT.F", "fac_process_blocfacto.F", "fac_process_bf.F", "fac_process_end_facto_slave.F", "fac_process_contrib_type1.F", "fac_process_contrib_type2.F", "fac_process_contrib_type3.F", "fac_process_maprow.F", "fac_process_master2.F", "fac_process_message.F", "fac_process_root2slave.F", "fac_process_root2son.F", "fac_process_rtnelind.F", "fac_root_parallel.F", "fac_scalings.F", "fac_determinant.F", "fac_scalings_simScaleAbs.F", "fac_scalings_simScale_util.F", "fac_sol_pool.F", "fac_type3_symmetrize.F", "ini_defaults.F", "mumps_driver.F", "mumps_f77.F", "mumps_iXamax.F", "ana_mtrans.F", "ooc_panel_piv.F", "rank_revealing.F", "sol_aux.F", "sol_bwd_aux.F", "sol_bwd.F", "sol_c.F", "sol_fwd_aux.F", "sol_fwd.F", "sol_matvec.F", "sol_root_parallel.F", "tools.F", "type3_root.F"]},
+         {"min": "5.1", "less": "",
+         "src": ["lr_stats.F", "lr_type.F", "mumps_save_restore.F", "mumps_save_restore_files.F"]
+        },
+        {"min": "5.2", "less": "",
+         "src": ["fac_mem_dynamic.F", "mumps_config_file.F", "mumps_sol_es.F", "sol_lr.F",
+           "sol_distrhs.F"]
+      },
+      {"min": "5.3", "less": "",
+        "src": ["fac_sispointers_m.F", "fac_sol_l0omp_m.F", "sol_omp_m.F"]
+        },
+        {"min": "5.6", "less": "",
+         "src": ["mumps_mpi3_mod.F"]
+        },
+        {"min": "5.7", "less": "",
+         "src": ["sol_distsol.F", "fac_diag.F", "fac_dist_arrowheads_omp.F"]
+        }
+    ]
+}
