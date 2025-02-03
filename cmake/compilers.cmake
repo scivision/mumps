@@ -23,7 +23,7 @@ add_compile_options(
 )
 # IntelLLVM does not have -fno-strict-aliasing for Fortran
 
-# this oneAPI flag needs to be applied EVERYWHERE incl. submodule projects
+# the Intel oneAPI fpscomp flag needs to be applied EVERYWHERE incl. submodule projects
 # or runtime errors / weird behavior with unresolved procedures that actually exist.
 # -standard-semantics is no good because it breaks linkage within oneAPI itself e.g. oneMPI library!
 add_compile_options("$<$<COMPILE_LANG_AND_ID:Fortran,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/fpscomp:logicals,-fpscomp;logicals>>")

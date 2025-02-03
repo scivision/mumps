@@ -20,15 +20,19 @@ COMPONENTS
 ``MKL``
   Intel MKL for MSVC, oneAPI, GCC.
   Working with IntelMPI (default Window, Linux), MPICH (default Mac) or OpenMPI (Linux only).
-
 ``MKL64``
-  MKL only: 64-bit integers  (default is 32-bit integers)
-
+  MKL 64-bit integers  (default is 32-bit integers)
 ``TBB``
-  Intel MPI + TBB for MKL (default is sequential)
-
+  MKL only: Intel MPI + TBB (default is sequential)
 ``OpenMP``
   MKL only: use OpenMP (default is sequential)
+
+``AOCL``
+  AMD ScaLAPACK fork of Netlib ScaLAPACK.
+  Requires LAPACK AOCL
+  https://www.amd.com/en/developer/aocl/scalapack.html
+``AOCL64``
+  AOCL 64-bit integers  (default is 32-bit integers)
 
 ``STATIC``
   Library search default on non-Windows is shared then static. On Windows default search is static only.
@@ -56,7 +60,7 @@ References
 * MKL link-line advisor: https://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
 #]=======================================================================]
 
-include(CheckFortranSourceCompiles)
+include(CheckSourceCompiles)
 
 set(SCALAPACK_LIBRARY)  # avoids appending to prior FindScalapack
 
@@ -86,7 +90,7 @@ if(STATIC IN_LIST SCALAPACK_FIND_COMPONENTS AND
 endif()
 # MPI needed for IntelLLVM
 
-check_fortran_source_compiles(
+check_source_compiles(Fortran
 "program test
 use, intrinsic :: iso_fortran_env, only : real64
 implicit none
@@ -95,10 +99,9 @@ integer :: ictxt
 print *, pdlamch(ictxt, 'E')
 end program"
 SCALAPACK_d_FOUND
-SRC_EXT f90
 )
 
-check_fortran_source_compiles(
+check_source_compiles(Fortran
 "program test
 use, intrinsic :: iso_fortran_env, only : real32
 implicit none
@@ -107,14 +110,13 @@ integer :: ictxt
 print *, pslamch(ictxt, 'E')
 end program"
 SCALAPACK_s_FOUND
-SRC_EXT f90
 )
 
 if(SCALAPACK_s_FOUND OR SCALAPACK_d_FOUND)
   set(SCALAPACK_links true PARENT_SCOPE)
 endif()
 
-endfunction(scalapack_check)
+endfunction()
 
 
 macro(scalapack_mkl)
@@ -167,8 +169,37 @@ endforeach()
 
 endmacro()
 
+#==========================
 
-function(scalapack_lib)
+function(scalapack_aocl)
+
+set(_nodef_scalapack)
+if(DEFINED SCALAPACK_ROOT)
+  set(_nodef_scalapack NO_DEFAULT_PATH)
+endif()
+
+set(_s "LP64")
+if(AOCL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
+  string(PREPEND _s "I")
+endif()
+
+find_library(SCALAPACK_LIBRARY
+NAMES scalapack
+PATH_SUFFIXES lib/${_s}
+HINTS ${SCALAPACK_ROOT} $ENV{SCALAPACK_ROOT}
+${_nodef_scalapack}
+DOC "AOCL SCALAPACK library"
+)
+
+if(SCALAPACK_LIBRARY)
+  set(SCALAPACK_AOCL_FOUND true PARENT_SCOPE)
+endif()
+
+endfunction()
+
+#===========================
+
+function(scalapack_netlib)
 
 if(BUILD_SHARED_LIBS)
   set(_s shared)
@@ -196,7 +227,7 @@ HINTS ${BLACS_ROOT}
 DOC "BLACS library"
 )
 
-endfunction(scalapack_lib)
+endfunction()
 
 # === main
 
@@ -219,8 +250,10 @@ if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS OR MKL64 IN_LIST SCALAPACK_FIND_COMPONE
   scalapack_mkl()
 elseif(SCALAPACK_CRAY)
   # Cray PE has Scalapack build into LibSci. Use Cray compiler wrapper.
+elseif(AOCL IN_LIST LAPACK_FIND_COMPONENTS)
+  scalapack_aocl()
 else()
-  scalapack_lib()
+  scalapack_netlib()
 endif()
 
 if(STATIC IN_LIST SCALAPACK_FIND_COMPONENTS)

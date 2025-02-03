@@ -3,6 +3,8 @@ include(GNUInstallDirs)
 
 if(find AND NOT TARGET SCALAPACK::SCALAPACK)
 
+# Make SCALAPACK_VENDOR match LAPACK_VENDOR
+
 if(NOT DEFINED SCALAPACK_VENDOR)
   if(LAPACK_VENDOR MATCHES "^MKL")
     set(SCALAPACK_VENDOR MKL)
@@ -10,6 +12,10 @@ if(NOT DEFINED SCALAPACK_VENDOR)
     (DEFINED ENV{MKLROOT} AND IS_DIRECTORY "$ENV{MKLROOT}"))
     set(SCALAPACK_VENDOR MKL)
     set(LAPACK_VENDOR MKL)
+  endif()
+
+  if(LAPACK_VENDOR STREQUAL "AOCL")
+    set(SCALAPACK_VENDOR AOCL)
   endif()
 endif()
 
@@ -35,6 +41,8 @@ endif()
 
 if(SCALAPACK_FOUND OR TARGET SCALAPACK::SCALAPACK)
   return()
+elseif(DEFINED SCALAPACK_VENDOR)
+  message(FATAL_ERROR "Scalapack from ${SCALAPACK_VENDOR} not found.")
 endif()
 
 set(scalapack_cmake_args
