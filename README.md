@@ -6,9 +6,11 @@
 
 CMake downloads the unmodified source tarfile from MUMPS developers and builds.
 CMake builds MUMPS in parallel faster and more conveniently than the original Makefiles.
-CMake allows easy reuse of MUMPS in external projects via CMake
-[FetchContent](https://gist.github.com/scivision/2ad002ed26589783f1522160da4d27d1)
-or ExternalProject or `cmake --install`.
+CMake allows easy reuse of MUMPS in external projects via any of:
+
+* CMake [FetchContent](https://gist.github.com/scivision/2ad002ed26589783f1522160da4d27d1)
+* build MUMPS, `cmake --install`, then [find_package(MUMPS CONFIG REQUIRED)](https://gist.github.com/scivision/1ea2d19011c165b39b15ccb95d54f451)
+* CMake ExternalProject_Add (similar to FetchContent example)
 
 [MUMPS CeCILL-C license](https://mumps-solver.org/index.php?page=dwnld#license)
 is distinct from this CMake script license.
