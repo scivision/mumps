@@ -29,7 +29,7 @@ MUMPS_INCLUDE_DIRS
 set(MUMPS_LIBRARY)  # don't endlessly append
 set(CMAKE_REQUIRED_FLAGS)
 
-include(CheckFortranSourceCompiles)
+include(CheckSourceCompiles)
 
 # --- functions
 
@@ -49,7 +49,7 @@ list(APPEND CMAKE_REQUIRED_INCLUDES ${OpenMP_Fortran_INCLUDE_DIRS} ${OpenMP_C_IN
 list(APPEND CMAKE_REQUIRED_LIBRARIES ${OpenMP_Fortran_LIBRARIES} ${OpenMP_C_LIBRARIES})
 
 
-check_fortran_source_compiles(
+check_source_compiles(Fortran
 "program test_omp
 implicit none
 external :: mumps_ana_omp_return, MUMPS_ICOPY_32TO64_64C
@@ -57,7 +57,6 @@ call mumps_ana_omp_return()
 call MUMPS_ICOPY_32TO64_64C()
 end program"
 MUMPS_OpenMP_FOUND
-SRC_EXT f90
 )
 
 endfunction(mumps_openmp_check)
@@ -68,7 +67,7 @@ function(mumps_scotch_check)
 list(APPEND CMAKE_REQUIRED_INCLUDES ${Scotch_INCLUDE_DIRS})
 list(APPEND CMAKE_REQUIRED_LIBRARIES ${Scotch_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
-check_fortran_source_compiles(
+check_source_compiles(Fortran
 "program test_scotch
 implicit none
 external :: mumps_scotch_version
@@ -76,7 +75,6 @@ integer :: vers
 call mumps_scotch_version(vers)
 end program"
 MUMPS_Scotch_FOUND
-SRC_EXT f90
 )
 
 endfunction(mumps_scotch_check)
@@ -87,7 +85,7 @@ function(mumps_metis_check)
 list(APPEND CMAKE_REQUIRED_INCLUDES ${METIS_INCLUDE_DIRS})
 list(APPEND CMAKE_REQUIRED_LIBRARIES ${METIS_LIBRARIES})
 
-check_fortran_source_compiles(
+check_source_compiles(Fortran
 "program test_metis
 implicit none
 external :: mumps_metis_idxsize
@@ -95,7 +93,6 @@ integer :: idxsize
 call mumps_metis_idxsize(idxsize)
 end program"
 MUMPS_METIS_FOUND
-SRC_EXT f90
 )
 
 endfunction(mumps_metis_check)
@@ -135,15 +132,15 @@ foreach(c IN LISTS MUMPS_FIND_COMPONENTS)
     continue()
   endif()
 
-  check_fortran_source_compiles(
-  "program test_mumps
-  implicit none
-  include '${c}mumps_struc.h'
-  external :: ${c}mumps
-  type(${c}mumps_struc) :: mumps_par
-  end program"
+  string(TOUPPER c c_upper)
+
+  check_source_compiles(C
+  "#include \"${c}mumps_c.h\"
+  int main(void){
+    struct ${c_upper}MUMPS_STRUC_C mumps_par;
+    return 0;
+  }"
   MUMPS_${c}_links
-  SRC_EXT f90
   )
 
   if(NOT MUMPS_${c}_links)
@@ -161,7 +158,7 @@ endfunction(mumps_check)
 function(mumps_libs)
 
 # NOTE: NO_DEFAULT_PATH disables CMP0074 MUMPS_ROOT and PATH_SUFFIXES, so we manually specify:
-# HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT
+# HINTS ${MUMPS_ROOT} $ENV{MUMPS_ROOT} ${CMAKE_PREFIX_PATH} $ENV{CMAKE_PREFIX_PATH}
 # PATH_SUFFIXES ...
 # to allow MKL using user-built MUMPS with `cmake -DMUMPS_ROOT=~/lib_intel/mumps`
 
@@ -169,7 +166,7 @@ if(DEFINED ENV{MKLROOT})
   find_path(MUMPS_INCLUDE_DIR
   NAMES mumps_compat.h
   NO_DEFAULT_PATH
-  HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT ${CMAKE_PREFIX_PATH} ENV CMAKE_PREFIX_PATH
+  HINTS ${MUMPS_ROOT} $ENV{MUMPS_ROOT} ${CMAKE_PREFIX_PATH} $ENV{CMAKE_PREFIX_PATH}
   PATH_SUFFIXES include
   DOC "MUMPS common header"
   )
@@ -206,7 +203,7 @@ if(DEFINED ENV{MKLROOT})
   find_library(MUMPS_COMMON
   NAMES mumps_common
   NO_DEFAULT_PATH
-  HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT ${CMAKE_PREFIX_PATH} ENV CMAKE_PREFIX_PATH
+  HINTS ${MUMPS_ROOT} $ENV{MUMPS_ROOT} ${CMAKE_PREFIX_PATH} $ENV{CMAKE_PREFIX_PATH}
   PATH_SUFFIXES lib
   DOC "MUMPS MPI common libraries"
   )
@@ -229,7 +226,7 @@ if(DEFINED ENV{MKLROOT})
   find_library(PORD
   NAMES pord
   NO_DEFAULT_PATH
-  HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT ${CMAKE_PREFIX_PATH} ENV CMAKE_PREFIX_PATH
+  HINTS ${MUMPS_ROOT} $ENV{MUMPS_ROOT} ${CMAKE_PREFIX_PATH} $ENV{CMAKE_PREFIX_PATH}
   PATH_SUFFIXES lib
   DOC "PORD ordering library"
   )
@@ -254,7 +251,7 @@ foreach(c IN LISTS MUMPS_FIND_COMPONENTS)
     find_library(MUMPS_${c}_lib
     NAMES ${c}mumps
     NO_DEFAULT_PATH
-    HINTS ${MUMPS_ROOT} ENV MUMPS_ROOT ${CMAKE_PREFIX_PATH} ENV CMAKE_PREFIX_PATH
+    HINTS ${MUMPS_ROOT} $ENV{MUMPS_ROOT} ${CMAKE_PREFIX_PATH} $ENV{CMAKE_PREFIX_PATH}
     PATH_SUFFIXES lib
     DOC "MUMPS precision-specific"
     )
