@@ -7,6 +7,8 @@ message(STATUS "ENV{CMAKE_BUILD_PARALLEL_LEVEL}: $ENV{CMAKE_BUILD_PARALLEL_LEVEL
 
 include(${CMAKE_CURRENT_LIST_DIR}/oneapi_check.cmake)
 
+find_package(MKL CONFIG REQUIRED)
+
 include(${CMAKE_CURRENT_LIST_DIR}/tempdir.cmake)
 
 get_temp_dir(tmpdir)
