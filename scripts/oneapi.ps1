@@ -4,4 +4,4 @@ $Env:CC="icx"
 $Env:FC="ifx"
 $Env:CXX="icx"
 
-& $Env:comspec /c '"%PROGRAMFILES(X86)%\Intel\oneAPI\$v\oneapi-vars.bat" && pwsh'
+& $Env:COMSPEC /c "`"${Env:ProgramFiles(x86)}\Intel\oneAPI\$v\oneapi-vars.bat`" && pwsh"
