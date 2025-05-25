@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20...3.31)
+cmake_minimum_required(VERSION 3.20...4.0)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "Please use out of source build:
@@ -12,7 +12,7 @@ endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.7.3.2
+VERSION 5.8.0.0
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "http://mumps-solver.org/"
 )
@@ -25,7 +25,7 @@ endif()
 enable_testing()
 
 if(NOT MUMPS_UPSTREAM_VERSION)
-  set(MUMPS_UPSTREAM_VERSION 5.7.3)
+  set(MUMPS_UPSTREAM_VERSION 5.8.0)
 endif()
 
 if(MSVC AND BUILD_SHARED_LIBS)
@@ -115,11 +115,11 @@ message(STATUS "MUMPS SCALAPACK_VENDOR: ${SCALAPACK_VENDOR}")
 # --- download MUMPS source
 include(FetchContent)
 
-set(url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
+set(mumps_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
 
 set(FETCHCONTENT_QUIET no)
 
-FetchContent_Populate(${PROJECT_NAME} URL ${url})
+FetchContent_Populate(${PROJECT_NAME} URL ${mumps_url})
 
 # --- MUMPS build
 
