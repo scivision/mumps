@@ -17,9 +17,9 @@ endif()
 
 option(MUMPS_scotch "use Scotch orderings")
 
-option(parmetis "use parallel METIS ordering")
-option(metis "use sequential METIS ordering")
-if(parmetis AND NOT MUMPS_parallel)
+option(MUMPS_parmetis "use parallel METIS ordering")
+option(MUMPS_metis "use sequential METIS ordering")
+if(MUMPS_parmetis AND NOT MUMPS_parallel)
   message(FATAL_ERROR "parmetis requires MUMPS_parallel=on")
 endif()
 

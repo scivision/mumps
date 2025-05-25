@@ -4,8 +4,8 @@ add_feature_info(64-bit-integer MUMPS_intsize64 "use 64-bit integers in C and Fo
 add_feature_info(GEMMT BLAS_HAVE_GEMMT "use GEMMT for symmetric matrix-matrix multiplication")
 
 add_feature_info(ScalaPACK MUMPS_scalapack "Scalapack linear algebra library https://www.netlib.org/scalapack/")
-add_feature_info(METIS metis "METIS graph partitioning https://github.com/KarypisLab/METIS")
-add_feature_info(parMETIS parmetis "parMETIS parallel graph partitioning")
+add_feature_info(METIS MUMPS_metis "METIS graph partitioning https://github.com/KarypisLab/METIS")
+add_feature_info(parMETIS MUMPS_parmetis "parMETIS parallel graph partitioning")
 
 add_feature_info(Scotch scotch "Scotch graph partitioning https://www.labri.fr/perso/pelegrin/scotch/")
 

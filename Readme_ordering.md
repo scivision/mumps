@@ -9,13 +9,13 @@ cmake -DMUMPS_scotch=yes
 To use METIS:
 
 ```sh
-cmake -Dmetis=yes
+cmake -DMUMPS_metis=yes
 ```
 
-To use parMETIS (metis option is ignored (overridden) by parmetis=yes):
+To use parMETIS (MUMPS_ option is ignored (overridden) by MUMPS_parmetis=yes):
 
 ```sh
-cmake -Dparmetis=yes
+cmake -DMUMPS_parmetis=yes
 ```
 
 The path to METIS and Scotch can be specified via variables METIS_ROOT and Scotch_ROOT, respectively.
@@ -32,7 +32,7 @@ cmake -Dprefix=~/mumps -P scripts/build_metis.cmake
 Build MUMPS
 
 ```sh
-cmake -Bbuild -DMETIS_ROOT=~/mumps -Dmetis=on
+cmake -Bbuild -DMETIS_ROOT=~/mumps -DMUMPS_metis=on
 
 cmake --build build
 ```
