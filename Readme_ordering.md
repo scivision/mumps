@@ -3,7 +3,7 @@
 To use Scotch (requires MUMPS >= 5.0 and Scotch built with libesmumps):
 
 ```sh
-cmake -Dscotch=yes
+cmake -DMUMPS_scotch=yes
 ```
 
 To use METIS:
@@ -49,7 +49,7 @@ cmake -Dprefix=~/mumps -P scripts/build_scotch.cmake
 Build MUMPS
 
 ```sh
-cmake -Bbuild -DMETIS_ROOT=~/mumps -DScotch_ROOT=~/mumps -Dscotch=on
+cmake -Bbuild -DMETIS_ROOT=~/mumps -DScotch_ROOT=~/mumps -DMUMPS_scotch=on
 
 cmake --build build
 ```
@@ -57,7 +57,7 @@ cmake --build build
 Build MUMPS example:
 
 ```sh
-cmake -S example -B example/build -Dscotch=on
+cmake -S example -B example/build
 cmake --build example/build
 ```
 

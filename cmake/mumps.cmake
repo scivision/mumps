@@ -112,7 +112,7 @@ if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.8)
 endif()
 
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.1)
-  if(scotch)
+  if(MUMPS_scotch)
     foreach(i IN ITEMS mumps_scotch.c mumps_scotch64.c mumps_scotch_int.c)
       list(APPEND COMM_OTHER_C ${_s}${i})
     endforeach()
