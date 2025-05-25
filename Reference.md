@@ -27,4 +27,4 @@ These definitions are described in MUMPS docs:
 
 * `WORKAROUNDINTELILP64OPENMPLIMITATION` for OpenMP (not currently needed)
 * `WORKAROUNDILP64MPICUSTOMREDUCE` was for IBM Platform MPI, which has been discontinued in favor of OpenMPI (obsolete)
-* `WORKAROUNDINTELILP64MPI2INTEGER` we use this if intsize64=true
+* `WORKAROUNDINTELILP64MPI2INTEGER` we use this if MUMPS_intsize64=true

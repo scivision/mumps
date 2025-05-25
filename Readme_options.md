@@ -22,7 +22,7 @@ The default integer size is 32-bit.
 64-bit integers can be enabled with:
 
 ```cmake
-cmake -Dintsize64=on
+cmake -DMUMPS_intsize64=on
 ```
 
 HOWEVER, this requires all libraries INCLUDING MPI to be compiled with 64-bit integers.

@@ -8,7 +8,7 @@ endif()
 
 option(MUMPS_parallel "parallel (use MPI)" ON)
 
-option(intsize64 "use 64-bit integers in C and Fortran")
+option(MUMPS_intsize64 "use 64-bit integers in C and Fortran")
 
 option(MUMPS_scalapack "Use ScalaPACK to speed up the solution of linear systems" ON)
 if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.7 AND NOT MUMPS_scalapack)
@@ -34,6 +34,7 @@ option(find "find [SCA]LAPACK" on)
 
 option(BUILD_SHARED_LIBS "Build shared libraries")
 
+# fPIC flags are specified by MUMPS INSTALL file, so we do the same in CMake
 include(CheckPIESupported)
 check_pie_supported()
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

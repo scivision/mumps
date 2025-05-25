@@ -3,7 +3,7 @@
 add_compile_definitions("$<$<COMPILE_LANGUAGE:C>:Add_>")
 # "Add_" works for all modern compilers we tried.
 
-add_compile_definitions("$<$<BOOL:${intsize64}>:INTSIZE64;PORD_INTSIZE64>")
+add_compile_definitions("$<$<BOOL:${MUMPS_intsize64}>:INTSIZE64;PORD_INTSIZE64>")
 
 if(MUMPS_openmp)
   add_compile_options(
@@ -28,7 +28,7 @@ add_compile_options(
 # -standard-semantics is no good because it breaks linkage within oneAPI itself e.g. oneMPI library!
 add_compile_options("$<$<COMPILE_LANG_AND_ID:Fortran,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/fpscomp:logicals,-fpscomp;logicals>>")
 
-if(intsize64)
+if(MUMPS_intsize64)
   add_compile_options(
     "$<$<COMPILE_LANG_AND_ID:Fortran,Intel,IntelLLVM>:-i8>"
     "$<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-fdefault-integer-8>"

@@ -19,7 +19,7 @@ option(BUILD_SINGLE "Build single precision real" ON)
 option(BUILD_DOUBLE "Build double precision real" ON)
 option(BUILD_COMPLEX "Build single precision complex")
 option(BUILD_COMPLEX16 "Build double precision complex")
-option(intsize64 "use 64-bit integers in C and Fortran--Scotch must be consistent with MUMPS")
+option(MUMPS_intsize64 "use 64-bit integers in C and Fortran--Scotch must be consistent with MUMPS")
 
 set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED true)
 
@@ -69,7 +69,7 @@ CONFIGURE_HANDLED_BY_BUILD true
 # METIS
 
 set(metis_cmake_args ${cmake_args}
--Dintsize=$<IF:$<BOOL:${intsize64}>,64,32>
+-Dintsize=$<IF:$<BOOL:${MUMPS_intsize64}>,64,32>
 )
 
 string(JSON metis_url GET ${json} metis git)
@@ -120,7 +120,7 @@ set(scotch_cmake_args ${cmake_args}
 -DINSTALL_METIS_HEADERS:BOOL=false
 -DBUILD_LIBSCOTCHMETIS:BOOL=false
 -DBUILD_LIBESMUMPS:BOOL=true
--DINTSIZE=$<IF:$<BOOL:${intsize64}>,64,32>
+-DINTSIZE=$<IF:$<BOOL:${MUMPS_intsize64}>,64,32>
 )
 #https://gitlab.inria.fr/scotch/scotch/-/blob/master/src/CMakeLists.txt#L84
 
