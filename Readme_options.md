@@ -52,11 +52,8 @@ The MUMPS version defaults to a recent release.
 For reproducibility, benchmarking and other purposes, one may select the version of MUMPS to build like:
 
 ```sh
-cmake -B build -DMUMPS_UPSTREAM_VERSION=5.6.2
+cmake -B build -DMUMPS_UPSTREAM_VERSION=5.8.0
 ```
-
-The MUMPS_UPSTREAM_VERSION works for MUMPS versions in
-[cmake/libraries.json](./cmake/libraries.json).
 
 ## OpenMP
 

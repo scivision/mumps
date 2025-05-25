@@ -20,20 +20,14 @@ Update the CMake scripts according to any relevant Makefile changes.
 
 A minor point release is like 5.6.0 to 5.6.1.
 For MUMPS, there are typically not changes in the source files used, though it's always a good practice to check the Makefiles.
+Use Meld for convenient visual comparison of the Makefiles.
 
 Example: minor release
 [patch](https://github.com/scivision/mumps/commit/c12584665024737f177d831256c6fb891104b133).
 
 ## All releases
 
-The URL of the new release can be extrapolated from
-[libraries.json](./cmake/libraries.json).
-
 Change the default MUMPS_UPSTREAM_VERSION to the latest release.
-
-Upload the latest MUMPS source archive to Zenodo using "new version".
-Zenodo is faster and more reliable than MUMPS server hosting.
-Update cmake/libraries.json to point to the new source archive URLs.
 
 ## Packaging
 

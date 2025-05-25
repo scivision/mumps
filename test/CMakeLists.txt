@@ -12,10 +12,6 @@ if(BUILD_DOUBLE)
   endif()
 endif()
 
-if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.1)
-  return()
-endif()
-
 if(BUILD_SINGLE)
   add_executable(test_mumps_simple32 s_simple.f90)
   target_link_libraries(test_mumps_simple32 PRIVATE MUMPS::MUMPS)
