@@ -78,10 +78,7 @@ jobs:
 
     - uses: actions/checkout@v4
 
-    - name: prereqs except scalapack
-      run: |
-        sudo apt-get update
-        sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev
+    - uses: ./.github/workflows/composite-deps
 
     - uses: ./.github/workflows/composite-cmake
 
