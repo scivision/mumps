@@ -25,8 +25,8 @@ endif()
 
 option(MUMPS_openmp "use OpenMP")
 
-option(matlab "Matlab interface" OFF)
-if(matlab AND MUMPS_parallel)
+option(MUMPS_matlab "Matlab interface" OFF)
+if(MUMPS_matlab AND MUMPS_parallel)
   message(FATAL_ERROR "Matlab requires -DMUMPS_parallel=off")
 endif()
 

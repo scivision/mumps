@@ -137,7 +137,7 @@ include(cmake/pord.cmake)
 # --- MUMPS itself
 include(cmake/mumps.cmake)
 
-if(matlab)
+if(MUMPS_matlab)
   include(cmake/matlab.cmake)
 endif()
 
