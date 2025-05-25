@@ -12,6 +12,6 @@
   },
   "scotch": {
     "git": "https://gitlab.inria.fr/scotch/scotch.git",
-    "tag": "v7.0.4"
+    "tag": "v7.0.7"
   }
 }
