@@ -4,7 +4,7 @@
   },
   "scalapack": {
     "git": "https://github.com/scivision/scalapack.git",
-    "tag": "84cf8d992ae6d2ab63a3baa373833198dd39ff40"
+    "tag": "6afecff0b136e18d0409e339f318f20c476756a6"
   },
   "metis": {
     "git": "https://github.com/scivision/METIS.git",

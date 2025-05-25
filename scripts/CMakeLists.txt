@@ -31,7 +31,6 @@ set(cmake_args
 -DCMAKE_PREFIX_PATH:PATH=${CMAKE_INSTALL_PREFIX}
 -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
 -DCMAKE_BUILD_TYPE=Release
--DBUILD_TESTING:BOOL=false
 )
 
 # Lapack
@@ -46,13 +45,15 @@ string(JSON lapack_url GET ${json} lapack git)
 
 ExternalProject_Add(lapack
 URL ${lapack_url}
-CMAKE_ARGS ${lapack_cmake_args}
+CMAKE_ARGS ${lapack_cmake_args} -DBUILD_TESTING:BOOL=false
 CONFIGURE_HANDLED_BY_BUILD true
 )
 
 # Scalapack
 
-set(scalapack_cmake_args ${lapack_cmake_args})
+set(scalapack_cmake_args ${lapack_cmake_args}
+-DSCALAPACK_BUILD_TESTING:BOOL=false
+)
 
 string(JSON scalapack_url GET ${json} scalapack git)
 string(JSON scalapack_tag GET ${json} scalapack tag)
@@ -70,6 +71,7 @@ CONFIGURE_HANDLED_BY_BUILD true
 
 set(metis_cmake_args ${cmake_args}
 -Dintsize=$<IF:$<BOOL:${MUMPS_intsize64}>,64,32>
+-DBUILD_TESTING:BOOL=false
 )
 
 string(JSON metis_url GET ${json} metis git)
@@ -117,6 +119,7 @@ bison_homebrew()
 
 # https://gitlab.inria.fr/scotch/scotch/-/blob/master/CMakeLists.txt
 set(scotch_cmake_args ${cmake_args}
+-DBUILD_TESTING:BOOL=false
 -DINSTALL_METIS_HEADERS:BOOL=false
 -DBUILD_LIBSCOTCHMETIS:BOOL=false
 -DBUILD_LIBESMUMPS:BOOL=true
