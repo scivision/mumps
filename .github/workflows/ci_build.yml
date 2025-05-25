@@ -16,15 +16,26 @@ on:
 jobs:
 
   linux:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install prereqs
+    - name: Install prereqs (Linux)
+      if: runner.os == 'Linux'
       run: |
         sudo apt update
         sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev
+
+    - name: Install prereqs (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew install flang open-mpi
+        echo "FC=flang" >> $GITHUB_ENV
 
     - name: configure
       run: cmake --preset default
