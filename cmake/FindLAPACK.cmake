@@ -43,9 +43,9 @@ COMPONENTS default to Netlib LAPACK / LapackE, otherwise:
 
 
 ``AOCL``
-  AMD ScaLAPACK fork of Netlib ScaLAPACK.
+  AMD LAPACK fork of Netlib LAPACK.
   Requires LAPACK AOCL
-  https://www.amd.com/en/developer/aocl/scalapack.html
+  https://www.amd.com/en/developer/aocl/dense.html
 ``AOCL64``
   AOCL 64-bit integers  (default is 32-bit integers)
 
@@ -269,7 +269,7 @@ if(WIN32)
 endif()
 
 set(_s "LP64")
-if(AOCL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
+if(AOCL64 IN_LIST LAPACK_FIND_COMPONENTS)
   string(PREPEND _s "I")
 endif()
 
@@ -387,9 +387,9 @@ endif()
 
 # MKL_THREADING default: "intel_thread" which is Intel OpenMP
 # some systems have messed up OpenMP, so sequential unless requested
-if(TBB IN_LIST SCALAPACK_FIND_COMPONENTS)
+if(TBB IN_LIST LAPACK_FIND_COMPONENTS)
   set(MKL_THREADING "tbb_thread")
-elseif(OpenMP IN_LIST SCALAPACK_FIND_COMPONENTS)
+elseif(OpenMP IN_LIST LAPACK_FIND_COMPONENTS)
   set(MKL_THREADING "intel_thread")
 else()
   set(MKL_THREADING "sequential")
