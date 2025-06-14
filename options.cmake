@@ -1,6 +1,6 @@
 option(MUMPS_BUILD_TESTING "Build tests" ${MUMPS_IS_TOP_LEVEL})
 
-option(find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
+option(MUMPS_find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
 
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
   option(gemmt "GEMMT is recommended in User Manual if available" ON)
@@ -30,7 +30,7 @@ if(MUMPS_matlab AND MUMPS_parallel)
   message(FATAL_ERROR "Matlab requires -DMUMPS_parallel=off")
 endif()
 
-option(find "find [SCA]LAPACK" on)
+option(MUMPS_find_SCALAPACK "find ScaLAPACK" on)
 
 option(BUILD_SHARED_LIBS "Build shared libraries")
 

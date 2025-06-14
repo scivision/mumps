@@ -1,7 +1,7 @@
 include(ExternalProject)
 include(GNUInstallDirs)
 
-if(find AND NOT TARGET SCALAPACK::SCALAPACK)
+if(MUMPS_find_SCALAPACK AND NOT TARGET SCALAPACK::SCALAPACK)
 
 # Make SCALAPACK_VENDOR match LAPACK_VENDOR
 
@@ -31,7 +31,7 @@ if(MKL IN_LIST SCALAPACK_VENDOR AND NOT MKL64 IN_LIST SCALAPACK_VENDOR)
   endif()
 endif()
 
-if(find_static)
+if(MUMPS_find_static)
   list(APPEND SCALAPACK_VENDOR STATIC)
 endif()
 

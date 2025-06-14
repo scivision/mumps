@@ -4,7 +4,7 @@ if(NOT DEFINED LAPACK_VENDOR AND DEFINED ENV{MKLROOT} AND IS_DIRECTORY "$ENV{MKL
   set(LAPACK_VENDOR MKL)
 endif()
 
-if(find_static)
+if(MUMPS_find_static)
   list(APPEND LAPACK_VENDOR STATIC)
 endif()
 
