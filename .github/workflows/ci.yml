@@ -34,21 +34,18 @@ jobs:
         metis: [false]
         parallel: [true]
         lapack_vendor: [""]
-        os: [ubuntu-24.04, macos-latest]
+        os: [ubuntu-latest, macos-latest]
         include:
           - scotch: true
-            os: ubuntu-24.04
+            os: ubuntu-latest
           - metis: true
-            os: ubuntu-24.04
+            os: ubuntu-latest
           - lapack_vendor: "OpenBLAS"
-            os: ubuntu-24.04
+            os: ubuntu-latest
           - parallel: false
-            os: ubuntu-24.04
+            os: ubuntu-latest
 
     runs-on: ${{ matrix.os }}
-
-    env:
-      FC: gfortran-13
 
     steps:
 
@@ -56,6 +53,10 @@ jobs:
 
     - name: install prereqs
       uses: ./.github/workflows/composite-deps
+
+    - name: set Fortran compiler FC (macOS)
+      if: runner.os == 'macOS'
+      run: echo "FC=gfortran-14" >> $GITHUB_ENV
 
     - name: build and install
       uses: ./.github/workflows/composite-build
