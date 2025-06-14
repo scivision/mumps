@@ -33,25 +33,12 @@ set(cmake_args
 -DCMAKE_BUILD_TYPE=Release
 )
 
-# Lapack
-set(lapack_cmake_args ${cmake_args}
+# Scalapack
+set(scalapack_cmake_args ${cmake_args}
 -DBUILD_SINGLE:BOOL=${BUILD_SINGLE}
 -DBUILD_DOUBLE:BOOL=${BUILD_DOUBLE}
 -DBUILD_COMPLEX:BOOL=${BUILD_COMPLEX}
 -DBUILD_COMPLEX16:BOOL=${BUILD_COMPLEX16}
-)
-
-string(JSON lapack_url GET ${json} lapack git)
-
-ExternalProject_Add(lapack
-URL ${lapack_url}
-CMAKE_ARGS ${lapack_cmake_args} -DBUILD_TESTING:BOOL=false
-CONFIGURE_HANDLED_BY_BUILD true
-)
-
-# Scalapack
-
-set(scalapack_cmake_args ${lapack_cmake_args}
 -DSCALAPACK_BUILD_TESTING:BOOL=false
 )
 
@@ -63,7 +50,6 @@ GIT_REPOSITORY ${scalapack_url}
 GIT_TAG ${scalapack_tag}
 GIT_SHALLOW true
 CMAKE_ARGS ${scalapack_cmake_args}
-DEPENDS lapack
 CONFIGURE_HANDLED_BY_BUILD true
 )
 
