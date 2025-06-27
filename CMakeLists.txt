@@ -26,6 +26,7 @@ enable_testing()
 
 if(NOT MUMPS_UPSTREAM_VERSION)
   set(MUMPS_UPSTREAM_VERSION 5.8.0)
+  set(MUMPS_ARCHIVE_MD5SUM "0a6e45a2afe0ab1167d0311d883ac2b8")
 endif()
 
 if(MSVC AND BUILD_SHARED_LIBS)
@@ -119,7 +120,10 @@ set(mumps_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
 
 set(FETCHCONTENT_QUIET no)
 
-FetchContent_Populate(${PROJECT_NAME} URL ${mumps_url})
+FetchContent_Populate(${PROJECT_NAME}
+	URL ${mumps_url}
+	URL_HASH MD5=${MUMPS_ARCHIVE_MD5SUM}
+	)
 
 # --- MUMPS build
 
