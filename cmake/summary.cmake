@@ -7,7 +7,7 @@ add_feature_info(ScalaPACK MUMPS_scalapack "Scalapack linear algebra library htt
 add_feature_info(METIS MUMPS_metis "METIS graph partitioning https://github.com/KarypisLab/METIS")
 add_feature_info(parMETIS MUMPS_parmetis "parMETIS parallel graph partitioning")
 
-add_feature_info(Scotch scotch "Scotch graph partitioning https://www.labri.fr/perso/pelegrin/scotch/")
+add_feature_info(Scotch MUMPS_scotch "Scotch graph partitioning https://www.labri.fr/perso/pelegrin/scotch/")
 
 add_feature_info(Openmp MUMPS_openmp "OpenMP API https://www.openmp.org/")
 
