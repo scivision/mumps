@@ -115,8 +115,8 @@ message(STATUS "MUMPS SCALAPACK_VENDOR: ${SCALAPACK_VENDOR}")
 # --- download MUMPS source
 include(FetchContent)
 
-set(mumps_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
-message(STATUS "MUMPS ${MUMPS_UPSTREAM_VERSION} source URL: ${mumps_url}")
+set(MUMPS_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
+message(STATUS "MUMPS source URL: ${MUMPS_url}")
 
 set(FETCHCONTENT_QUIET no)
 
@@ -133,9 +133,18 @@ endif()
 
 
 FetchContent_Populate(MUMPS
-URL ${mumps_url}
+URL ${MUMPS_url}
 ${_hash}
 )
+
+# Read MUMPS/VERSION file to get the actual version
+# the first line is like "MUMPS 5.7.3"
+file(STRINGS "${mumps_SOURCE_DIR}/VERSION" _version_line LIMIT_COUNT 1 REGEX "^MUMPS [0-9]+\\.[0-9]+\\.[0-9]+")
+message(DEBUG "MUMPS version line: ${_version_line}")
+string(REGEX REPLACE "MUMPS ([0-9]+\\.[0-9]+\\.[0-9]+)" "\\1" MUMPS_ACTUAL_VERSION "${_version_line}")
+if(NOT MUMPS_ACTUAL_VERSION VERSION_EQUAL MUMPS_UPSTREAM_VERSION)
+  message(FATAL_ERROR "Failed to read MUMPS version ${MUMPS_UPSTREAM_VERSION} from ${mumps_SOURCE_DIR}/VERSION, got ${MUMPS_ACTUAL_VERSION} instead.")
+endif()
 
 # --- MUMPS build
 
