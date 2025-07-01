@@ -116,6 +116,7 @@ message(STATUS "MUMPS SCALAPACK_VENDOR: ${SCALAPACK_VENDOR}")
 include(FetchContent)
 
 set(mumps_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
+message(STATUS "MUMPS ${MUMPS_UPSTREAM_VERSION} source URL: ${mumps_url}")
 
 set(FETCHCONTENT_QUIET no)
 
