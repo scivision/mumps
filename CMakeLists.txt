@@ -12,7 +12,7 @@ endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.8.0.2
+VERSION 5.8.0.3
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "http://mumps-solver.org/"
 )
@@ -24,9 +24,6 @@ endif()
 
 enable_testing()
 
-if(NOT MUMPS_UPSTREAM_VERSION)
-  set(MUMPS_UPSTREAM_VERSION 5.8.0)
-endif()
 
 if(MSVC AND BUILD_SHARED_LIBS)
   message(WARNING "MUMPS: Windows IntelLLVM compilers with **shared** libraries is not supported and will probably fail.
@@ -38,8 +35,9 @@ endif()
 include(options.cmake)
 include(cmake/compilers.cmake)
 
-message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION} upstream ${MUMPS_UPSTREAM_VERSION} install prefix: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "MUMPS ${PROJECT_VERSION} upstream ${MUMPS_UPSTREAM_VERSION} install prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "CMake ${CMAKE_VERSION}  Toolchain ${CMAKE_TOOLCHAIN_FILE}")
+message(STATUS "MUMPS source URL: ${MUMPS_url}")
 
 # --- dependencies
 find_package(Threads)
@@ -115,21 +113,20 @@ message(STATUS "MUMPS SCALAPACK_VENDOR: ${SCALAPACK_VENDOR}")
 # --- download MUMPS source
 include(FetchContent)
 
-set(MUMPS_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
-message(STATUS "MUMPS source URL: ${MUMPS_url}")
+set(_hash)
+if(MUMPS_UPSTREAM_VERSION)
+  set(_json_fn ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libraries.json)
+  file(READ ${_json_fn} json)
+  string(JSON mumps_sha256 ERROR_VARIABLE _jerr GET ${json} "mumps_sha256" "${MUMPS_UPSTREAM_VERSION}")
+  if(NOT _jerr AND mumps_sha256)
+    set(_hash URL_HASH SHA256=${mumps_sha256})
+    message(STATUS "MUMPS ${MUMPS_UPSTREAM_VERSION} ${_hash}")
+  else()
+    message(STATUS "No sha256 for MUMPS ${MUMPS_UPSTREAM_VERSION} found in ${_json_fn}")
+  endif()
+endif()
 
 set(FETCHCONTENT_QUIET no)
-
-set(_json_fn ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libraries.json)
-file(READ ${_json_fn} json)
-string(JSON mumps_sha256 ERROR_VARIABLE _jerr GET ${json} "mumps_sha256" "${MUMPS_UPSTREAM_VERSION}")
-if(NOT _jerr AND mumps_sha256)
-  set(_hash URL_HASH SHA256=${mumps_sha256})
-  message(STATUS "MUMPS ${MUMPS_UPSTREAM_VERSION} ${_hash}")
-else()
-  message(STATUS "No sha256 for MUMPS ${MUMPS_UPSTREAM_VERSION} found in ${_json_fn}")
-  set(_hash)
-endif()
 
 
 FetchContent_Populate(MUMPS
@@ -142,7 +139,7 @@ ${_hash}
 file(STRINGS "${mumps_SOURCE_DIR}/VERSION" _version_line LIMIT_COUNT 1 REGEX "^MUMPS [0-9]+\\.[0-9]+\\.[0-9]+")
 message(DEBUG "MUMPS version line: ${_version_line}")
 string(REGEX REPLACE "MUMPS ([0-9]+\\.[0-9]+\\.[0-9]+)" "\\1" MUMPS_ACTUAL_VERSION "${_version_line}")
-if(NOT MUMPS_ACTUAL_VERSION VERSION_EQUAL MUMPS_UPSTREAM_VERSION)
+if(MUMPS_UPSTREAM_VERSION AND NOT MUMPS_ACTUAL_VERSION VERSION_EQUAL MUMPS_UPSTREAM_VERSION)
   message(FATAL_ERROR "Failed to read MUMPS version ${MUMPS_UPSTREAM_VERSION} from ${mumps_SOURCE_DIR}/VERSION, got ${MUMPS_ACTUAL_VERSION} instead.")
 endif()
 
@@ -174,7 +171,7 @@ endif()
 
 # --- feature summary
 
-message(STATUS "Configured MUMPS ${MUMPS_UPSTREAM_VERSION} source in ${mumps_SOURCE_DIR}")
+message(STATUS "Configured MUMPS ${MUMPS_ACTUAL_VERSION} source in ${mumps_SOURCE_DIR}")
 
 include(cmake/summary.cmake)
 

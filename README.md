@@ -5,6 +5,8 @@
 [![oneapi-linux](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml)
 
 CMake downloads the unmodified source tarfile from MUMPS developers and builds.
+For offline usage, the user can specify a local MUMPS source archive like `cmake -Bbuild -DMUMPS_url=/path/to/mumps.zip`
+
 CMake builds MUMPS in parallel faster and more conveniently than the original Makefiles.
 CMake allows easy reuse of MUMPS in external projects via any of:
 

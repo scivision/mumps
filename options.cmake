@@ -2,6 +2,19 @@ option(MUMPS_BUILD_TESTING "Build tests" ${MUMPS_IS_TOP_LEVEL})
 
 option(MUMPS_find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
 
+
+if(MUMPS_url)
+  if(EXISTS ${MUMPS_url})
+    get_filename_component(MUMPS_url ${MUMPS_url} ABSOLUTE)
+  endif()
+else()
+  if(NOT DEFINED MUMPS_UPSTREAM_VERSION)
+    set(MUMPS_UPSTREAM_VERSION 5.8.0)
+  endif()
+
+  set(MUMPS_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
+endif()
+
 if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
   option(gemmt "GEMMT is recommended in User Manual if available" ON)
 endif()
@@ -11,7 +24,7 @@ option(MUMPS_parallel "parallel (use MPI)" ON)
 option(MUMPS_intsize64 "use 64-bit integers in C and Fortran")
 
 option(MUMPS_scalapack "Use ScalaPACK to speed up the solution of linear systems" ON)
-if(MUMPS_UPSTREAM_VERSION VERSION_LESS 5.7 AND NOT MUMPS_scalapack)
+if(MUMPS_UPSTREAM_VERSION AND MUMPS_UPSTREAM_VERSION VERSION_LESS 5.7 AND NOT MUMPS_scalapack)
   message(FATAL_ERROR "MUMPS version < 5.7 requires MUMPS_scalapack=on")
 endif()
 

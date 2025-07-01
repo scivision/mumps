@@ -55,6 +55,12 @@ For reproducibility, benchmarking and other purposes, one may select the version
 cmake -B build -DMUMPS_UPSTREAM_VERSION=5.8.0
 ```
 
+The source URL may be directly specified, which may be a local file or remote URL:
+
+```sh
+cmake -B build -DMUMPS_url=/path/to/mumps.zip
+```
+
 ## OpenMP
 
 OpenMP can make MUMPS slower in certain situations.
