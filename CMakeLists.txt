@@ -119,7 +119,18 @@ set(mumps_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
 
 set(FETCHCONTENT_QUIET no)
 
-FetchContent_Populate(${PROJECT_NAME} URL ${mumps_url})
+file(READ ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libraries.json json)
+string(JSON mumps_sha256 ERROR_VARIABLE _jerr GET ${json} "mumps_sha256" "${MUMPS_UPSTREAM_VERSION}")
+if(NOT _jerr AND mumps_sha256)
+  set(_hash URL_HASH SHA256=${mumps_sha256})
+else()
+  set(_hash)
+endif()
+
+FetchContent_Populate(MUMPS
+URL ${mumps_url}
+${_hash}
+)
 
 # --- MUMPS build
 

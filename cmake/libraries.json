@@ -10,5 +10,9 @@
   "scotch": {
     "git": "https://gitlab.inria.fr/scotch/scotch.git",
     "tag": "v7.0.7"
+  },
+  "mumps_sha256": {
+    "5.8.0": "d762eb8b1d9843a0993b8cfc137d043d04c7c51877ad37c94560433a474340a0",
+    "5.7.3": "84a47f7c4231b9efdf4d4f631a2cae2bdd9adeaabc088261d15af040143ed112"
   }
 }
