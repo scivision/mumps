@@ -15,7 +15,7 @@ endif()
 find_package(MUMPS CONFIG REQUIRED)
 message(STATUS "MUMPS_DIR: ${MUMPS_DIR}")
 
-find_package(MPI COMPONENTS CXX REQUIRED)
+find_package(MPI COMPONENTS CXX)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/mpi_launcher.cmake)
 
@@ -36,8 +36,11 @@ endfunction()
 
 if(MUMPS_d_FOUND)
   precision_ex("d" c)
-  precision_ex("d" cpp)
+  if(MPI_CXX_FOUND)
+    precision_ex("d" cpp)
+  endif()
 endif()
+
 if(MUMPS_z_FOUND)
   precision_ex("z" c)
 endif()
