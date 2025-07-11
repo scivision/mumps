@@ -373,8 +373,6 @@ endfunction()
 macro(lapack_mkl)
 # https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2025-0/cmake-config-for-onemkl.html
 
-set(MKL_ARCH "intel64")
-
 set(MKL_INTERFACE "lp64")
 if(MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
   string(PREPEND MKL_INTERFACE "i")
@@ -387,12 +385,14 @@ endif()
 
 # MKL_THREADING default: "intel_thread" which is Intel OpenMP
 # some systems have messed up OpenMP, so sequential unless requested
-if(TBB IN_LIST LAPACK_FIND_COMPONENTS)
-  set(MKL_THREADING "tbb_thread")
-elseif(OpenMP IN_LIST LAPACK_FIND_COMPONENTS)
-  set(MKL_THREADING "intel_thread")
-else()
-  set(MKL_THREADING "sequential")
+if(NOT DEFINED MKL_THREADING)
+  if(TBB IN_LIST LAPACK_FIND_COMPONENTS)
+    set(MKL_THREADING "tbb_thread")
+  elseif(OpenMP IN_LIST LAPACK_FIND_COMPONENTS)
+    set(MKL_THREADING "intel_thread")
+  else()
+    set(MKL_THREADING "sequential")
+  endif()
 endif()
 
 # default: dynamic
@@ -400,7 +400,7 @@ if(STATIC IN_LIST LAPACK_FIND_COMPONENTS)
   set(MKL_LINK "static")
 endif()
 
-find_package(MKL CONFIG HINTS $ENV{MKLROOT})
+find_package(MKL CONFIG)
 
 if(NOT MKL_FOUND)
   return()

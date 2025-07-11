@@ -120,12 +120,10 @@ endfunction()
 
 
 macro(scalapack_mkl)
-# https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2025-0/cmake-config-for-onemkl.html
+# https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2025-2/cmake-config-for-onemkl.html
 
 set(ENABLE_SCALAPACK true)
 set(ENABLE_BLAS true)
-
-set(MKL_ARCH "intel64")
 
 set(MKL_INTERFACE "lp64")
 if(MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
@@ -134,7 +132,7 @@ endif()
 
 # MKL_THREADING default: "intel_thread" which is Intel OpenMP
 # some systems have messed up OpenMP, so sequential unless requested
-if(NOT MKL_THREADING)
+if(NOT DEFINED MKL_THREADING)
   if(TBB IN_LIST SCALAPACK_FIND_COMPONENTS)
     set(MKL_THREADING "tbb_thread")
   elseif(OpenMP IN_LIST SCALAPACK_FIND_COMPONENTS)
@@ -142,7 +140,7 @@ if(NOT MKL_THREADING)
   else()
     set(MKL_THREADING "sequential")
   endif()
-endif(NOT MKL_THREADING)
+endif()
 
 set(MKL_SYCL_MPI false)
 # for Intel oneAPI 2025.2, we don't need SYCL
@@ -152,7 +150,7 @@ if(STATIC IN_LIST SCALAPACK_FIND_COMPONENTS)
   set(MKL_LINK "static")
 endif()
 
-find_package(MKL CONFIG HINTS $ENV{MKLROOT})
+find_package(MKL CONFIG)
 
 if(NOT MKL_FOUND)
   return()
