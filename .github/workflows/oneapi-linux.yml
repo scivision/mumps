@@ -67,7 +67,13 @@ jobs:
       timeout-minutes: 10
       run: |
         .github/workflows/oneapi_setup_apt_repo_linux.sh
-        sudo apt install --no-install-recommends intel-oneapi-compiler-dpcpp-cpp-${{ matrix.oneapi }} intel-oneapi-compiler-fortran-${{ matrix.oneapi }} intel-oneapi-mkl-${{ matrix.oneapi }} intel-oneapi-mkl-devel-${{ matrix.oneapi }} intel-oneapi-mpi intel-oneapi-mpi-devel
+        sudo apt install --no-install-recommends \
+          intel-oneapi-compiler-dpcpp-cpp-${{ matrix.oneapi }} \
+          intel-oneapi-compiler-fortran-${{ matrix.oneapi }} \
+          intel-oneapi-mkl-${{ matrix.oneapi }} \
+          intel-oneapi-mkl-devel-${{ matrix.oneapi }} \
+          intel-oneapi-mpi \
+          intel-oneapi-mpi-devel
 
     - name: Setup Intel oneAPI environment
       run: |

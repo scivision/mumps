@@ -143,6 +143,7 @@ if(NOT DEFINED MKL_THREADING)
 endif()
 
 set(MKL_SYCL_MPI false)
+set(MKL_SYCL_LINK false)
 # for Intel oneAPI 2025.2, we don't need SYCL
 
 # default: dynamic
