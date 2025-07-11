@@ -144,6 +144,9 @@ if(NOT MKL_THREADING)
   endif()
 endif(NOT MKL_THREADING)
 
+set(MKL_SYCL_MPI false)
+# for Intel oneAPI 2025.2, we don't need SYCL
+
 # default: dynamic
 if(STATIC IN_LIST SCALAPACK_FIND_COMPONENTS)
   set(MKL_LINK "static")
@@ -163,7 +166,7 @@ get_property(SCALAPACK_LIBRARY TARGET MKL::MKL PROPERTY INTERFACE_LINK_LIBRARIES
 
 set(SCALAPACK_MKL_FOUND true)
 
-foreach(c IN ITEMS TBB LAPACK95 MKL64 OpenMP)
+foreach(c IN ITEMS TBB MKL64 OpenMP)
   if(${c} IN_LIST SCALAPACK_FIND_COMPONENTS)
     set(SCALAPACK_${c}_FOUND true)
   endif()

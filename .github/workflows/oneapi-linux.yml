@@ -49,7 +49,7 @@ jobs:
       matrix:
         int64: [true, false]
         parallel: [true, false]
-        oneapi: [2025.1]
+        oneapi: [2025.2]
 
     steps:
     - uses: actions/checkout@v4
