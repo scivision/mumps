@@ -1,6 +1,6 @@
 set_property(DIRECTORY PROPERTY LABELS "unit;mumps")
 
-include(${PROJECT_SOURCE_DIR}/cmake/launcher.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/mpi_launcher.cmake)
 
 if(BUILD_DOUBLE)
   add_executable(test_mumps_config test_mumps.f90)
@@ -8,7 +8,7 @@ if(BUILD_DOUBLE)
   add_test(NAME test_mumps_config COMMAND test_mumps_config)
 
   if(MUMPS_parallel)
-    test_mpi_launcher(test_mumps_config 2)
+    test_mpi_launcher(test_mumps_config test_mumps_config 2)
   endif()
 endif()
 
@@ -18,7 +18,7 @@ if(BUILD_SINGLE)
   add_test(NAME test_mumps_simple32 COMMAND test_mumps_simple32)
 
   if(MUMPS_parallel)
-    test_mpi_launcher(test_mumps_simple32 2)
+    test_mpi_launcher(test_mumps_simple32 test_mumps_simple32 2)
   endif()
 endif()
 
@@ -28,7 +28,7 @@ if(BUILD_DOUBLE)
   add_test(NAME test_mumps_simple64 COMMAND test_mumps_simple64)
 
   if(MUMPS_parallel)
-    test_mpi_launcher(test_mumps_simple64 2)
+    test_mpi_launcher(test_mumps_simple64 test_mumps_simple64 2)
   endif()
 
   add_executable(test_mumps_complex128 simple.c)
@@ -40,7 +40,7 @@ if(BUILD_DOUBLE)
   endif()
 
   if(MUMPS_parallel)
-    test_mpi_launcher(test_mumps_complex128 2)
+    test_mpi_launcher(test_mumps_complex128 test_mumps_complex128 2)
   endif()
 endif()
 

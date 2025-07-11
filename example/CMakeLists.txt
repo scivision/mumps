@@ -17,7 +17,7 @@ message(STATUS "MUMPS_DIR: ${MUMPS_DIR}")
 
 find_package(MPI COMPONENTS CXX REQUIRED)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/launcher.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/mpi_launcher.cmake)
 
 function(precision_ex a lang)
 
@@ -29,7 +29,7 @@ function(precision_ex a lang)
   add_test(NAME ${a}_example_${lang} COMMAND ${a}_example_${lang})
 
   if(MUMPS_parallel)
-    test_mpi_launcher(${a}_example_${lang} 2)
+    test_mpi_launcher(${a}_example_${lang} ${a}_example_${lang} 2)
   endif()
 
 endfunction()
