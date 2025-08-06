@@ -60,8 +60,8 @@ set(scalapack_cmake_args
 
 file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
 
-string(JSON scalapack_url GET ${json} scalapack git)
-string(JSON scalapack_tag GET ${json} scalapack tag)
+string(JSON scalapack_url GET ${json} scalapack url)
+string(JSON scalapack_sha256 GET ${json} scalapack sha256)
 
 set(SCALAPACK_INCLUDE_DIRS ${CMAKE_INSTALL_FULL_INCLUDEDIR})
 file(MAKE_DIRECTORY ${SCALAPACK_INCLUDE_DIRS})
@@ -80,9 +80,8 @@ else()
 endif()
 
 ExternalProject_Add(scalapack
-GIT_REPOSITORY ${scalapack_url}
-GIT_TAG ${scalapack_tag}
-GIT_SHALLOW true
+URL ${scalapack_url}
+URL_HASH SHA256=${scalapack_sha256}
 CMAKE_ARGS ${scalapack_cmake_args}
 TEST_COMMAND ""
 BUILD_BYPRODUCTS ${SCALAPACK_LIBRARIES}
