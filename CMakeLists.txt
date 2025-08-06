@@ -62,6 +62,16 @@ if(MUMPS_parallel)
   # https://discourse.cmake.org/t/problem-enabling-64-bit-fortran-compilation-on-windows-using-intel-oneapi-with-cmake-on-windows/4541
   # https://github.com/scivision/mumps/issues/114
   if(MUMPS_intsize64 AND DEFINED ENV{I_MPI_ROOT})
+    find_path(IMPI_INC64
+      NAMES mpi.mod
+      HINTS $ENV{I_MPI_ROOT}
+      NO_DEFAULT_PATH
+      PATH_SUFFIXES include/mpi/ilp64
+      REQUIRED
+    )
+    message(STATUS "Found IMPI ILP64 include: ${IMPI_INC64}")
+    list(PREPEND MPI_Fortran_INCLUDE_DIRS ${IMPI_INC64})
+
     find_library(IMPI_LIB64
       NAMES mpi_ilp64 libmpi_ilp64
       HINTS $ENV{I_MPI_ROOT}
