@@ -26,16 +26,13 @@ else()
 endif()
 
 # -- Mumps COMMON
-set(COMM_SRC_Fortran ${_s}mumps_ooc_common.F ${_s}mumps_static_mapping.F)
+set(COMM_SRC_Fortran ${_s}mumps_ooc_common.F ${_s}mumps_static_mapping.F ${_s}mumps_mpitoomp_m.F)
 
 foreach(i IN ITEMS ana_omp_m.F double_linked_list.F fac_asm_build_sort_index_ELT_m.F fac_asm_build_sort_index_m.F fac_descband_data_m.F fac_future_niv2_mod.F fac_maprow_data_m.F front_data_mgt_m.F mumps_l0_omp_m.F omp_tps_common_m.F
                    ana_orderings_wrappers_m.F lr_common.F mumps_memory_mod.F)
   list(APPEND COMM_SRC_Fortran ${_s}${i})
 endforeach()
 
-if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.2)
-  list(APPEND COMM_SRC_Fortran  ${_s}mumps_mpitoomp_m.F)
-endif()
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.3)
   list(APPEND COMM_SRC_Fortran ${_s}ana_blk_m.F)
 endif()
@@ -63,20 +60,15 @@ endforeach()
 
 if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.6)
   list(APPEND COMM_OTHER_C ${_s}mumps_size.c)
-endif()
-if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.2)
-  list(APPEND COMM_OTHER_Fortran ${_s}mumps_sol_es.F)
-endif()
-if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.6)
+else()
   list(APPEND COMM_OTHER_C ${_s}mumps_addr.c)
 endif()
 
-if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.2)
-  foreach(i IN ITEMS mumps_config_file_C.c mumps_thread_affinity.c)
-    list(APPEND COMM_OTHER_C ${_s}${i})
-  endforeach()
-  list(APPEND COMM_OTHER_Fortran ${_s}sol_common.F)
-endif()
+foreach(i IN ITEMS mumps_config_file_C.c mumps_thread_affinity.c)
+  list(APPEND COMM_OTHER_C ${_s}${i})
+endforeach()
+list(APPEND COMM_OTHER_Fortran ${_s}sol_common.F)
+
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.3)
   list(APPEND COMM_OTHER_Fortran ${_s}ana_blk.F)
 endif()
@@ -140,22 +132,18 @@ add_library(MUMPS INTERFACE)
 
 function(precision_source a)
 
-set(SRC_Fortran)
-set(SRC_C)
+set(SRC_Fortran ${_s}${a}sol_distrhs.F)
+
+set(SRC_C ${_s}${a}mumps_gpu.c)
+
 foreach(i IN ITEMS mumps_comm_buffer.F mumps_ooc_buffer.F mumps_ooc.F mumps_struc_def.F
                    ana_aux.F ana_aux_par.F ana_lr.F fac_asm_master_ELT_m.F fac_asm_master_m.F fac_front_aux.F fac_front_LU_type1.F fac_front_LU_type2.F fac_front_LDLT_type1.F fac_front_LDLT_type2.F fac_front_type2_aux.F fac_lr.F fac_omp_m.F fac_par_m.F lr_core.F mumps_lr_data_m.F omp_tps_m.F static_ptr_m.F
-                   lr_type.F mumps_save_restore.F mumps_save_restore_files.F)
+                   lr_type.F mumps_save_restore.F mumps_save_restore_files.F
+                   fac_mem_dynamic.F mumps_config_file.F mumps_sol_es.F sol_lr.F
+                   )
   list(APPEND SRC_Fortran ${_s}${a}${i})
 endforeach()
 
-if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.8)
-  list(APPEND SRC_Fortran ${_s}${a}lr_stats.F)
-endif()
-if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.2)
-  foreach(i IN ITEMS fac_mem_dynamic.F mumps_config_file.F mumps_sol_es.F sol_lr.F)
-    list(APPEND SRC_Fortran ${_s}${a}${i})
-  endforeach()
-endif()
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.3)
   foreach(i IN ITEMS fac_sispointers_m.F fac_sol_l0omp_m.F sol_omp_m.F)
     list(APPEND SRC_Fortran ${_s}${a}${i})
@@ -164,8 +152,9 @@ endif()
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.6)
   list(APPEND SRC_Fortran ${_s}${a}mumps_mpi3_mod.F)
 endif()
+
 if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.8)
-  list(APPEND SRC_Fortran ${_s}${a}mumps_load.F)
+  list(APPEND SRC_Fortran ${_s}${a}lr_stats.F ${_s}${a}mumps_load.F)
 else()
   list(APPEND SRC_Fortran ${_s}${a}fac_compact_factors_m.F ${_s}${a}mumps_intr_types.F)
 endif()
@@ -193,10 +182,6 @@ foreach(i IN ITEMS
   list(APPEND SRC_Fortran ${_s}${a}${i})
 endforeach()
 
-if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.2)
-  list(APPEND SRC_Fortran ${_s}${a}sol_distrhs.F)
-  list(APPEND SRC_C ${_s}${a}mumps_gpu.c)
-endif()
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.7)
   list(APPEND SRC_Fortran ${_s}${a}sol_distsol.F ${_s}${a}fac_diag.F ${_s}${a}fac_dist_arrowheads_omp.F)
 endif()
