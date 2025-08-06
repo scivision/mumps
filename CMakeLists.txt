@@ -57,6 +57,22 @@ if(MUMPS_parallel)
     list(PREPEND NUMERIC_LIBS SCALAPACK::SCALAPACK)
   endif()
 
+  # this is needed for Intel MPI ILP64 support
+  # It's a long-known FindMPI CMake issue
+  # https://discourse.cmake.org/t/problem-enabling-64-bit-fortran-compilation-on-windows-using-intel-oneapi-with-cmake-on-windows/4541
+  # https://github.com/scivision/mumps/issues/114
+  if(MUMPS_intsize64 AND DEFINED ENV{I_MPI_ROOT})
+    find_library(IMPI_LIB64
+      NAMES mpi_ilp64 libmpi_ilp64
+      HINTS $ENV{I_MPI_ROOT}
+      NO_DEFAULT_PATH
+      PATH_SUFFIXES lib
+      REQUIRED
+    )
+    message(STATUS "Found IMPI ILP64 library: ${IMPI_LIB64}")
+    list(APPEND NUMERIC_LIBS ${IMPI_LIB64})
+  endif()
+
   # avoid MPICH -fallow flag leakage
   set(NUMERIC_INC ${MPI_Fortran_INCLUDE_DIRS})
   list(APPEND NUMERIC_LIBS ${MPI_Fortran_LIBRARIES} MPI::MPI_C)
