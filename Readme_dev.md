@@ -12,9 +12,14 @@ When a new
 occurs, download both the prior release and the current release.
 Extract both release archives into distinct directories.
 
-Do a "diff" of the Makefiles--perhaps via Meld.
+We have made a CMake + Python script to help compare MUMPS source files and Makefiles.
+
+```sh
+cmake -Dold="5.8.0" -Dnew="5.8.1" -P .\scripts\compare_mumps_version_source.cmake
+```
+
 This will show if there are any new and/or removed source files.
-Update the CMake scripts according to any relevant Makefile changes.
+Update the CMake scripts to add / remove source files according to any relevant Makefile changes.
 
 ## Minor point release
 
