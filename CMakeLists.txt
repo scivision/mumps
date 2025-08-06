@@ -143,6 +143,11 @@ if(MUMPS_UPSTREAM_VERSION AND NOT MUMPS_ACTUAL_VERSION VERSION_EQUAL MUMPS_UPSTR
   message(FATAL_ERROR "Failed to read MUMPS version ${MUMPS_UPSTREAM_VERSION} from ${mumps_SOURCE_DIR}/VERSION, got ${MUMPS_ACTUAL_VERSION} instead.")
 endif()
 
+# minimum MUMPS version
+if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.1)
+  message(FATAL_ERROR "MUMPS version ${MUMPS_ACTUAL_VERSION} is too old, please use MUMPS >= 5.1")
+endif()
+
 # --- MUMPS build
 
 # --- mpiseq (No MPI)
