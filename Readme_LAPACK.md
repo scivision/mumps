@@ -6,9 +6,9 @@ By default, the generic LAPACK library "lapack" is searched for.
 To specify a particular LAPACK library, use CMake configure variable "LAPACK_VENDOR" and "SCALAPACK_VENDOR" using one of the following vendors:
 
 * AOCL  [AMD Optimizing CPU Libraries](https://www.amd.com/en/developer/aocl.html)
-* Atlas [Automatically Tuned Linear Algebra Software](http://math-atlas.sourceforge.net/)
+* Atlas [Automatically Tuned Linear Algebra Software](https://math-atlas.sourceforge.net/)
 * MKL  [Intel oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html): requires [oneMKL >= 2021.3](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/cmake-config-for-onemkl.html)
-* Netlib [Netlib LAPACK](http://www.netlib.org/lapack/)  (default)
+* Netlib [Netlib LAPACK](https://www.netlib.org/lapack/)  (default)
 * OpenBLAS [OpenBLAS](https://www.openblas.net/)
 
 For example, to use OpenBLAS:

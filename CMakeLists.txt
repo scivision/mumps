@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20...4.0)
+cmake_minimum_required(VERSION 3.20...4.1)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "Please use out of source build:
@@ -12,9 +12,9 @@ endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.8.0.3
+VERSION 5.8.1.0
 DESCRIPTION "Sparse direct parallel solver"
-HOMEPAGE_URL "http://mumps-solver.org/"
+HOMEPAGE_URL "https://mumps-solver.org/"
 )
 
 if(CMAKE_VERSION VERSION_GREATER 3.30.0 AND CMAKE_VERSION VERSION_LESS 3.30.4)
