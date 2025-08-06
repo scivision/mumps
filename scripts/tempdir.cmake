@@ -26,4 +26,4 @@ endif()
 
 message(FATAL_ERROR "Could not find mktemp or pwsh to make temporary directory")
 
-endfunction(get_temp_dir)
+endfunction()
