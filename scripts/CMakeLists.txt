@@ -42,13 +42,12 @@ set(scalapack_cmake_args ${cmake_args}
 -DSCALAPACK_BUILD_TESTING:BOOL=false
 )
 
-string(JSON scalapack_url GET ${json} scalapack git)
-string(JSON scalapack_tag GET ${json} scalapack tag)
+string(JSON scalapack_url GET ${json} scalapack url)
+string(JSON scalapack_sha256 GET ${json} scalapack sha256)
 
 ExternalProject_Add(scalapack
-GIT_REPOSITORY ${scalapack_url}
-GIT_TAG ${scalapack_tag}
-GIT_SHALLOW true
+URL ${scalapack_url}
+URL_HASH SHA256=${scalapack_sha256}
 CMAKE_ARGS ${scalapack_cmake_args}
 CONFIGURE_HANDLED_BY_BUILD true
 )
@@ -60,13 +59,12 @@ set(metis_cmake_args ${cmake_args}
 -DBUILD_TESTING:BOOL=false
 )
 
-string(JSON metis_url GET ${json} metis git)
-string(JSON metis_tag GET ${json} metis tag)
+string(JSON metis_url GET ${json} metis url)
+string(JSON metis_sha256 GET ${json} metis sha256)
 
 ExternalProject_Add(metis
-GIT_REPOSITORY ${metis_url}
-GIT_TAG ${metis_tag}
-GIT_SHALLOW true
+URL ${metis_url}
+URL_HASH SHA256=${metis_sha256}
 CMAKE_ARGS ${metis_cmake_args}
 CONFIGURE_HANDLED_BY_BUILD true
 )
@@ -117,13 +115,12 @@ if(BISON_ROOT)
   list(APPEND scotch_cmake_args -DCMAKE_PREFIX_PATH:PATH=${BISON_ROOT})
 endif()
 
-string(JSON scotch_url GET ${json} scotch git)
-string(JSON scotch_tag GET ${json} scotch tag)
+string(JSON scotch_url GET ${json} scotch url)
+string(JSON scotch_sha256 GET ${json} scotch sha256)
 
 ExternalProject_Add(scotch
-GIT_REPOSITORY ${scotch_url}
-GIT_TAG ${scotch_tag}
-GIT_SHALLOW true
+URL ${scotch_url}
+URL_HASH SHA256=${scotch_sha256}
 CMAKE_ARGS ${scotch_cmake_args}
 CONFIGURE_HANDLED_BY_BUILD true
 )

@@ -23,6 +23,13 @@ on:
       - ".github/workflows/ci.yml"
       - "!scripts/*"
 
+  workflow_dispatch:
+
+# avoid wasted runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
 
   core:
