@@ -30,15 +30,35 @@ add_compile_options("$<$<COMPILE_LANG_AND_ID:Fortran,IntelLLVM>:$<IF:$<BOOL:${WI
 
 if(MUMPS_intsize64)
   add_compile_options(
-    "$<$<COMPILE_LANG_AND_ID:Fortran,Intel,IntelLLVM>:-i8>"
     "$<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-fdefault-integer-8>"
   )
   # ALL libraries must be compiled with -fdefault-integer-8, including MPI,
   # or runtime fails
   # See MUMPS 5.7.0 User manual about error -69
 
+  if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
+    # https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2025-2/using-the-ilp64-interface-vs-lp64-interface.html
+    # https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2025-2/using-the-ilp64-interface-vs-lp64-interface.html
+    # https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-16/ilp64-support.html
 
-  add_compile_definitions($<$<COMPILE_LANG_AND_ID:Fortran,Intel,IntelLLVM>:WORKAROUNDINTELILP64MPI2INTEGER>)
+    if(MUMPS_openmp)
+      set(_mkl_ilp64 parallel)
+    else()
+      set(_mkl_ilp64 sequential)
+    endif()
+
+    add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:-i8>")
+    if(WIN32)
+      add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:/Qmkl-ilp64=${_mkl_ilp64}>")
+    endif()
+
+    add_compile_definitions(
+      "$<$<COMPILE_LANGUAGE:C>:MKL_ILP64>"
+      "$<$<COMPILE_LANGUAGE:Fortran>:WORKAROUNDINTELILP64MPI2INTEGER>"
+    )
+
+    add_link_options("$<$<COMPILE_LANGUAGE:Fortran>:-qmkl-ilp64=${_mkl_ilp64}>")
+  endif()
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
