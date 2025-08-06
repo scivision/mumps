@@ -18,9 +18,7 @@ else()
   set(MUMPS_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
 endif()
 
-if(MUMPS_UPSTREAM_VERSION VERSION_GREATER_EQUAL 5.2)
-  option(gemmt "GEMMT is recommended in User Manual if available" ON)
-endif()
+option(gemmt "GEMMT is recommended in User Manual if available" ON)
 
 option(MUMPS_parallel "parallel (use MPI)" ON)
 

@@ -12,9 +12,10 @@ if(NOT DEFINED tempdir)
 endif()
 
 # MUMPS 4.8.4, 4.9.2, 5.0.2 source no longer available from mumps-solver.org
+# discarded 5.1.x for simplicity of our build scripts
 
 if(NOT DEFINED vers)
-  set(vers 5.1.2 5.2.1 5.3.5 5.4.1 5.5.1 5.6.2 5.7.0 5.7.3 5.8.1)
+  set(vers 5.2.1 5.3.5 5.4.1 5.5.1 5.6.2 5.7.3 5.8.1)
 endif()
 
 message(STATUS "Testing MUMPS versions: ${vers}")

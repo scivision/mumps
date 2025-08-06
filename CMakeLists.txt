@@ -144,8 +144,8 @@ if(MUMPS_UPSTREAM_VERSION AND NOT MUMPS_ACTUAL_VERSION VERSION_EQUAL MUMPS_UPSTR
 endif()
 
 # minimum MUMPS version
-if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.1)
-  message(FATAL_ERROR "MUMPS version ${MUMPS_ACTUAL_VERSION} is too old, please use MUMPS >= 5.1")
+if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.2)
+  message(FATAL_ERROR "MUMPS version ${MUMPS_ACTUAL_VERSION} is too old, please use MUMPS >= 5.2")
 endif()
 
 # --- MUMPS build
