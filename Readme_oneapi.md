@@ -5,6 +5,12 @@ We require
 
 Do not try to build LAPACK and ScaLAPACK with oneAPI, the build will fail--use the oneMKL libraries that provide LAPACK and SCALAPACK.
 
+We handle the compile and link options as
+[specified by Intel MPI](https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-16/ilp64-support.html).
+We link "libmpi_ilp64" as a workaround to a
+[long-standing issue](https://discourse.cmake.org/t/problem-enabling-64-bit-fortran-compilation-on-windows-using-intel-oneapi-with-cmake-on-windows/4541)
+with Intel MPI and CMake.
+
 ## Linux
 
 Use the oneAPI

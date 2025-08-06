@@ -80,6 +80,9 @@ jobs:
         source /opt/intel/oneapi/setvars.sh
         printenv >> $GITHUB_ENV
 
+    - name: Tell MPI compiler wrapper flags
+      run: mpiifx -show
+
     - name: CMake Configure
       run: >-
         cmake --preset default
