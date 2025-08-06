@@ -2,10 +2,10 @@ name: ci_build
 
 env:
   CTEST_NO_TESTS_ACTION: error
-  CMAKE_BUILD_PARALLEL_LEVEL: 4
   CTEST_PARALLEL_LEVEL: 0
   CMAKE_INSTALL_PREFIX: ~/libs
   CMAKE_PREFIX_PATH: ~/libs
+  CMAKE_GENERATOR: Ninja
 
 on:
   push:
