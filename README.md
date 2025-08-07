@@ -73,9 +73,12 @@ With the default options the build/ directory contains library binaries ([Window
 * libmumps_common.a (common MUMPS routines)
 * libpord.a  (PORD library)
 
-If `-DMUMPS_parallel=no` was set, an additional helper library is built in place of linking MPI libraries:
+If `-DMUMPS_parallel=no` was set, additional helper libraries are built in place of linking MPI libraries:
 
-* libmpiseq.a
+* libmpiseq_fortran.a
+* libmpiseq_c.a
+
+The libmpiseq.a file isn't used directly by this project, but it for compatibility with other build systems that may expect a libmpiseq file.
 
 These libraries can be linked into C, C++, Fortran, etc. programs, or even be used with appropriate interfaces from [Matlab](./Readme_matlab.md) and Python
 [PyMUMPS](https://pypi.org/project/PyMUMPS/)
@@ -112,5 +115,5 @@ mpicxx ./example/d_example.cpp -I./build/local/include -L./build/local/lib -ldmu
 If `-DMUMPS_parallel=no` was used to build MUMPS, instead do:
 
 ```sh
-g++ ./example/d_example.cpp -I./build/local/include -L./build/local/lib -ldmumps -lmumps_common -lpord -llapack -lblas -lmpiseq -lgfortran
+g++ ./example/d_example.cpp -I./build/local/include -L./build/local/lib -ldmumps -lmumps_common -lpord -llapack -lblas -lmpiseq_fortran -lmpiseq_c -lgfortran
 ```
