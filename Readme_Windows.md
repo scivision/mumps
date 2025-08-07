@@ -18,6 +18,9 @@ winget install Intel.OneAPI.BaseToolkit
 winget install Intel.OneAPI.HPCToolkit
 ```
 
+We have provided a helper script "build.bat" at the top of the MUMPS project directory.
+One can edit / run this script to help get started.
+
 ## CMake Generator
 
 In general on Windows, CMake is easier to use with Ninja as the build system backend.
