@@ -17,7 +17,7 @@ runs:
 
   - name: Install OpenBLAS (Linux)
     shell: bash
-    if: ${{ matrix.lapack_vendor == 'OpenBLAS' }}
+    if: ${{ runner.os == 'Linux' && matrix.lapack_vendor == 'OpenBLAS' }}
     run: sudo apt install --no-install-recommends libopenblas-dev
 
   - name: Build METIS
