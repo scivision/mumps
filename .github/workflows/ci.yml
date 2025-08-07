@@ -55,6 +55,8 @@ jobs:
           - openmp: true
             os: ubuntu-latest
 
+    name: linux-parallel=${{ matrix.parallel }}-scotch=${{ matrix.scotch }}-metis=${{ matrix.metis }}-lapack=${{ matrix.lapack_vendor }}-openmp=${{ matrix.openmp }}
+
     runs-on: ${{ matrix.os }}
 
     steps:
