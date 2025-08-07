@@ -71,58 +71,8 @@ CONFIGURE_HANDLED_BY_BUILD true
 
 # Scotch
 
-function(bison_homebrew)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/scotch.cmake)
 
-find_program(brew NAMES brew)
-if(NOT brew)
-  return()
-endif()
-
-execute_process(COMMAND ${brew} --prefix
-RESULT_VARIABLE ret
-OUTPUT_VARIABLE out OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-if(NOT ret EQUAL 0)
-  return()
-endif()
-
-find_program(bison NAMES bison HINTS ${out} PATH_SUFFIXES opt/bison/bin)
-if(NOT bison)
-  return()
-endif()
-
-message(STATUS "Bison found: ${bison}")
-cmake_path(GET bison PARENT_PATH bison_root)
-
-set(BISON_ROOT ${bison_root} PARENT_SCOPE)
-
-endfunction()
-
-bison_homebrew()
-
-# https://gitlab.inria.fr/scotch/scotch/-/blob/master/CMakeLists.txt
-set(scotch_cmake_args ${cmake_args}
--DBUILD_TESTING:BOOL=false
--DINSTALL_METIS_HEADERS:BOOL=false
--DBUILD_LIBSCOTCHMETIS:BOOL=false
--DBUILD_LIBESMUMPS:BOOL=true
--DINTSIZE=$<IF:$<BOOL:${MUMPS_intsize64}>,64,32>
-)
-#https://gitlab.inria.fr/scotch/scotch/-/blob/master/src/CMakeLists.txt#L84
-
-if(BISON_ROOT)
-  list(APPEND scotch_cmake_args -DCMAKE_PREFIX_PATH:PATH=${BISON_ROOT})
-endif()
-
-string(JSON scotch_url GET ${json} scotch url)
-string(JSON scotch_sha256 GET ${json} scotch sha256)
-
-ExternalProject_Add(scotch
-URL ${scotch_url}
-URL_HASH SHA256=${scotch_sha256}
-CMAKE_ARGS ${scotch_cmake_args}
-CONFIGURE_HANDLED_BY_BUILD true
-)
+# ignore build dir
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")

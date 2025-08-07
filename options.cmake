@@ -64,7 +64,7 @@ set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED true)
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED true)
 
-# this is for convenience of those needing scalapaack, lapack built
+# this is for convenience of those needing scalapack, lapack, scotch, etc. built
 if(MUMPS_IS_TOP_LEVEL AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "${PROJECT_BINARY_DIR}/local")
 endif()

@@ -149,9 +149,15 @@ set(ORDERING_LIBS)
 set(ORDERING_DEFS pord)
 
 if(MUMPS_scotch)
-  find_package(Scotch COMPONENTS ESMUMPS REQUIRED)
+
+  find_package(Scotch COMPONENTS ESMUMPS)
+  if(NOT Scotch_FOUND)
+    include(cmake/scotch.cmake)
+  endif()
+
   list(APPEND ORDERING_DEFS scotch)
   list(APPEND ORDERING_LIBS Scotch::Scotch)
+
 endif()
 
 if(MUMPS_parmetis)

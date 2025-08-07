@@ -11,6 +11,9 @@
     "url": "https://gitlab.inria.fr/scotch/scotch/-/archive/v7.0.7/scotch-v7.0.7.tar.bz2",
     "sha256": "d88a9005dd05a9b3b86e6d1d7925740a789c975e5a92718ca0070e16b6567893"
   },
+  "win_flex_bison": {
+    "url": "https://github.com/lexxmark/winflexbison/releases/download/v2.5.25/win_flex_bison-2.5.25.zip"
+  },
   "mumps_sha256": {
     "5.2.1": "d988fc34dfc8f5eee0533e361052a972aa69cc39ab193e7f987178d24981744a",
     "5.3.5": "e5d665fdb7043043f0799ae3dbe3b37e5b200d1ab7a6f7b2a4e463fd89507fa4",

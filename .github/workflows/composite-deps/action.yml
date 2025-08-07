@@ -10,10 +10,22 @@ runs:
       sudo apt update
       sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-openmpi-dev
 
+  - name: install Scotch prereqs (Linux)
+    shell: bash
+    if: ${{ runner.os == 'Linux' && matrix.scotch}}
+    run: |
+      sudo apt install --no-install-recommends bison flex
+
   - name: Install prereqs (macOS)
     shell: bash
     if: runner.os == 'macOS'
     run: brew install open-mpi scalapack
+
+  - name: install Scotch prereqs (macOS)
+    shell: bash
+    if: ${{ runner.os == 'macOS' && matrix.scotch }}
+    run: |
+      brew install bison flex
 
   - name: Install OpenBLAS (Linux)
     shell: bash
@@ -24,8 +36,3 @@ runs:
     shell: bash
     if: ${{ matrix.metis }}
     run: cmake -P scripts/build_metis.cmake
-
-  - name: Build scotch
-    shell: bash
-    if: ${{ matrix.scotch }}
-    run: cmake -P scripts/build_scotch.cmake
