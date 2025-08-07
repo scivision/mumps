@@ -103,9 +103,11 @@ if(BLAS_HAVE_sGEMMT OR BLAS_HAVE_dGEMMT OR BLAS_HAVE_cGEMMT OR BLAS_HAVE_zGEMMT)
   set(BLAS_HAVE_GEMMT TRUE)
 endif()
 
+# use MPI_Fortran_INCLUDE_DIRS directly to avoid MPICH Fortran -fallow flag leakage
+
 foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   target_include_directories(${t} PUBLIC
-  "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/src;${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
+  "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/src;${mumps_SOURCE_DIR}/include;${MPI_Fortran_INCLUDE_DIRS}>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 
@@ -202,7 +204,7 @@ foreach(t IN ITEMS ${a}mumps ${a}mumps_C ${a}mumps_Fortran)
   $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${MUMPS_scalapack}>>>:NOSCALAPACK>
   )
   target_include_directories(${t} PUBLIC
-  "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${NUMERIC_INC}>"
+  "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${MPI_Fortran_INCLUDE_DIRS}>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
   target_link_libraries(${t} PUBLIC mumps_common)

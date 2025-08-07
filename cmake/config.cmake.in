@@ -29,6 +29,14 @@ if(MUMPS_parallel)
   find_dependency(SCALAPACK COMPONENTS ${MUMPS_SCALAPACK_VENDOR})
 else()
   find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})
+
+  # This is used in place of find_dependency(MPI) in MUMPS when MUMPS_parallel is OFF
+  add_library(MPI::MPI_C INTERFACE IMPORTED)
+  target_link_libraries(MPI::MPI_C INTERFACE MUMPS::mpiseq_c)
+
+  add_library(MPI::MPI_Fortran INTERFACE IMPORTED)
+  target_link_libraries(MPI::MPI_Fortran INTERFACE MUMPS::mpiseq_fortran)
+
   set(MUMPS_mpiseq_FOUND true)
 endif()
 
