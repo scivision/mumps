@@ -15,10 +15,16 @@ if not defined CMPLR_ROOT (
   if exist "%ProgramFiles(x86)%\Intel\oneAPI\setvars.bat" (
     call "%ProgramFiles(x86)%\Intel\oneAPI\setvars.bat"
   ) else (
-    echo Intel oneAPI not found, attempting to proceed with default compiler.
+    echo Intel oneAPI not found, halting. Try using the Intel oneAPI command prompt.
+    exit /b 1
   )
 )
 
+)
+
+where cmake
+if %errorlevel% neq 0 (
+  winget install Kitware.CMake
 )
 
 if %CMAKE_GENERATOR%==Ninja (
