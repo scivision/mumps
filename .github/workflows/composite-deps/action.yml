@@ -8,7 +8,17 @@ runs:
     if: runner.os == 'Linux'
     run: |
       sudo apt update
-      sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev libscalapack-openmpi-dev
+      sudo apt install --no-install-recommends liblapack-dev
+
+  - name: install open-mpi (linux)
+    shell: bash
+    if: ${{ runner.os == 'Linux' && !matrix.mpich }}
+    run: sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin libscalapack-openmpi-dev
+
+  - name: install MPICH (linux)
+    shell: bash
+    if: ${{ runner.os == 'Linux' && matrix.mpich }}
+    run: sudo apt install --no-install-recommends libmpich-dev mpich libscalapack-mpich-dev
 
   - name: Install prereqs (macOS)
     shell: bash
@@ -17,7 +27,7 @@ runs:
 
   - name: Install OpenBLAS (Linux)
     shell: bash
-    if: ${{ matrix.lapack_vendor == 'OpenBLAS' }}
+    if: ${{ runner.os == 'Linux' && matrix.lapack_vendor == 'OpenBLAS' }}
     run: sudo apt install --no-install-recommends libopenblas-dev
 
   - name: Build METIS

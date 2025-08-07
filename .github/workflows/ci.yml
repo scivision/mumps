@@ -33,6 +33,7 @@ jobs:
         scotch: [false]
         metis: [false]
         parallel: [true]
+        mpich: [false]
         lapack_vendor: [""]
         os: [ubuntu-latest, macos-latest]
         include:
@@ -43,6 +44,8 @@ jobs:
           - lapack_vendor: "OpenBLAS"
             os: ubuntu-latest
           - parallel: false
+            os: ubuntu-latest
+          - mpich: true
             os: ubuntu-latest
 
     runs-on: ${{ matrix.os }}
