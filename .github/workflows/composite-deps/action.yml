@@ -18,7 +18,9 @@ runs:
   - name: install MPICH (linux)
     shell: bash
     if: ${{ runner.os == 'Linux' && matrix.mpich }}
-    run: sudo apt install --no-install-recommends libmpich-dev mpich libscalapack-mpich-dev
+    run: sudo apt install --no-install-recommends libmpich-dev mpich
+# libscalapack-mpich-dev is broken, it pulls in openmpi-bin, which leads to OpenMPI clashing with MPICH
+# https://packages.ubuntu.com/noble/libscalapack-mpich2.2
 
   - name: install Scotch prereqs (Linux)
     shell: bash

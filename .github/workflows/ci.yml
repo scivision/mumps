@@ -47,8 +47,10 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         include:
           - scotch: true
+            parallel: true
             os: ubuntu-latest
           - metis: true
+            parallel: true
             os: ubuntu-latest
           - parmetis: true
             parallel: true
@@ -60,6 +62,7 @@ jobs:
           - openmp: true
             os: ubuntu-latest
           - mpich: true
+            parallel: true
             os: ubuntu-latest
 
     name: linux-parallel=${{ matrix.parallel }}-scotch=${{ matrix.scotch }}-metis=${{ matrix.metis }}-parmetis=${{ matrix.parmetis }}-lapack=${{ matrix.lapack_vendor }}-openmp=${{ matrix.openmp }}
