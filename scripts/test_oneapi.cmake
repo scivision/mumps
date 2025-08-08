@@ -9,9 +9,12 @@ include(${CMAKE_CURRENT_LIST_DIR}/oneapi_check.cmake)
 
 find_package(MKL CONFIG REQUIRED)
 
-include(${CMAKE_CURRENT_LIST_DIR}/tempdir.cmake)
-
-get_temp_dir(tmpdir)
+foreach(n IN ITEMS $ENV{TEMP} $ENV{TMP} $ENV{TMPDIR})
+  if(EXISTS ${n})
+    set(tempdir ${n})
+    break()
+  endif()
+endforeach()
 
 # save build time
 set(BUILD_SINGLE off)
@@ -19,7 +22,7 @@ set(BUILD_DOUBLE on)
 
 foreach(MUMPS_parallel IN ITEMS true false)
 
-set(bindir ${tmpdir}/parallel_${MUMPS_parallel})
+set(bindir ${tempdir}/parallel_${MUMPS_parallel})
 
 set(prefix ${bindir}/install)
 

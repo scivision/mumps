@@ -7,3 +7,6 @@
 [submodule "scotch"]
 	path = scotch
 	url = https://gitlab.inria.fr/scotch/scotch
+[submodule "scalapack"]
+	path = scalapack
+	url = https://github.com/scivision/scalapack

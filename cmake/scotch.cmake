@@ -78,10 +78,13 @@ endif()
 
 if(WIN32 AND (NOT BISON_ROOT OR NOT FLEX_ROOT))
 
+  file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
   string(JSON win_flex_bison_url GET ${json} win_flex_bison url)
+  string(JSON win_flex_bison_sha256 GET ${json} win_flex_bison sha256)
 
   FetchContent_Populate(win_flex_bison
   URL ${win_flex_bison_url}
+  URL_HASH SHA256=${win_flex_bison_sha256}
   )
 
   message(DEBUG "Hint Bison,Flex path ${win_flex_bison_SOURCE_DIR}")
@@ -127,6 +130,9 @@ USES_TERMINAL_INSTALL true
 )
 
 file(MAKE_DIRECTORY ${Scotch_INCLUDE_DIRS})
+if(NOT IS_DIRECTORY ${Scotch_INCLUDE_DIRS})
+  message(FATAL_ERROR "Could not create directory: ${Scotch_INCLUDE_DIRS}")
+endif()
 
 add_library(SCOTCH::scotch INTERFACE IMPORTED GLOBAL)
 add_dependencies(SCOTCH::scotch scotch_ep)
