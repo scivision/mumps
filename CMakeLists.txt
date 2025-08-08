@@ -161,20 +161,23 @@ if(MUMPS_scotch)
 endif()
 
 
-set(IDXTYPEWIDTH $<IF:$<BOOL:${MUMPS_intsize64}>,64,32>)
-if(MUMPS_metis)
-  git_submodule(${PROJECT_SOURCE_DIR}/metis)
-  add_subdirectory(metis)
+if(MUMPS_metis OR MUMPS_parmetis)
+  set(IDXTYPEWIDTH $<IF:$<BOOL:${MUMPS_intsize64}>,64,32>)
+  git_submodule(${PROJECT_SOURCE_DIR}/parmetis)
+
+  if(MUMPS_parmetis)
+    add_subdirectory(parmetis)
+    list(APPEND ORDERING_DEFS parmetis)
+    list(APPEND ORDERING_LIBS parmetis::parmetis)
+  else()
+    git_submodule(${PROJECT_SOURCE_DIR}/parmetis/METIS)
+    add_subdirectory(parmetis/METIS)
+    list(APPEND ORDERING_LIBS metis::metis)
+  endif()
 
   list(APPEND ORDERING_DEFS REALTYPEWIDTH=32 IDXTYPEWIDTH=${IDXTYPEWIDTH} metis)
-  list(APPEND ORDERING_LIBS metis::metis)
-elseif(MUMPS_parmetis)
-  git_submodule(${PROJECT_SOURCE_DIR}/parmetis)
-  add_subdirectory(parmetis)
-
-  list(APPEND ORDERING_DEFS REALTYPEWIDTH=32 IDXTYPEWIDTH=${IDXTYPEWIDTH} parmetis metis)
-  list(APPEND ORDERING_LIBS parmetis::parmetis)
 endif()
+
 
 list(APPEND ORDERING_LIBS pord)
 
