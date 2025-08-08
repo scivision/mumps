@@ -49,24 +49,31 @@ jobs:
           - scotch: true
             parallel: true
             os: ubuntu-latest
+            name: Scotch
           - metis: true
-            parallel: true
+            parallel: false
             os: ubuntu-latest
+            name: METIS
           - parmetis: true
             parallel: true
             os: ubuntu-latest
+            name: ParMETIS
           - lapack_vendor: "OpenBLAS"
+            parallel: true
             os: ubuntu-latest
+            name: OpenBLAS
           - parallel: false
             os: ubuntu-latest
           - openmp: true
+            parallel: false
             os: ubuntu-latest
+            name: OpenMP
           - mpich: true
             parallel: true
             os: ubuntu-latest
+            name: MPICH
 
-    name: linux-parallel=${{ matrix.parallel }}-scotch=${{ matrix.scotch }}-metis=${{ matrix.metis }}-parmetis=${{ matrix.parmetis }}-lapack=${{ matrix.lapack_vendor }}-openmp=${{ matrix.openmp }}
-
+    name: ${{ matrix.os }}-parallel=${{ matrix.parallel }}-${{ matrix.name }}
     runs-on: ${{ matrix.os }}
 
     steps:
