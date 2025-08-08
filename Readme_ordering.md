@@ -1,6 +1,6 @@
 # MUMPS ordering
 
-To use Scotch, METIS, and/or ParMETIS:
+To use Scotch, METIS, and/or ParMETIS, which will be automatically built if needed:
 
 ```sh
 cmake -DMUMPS_scotch=yes

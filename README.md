@@ -27,7 +27,7 @@ Virtually all contemporary compilers work, including GCC, Clang/Flang, oneAPI, N
 
 By default PORD ordering is used.
 [Scotch, METIS, and parMETIS ordering](./Readme_ordering.md)
-can be used.
+can be used and will be automatically built if needed.
 
 Several [LAPACK vendors](./Readme_LAPACK.md) are supported.
 
