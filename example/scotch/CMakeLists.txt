@@ -10,7 +10,11 @@ find_package(MUMPS CONFIG REQUIRED)
 
 function(precision_ex a)
   add_executable(${a}_scotch ${a}_scotch.f90)
-  target_link_libraries(${a}_scotch PRIVATE MUMPS::MUMPS)
+  target_link_libraries(${a}_scotch PRIVATE MUMPS::MUMPS
+  MPI::MPI_Fortran MPI::MPI_C
+  )
+  # always link MPI as we use the libmpiseq if not MUMPS_parallel
+
   add_test(NAME ${a}_scotch COMMAND ${a}_scotch)
 endfunction()
 

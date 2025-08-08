@@ -94,7 +94,10 @@ if(MUMPS_metis OR MUMPS_parmetis)
 endif()
 
 add_library(mumps_common_C OBJECT ${COMM_OTHER_C})
+target_link_libraries(mumps_common_C PRIVATE MPI::MPI_C)
+
 add_library(mumps_common_Fortran OBJECT ${COMM_SRC_Fortran} ${COMM_OTHER_Fortran})
+target_link_libraries(mumps_common_Fortran PRIVATE MPI::MPI_Fortran)
 
 add_library(mumps_common $<TARGET_OBJECTS:mumps_common_Fortran> $<TARGET_OBJECTS:mumps_common_C>)
 
@@ -107,7 +110,7 @@ endif()
 
 foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   target_include_directories(${t} PUBLIC
-  "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/src;${mumps_SOURCE_DIR}/include;${MPI_Fortran_INCLUDE_DIRS}>"
+  "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/src;${mumps_SOURCE_DIR}/include>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 
@@ -191,7 +194,9 @@ endif()
 set(CINT_SRC ${_s}mumps_c.c)
 
 add_library(${a}mumps_C OBJECT ${CINT_SRC} ${SRC_C})
+
 add_library(${a}mumps_Fortran OBJECT ${SRC_Fortran})
+target_link_libraries(${a}mumps_Fortran PRIVATE MPI::MPI_Fortran)
 
 add_library(${a}mumps $<TARGET_OBJECTS:${a}mumps_C> $<TARGET_OBJECTS:${a}mumps_Fortran>)
 
@@ -204,7 +209,7 @@ foreach(t IN ITEMS ${a}mumps ${a}mumps_C ${a}mumps_Fortran)
   $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${MUMPS_scalapack}>>>:NOSCALAPACK>
   )
   target_include_directories(${t} PUBLIC
-  "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include;${MPI_Fortran_INCLUDE_DIRS}>"
+  "$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/include>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
   target_link_libraries(${t} PUBLIC mumps_common)

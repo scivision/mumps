@@ -131,9 +131,6 @@ else()
 
 endif()
 
-# LINK_ONLY avoids MPICH Fortran -fallow flag leakage
-list(APPEND NUMERIC_LIBS $<LINK_ONLY:MPI::MPI_Fortran> MPI::MPI_C)
-
 if(MUMPS_openmp)
   find_package(OpenMP COMPONENTS C Fortran REQUIRED)
   list(APPEND NUMERIC_LIBS OpenMP::OpenMP_Fortran OpenMP::OpenMP_C)

@@ -32,7 +32,9 @@ function(precision_ex a lang)
   add_executable(${a}_example_${lang} ${a}_example.${lang})
   target_link_libraries(${a}_example_${lang} PRIVATE MUMPS::MUMPS
   "$<$<BOOL:${MPI_CXX_FOUND}>:MPI::MPI_CXX>"
+  MPI::MPI_C
   )
+  # always link MPI as we use the libmpiseq if not MUMPS_parallel
 
   add_test(NAME ${a}_example_${lang} COMMAND ${a}_example_${lang})
 
