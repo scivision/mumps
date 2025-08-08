@@ -39,6 +39,7 @@ jobs:
       matrix:
         scotch: [false]
         metis: [false]
+        parmetis: [false]
         parallel: [true]
         openmp: [false]
         lapack_vendor: [""]
@@ -48,6 +49,9 @@ jobs:
             os: ubuntu-latest
           - metis: true
             os: ubuntu-latest
+          - parmetis: true
+            parallel: true
+            os: ubuntu-latest
           - lapack_vendor: "OpenBLAS"
             os: ubuntu-latest
           - parallel: false
@@ -55,7 +59,7 @@ jobs:
           - openmp: true
             os: ubuntu-latest
 
-    name: linux-parallel=${{ matrix.parallel }}-scotch=${{ matrix.scotch }}-metis=${{ matrix.metis }}-lapack=${{ matrix.lapack_vendor }}-openmp=${{ matrix.openmp }}
+    name: linux-parallel=${{ matrix.parallel }}-scotch=${{ matrix.scotch }}-metis=${{ matrix.metis }}-parmetis=${{ matrix.parmetis }}-lapack=${{ matrix.lapack_vendor }}-openmp=${{ matrix.openmp }}
 
     runs-on: ${{ matrix.os }}
 

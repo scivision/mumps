@@ -11,6 +11,7 @@ runs:
       -DMUMPS_parallel:BOOL=${{ matrix.parallel }}
       -DMUMPS_scotch:BOOL=${{ matrix.scotch }}
       -DMUMPS_metis:BOOL=${{ matrix.metis }}
+      -DMUMPS_parmetis:BOOL=${{ matrix.parmetis }}
       -DLAPACK_VENDOR=${{ matrix.lapack_vendor }}
       -DMUMPS_openmp:BOOL=${{ matrix.openmp }}
 

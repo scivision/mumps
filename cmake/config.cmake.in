@@ -58,6 +58,11 @@ if(MUMPS_METIS_FOUND)
   find_dependency(metis CONFIG)
 endif()
 
+set(MUMPS_PARMETIS_FOUND @MUMPS_parmetis@)
+if(MUMPS_PARMETIS_FOUND)
+  find_dependency(parmetis CONFIG)
+endif()
+
 set(MUMPS_OpenMP_FOUND @MUMPS_openmp@)
 if(MUMPS_OpenMP_FOUND)
   find_dependency(OpenMP)

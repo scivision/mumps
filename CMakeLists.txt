@@ -173,7 +173,7 @@ elseif(MUMPS_parmetis)
   add_subdirectory(parmetis)
 
   list(APPEND ORDERING_DEFS REALTYPEWIDTH=32 IDXTYPEWIDTH=${IDXTYPEWIDTH} parmetis metis)
-  list(APPEND ORDERING_LIBS METIS::PARMETIS)
+  list(APPEND ORDERING_LIBS parmetis::parmetis)
 endif()
 
 list(APPEND ORDERING_LIBS pord)
