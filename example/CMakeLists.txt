@@ -13,9 +13,17 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
 endif()
 
 find_package(MUMPS CONFIG REQUIRED)
-message(STATUS "MUMPS_DIR: ${MUMPS_DIR}")
+message(STATUS "MUMPS_DIR: ${MUMPS_DIR}
+parallel: ${MUMPS_parallel}
+Scotch: ${MUMPS_Scotch}
+METIS: ${MUMPS_metis}
+ParMETIS: ${MUMPS_parmetis}
+OpenMP: ${MUMPS_openmp}
+")
 
-find_package(MPI COMPONENTS CXX)
+if(MUMPS_parallel)
+  find_package(MPI COMPONENTS CXX)
+endif()
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/mpi_launcher.cmake)
 
