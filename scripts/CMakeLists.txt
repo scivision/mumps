@@ -52,23 +52,6 @@ CMAKE_ARGS ${scalapack_cmake_args}
 CONFIGURE_HANDLED_BY_BUILD true
 )
 
-# METIS
-
-set(metis_cmake_args ${cmake_args}
--Dintsize=$<IF:$<BOOL:${MUMPS_intsize64}>,64,32>
--DBUILD_TESTING:BOOL=false
-)
-
-string(JSON metis_url GET ${json} metis url)
-string(JSON metis_sha256 GET ${json} metis sha256)
-
-ExternalProject_Add(metis
-URL ${metis_url}
-URL_HASH SHA256=${metis_sha256}
-CMAKE_ARGS ${metis_cmake_args}
-CONFIGURE_HANDLED_BY_BUILD true
-)
-
 # Scotch
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/scotch.cmake)

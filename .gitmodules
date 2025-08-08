@@ -1,0 +1,6 @@
+[submodule "metis"]
+	path = metis
+	url = https://github.com/scivision/metis
+[submodule "parmetis"]
+	path = parmetis
+	url = https://github.com/scivision/parmetis

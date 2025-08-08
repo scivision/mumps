@@ -31,8 +31,3 @@ runs:
     shell: bash
     if: ${{ runner.os == 'Linux' && matrix.lapack_vendor == 'OpenBLAS' }}
     run: sudo apt install --no-install-recommends libopenblas-dev
-
-  - name: Build METIS
-    shell: bash
-    if: ${{ matrix.metis }}
-    run: cmake -P scripts/build_metis.cmake

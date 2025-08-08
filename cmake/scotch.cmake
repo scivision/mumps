@@ -127,9 +127,7 @@ USES_TERMINAL_BUILD true
 USES_TERMINAL_INSTALL true
 )
 
-
 file(MAKE_DIRECTORY ${Scotch_INCLUDE_DIRS})
-
 
 add_library(Scotch::Scotch INTERFACE IMPORTED GLOBAL)
 add_dependencies(Scotch::Scotch scotch_ep)

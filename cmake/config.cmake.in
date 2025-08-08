@@ -47,7 +47,7 @@ endif()
 
 set(MUMPS_METIS_FOUND @MUMPS_metis@)
 if(MUMPS_METIS_FOUND)
-  find_dependency(METIS)
+  find_dependency(metis CONFIG)
 endif()
 
 set(MUMPS_OpenMP_FOUND @MUMPS_openmp@)

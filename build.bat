@@ -15,6 +15,9 @@ set openmp=1
 REM use MPI?
 set parallel=1
 
+REM use Metis?
+set metis=0
+
 REM use Scotch?
 set scotch=1
 
@@ -40,6 +43,7 @@ cmake -S%~dp0 -B%bindir% %opts% ^
   --install-prefix=%install_prefix% ^
   -DMUMPS_openmp:BOOL=%openmp% ^
   -DMUMPS_parallel:BOOL=%parallel% ^
+  -DMUMPS_metis:BOOL=%metis% ^
   -DMUMPS_scotch:BOOL=%scotch%
 
 if !errorlevel! neq 0 (

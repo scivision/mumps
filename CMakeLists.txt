@@ -25,6 +25,7 @@ endif()
 enable_testing()
 
 include(GNUInstallDirs)
+include(cmake/GitSubmodule.cmake)
 
 
 if(MSVC AND BUILD_SHARED_LIBS)
@@ -160,14 +161,20 @@ if(MUMPS_scotch)
 
 endif()
 
-if(MUMPS_parmetis)
-  find_package(METIS REQUIRED COMPONENTS ParMETIS)
-  list(APPEND ORDERING_DEFS parmetis metis)
-  list(APPEND ORDERING_LIBS METIS::METIS)
-elseif(MUMPS_metis)
-  find_package(METIS REQUIRED)
-  list(APPEND ORDERING_DEFS metis)
-  list(APPEND ORDERING_LIBS METIS::METIS)
+
+set(IDXTYPEWIDTH $<IF:$<BOOL:${MUMPS_intsize64}>,64,32>)
+if(MUMPS_metis)
+  git_submodule(${PROJECT_SOURCE_DIR}/metis)
+  add_subdirectory(metis)
+
+  list(APPEND ORDERING_DEFS REALTYPEWIDTH=32 IDXTYPEWIDTH=${IDXTYPEWIDTH} metis)
+  list(APPEND ORDERING_LIBS metis::metis)
+elseif(MUMPS_parmetis)
+  git_submodule(${PROJECT_SOURCE_DIR}/parmetis)
+  add_subdirectory(parmetis)
+
+  list(APPEND ORDERING_DEFS REALTYPEWIDTH=32 IDXTYPEWIDTH=${IDXTYPEWIDTH} parmetis metis)
+  list(APPEND ORDERING_LIBS METIS::PARMETIS)
 endif()
 
 list(APPEND ORDERING_LIBS pord)
@@ -175,7 +182,6 @@ list(APPEND ORDERING_LIBS pord)
 install(FILES
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLAPACK.cmake
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindSCALAPACK.cmake
-${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindMETIS.cmake
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindScotch.cmake
 DESTINATION cmake
 )
