@@ -1,15 +1,25 @@
-function(git_submodule submod_dir)
 # get/update Git submodule directory to CMake, assuming the
 # Git submodule directory is a CMake project.
+# If the submodule directory is not in the same directory, descend level by level with multiple
+# git_submodule() calls.
+#
+# For example, in the MUMPS project, we have submodule directories
+# mumps/parmetis/METIS/GKlib
+#
+# from the mumps/ directory to enable METIS but not ParMETIS if the user desires, we do
+# git_submodule(${PROJECT_SOURCE_DIR}/parmetis)
+# if(MUMPS_parmetis)
+#   add_subdirectory(${PROJECT_SOURCE_DIR}/parmetis)
+#   # ParMETIS project itself handles METIS submodule, then METIS handles GKlib submodule
+# else()
+#   git_submodule(${PROJECT_SOURCE_DIR}/parmetis/METIS)
+#   add_subdirectory(${PROJECT_SOURCE_DIR}/parmetis/METIS)
+#   METIS project itself handles GKlib submodule
+# endif()
 
-set(workdir ${submod_dir}/..)
-cmake_path(NORMAL_PATH workdir)
 
-cmake_path(RELATIVE_PATH workdir BASE_DIRECTORY ${PROJECT_SOURCE_DIR} OUTPUT_VARIABLE submod_rel_path)
-if(NOT (submod_rel_path MATCHES ".." OR submod_rel_path STREQUAL "."))
-  message(FATAL_ERROR "Submodule ${submod_dir} is not under the project source ${PROJECT_SOURCE_DIR}")
-  return()
-endif()
+function(git_submodule submod_dir)
+
 
 if(EXISTS ${submod_dir}/CMakeLists.txt)
   return()
@@ -19,29 +29,41 @@ find_package(Git REQUIRED)
 
 set(CMAKE_EXECUTE_PROCESS_COMMAND_ECHO STDOUT)
 
+cmake_path(GET submod_dir PARENT_PATH mod_dir)
+# we need to descend level by level
 
+if(IS_DIRECTORY ${mod_dir}/.git)
 
-# EXISTS, do not use IS_DIRECTORY as in submodule .git is a file not a directory
-if(EXISTS ${submod_dir}/../.git)
-  message(DEBUG "${PROJECT_SOURCE_DIR} is a Git repository, updating submodule ${submod_dir}")
-  execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive -- ${submod_dir}
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    COMMAND_ERROR_IS_FATAL ANY
-    )
+message(STATUS "${mod_dir} is a Git repository, updating submodule ${submod_dir}")
+
+execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive -- ${submod_dir}
+  WORKING_DIRECTORY ${mod_dir}
+  COMMAND_ERROR_IS_FATAL ANY
+)
+
 else()
-  message(DEBUG "${PROJECT_SOURCE_DIR} is from an archive or otherwise not a Git repository. Getting .gitmodules info to clone")
-  execute_process(COMMAND ${GIT_EXECUTABLE} config --file ${PROJECT_SOURCE_DIR}/.gitmodules --get submodule.scalapack.url
-                  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-                  OUTPUT_VARIABLE submod_url
-                  OUTPUT_STRIP_TRAILING_WHITESPACE
-                  COMMAND_ERROR_IS_FATAL ANY
-                  )
-  # Some platforms like Windows, Git might refuse to clone into a totally empty existing directory
-  # this is a known technique, to "git clone" from that empty directory to make it work.
-  execute_process(COMMAND ${GIT_EXECUTABLE} clone ${submod_url} ${submod_dir}
-                  WORKING_DIRECTORY ${submod_dir}
-                  COMMAND_ERROR_IS_FATAL ANY
-                  )
+
+cmake_path(GET submod_dir STEM submod_name)
+message(STATUS "${PROJECT_SOURCE_DIR} is not a Git repository.")
+message(STATUS "Getting ${mod_dir}/.gitmodules info to Git clone ${submod_name} into ${submod_dir}")
+
+execute_process(
+  COMMAND ${GIT_EXECUTABLE} config
+    --file ${mod_dir}/.gitmodules
+    --get submodule.${submod_name}.url
+  WORKING_DIRECTORY ${mod_dir}
+  OUTPUT_VARIABLE submod_url
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  COMMAND_ERROR_IS_FATAL ANY
+)
+# Some platforms like Windows, Git might refuse to clone into a totally empty existing directory
+# this is a known technique, to "git clone" from that empty submod_dir directory to make it work.
+execute_process(
+  COMMAND ${GIT_EXECUTABLE} clone ${submod_url} ${submod_dir}
+  WORKING_DIRECTORY ${submod_dir}
+  COMMAND_ERROR_IS_FATAL ANY
+)
+
 endif()
 
 endfunction()
