@@ -4,3 +4,6 @@
 [submodule "parmetis"]
 	path = parmetis
 	url = https://github.com/scivision/parmetis
+[submodule "scotch"]
+	path = scotch
+	url = https://gitlab.inria.fr/scotch/scotch

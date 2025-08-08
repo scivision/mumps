@@ -33,6 +33,9 @@ if(APPLE)
   bison_homebrew()
 endif()
 
+git_submodule(${CMAKE_CURRENT_SOURCE_DIR}/scotch)
+
+
 # https://gitlab.inria.fr/scotch/scotch/-/blob/master/CMakeLists.txt
 # options were checked with Scotch 7.0.7
 set(scotch_cmake_args
@@ -50,9 +53,6 @@ set(scotch_cmake_args
 -DCMAKE_POLICY_DEFAULT_CMP0074=NEW
 )
 #https://gitlab.inria.fr/scotch/scotch/-/blob/master/src/CMakeLists.txt#L84
-
-string(JSON scotch_url GET ${json} scotch url)
-string(JSON scotch_sha256 GET ${json} scotch sha256)
 
 set(Scotch_INCLUDE_DIRS ${CMAKE_INSTALL_FULL_INCLUDEDIR})
 
@@ -76,7 +76,7 @@ else()
   endforeach()
 endif()
 
-if(MSVC AND NOT BISON_ROOT)
+if(WIN32 AND (NOT BISON_ROOT OR NOT FLEX_ROOT))
 
   string(JSON win_flex_bison_url GET ${json} win_flex_bison url)
 
@@ -113,8 +113,7 @@ endif()
 message(DEBUG "Scotch CMake args: ${scotch_cmake_args}")
 
 ExternalProject_Add(scotch_ep
-URL ${scotch_url}
-URL_HASH SHA256=${scotch_sha256}
+URL ${CMAKE_CURRENT_SOURCE_DIR}/scotch
 CMAKE_ARGS ${scotch_cmake_args}
 CONFIGURE_HANDLED_BY_BUILD true
 TEST_COMMAND ""
@@ -129,7 +128,7 @@ USES_TERMINAL_INSTALL true
 
 file(MAKE_DIRECTORY ${Scotch_INCLUDE_DIRS})
 
-add_library(Scotch::Scotch INTERFACE IMPORTED GLOBAL)
-add_dependencies(Scotch::Scotch scotch_ep)
-target_link_libraries(Scotch::Scotch INTERFACE "${Scotch_LIBRARIES}")
-target_include_directories(Scotch::Scotch INTERFACE "${Scotch_INCLUDE_DIRS}")
+add_library(SCOTCH::scotch INTERFACE IMPORTED GLOBAL)
+add_dependencies(SCOTCH::scotch scotch_ep)
+target_link_libraries(SCOTCH::scotch INTERFACE "${Scotch_LIBRARIES}")
+target_include_directories(SCOTCH::scotch INTERFACE "${Scotch_INCLUDE_DIRS}")

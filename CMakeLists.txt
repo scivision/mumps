@@ -151,13 +151,12 @@ set(ORDERING_DEFS pord)
 
 if(MUMPS_scotch)
 
-  find_package(Scotch COMPONENTS ESMUMPS)
   if(NOT Scotch_FOUND)
     include(cmake/scotch.cmake)
   endif()
 
   list(APPEND ORDERING_DEFS scotch)
-  list(APPEND ORDERING_LIBS Scotch::Scotch)
+  list(APPEND ORDERING_LIBS SCOTCH::scotch)
 
 endif()
 
@@ -182,7 +181,6 @@ list(APPEND ORDERING_LIBS pord)
 install(FILES
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLAPACK.cmake
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindSCALAPACK.cmake
-${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindScotch.cmake
 DESTINATION cmake
 )
 

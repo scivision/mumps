@@ -52,10 +52,6 @@ CMAKE_ARGS ${scalapack_cmake_args}
 CONFIGURE_HANDLED_BY_BUILD true
 )
 
-# Scotch
-
-include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/scotch.cmake)
-
 # ignore build dir
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")

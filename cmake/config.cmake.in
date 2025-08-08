@@ -42,7 +42,8 @@ endif()
 
 set(MUMPS_Scotch_FOUND @MUMPS_scotch@)
 if(MUMPS_Scotch_FOUND)
-  find_dependency(Scotch COMPONENTS ESMUMPS)
+  find_dependency(SCOTCH CONFIG)
+  target_link_libraries(SCOTCH::scotch INTERFACE SCOTCH::scotcherr SCOTCH::esmumps)
 endif()
 
 set(MUMPS_METIS_FOUND @MUMPS_metis@)
