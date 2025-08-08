@@ -65,7 +65,8 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v4
+    - &checkout
+      uses: actions/checkout@v4
 
     - &prereqs
       name: install prereqs
@@ -92,9 +93,7 @@ jobs:
         cmake_version: ["3.20.6"]
 
     steps:
-
-    - uses: actions/checkout@v4
-
+    - *checkout
     - *prereqs
 
     - uses: ./.github/workflows/composite-cmake
@@ -110,3 +109,19 @@ jobs:
 
     - name: install package
       run: $CMAKE --install build
+
+
+# test this project used as an archive in other projects
+  archive:
+    timeout-minutes: 15
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - *checkout
+    - *prereqs
+
+    - name: Test Project as archive
+      run: cmake -S example/other_project -B build
+
+# if broken, the CMake configure step fails
