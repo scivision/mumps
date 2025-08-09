@@ -28,7 +28,6 @@ on:
       - ".github/workflows/oneapi*.sh"
       - "!memcheck.cmake"
       - "!coverage.cmake"
-      - "!example/*"
       - "!scripts/*"
   workflow_dispatch:
 
