@@ -44,6 +44,10 @@ if(BUILD_DOUBLE)
   endif()
 endif()
 
+if(MUMPS_metis OR MUMPS_parmetis)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/example/metis build_metis_example)
+endif()
+
 if(MUMPS_scotch)
   add_subdirectory(${PROJECT_SOURCE_DIR}/example/scotch build_scotch_example)
 endif()
