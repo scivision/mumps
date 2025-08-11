@@ -3,7 +3,7 @@
 	url = https://github.com/scivision/parmetis
 [submodule "scotch"]
 	path = scotch
-	url = https://gitlab.inria.fr/scotch/scotch
+	url = https://github.com/scivision/scotch
 [submodule "scalapack"]
 	path = scalapack
 	url = https://github.com/scivision/scalapack
