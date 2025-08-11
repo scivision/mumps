@@ -27,11 +27,18 @@ enable_testing()
 include(GNUInstallDirs)
 include(cmake/GitSubmodule.cmake)
 
-
+# --- sanity checks
 if(MSVC AND BUILD_SHARED_LIBS)
   message(WARNING "MUMPS: Windows IntelLLVM compilers with **shared** libraries is not supported and will probably fail.
   Recommend using static libraries, which does work:
   cmake -DBUILD_SHARED_LIBS=off")
+endif()
+
+if(DEFINED ENV{CONDA_PREFIX})
+  list(APPEND CMAKE_IGNORE_PREFIX_PATH $ENV{CONDA_PREFIX})
+  list(APPEND CMAKE_IGNORE_PATH $ENV{CONDA_PREFIX}/bin)
+  # need CMAKE_IGNORE_PATH for CMake < 3.23 and to ensure system env var PATH doesn't interfere
+  # despite CMAKE_IGNORE_PREFIX_PATH
 endif()
 
 # --- user options
