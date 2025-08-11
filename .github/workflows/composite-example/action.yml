@@ -21,12 +21,14 @@ runs:
     run: |
       cmake -S example/scotch -Bexample/scotch/build
       cmake --build example/scotch/build
-      ctest --test-dir example/scotch/build
+      ctest --test-dir example/scotch/build -V
 
-  - name: print config log
-    shell: bash
+  - name: Upload log failure
     if: ${{ failure() && matrix.scotch }}
-    run: cat example/scotch/build/CMakeFiles/CMakeConfigureLog.yaml
+    uses: actions/upload-artifact@v4
+    with:
+      name: Scotch-example-${{ runner.os }}-CMakeConfigureLog.yaml
+      path: example/scotch/build/CMakeFiles/CMakeConfigureLog.yaml
 
   - name: METIS example
     shell: bash
@@ -34,9 +36,27 @@ runs:
     run: |
       cmake -S example/metis -Bexample/metis/build
       cmake --build example/metis/build
-      ctest --test-dir example/metis/build
+      ctest --test-dir example/metis/build -V
 
-  - name: print config log
-    shell: bash
+  - name: Upload log failure
     if: ${{ failure() && matrix.metis }}
-    run: cat example/metis/build/CMakeFiles/CMakeConfigureLog.yaml
+    uses: actions/upload-artifact@v4
+    with:
+      name: METIS-example-${{ runner.os }}-CMakeConfigureLog.yaml
+      path: example/metis/build/CMakeFiles/CMakeConfigureLog.yaml
+
+
+  - name: OpenMP example
+    shell: bash
+    if: ${{ matrix.openmp }}
+    run: |
+      cmake -S example/openmp -Bexample/openmp/build
+      cmake --build example/openmp/build
+      ctest --test-dir example/openmp/build -V
+
+  - name: Upload log failure
+    if: ${{ failure() && matrix.openmp }}
+    uses: actions/upload-artifact@v4
+    with:
+      name: OpenMP-example-${{ runner.os }}-CMakeConfigureLog.yaml
+      path: example/openmp/build/CMakeFiles/CMakeConfigureLog.yaml

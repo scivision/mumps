@@ -65,7 +65,7 @@ endif()
 
 set(MUMPS_OpenMP_FOUND @MUMPS_openmp@)
 if(MUMPS_OpenMP_FOUND)
-  find_dependency(OpenMP)
+  find_dependency(OpenMP COMPONENTS C Fortran)
 endif()
 
 check_required_components(@PROJECT_NAME@)
