@@ -1,5 +1,7 @@
 include(ExternalProject)
 
+find_package(BISON 2.7)
+
 
 function(bison_homebrew)
 
@@ -17,19 +19,29 @@ if(NOT ret EQUAL 0)
   return()
 endif()
 
-find_program(bison NAMES bison HINTS ${out} PATH_SUFFIXES opt/bison/bin)
-if(NOT bison)
+find_program(_bison_exe NAMES bison HINTS ${out} PATH_SUFFIXES opt/bison/bin)
+if(NOT _bison_exe)
   return()
 endif()
 
-message(STATUS "Bison found: ${bison}")
-cmake_path(GET bison PARENT_PATH bison_root)
+cmake_path(GET _bison_exe PARENT_PATH BISON_ROOT)
+message(STATUS "Bison executable found: ${_bison_exe}  BISON_ROOT ${BISON_ROOT}")
 
-set(BISON_ROOT ${bison_root} PARENT_SCOPE)
+if(NOT DEFINED FLEX_ROOT)
+  find_program(_flex_exe NAMES flex HINTS ${out} PATH_SUFFIXES opt/flex/bin)
+  if(_flex_exe)
+    cmake_path(GET _flex_exe PARENT_PATH FLEX_ROOT)
+    message(STATUS "Flex executable: ${_flex_exe}  FLEX_ROOT=${FLEX_ROOT}")
+  endif()
+
+  set(FLEX_ROOT ${FLEX_ROOT} PARENT_SCOPE)
+endif()
+
+set(BISON_ROOT ${BISON_ROOT} PARENT_SCOPE)
 
 endfunction()
 
-if(APPLE)
+if(APPLE AND NOT DEFINED BISON_ROOT AND NOT BISON_FOUND)
   bison_homebrew()
 endif()
 
@@ -88,20 +100,20 @@ if(WIN32 AND (NOT BISON_ROOT OR NOT FLEX_ROOT))
   )
 
   message(DEBUG "Hint Bison,Flex path ${win_flex_bison_SOURCE_DIR}")
-  find_program(_bison
+  find_program(_bison_exe
   NAMES bison win_bison
   HINTS ${win_flex_bison_SOURCE_DIR}
   )
-  if(_bison)
-    cmake_path(GET _bison PARENT_PATH BISON_ROOT)
+  if(_bison_exe)
+    cmake_path(GET _bison_exe PARENT_PATH BISON_ROOT)
   endif()
 
-  find_program(_flex
+  find_program(_flex_exe
   NAMES flex win_flex
   HINTS ${win_flex_bison_SOURCE_DIR}
   )
   if(_flex)
-    cmake_path(GET _flex PARENT_PATH FLEX_ROOT)
+    cmake_path(GET _flex_exe PARENT_PATH FLEX_ROOT)
   endif()
 endif()
 
