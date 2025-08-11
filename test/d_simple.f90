@@ -31,7 +31,7 @@ CALL DMUMPS(mumps_par)
 mumps_par%icntl(1) = stderr  ! error messages
 mumps_par%icntl(2) = stdout !  diagnostic, statistics, and warning messages
 mumps_par%icntl(3) = stdout! ! global info, for the host (myid==0)
-mumps_par%icntl(4) = 1           ! default is 2, this reduces verbosity
+mumps_par%icntl(4) = 2           ! default is 2, 1 reduces verbosity
 
 ! === config done, now check config
 IF (mumps_par%INFOG(1) < 0) THEN

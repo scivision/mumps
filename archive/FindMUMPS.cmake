@@ -13,7 +13,6 @@ COMPONENTS
   s d c z   list one or more. Default is "s d". s: real32, d: real64, c: complex32, z: complex64
   Scotch  MUMPS built with Scotch
   METIS   MUMPS build with METIS
-  OpenMP  MUMPS build with OpenMP support
 
 Result Variables
 ^^^^^^^^^^^^^^^^
@@ -32,34 +31,6 @@ set(CMAKE_REQUIRED_FLAGS)
 include(CheckSourceCompiles)
 
 # --- functions
-
-function(mumps_openmp_check)
-
-# MUMPS doesn't set any distinct symbols or procedures if OpenMP was linked,
-# so we do this indirect test to see if MUMPS needs OpenMP to link.
-
-find_package(OpenMP COMPONENTS C Fortran)
-
-if(NOT OpenMP_FOUND)
-  return()
-endif()
-
-set(CMAKE_REQUIRED_FLAGS "${OpenMP_Fortran_FLAGS} ${OpenMP_C_FLAGS}")
-list(APPEND CMAKE_REQUIRED_INCLUDES ${OpenMP_Fortran_INCLUDE_DIRS} ${OpenMP_C_INCLUDE_DIRS})
-list(APPEND CMAKE_REQUIRED_LIBRARIES ${OpenMP_Fortran_LIBRARIES} ${OpenMP_C_LIBRARIES})
-
-
-check_source_compiles(Fortran
-"program test_omp
-implicit none
-external :: mumps_ana_omp_return, MUMPS_ICOPY_32TO64_64C
-call mumps_ana_omp_return()
-call MUMPS_ICOPY_32TO64_64C()
-end program"
-MUMPS_OpenMP_FOUND
-)
-
-endfunction(mumps_openmp_check)
 
 
 function(mumps_scotch_check)
@@ -114,10 +85,6 @@ ${MPI_Fortran_INCLUDE_DIRS} ${MPI_C_INCLUDE_DIRS}
 set(CMAKE_REQUIRED_LIBRARIES ${MUMPS_LIBRARY} ${SCALAPACK_LIBRARIES} ${LAPACK_LIBRARIES}
 ${MPI_Fortran_LIBRARIES} ${MPI_C_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}
 )
-
-if(OpenMP IN_LIST MUMPS_FIND_COMPONENTS)
-  mumps_openmp_check()
-endif()
 
 if(Scotch IN_LIST MUMPS_FIND_COMPONENTS)
   mumps_scotch_check()

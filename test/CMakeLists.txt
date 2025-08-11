@@ -4,7 +4,10 @@ include(${PROJECT_SOURCE_DIR}/cmake/mpi_launcher.cmake)
 
 if(BUILD_DOUBLE)
   add_executable(test_mumps_config test_mumps.f90)
-  target_link_libraries(test_mumps_config PRIVATE MUMPS::MUMPS MPI::MPI_Fortran MPI::MPI_C)
+  target_link_libraries(test_mumps_config PRIVATE MUMPS::MUMPS
+  MPI::MPI_Fortran MPI::MPI_C
+  $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
+  )
   add_test(NAME test_mumps_config COMMAND test_mumps_config)
 
   if(MUMPS_parallel)
@@ -14,7 +17,10 @@ endif()
 
 if(BUILD_SINGLE)
   add_executable(test_mumps_simple32 s_simple.f90)
-  target_link_libraries(test_mumps_simple32 PRIVATE MUMPS::MUMPS MPI::MPI_Fortran MPI::MPI_C)
+  target_link_libraries(test_mumps_simple32 PRIVATE MUMPS::MUMPS
+  MPI::MPI_Fortran MPI::MPI_C
+  $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
+  )
   add_test(NAME test_mumps_simple32 COMMAND test_mumps_simple32)
 
   if(MUMPS_parallel)
@@ -24,7 +30,10 @@ endif()
 
 if(BUILD_DOUBLE)
   add_executable(test_mumps_simple64 d_simple.f90)
-  target_link_libraries(test_mumps_simple64 PRIVATE MUMPS::MUMPS MPI::MPI_Fortran MPI::MPI_C)
+  target_link_libraries(test_mumps_simple64 PRIVATE MUMPS::MUMPS
+  MPI::MPI_Fortran MPI::MPI_C
+  $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
+  )
   add_test(NAME test_mumps_simple64 COMMAND test_mumps_simple64)
 
   if(MUMPS_parallel)
@@ -32,7 +41,10 @@ if(BUILD_DOUBLE)
   endif()
 
   add_executable(test_mumps_complex128 simple.c)
-  target_link_libraries(test_mumps_complex128 PRIVATE MUMPS::MUMPS MPI::MPI_Fortran MPI::MPI_C)
+  target_link_libraries(test_mumps_complex128 PRIVATE MUMPS::MUMPS
+  MPI::MPI_Fortran MPI::MPI_C
+  $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
+  )
   add_test(NAME test_mumps_complex128 COMMAND test_mumps_complex128)
   if(CMAKE_C_COMPILER_ID MATCHES "^Intel" AND "$ENV{GITHUB_ACTIONS}")
     # Please verify that both the operating system and the processor support Intel(R) X87, CMOV, MMX, SSE, SSE2, SSE3, SSSE3, SSE4_1, SSE4_2, MOVBE, POPCNT, AVX, F16C, FMA, BMI, LZCNT, AVX2, ADX and SHSTK instructions.

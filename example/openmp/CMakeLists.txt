@@ -18,6 +18,9 @@ OpenMP::OpenMP_Fortran
 # always link MPI as we use the libmpiseq if not MUMPS_parallel
 
 add_test(NAME MUMPSopenMP COMMAND test_mumps_openmp)
-set_tests_properties(MUMPSopenMP PROPERTIES LABELS "OpenMP")
+set_tests_properties(MUMPSopenMP PROPERTIES
+LABELS "OpenMP"
+ENVIRONMENT OMP_NUM_THREADS=4
+)
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")

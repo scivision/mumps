@@ -15,6 +15,7 @@ function(precision_ex a)
   target_link_libraries(${a}_scotch PRIVATE MUMPS::MUMPS
   $<$<NOT:$<BOOL:${PROJECT_IS_TOP_LEVEL}>>:SCOTCH::scotch>
   MPI::MPI_Fortran MPI::MPI_C
+  $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
   )
   # always link MPI as we use the libmpiseq if not MUMPS_parallel
 
