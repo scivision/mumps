@@ -152,7 +152,7 @@ if(MUMPS_scotch)
     include(cmake/scotch.cmake)
   endif()
 
-  list(APPEND ORDERING_DEFS scotch)
+  list(APPEND ORDERING_DEFS scotch $<$<BOOL:${MUMPS_parallel}>:ptscotch>)
   list(APPEND ORDERING_LIBS SCOTCH::scotch)
 
 endif()

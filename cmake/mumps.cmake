@@ -95,9 +95,13 @@ endif()
 
 add_library(mumps_common_C OBJECT ${COMM_OTHER_C})
 target_link_libraries(mumps_common_C PRIVATE MPI::MPI_C)
+target_compile_definitions(mumps_common_C PRIVATE ${mumps_cdefs})
+target_compile_options(mumps_common_C PRIVATE ${mumps_cflags})
 
 add_library(mumps_common_Fortran OBJECT ${COMM_SRC_Fortran} ${COMM_OTHER_Fortran})
 target_link_libraries(mumps_common_Fortran PRIVATE MPI::MPI_Fortran)
+target_compile_definitions(mumps_common_Fortran PRIVATE ${mumps_fdefs})
+target_compile_options(mumps_common_Fortran PRIVATE ${mumps_fflags})
 
 add_library(mumps_common $<TARGET_OBJECTS:mumps_common_Fortran> $<TARGET_OBJECTS:mumps_common_C>)
 
@@ -194,9 +198,13 @@ endif()
 set(CINT_SRC ${_s}mumps_c.c)
 
 add_library(${a}mumps_C OBJECT ${CINT_SRC} ${SRC_C})
+target_compile_definitions(${a}mumps_C PRIVATE ${mumps_cdefs})
+target_compile_options(${a}mumps_C PRIVATE ${mumps_cflags})
 
 add_library(${a}mumps_Fortran OBJECT ${SRC_Fortran})
 target_link_libraries(${a}mumps_Fortran PRIVATE MPI::MPI_Fortran)
+target_compile_definitions(${a}mumps_Fortran PRIVATE ${mumps_fdefs})
+target_compile_options(${a}mumps_Fortran PRIVATE ${mumps_fflags})
 
 add_library(${a}mumps $<TARGET_OBJECTS:${a}mumps_C> $<TARGET_OBJECTS:${a}mumps_Fortran>)
 

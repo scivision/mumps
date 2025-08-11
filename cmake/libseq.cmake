@@ -9,12 +9,15 @@ target_include_directories(mpiseq_c PUBLIC
 "$<BUILD_INTERFACE:${MPI_C_INCLUDE_DIRS}>"
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
+target_compile_options(mpiseq_c PRIVATE ${mumps_cflags})
+target_compile_definitions(mpiseq_c PRIVATE ${mumps_cdefs})
 
 add_library(mpiseq_fortran ${mumps_SOURCE_DIR}/libseq/mpi.f)
 target_include_directories(mpiseq_fortran PUBLIC
 "$<BUILD_INTERFACE:${MPI_Fortran_INCLUDE_DIRS}>"
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
+target_compile_options(mpiseq_fortran PRIVATE ${mumps_fflags})
 
 # we don't use this target directly, but it's to be compatible with other build systems that make a
 # libmpiseq file
