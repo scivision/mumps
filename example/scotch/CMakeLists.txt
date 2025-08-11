@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.21)
 
 project(MUMPSscotchExamples
 LANGUAGES C Fortran
@@ -6,7 +6,9 @@ LANGUAGES C Fortran
 
 enable_testing()
 
-find_package(MUMPS CONFIG REQUIRED)
+if(PROJECT_IS_TOP_LEVEL)
+  find_package(MUMPS CONFIG REQUIRED)
+endif()
 
 function(precision_ex a)
   add_executable(${a}_scotch ${a}_scotch.f90)
@@ -16,9 +18,10 @@ function(precision_ex a)
   # always link MPI as we use the libmpiseq if not MUMPS_parallel
 
   add_test(NAME ${a}_scotch COMMAND ${a}_scotch)
+  set_tests_properties(${a}_scotch PROPERTIES LABELS "Scotch")
 endfunction()
 
-if(MUMPS_d_FOUND)
+if(MUMPS_d_FOUND OR BUILD_DOUBLE)
   precision_ex("d")
 endif()
 
