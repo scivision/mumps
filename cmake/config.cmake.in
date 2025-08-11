@@ -11,14 +11,23 @@ set(MUMPS_ACTUAL_VERSION @MUMPS_ACTUAL_VERSION@)
 
 set(MUMPS_intsize64 @MUMPS_intsize64@)
 set(MUMPS_parallel @MUMPS_parallel@)
+
 set(MUMPS_LAPACK_VENDOR @LAPACK_VENDOR@)
+
 set(MUMPS_SCALAPACK_VENDOR @SCALAPACK_VENDOR@)
-set(MUMPS_SCALAPACK_FOUND @SCALAPACK_FOUND@)
+set(MUMPS_scalapack @MUMPS_scalapack@)
 
 set(MUMPS_s_FOUND @BUILD_SINGLE@)
+set(MUMPS_SINGLE @BUILD_SINGLE@)
+
 set(MUMPS_d_FOUND @BUILD_DOUBLE@)
+set(MUMPS_DOUBLE @BUILD_DOUBLE@)
+
 set(MUMPS_c_FOUND @BUILD_COMPLEX@)
+set(MUMPS_COMPLEX @BUILD_COMPLEX@)
+
 set(MUMPS_z_FOUND @BUILD_COMPLEX16@)
+set(MUMPS_COMPLEX16 @BUILD_COMPLEX16@)
 
 if(MUMPS_parallel)
   find_dependency(MPI COMPONENTS C Fortran)
@@ -29,7 +38,7 @@ if(MUMPS_parallel)
 
   if(DEFINED MUMPS_SCALAPACK_VENDOR)
     find_dependency(SCALAPACK COMPONENTS ${MUMPS_SCALAPACK_VENDOR})
-  elseif(MUMPS_SCALAPACK_FOUND)
+  elseif(MUMPS_scalapack)
     find_dependency(SCALAPACK)
   else()
     find_dependency(SCALAPACK CONFIG)
@@ -43,28 +52,26 @@ else()
 
   add_library(MPI::MPI_Fortran INTERFACE IMPORTED)
   target_link_libraries(MPI::MPI_Fortran INTERFACE MUMPS::mpiseq_fortran)
-
-  set(MUMPS_mpiseq_FOUND true)
 endif()
 
-set(MUMPS_Scotch_FOUND @MUMPS_scotch@)
-if(MUMPS_Scotch_FOUND)
+set(MUMPS_scotch @MUMPS_scotch@)
+if(MUMPS_scotch)
   find_dependency(SCOTCH CONFIG)
   target_link_libraries(SCOTCH::scotch INTERFACE SCOTCH::scotcherr SCOTCH::esmumps)
 endif()
 
-set(MUMPS_METIS_FOUND @MUMPS_metis@)
-if(MUMPS_METIS_FOUND)
+set(MUMPS_metis @MUMPS_metis@)
+if(MUMPS_metis)
   find_dependency(metis CONFIG)
 endif()
 
-set(MUMPS_PARMETIS_FOUND @MUMPS_parmetis@)
-if(MUMPS_PARMETIS_FOUND)
+set(MUMPS_parmetis @MUMPS_parmetis@)
+if(MUMPS_parmetis)
   find_dependency(parmetis CONFIG)
 endif()
 
-set(MUMPS_OpenMP_FOUND @MUMPS_openmp@)
-if(MUMPS_OpenMP_FOUND)
+set(MUMPS_openmp @MUMPS_openmp@)
+if(MUMPS_openmp)
   find_dependency(OpenMP COMPONENTS C Fortran)
 endif()
 

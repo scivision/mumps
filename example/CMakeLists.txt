@@ -21,6 +21,15 @@ ParMETIS: ${MUMPS_parmetis}
 OpenMP: ${MUMPS_openmp}
 ")
 
+message(STATUS "MUMPS_intsize64: ${MUMPS_intsize64}
+LAPACK vendor: ${MUMPS_LAPACK_VENDOR}
+Scalapack vendor: ${MUMPS_SCALAPACK_VENDOR}
+real32: ${MUMPS_SINGLE}
+real64: ${MUMPS_DOUBLE}
+complex64: ${MUMPS_COMPLEX}
+complex128: ${MUMPS_COMPLEX16}
+")
+
 if(MUMPS_parallel)
   find_package(MPI COMPONENTS CXX)
 endif()
@@ -50,14 +59,14 @@ function(precision_ex a lang)
 
 endfunction()
 
-if(MUMPS_d_FOUND)
+if(MUMPS_DOUBLE)
   precision_ex("d" c)
   if(MPI_CXX_FOUND)
     precision_ex("d" cpp)
   endif()
 endif()
 
-if(MUMPS_z_FOUND)
+if(MUMPS_COMPLEX_16)
   precision_ex("z" c)
 endif()
 
