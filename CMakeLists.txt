@@ -145,17 +145,13 @@ endif()
 
 # --- ordering libs
 
-set(ORDERING_LIBS)
 set(ORDERING_DEFS pord)
 
 if(MUMPS_scotch)
 
-  if(NOT Scotch_FOUND)
-    include(cmake/scotch.cmake)
-  endif()
+  include(cmake/scotch.cmake)
 
   list(APPEND ORDERING_DEFS scotch $<$<BOOL:${MUMPS_parallel}>:ptscotch>)
-  list(APPEND ORDERING_LIBS SCOTCH::scotch)
 
 endif()
 
@@ -167,18 +163,13 @@ if(MUMPS_metis OR MUMPS_parmetis)
   if(MUMPS_parmetis)
     add_subdirectory(parmetis)
     list(APPEND ORDERING_DEFS parmetis)
-    list(APPEND ORDERING_LIBS parmetis::parmetis)
   else()
     git_submodule(${PROJECT_SOURCE_DIR}/parmetis/METIS)
     add_subdirectory(parmetis/METIS)
-    list(APPEND ORDERING_LIBS metis::metis)
   endif()
 
   list(APPEND ORDERING_DEFS REALTYPEWIDTH=32 IDXTYPEWIDTH=${IDXTYPEWIDTH} metis)
 endif()
-
-
-list(APPEND ORDERING_LIBS pord)
 
 install(FILES
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLAPACK.cmake
@@ -187,7 +178,6 @@ DESTINATION cmake
 )
 
 message(STATUS "MUMPS ORDERING_DEFS: ${ORDERING_DEFS}")
-message(STATUS "MUMPS ORDERING_LIBS: ${ORDERING_LIBS}")
 message(STATUS "MUMPS LAPACK_VENDOR: ${LAPACK_VENDOR}")
 message(STATUS "MUMPS SCALAPACK_VENDOR: ${SCALAPACK_VENDOR}")
 

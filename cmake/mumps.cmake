@@ -122,7 +122,10 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   )
 
   target_link_libraries(${t} PUBLIC
-  ${ORDERING_LIBS}
+  $<$<BOOL:${MUMPS_scotch}>:SCOTCH::scotch>
+  $<$<BOOL:${MUMPS_parmetis}>:parmetis::parmetis>
+  $<$<BOOL:${MUMPS_metis}>:metis::metis>
+  pord
   $<$<BOOL:${MUMPS_scalapack}>:SCALAPACK::SCALAPACK>
   LAPACK::LAPACK
   $<$<BOOL:${IMPI_LIB64}>:${IMPI_LIB64}>
