@@ -121,7 +121,13 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 
-  target_link_libraries(${t} PUBLIC ${ORDERING_LIBS} ${NUMERIC_LIBS})
+  target_link_libraries(${t} PUBLIC
+  ${ORDERING_LIBS}
+  $<$<BOOL:${MUMPS_scalapack}>:SCALAPACK::SCALAPACK>
+  LAPACK::LAPACK
+  $<$<BOOL:${IMPI_LIB64}>:${IMPI_LIB64}>
+  ${CMAKE_THREAD_LIBS_INIT}
+  )
 
   target_compile_definitions(${t} PRIVATE
   ${ORDERING_DEFS}

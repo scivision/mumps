@@ -7,12 +7,12 @@ endif()
 
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(NOT is_multi_config AND NOT (CMAKE_BUILD_TYPE OR DEFINED ENV{CMAKE_BUILD_TYPE}))
-  set(CMAKE_BUILD_TYPE Release CACHE STRING "Release default")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Release default" FORCE)
 endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.8.1.0
+VERSION 5.8.1.1
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "https://mumps-solver.org/"
 )
@@ -91,8 +91,6 @@ endif()
 find_package(Threads)
 
 # -- Scalapack / MPI
-set(NUMERIC_LIBS LAPACK::LAPACK)
-
 if(MUMPS_parallel)
   find_package(MPI COMPONENTS C Fortran REQUIRED)
   if(NOT DEFINED ENV{MKLROOT} AND NOT LAPACK_VENDOR MATCHES "^MKL" OR NOT MUMPS_scalapack)
@@ -102,7 +100,6 @@ if(MUMPS_parallel)
 
   if(MUMPS_scalapack)
     include(cmake/scalapack.cmake) # this will also create the LAPACK::LAPACK target
-    list(PREPEND NUMERIC_LIBS SCALAPACK::SCALAPACK)
   endif()
 
   # this is needed for Intel MPI ILP64 support
@@ -128,7 +125,6 @@ if(MUMPS_parallel)
       REQUIRED
     )
     message(STATUS "Found IMPI ILP64 library: ${IMPI_LIB64}")
-    list(APPEND NUMERIC_LIBS ${IMPI_LIB64})
   endif()
 
 else()
@@ -196,8 +192,6 @@ message(STATUS "MUMPS LAPACK_VENDOR: ${LAPACK_VENDOR}")
 message(STATUS "MUMPS SCALAPACK_VENDOR: ${SCALAPACK_VENDOR}")
 
 # --- MUMPS build
-
-list(APPEND NUMERIC_LIBS ${CMAKE_THREAD_LIBS_INIT})
 
 # --- PORD (always used)
 include(cmake/pord.cmake)
