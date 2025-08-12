@@ -152,3 +152,5 @@ add_library(SCOTCH::scotch INTERFACE IMPORTED GLOBAL)
 add_dependencies(SCOTCH::scotch scotch_ep)
 target_link_libraries(SCOTCH::scotch INTERFACE "${Scotch_LIBRARIES}")
 target_include_directories(SCOTCH::scotch INTERFACE "${Scotch_INCLUDE_DIRS}")
+
+message(STATUS "Scotch_LIBRARIES: ${Scotch_LIBRARIES}")

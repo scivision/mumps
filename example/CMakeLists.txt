@@ -6,6 +6,13 @@ LANGUAGES C CXX Fortran
 
 enable_testing()
 
+if(DEFINED ENV{CONDA_PREFIX})
+  list(APPEND CMAKE_IGNORE_PREFIX_PATH $ENV{CONDA_PREFIX})
+  list(APPEND CMAKE_IGNORE_PATH $ENV{CONDA_PREFIX}/bin)
+  # need CMAKE_IGNORE_PATH for CMake < 3.23 and to ensure system env var PATH doesn't interfere
+  # despite CMAKE_IGNORE_PREFIX_PATH
+endif()
+
 if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU|Intel")
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-Werror-implicit-function-declaration>)
 elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
@@ -15,7 +22,7 @@ endif()
 find_package(MUMPS CONFIG REQUIRED)
 message(STATUS "MUMPS_DIR: ${MUMPS_DIR}
 parallel: ${MUMPS_parallel}
-Scotch: ${MUMPS_Scotch}
+Scotch: ${MUMPS_scotch}
 METIS: ${MUMPS_metis}
 ParMETIS: ${MUMPS_parmetis}
 OpenMP: ${MUMPS_openmp}
