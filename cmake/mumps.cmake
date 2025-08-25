@@ -143,7 +143,7 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
 endforeach()
 
 set_property(TARGET mumps_common PROPERTY EXPORT_NAME COMMON)
-set_property(TARGET mumps_common PROPERTY VERSION ${MUMPS_VERSION})
+set_property(TARGET mumps_common PROPERTY VERSION ${MUMPS_ACTUAL_VERSION})
 
 install(TARGETS mumps_common EXPORT ${PROJECT_NAME}-targets)
 
@@ -243,7 +243,7 @@ endforeach()
 string(TOUPPER ${a} aup)
 
 set_property(TARGET ${a}mumps PROPERTY EXPORT_NAME ${aup}MUMPS)
-set_property(TARGET ${a}mumps PROPERTY VERSION ${MUMPS_VERSION})
+set_property(TARGET ${a}mumps PROPERTY VERSION ${MUMPS_ACTUAL_VERSION})
 
 target_link_libraries(MUMPS INTERFACE ${a}mumps)
 
