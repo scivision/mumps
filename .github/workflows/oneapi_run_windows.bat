@@ -14,7 +14,7 @@ if %errorlevel% neq 0 (
 )
 
 echo "workflow %GITHUB_REPOSITORY%"
-cmake --workflow --preset default
+cmake --workflow default
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo "install project"
@@ -24,5 +24,5 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 echo "Example config, build, test"
 cd example
 set CMAKE_PREFIX_PATH=%RUNNER_TEMP%
-cmake --workflow --preset default
+cmake --workflow default
 if %errorlevel% neq 0 exit /b %errorlevel%

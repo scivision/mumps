@@ -17,7 +17,7 @@ runs:
 
   - name: build, test release
     shell: bash
-    run: cmake --workflow --preset default
+    run: cmake --workflow default
 
   - name: install package
     shell: bash

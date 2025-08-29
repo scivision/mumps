@@ -23,7 +23,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Install prereqs (Linux)
       if: runner.os == 'Linux'
@@ -41,7 +41,7 @@ jobs:
       run: cmake --preset default
 
     - name: build, test release
-      run: cmake --workflow --preset default
+      run: cmake --workflow default
 
     - run: cmake --install build
 

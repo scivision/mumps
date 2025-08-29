@@ -40,7 +40,7 @@ jobs:
     - name: Put MSYS2_MinGW64 on PATH
       run: echo "${{ steps.msys2.outputs.msys2-location }}/ucrt64/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: config
       run: cmake --preset default -DMUMPS_parallel:BOOL=false --install-prefix=${{ runner.temp }}
@@ -48,7 +48,7 @@ jobs:
         LAPACK_ROOT: ${{ steps.msys2.outputs.msys2-location }}/ucrt64
 
     - name: build, test
-      run: cmake --workflow --preset default
+      run: cmake --workflow default
 
     - name: install package
       run: cmake --install build
