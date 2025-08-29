@@ -15,12 +15,13 @@ on:
 
 jobs:
 
-  linux:
+  build:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
+        scotch: [true]
 
     steps:
     - uses: actions/checkout@v5
@@ -30,15 +31,17 @@ jobs:
       run: |
         sudo apt update
         sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev
+        [[ "${{ matrix.scotch }}" == "true" ]] && sudo apt install --no-install-recommends bison flex
 
     - name: Install prereqs (macOS)
       if: runner.os == 'macOS'
       run: |
         brew install flang open-mpi
+        [[ "${{ matrix.scotch }}" == "true" ]] && brew install bison flex
         echo "FC=flang" >> $GITHUB_ENV
 
     - name: configure
-      run: cmake --preset default
+      run: cmake --preset default -DMUMPS_scotch:BOOL=${{ matrix.scotch }}
 
     - name: build, test release
       run: cmake --workflow default

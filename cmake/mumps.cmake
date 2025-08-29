@@ -121,8 +121,14 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 
+  if(MUMPS_ptscotch)
+    target_link_libraries(${t} PUBLIC SCOTCH::ptesmumps SCOTCH::ptscotch SCOTCH::ptscotcherr)
+  endif()
+  if(MUMPS_scotch)
+    target_link_libraries(${t} PUBLIC SCOTCH::esmumps SCOTCH::scotch SCOTCH::scotcherr)
+  endif()
+
   target_link_libraries(${t} PUBLIC
-  $<$<BOOL:${MUMPS_scotch}>:SCOTCH::scotch>
   $<$<BOOL:${MUMPS_parmetis}>:parmetis::parmetis>
   $<$<BOOL:${MUMPS_metis}>:metis::metis>
   pord

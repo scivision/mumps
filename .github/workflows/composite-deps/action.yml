@@ -22,22 +22,23 @@ runs:
 # libscalapack-mpich-dev is broken, it pulls in openmpi-bin, which leads to OpenMPI clashing with MPICH
 # https://packages.ubuntu.com/noble/libscalapack-mpich2.2
 
-  - name: install Scotch prereqs (Linux)
+  - name: install Scotch (Linux)
     shell: bash
     if: ${{ runner.os == 'Linux' && matrix.scotch}}
     run: |
-      sudo apt install --no-install-recommends bison flex
+      sudo apt install --no-install-recommends libptscotch-dev
 
   - name: Install prereqs (macOS)
     shell: bash
     if: runner.os == 'macOS'
     run: brew install open-mpi scalapack
 
-  - name: install Scotch prereqs (macOS)
+  - name: install Scotch (macOS)
     shell: bash
     if: ${{ runner.os == 'macOS' && matrix.scotch }}
     run: |
-      brew install bison flex
+      brew install scotch
+    # Homebrew "scotch" is also ptscotch
 
   - name: Install OpenBLAS (Linux)
     shell: bash

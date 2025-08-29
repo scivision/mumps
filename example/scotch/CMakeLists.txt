@@ -20,7 +20,6 @@ endif()
 function(precision_ex a)
   add_executable(${a}_scotch ${a}_scotch.f90)
   target_link_libraries(${a}_scotch PRIVATE MUMPS::MUMPS
-  $<$<NOT:$<BOOL:${PROJECT_IS_TOP_LEVEL}>>:SCOTCH::scotch>
   MPI::MPI_Fortran MPI::MPI_C
   $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
   )

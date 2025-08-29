@@ -37,27 +37,19 @@ jobs:
 
     strategy:
       matrix:
-        scotch: [false]
+        scotch: [true,false]
         metis: [false]
-        parmetis: [false]
+        parmetis: [true,false]
         parallel: [true]
         openmp: [false]
         mpich: [false]
         lapack_vendor: [""]
         os: [ubuntu-latest, macos-latest]
         include:
-          - scotch: true
-            parallel: true
-            os: ubuntu-latest
-            name: Scotch
           - metis: true
             parallel: false
             os: ubuntu-latest
             name: METIS
-          - parmetis: true
-            parallel: true
-            os: ubuntu-latest
-            name: ParMETIS
           - lapack_vendor: "OpenBLAS"
             parallel: true
             os: ubuntu-latest
@@ -73,7 +65,7 @@ jobs:
             os: ubuntu-latest
             name: MPICH
 
-    name: ${{ matrix.os }}-parallel=${{ matrix.parallel }}-${{ matrix.name }}
+    name: ${{ matrix.os }}-parallel=${{ matrix.parallel }}-${{ matrix.name }}-scotch-${{ matrix.scotch }}
     runs-on: ${{ matrix.os }}
 
     steps:

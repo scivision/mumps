@@ -149,7 +149,17 @@ set(ORDERING_DEFS pord)
 
 if(MUMPS_scotch)
 
-  include(cmake/scotch.cmake)
+  if(MUMPS_find_scotch)
+    set(SCOTCH_COMPONENTS ESMUMPS)
+    if(MUMPS_ptscotch)
+      list(APPEND SCOTCH_COMPONENTS PTScotch)
+    endif()
+    find_package(SCOTCH COMPONENTS ${SCOTCH_COMPONENTS})
+  endif()
+
+  if(NOT TARGET SCOTCH::scotch)
+    include(cmake/scotch.cmake)
+  endif()
 
   list(APPEND ORDERING_DEFS scotch $<$<BOOL:${MUMPS_parallel}>:ptscotch>)
 
@@ -174,6 +184,7 @@ endif()
 install(FILES
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLAPACK.cmake
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindSCALAPACK.cmake
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindSCOTCH.cmake
 DESTINATION cmake
 )
 

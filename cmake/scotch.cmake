@@ -1,7 +1,5 @@
 include(ExternalProject)
 
-find_package(BISON 2.7)
-
 
 function(bison_homebrew)
 
@@ -41,8 +39,12 @@ set(BISON_ROOT ${BISON_ROOT} PARENT_SCOPE)
 
 endfunction()
 
-if(APPLE AND NOT DEFINED BISON_ROOT AND NOT BISON_FOUND)
-  bison_homebrew()
+
+if(APPLE)
+  find_package(BISON 2.7)
+  if(NOT BISON_FOUND)
+    bison_homebrew()
+  endif()
 endif()
 
 git_submodule(${CMAKE_CURRENT_SOURCE_DIR}/scotch)
@@ -50,7 +52,7 @@ git_submodule(${CMAKE_CURRENT_SOURCE_DIR}/scotch)
 
 # https://gitlab.inria.fr/scotch/scotch/-/blob/master/CMakeLists.txt
 # options were checked with Scotch 7.0.7
-set(scotch_cmake_args
+set(SCOTCH_cmake_args
 -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
 -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
 -DENABLE_TESTS:BOOL=false
@@ -68,23 +70,23 @@ set(scotch_cmake_args
 #https://gitlab.inria.fr/scotch/scotch/-/blob/master/src/CMakeLists.txt#L84
 # CMAKE_POSITION_INDEPENDENT_CODE=ON necessary on HPC with shared libs like MPI
 
-set(Scotch_INCLUDE_DIRS ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+set(SCOTCH_INCLUDE_DIRS ${CMAKE_INSTALL_FULL_INCLUDEDIR})
 
-set(scotch_names scotch scotcherr esmumps)
+set(SCOTCH_names scotch scotcherr esmumps)
 if(MUMPS_parallel)
-  list(PREPEND scotch_names ptscotch ptscotcherr ptesmumps)
+  list(PREPEND SCOTCH_names ptscotch ptscotcherr ptesmumps)
 endif()
 
-set(Scotch_LIBRARIES)
+set(SCOTCH_LIBRARIES)
 if(BUILD_SHARED_LIBS)
-  foreach(n IN LISTS scotch_names)
-    list(APPEND Scotch_LIBRARIES
+  foreach(n IN LISTS SCOTCH_names)
+    list(APPEND SCOTCH_LIBRARIES
       ${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${n}${CMAKE_SHARED_LIBRARY_SUFFIX}
     )
   endforeach()
 else()
-  foreach(n IN LISTS scotch_names)
-    list(APPEND Scotch_LIBRARIES
+  foreach(n IN LISTS SCOTCH_names)
+    list(APPEND SCOTCH_LIBRARIES
       ${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${n}${CMAKE_STATIC_LIBRARY_SUFFIX}
     )
   endforeach()
@@ -114,27 +116,27 @@ if(WIN32 AND (NOT BISON_ROOT OR NOT FLEX_ROOT))
   NAMES flex win_flex
   HINTS ${win_flex_bison_SOURCE_DIR}
   )
-  if(_flex)
+  if(_flex_exe)
     cmake_path(GET _flex_exe PARENT_PATH FLEX_ROOT)
   endif()
 endif()
 
 if(BISON_ROOT)
-  list(APPEND scotch_cmake_args -DBISON_ROOT:PATH=${BISON_ROOT})
+  list(APPEND SCOTCH_cmake_args -DBISON_ROOT:PATH=${BISON_ROOT})
 endif()
 
 if(FLEX_ROOT)
-  list(APPEND scotch_cmake_args -DFLEX_ROOT:PATH=${FLEX_ROOT})
+  list(APPEND SCOTCH_cmake_args -DFLEX_ROOT:PATH=${FLEX_ROOT})
 endif()
 
-message(DEBUG "Scotch CMake args: ${scotch_cmake_args}")
+message(DEBUG "Scotch CMake args: ${SCOTCH_cmake_args}")
 
 ExternalProject_Add(scotch_ep
 URL ${CMAKE_CURRENT_SOURCE_DIR}/scotch
-CMAKE_ARGS ${scotch_cmake_args}
+CMAKE_ARGS ${SCOTCH_cmake_args}
 CONFIGURE_HANDLED_BY_BUILD true
 TEST_COMMAND ""
-BUILD_BYPRODUCTS ${Scotch_LIBRARIES}
+BUILD_BYPRODUCTS ${SCOTCH_LIBRARIES}
 USES_TERMINAL_DOWNLOAD true
 USES_TERMINAL_UPDATE true
 USES_TERMINAL_PATCH true
@@ -143,14 +145,20 @@ USES_TERMINAL_BUILD true
 USES_TERMINAL_INSTALL true
 )
 
-file(MAKE_DIRECTORY ${Scotch_INCLUDE_DIRS})
-if(NOT IS_DIRECTORY ${Scotch_INCLUDE_DIRS})
-  message(FATAL_ERROR "Could not create directory: ${Scotch_INCLUDE_DIRS}")
+if(DEFINED win_flex_bison)
+  add_dependencies(scotch_ep win_flex_bison)
 endif()
 
-add_library(SCOTCH::scotch INTERFACE IMPORTED GLOBAL)
-add_dependencies(SCOTCH::scotch scotch_ep)
-target_link_libraries(SCOTCH::scotch INTERFACE "${Scotch_LIBRARIES}")
-target_include_directories(SCOTCH::scotch INTERFACE "${Scotch_INCLUDE_DIRS}")
+file(MAKE_DIRECTORY ${SCOTCH_INCLUDE_DIRS})
+if(NOT IS_DIRECTORY ${SCOTCH_INCLUDE_DIRS})
+  message(FATAL_ERROR "Could not create directory: ${SCOTCH_INCLUDE_DIRS}")
+endif()
 
-message(STATUS "Scotch_LIBRARIES: ${Scotch_LIBRARIES}")
+foreach(l IN LISTS SCOTCH_names)
+  add_library(SCOTCH::${l} INTERFACE IMPORTED GLOBAL)
+  add_dependencies(SCOTCH::${l} scotch_ep)
+  set_property(TARGET SCOTCH::${l} PROPERTY INTERFACE_LINK_LIBRARIES "${SCOTCH_${l}_LIBRARY}")
+  set_property(TARGET SCOTCH::${l} PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${SCOTCH_INCLUDE_DIRS}")
+endforeach()
+
+message(STATUS "SCOTCH_LIBRARIES: ${SCOTCH_LIBRARIES}")
