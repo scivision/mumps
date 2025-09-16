@@ -22,6 +22,10 @@ cmake_policy(SET CMP0168 OLD)
 # workaround to stop repeat FetchContent download on each configure for CMake 3.30.0..3.30.3
 endif()
 
+if(NOT APPLE)
+  set(CMAKE_INSTALL_RPATH $ORIGIN)
+endif()
+
 enable_testing()
 
 include(GNUInstallDirs)
