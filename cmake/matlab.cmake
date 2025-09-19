@@ -6,7 +6,7 @@ if(MUMPS_parallel)
   message(WARNING "MUMPS MEX assumes no MPI (cmake -DMUMPS_parallel=no)")
 endif()
 
-set(mumps_matlab_path ${mumps_SOURCE_DIR}/MATLAB)
+set(mumps_matlab_path ${MUMPS_upstream_SOURCE_DIR}/MATLAB)
 
 find_package(Matlab REQUIRED COMPONENTS MEX_COMPILER MAIN_PROGRAM)
 

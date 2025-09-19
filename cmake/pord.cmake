@@ -1,9 +1,8 @@
-set(_p "${mumps_SOURCE_DIR}/PORD/lib/")
-
+set(_p "${MUMPS_upstream_SOURCE_DIR}/PORD/lib/")
 add_library(pord ${_p}graph.c ${_p}gbipart.c ${_p}gbisect.c ${_p}ddcreate.c ${_p}ddbisect.c ${_p}nestdiss.c ${_p}multisector.c ${_p}gelim.c ${_p}bucket.c ${_p}tree.c ${_p}symbfac.c ${_p}interface.c ${_p}sort.c ${_p}minpriority.c)
 
 target_include_directories(pord PUBLIC
-$<BUILD_INTERFACE:${mumps_SOURCE_DIR}/PORD/include>
+$<BUILD_INTERFACE:${MUMPS_upstream_SOURCE_DIR}/PORD/include>
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
