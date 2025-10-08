@@ -107,6 +107,8 @@ target_compile_definitions(mumps_common_Fortran PRIVATE ${mumps_fdefs})
 target_compile_options(mumps_common_Fortran PRIVATE ${mumps_fflags})
 
 add_library(mumps_common $<TARGET_OBJECTS:mumps_common_Fortran> $<TARGET_OBJECTS:mumps_common_C>)
+target_link_libraries(mumps_common PUBLIC MPI::MPI_C)
+target_link_libraries(mumps_common PUBLIC MPI::MPI_Fortran)
 
 set(BLAS_HAVE_GEMMT FALSE)
 if(BLAS_HAVE_sGEMMT OR BLAS_HAVE_dGEMMT OR BLAS_HAVE_cGEMMT OR BLAS_HAVE_zGEMMT)

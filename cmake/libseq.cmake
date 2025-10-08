@@ -17,7 +17,10 @@ target_include_directories(mpiseq_fortran PUBLIC
 "$<BUILD_INTERFACE:${MPI_Fortran_INCLUDE_DIRS}>"
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-target_compile_options(mpiseq_fortran PRIVATE ${mumps_fflags})
+target_compile_options(mpiseq_fortran PRIVATE ${mumps_fflags} )
+
+# Ensure linking mpi_fortran to mpi_c for missing symbol resolution
+target_link_libraries(mpiseq_fortran PUBLIC mpiseq_c)
 
 # we don't use this target directly, but it's to be compatible with other build systems that make a
 # libmpiseq file
@@ -36,4 +39,4 @@ add_library(MPI::MPI_C INTERFACE IMPORTED)
 target_link_libraries(MPI::MPI_C INTERFACE mpiseq_c)
 
 add_library(MPI::MPI_Fortran INTERFACE IMPORTED)
-target_link_libraries(MPI::MPI_Fortran INTERFACE mpiseq_fortran)
+target_link_libraries(MPI::MPI_Fortran INTERFACE mpiseq_fortran )
