@@ -39,4 +39,4 @@ add_library(MPI::MPI_C INTERFACE IMPORTED)
 target_link_libraries(MPI::MPI_C INTERFACE mpiseq_c)
 
 add_library(MPI::MPI_Fortran INTERFACE IMPORTED)
-target_link_libraries(MPI::MPI_Fortran INTERFACE mpiseq_fortran )
+target_link_libraries(MPI::MPI_Fortran INTERFACE mpiseq_fortran)
