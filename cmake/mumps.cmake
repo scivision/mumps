@@ -253,6 +253,9 @@ foreach(t IN ITEMS ${a}mumps ${a}mumps_C ${a}mumps_Fortran)
 
 endforeach()
 
+target_link_libraries(${a}mumps PRIVATE MPI::MPI_Fortran)
+# this is needed for mpiseq, and is best for clarity and consistency
+
 
 string(TOUPPER ${a} aup)
 
