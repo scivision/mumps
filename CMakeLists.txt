@@ -68,18 +68,18 @@ endif()
 set(FETCHCONTENT_QUIET no)
 
 
-FetchContent_Populate(MUMPS
+FetchContent_Populate(mumps_upstream
 URL ${MUMPS_url}
 ${_hash}
 )
 
 # Read MUMPS/VERSION file to get the actual version
 # the first line is like "MUMPS 5.7.3"
-file(STRINGS "${mumps_SOURCE_DIR}/VERSION" _version_line LIMIT_COUNT 1 REGEX "^MUMPS [0-9]+\\.[0-9]+\\.[0-9]+")
+file(STRINGS "${mumps_upstream_SOURCE_DIR}/VERSION" _version_line LIMIT_COUNT 1 REGEX "^MUMPS [0-9]+\\.[0-9]+\\.[0-9]+")
 message(DEBUG "MUMPS version line: ${_version_line}")
 string(REGEX REPLACE "MUMPS ([0-9]+\\.[0-9]+\\.[0-9]+)" "\\1" MUMPS_ACTUAL_VERSION "${_version_line}")
 if(MUMPS_UPSTREAM_VERSION AND NOT MUMPS_ACTUAL_VERSION VERSION_EQUAL MUMPS_UPSTREAM_VERSION)
-  message(FATAL_ERROR "Failed to read MUMPS version ${MUMPS_UPSTREAM_VERSION} from ${mumps_SOURCE_DIR}/VERSION, got ${MUMPS_ACTUAL_VERSION} instead.")
+  message(FATAL_ERROR "Failed to read MUMPS version ${MUMPS_UPSTREAM_VERSION} from ${mumps_upstream_SOURCE_DIR}/VERSION, got ${MUMPS_ACTUAL_VERSION} instead.")
 endif()
 
 # minimum MUMPS version
@@ -212,7 +212,7 @@ endif()
 
 # --- feature summary
 
-message(STATUS "Configured MUMPS ${MUMPS_ACTUAL_VERSION} source in ${mumps_SOURCE_DIR}")
+message(STATUS "Configured MUMPS ${MUMPS_ACTUAL_VERSION} source in ${mumps_upstream_SOURCE_DIR}")
 
 include(cmake/summary.cmake)
 
