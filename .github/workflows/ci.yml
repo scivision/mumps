@@ -39,7 +39,7 @@ jobs:
       matrix:
         scotch: [true,false]
         metis: [false]
-        parmetis: [true,false]
+        parmetis: [false]
         parallel: [true]
         openmp: [false]
         mpich: [false]
@@ -50,6 +50,10 @@ jobs:
             parallel: false
             os: ubuntu-latest
             name: METIS
+          - parmetis: true
+            parallel: true
+            os: ubuntu-latest
+            name: ParMETIS
           - lapack_vendor: "OpenBLAS"
             parallel: true
             os: ubuntu-latest

@@ -38,6 +38,13 @@ ScalaPACK can be omitted with MUMPS &ge; 5.7.0 by option:
 cmake -DMUMPS_scalapack=off
 ```
 
+To control whether to first look for Scalapack and only if needed automatically build ScalaPACK,
+Optionally, specify the location of Scalapack with CMake option `-DScalapack_ROOT=/path/to/scalapack"
+
+```sh
+cmake -DMUMPS_find_SCALAPACK=on
+```
+
 ## MPI
 
 For systems where MPI, BLACS and SCALAPACK are not available, or where non-parallel execution is suitable, the default `MUMPS_parallel=true` can be disabled at CMake configure time by option:

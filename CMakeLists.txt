@@ -167,23 +167,34 @@ endif()
 
 
 if(MUMPS_metis OR MUMPS_parmetis)
-  set(IDXTYPEWIDTH $<IF:$<BOOL:${MUMPS_intsize64}>,64,32>)
-  git_submodule(${PROJECT_SOURCE_DIR}/parmetis)
+  if(MUMPS_find_metis)
+    if(MUMPS_parmetis)
+      set(METIS_COMPONENTS ParMETIS)
+    endif()
+    find_package(METIS COMPONENTS ${METIS_COMPONENTS})
+  endif()
 
-  if(MUMPS_parmetis)
-    add_subdirectory(parmetis)
-    list(APPEND ORDERING_DEFS parmetis)
-  else()
-    git_submodule(${PROJECT_SOURCE_DIR}/parmetis/METIS)
-    add_subdirectory(parmetis/METIS)
+  if(NOT METIS_FOUND)
+    set(IDXTYPEWIDTH $<IF:$<BOOL:${MUMPS_intsize64}>,64,32>)
+    git_submodule(${PROJECT_SOURCE_DIR}/parmetis)
+
+    if(MUMPS_parmetis)
+      add_subdirectory(parmetis)
+      list(APPEND ORDERING_DEFS parmetis)
+    else()
+      git_submodule(${PROJECT_SOURCE_DIR}/parmetis/METIS)
+      add_subdirectory(parmetis/METIS)
+    endif()
   endif()
 
   list(APPEND ORDERING_DEFS REALTYPEWIDTH=32 IDXTYPEWIDTH=${IDXTYPEWIDTH} metis)
+
 endif()
 
 install(FILES
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLAPACK.cmake
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindSCALAPACK.cmake
+${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindMETIS.cmake
 ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindSCOTCH.cmake
 DESTINATION cmake
 )

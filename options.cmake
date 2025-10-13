@@ -40,6 +40,7 @@ option(MUMPS_metis "use sequential METIS ordering")
 if(MUMPS_parmetis AND NOT MUMPS_parallel)
   message(FATAL_ERROR "parmetis requires MUMPS_parallel=on")
 endif()
+option(MUMPS_find_metis "find METIS")
 
 option(MUMPS_openmp "use OpenMP")
 

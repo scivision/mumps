@@ -35,6 +35,16 @@ cmake -DMUMPS_metis=yes
 cmake -DMUMPS_parmetis=yes
 ```
 
+optionally, try to find METIS or ParMETIS before building if needed:
+
+```sh
+cmake -DMUMPS_metis=yes -DMUMPS_find_metis=yes
+
+# or
+
+cmake -DMUMPS_parmetis=yes -DMUMPS_find_metis=yes
+```
+
 Build MUMPS
 
 ```sh

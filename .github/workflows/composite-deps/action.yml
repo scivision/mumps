@@ -28,7 +28,17 @@ runs:
     run: |
       sudo apt install --no-install-recommends libptscotch-dev
 
-  - name: Install prereqs (macOS)
+  - name: install METIS (Linux)
+    shell: bash
+    if: ${{ runner.os == 'Linux' && matrix.metis }}
+    run: sudo apt install --no-install-recommends libmetis-dev
+
+  - name: Install ParMETIS (Linux)
+    shell: bash
+    if: ${{ runner.os == 'Linux' && matrix.parmetis }}
+    run: sudo apt install --no-install-recommends libparmetis-dev
+
+  - name: Install MPI (macOS)
     shell: bash
     if: runner.os == 'macOS'
     run: brew install open-mpi scalapack
@@ -39,6 +49,11 @@ runs:
     run: |
       brew install scotch
     # Homebrew "scotch" is also ptscotch
+
+  - name: install METIS (macOS)
+    shell: bash
+    if: ${{ runner.os == 'macOS' && matrix.metis }}
+    run: brew install metis
 
   - name: Install OpenBLAS (Linux)
     shell: bash
