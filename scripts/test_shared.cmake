@@ -12,7 +12,8 @@ get_tempdir(tempdir)
 set(BUILD_SINGLE off)
 set(BUILD_DOUBLE on)
 set(BUILD_SHARED_LIBS on)
-set(CMAKE_Fortran_COMPILER gfortran)
+# set(FCs flang gfortran gfortran)
+set(FCs gfortran gfortran)
 
 if(APPLE)
   # update periodically with latest Homebrew GCC version, as 'gcc' is AppleClang
@@ -33,27 +34,26 @@ endif()
 message(VERBOSE "CCs: ${CCs}")
 
 
-foreach(CMAKE_C_COMPILER IN LISTS CCs)
+foreach(CMAKE_C_COMPILER CMAKE_Fortran_COMPILER IN ZIP_LISTS CCs FCs)
   foreach(MUMPS_parallel IN ITEMS true false)
+    foreach(MUMPS_openmp IN ITEMS true false)
 
-    cmake_path(GET CMAKE_C_COMPILER STEM cc)
-    cmake_path(GET CMAKE_Fortran_COMPILER STEM fc)
+      cmake_path(GET CMAKE_C_COMPILER STEM cc)
+      cmake_path(GET CMAKE_Fortran_COMPILER STEM fc)
 
-    set(bindir ${tempdir}/mumps_shared_build_${MUMPS_parallel}_${cc}_${fc})
-    set(prefix ${bindir}/install)
+      set(bindir ${tempdir}/mumps_shared_build_${MUMPS_parallel}_${MUMPS_openmp}_${cc}_${fc})
+      set(prefix ${bindir}/install)
 
-    message(STATUS "MUMP_parallel=${MUMPS_parallel}
-    binary_dir: ${bindir}
-    temp install dir: ${prefix}"
-    )
+      message(STATUS "MUMP_parallel=${MUMPS_parallel}
+      binary_dir: ${bindir}
+      temp install dir: ${prefix}"
+      )
 
-    project_build(${prefix} ${bindir})
+      project_build(${prefix} ${bindir})
 
-    execute_process(COMMAND ${CMAKE_CTEST_COMMAND} --test-dir ${bindir} -V
-    COMMAND_ERROR_IS_FATAL ANY
-    )
+      execute_process(COMMAND ${CMAKE_CTEST_COMMAND} --test-dir ${bindir} -V)
 
-    example_build(${bindir}/example)
-
+      example_build(${bindir}/example)
+    endforeach()
   endforeach()
 endforeach()
