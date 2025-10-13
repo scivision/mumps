@@ -148,7 +148,10 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   endif()
 endforeach()
 
-target_link_libraries(mumps_common PRIVATE MPI::MPI_Fortran MPI::MPI_C)
+target_link_libraries(mumps_common PRIVATE
+MPI::MPI_Fortran MPI::MPI_C
+$<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
+)
 # this is needed for mpiseq, and is best for clarity and consistency
 
 if(BUILD_SHARED_LIBS AND APPLE AND CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang")
@@ -253,7 +256,10 @@ foreach(t IN ITEMS ${a}mumps ${a}mumps_C ${a}mumps_Fortran)
 
 endforeach()
 
-target_link_libraries(${a}mumps PRIVATE MPI::MPI_Fortran)
+target_link_libraries(${a}mumps PRIVATE
+MPI::MPI_Fortran
+$<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
+)
 # this is needed for mpiseq, and is best for clarity and consistency
 
 
