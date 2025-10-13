@@ -12,29 +12,28 @@ get_tempdir(tempdir)
 set(BUILD_SINGLE off)
 set(BUILD_DOUBLE on)
 set(BUILD_SHARED_LIBS on)
+set(CMAKE_Fortran_COMPILER gfortran)
 
 if(APPLE)
   # update periodically with latest Homebrew GCC version, as 'gcc' is AppleClang
   set(CCs clang)
-  set(FCs flang)
   find_program(brew NAMES brew)
   if(brew)
     execute_process(COMMAND ${brew} --prefix gcc RESULT_VARIABLE ret OUTPUT_VARIABLE gcc_root OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(ret EQUAL 0)
       list(APPEND CCs ${gcc_root}/bin/gcc)
-      list(APPEND FCs ${gcc_root}/bin/gfortran)
     endif()
   endif()
-else()
-  set(CCs gcc)
-  set(FCs gfortran)
 endif()
 
 
-foreach(CMAKE_C_COMPILER CMAKE_Fortran_COMPILER IN ZIP_LISTS CCs FCs)
+foreach(CMAKE_C_COMPILER IN LISTS CCs)
   foreach(MUMPS_parallel IN ITEMS true false)
 
-    set(bindir ${tempdir}/mumps_shared_build_${MUMPS_parallel}_${CMAKE_C_COMPILER}_${CMAKE_Fortran_COMPILER})
+    cmake_path(GET CMAKE_C_COMPILER STEM cc)
+    cmake_path(GET CMAKE_Fortran_COMPILER STEM fc)
+
+    set(bindir ${tempdir}/mumps_shared_build_${MUMPS_parallel}_${cc}_${fc})
     set(prefix ${bindir}/install)
 
     message(STATUS "MUMP_parallel=${MUMPS_parallel}
