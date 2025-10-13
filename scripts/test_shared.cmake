@@ -20,11 +20,17 @@ if(APPLE)
   find_program(brew NAMES brew)
   if(brew)
     execute_process(COMMAND ${brew} --prefix gcc RESULT_VARIABLE ret OUTPUT_VARIABLE gcc_root OUTPUT_STRIP_TRAILING_WHITESPACE)
-    if(ret EQUAL 0)
-      list(APPEND CCs ${gcc_root}/bin/gcc)
-    endif()
+    file(GLOB cand LIST_DIRECTORIES false ${gcc_root}/bin/gcc-*)
+    # filter out non-numeric suffixes like gcc-ar, gcc-nm, gcc-ranlib
+    list(FILTER cand INCLUDE REGEX ".*gcc-[0-9]+$")
+    # sort to get latest version last
+    list(SORT cand COMPARE NATURAL)
+    list(GET cand -1 _latest_gcc)
+    list(APPEND CCs ${_latest_gcc})
   endif()
 endif()
+
+message(VERBOSE "CCs: ${CCs}")
 
 
 foreach(CMAKE_C_COMPILER IN LISTS CCs)
