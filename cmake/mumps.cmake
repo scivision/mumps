@@ -132,7 +132,7 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   $<$<BOOL:${MUMPS_parmetis}>:parmetis::parmetis>
   $<$<BOOL:${MUMPS_metis}>:metis::metis>
   pord
-  $<$<BOOL:${MUMPS_scalapack}>:SCALAPACK::SCALAPACK>
+  $<$<AND:$<BOOL:${MUMPS_scalapack}>,$<BOOL:${MUMPS_parallel}>>:SCALAPACK::SCALAPACK>
   LAPACK::LAPACK
   $<$<BOOL:${IMPI_LIB64}>:${IMPI_LIB64}>
   ${CMAKE_THREAD_LIBS_INIT}
