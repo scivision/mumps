@@ -3,44 +3,30 @@
 # So a dev might test MUMPS with Windows oneAPI on a laptop.
 cmake_minimum_required(VERSION 3.21)
 
-message(STATUS "ENV{CMAKE_BUILD_PARALLEL_LEVEL}: $ENV{CMAKE_BUILD_PARALLEL_LEVEL}")
+include(${CMAKE_CURRENT_LIST_DIR}/GetTempdir.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/ProjectBuild.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/ExampleBuild.cmake)
+
+get_tempdir(tempdir)
 
 include(${CMAKE_CURRENT_LIST_DIR}/oneapi_check.cmake)
 
 find_package(MKL CONFIG REQUIRED)
 
-foreach(n IN ITEMS $ENV{TEMP} $ENV{TMP} $ENV{TMPDIR})
-  if(EXISTS ${n})
-    set(tempdir ${n})
-    break()
-  endif()
-endforeach()
-
 # save build time
 set(BUILD_SINGLE off)
 set(BUILD_DOUBLE on)
+option(BUILD_SHARED_LIBS "Build shared libraries")
 
 foreach(MUMPS_parallel IN ITEMS true false)
 
-set(bindir ${tempdir}/parallel_${MUMPS_parallel})
+set(bindir ${tempdir}/mumps_oneapi_${MUMPS_parallel})
 
 set(prefix ${bindir}/install)
 
-message(STATUS "Testing MUMPS_parallel=${MUMPS_parallel} in ${bindir}  prefix: ${prefix}")
-
-execute_process(
-COMMAND ${CMAKE_COMMAND} -B${bindir} -S${CMAKE_CURRENT_LIST_DIR}/..
-  --install-prefix=${prefix}
-  -DMUMPS_parallel=${MUMPS_parallel}
-  -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
-  -DCMAKE_Fortran_COMPILER:FILEPATH=${CMAKE_Fortran_COMPILER}
-  -DBUILD_SINGLE:BOOL=${BUILD_SINGLE}
-  -DBUILD_DOUBLE:BOOL=${BUILD_DOUBLE}
-COMMAND_ERROR_IS_FATAL ANY
-)
-
-execute_process(COMMAND ${CMAKE_COMMAND} --build ${bindir}
-COMMAND_ERROR_IS_FATAL ANY
+message(STATUS "MUMP_parallel=${MUMPS_parallel}
+binary_dir: ${bindir}
+temp install dir: ${prefix}"
 )
 
 find_library(mpiseq NAMES mpiseq
@@ -62,29 +48,10 @@ else()
   endif()
 endif()
 
-execute_process(COMMAND ${CMAKE_CTEST_COMMAND} --test-dir ${bindir}
+execute_process(COMMAND ${CMAKE_CTEST_COMMAND} --test-dir ${bindir} -V
 COMMAND_ERROR_IS_FATAL ANY
 )
 
-execute_process(COMMAND ${CMAKE_COMMAND} --install ${bindir}
-COMMAND_ERROR_IS_FATAL ANY
-)
-
-# example
-execute_process(
-COMMAND ${CMAKE_COMMAND} -B${bindir}/build_example -S${CMAKE_CURRENT_LIST_DIR}/../example
-  -DMUMPS_ROOT=${prefix}
-  -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
-  -DCMAKE_Fortran_COMPILER:FILEPATH=${CMAKE_Fortran_COMPILER}
-COMMAND_ERROR_IS_FATAL ANY
-)
-
-execute_process(COMMAND ${CMAKE_COMMAND} --build ${bindir}/build_example
-COMMAND_ERROR_IS_FATAL ANY
-)
-
-execute_process(COMMAND ${CMAKE_CTEST_COMMAND} --test-dir ${bindir}/build_example
-COMMAND_ERROR_IS_FATAL ANY
-)
+example_build(${bindir}/example)
 
 endforeach()
