@@ -12,7 +12,8 @@ $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 target_compile_options(mpiseq_c PRIVATE ${mumps_cflags})
 target_compile_definitions(mpiseq_c PRIVATE ${mumps_cdefs})
 
-add_library(mpiseq_fortran ${mumps_SOURCE_DIR}/libseq/mpi.f)
+add_library(mpiseq_fortran ${mumps_SOURCE_DIR}/libseq/mpi.f $<TARGET_OBJECTS:mpiseq_c>)
+# BUILD_SHARED_LIBS=on reveals that $<TARGET_OBJECTS:mpiseq_c> is needed in the Fortran target
 target_include_directories(mpiseq_fortran PUBLIC
 "$<BUILD_INTERFACE:${MPI_Fortran_INCLUDE_DIRS}>"
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
