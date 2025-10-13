@@ -148,6 +148,14 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   endif()
 endforeach()
 
+target_link_libraries(mumps_common PRIVATE MPI::MPI_Fortran MPI::MPI_C)
+# this is needed for mpiseq, and is best for clarity and consistency
+
+if(BUILD_SHARED_LIBS AND APPLE AND CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang")
+  # flang linker can't handle -dynamiclib flag
+  set_property(TARGET mumps_common PROPERTY LINKER_LANGUAGE C)
+endif()
+
 set_property(TARGET mumps_common PROPERTY EXPORT_NAME COMMON)
 set_property(TARGET mumps_common PROPERTY VERSION ${MUMPS_ACTUAL_VERSION})
 
