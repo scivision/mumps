@@ -25,7 +25,7 @@ runs:
 
   - name: Upload log failure
     if: ${{ failure() && matrix.scotch }}
-    uses: actions/upload-artifact@v4
+    uses: actions/upload-artifact@v6
     with:
       name: Scotch-example-${{ runner.os }}-CMakeConfigureLog.yaml
       path: example/scotch/build/CMakeFiles/CMakeConfigureLog.yaml
@@ -40,7 +40,7 @@ runs:
 
   - name: Upload log failure
     if: ${{ failure() && matrix.metis }}
-    uses: actions/upload-artifact@v4
+    uses: actions/upload-artifact@v6
     with:
       name: METIS-example-${{ runner.os }}-CMakeConfigureLog.yaml
       path: example/metis/build/CMakeFiles/CMakeConfigureLog.yaml
@@ -56,7 +56,7 @@ runs:
 
   - name: Upload log failure
     if: ${{ failure() && matrix.openmp }}
-    uses: actions/upload-artifact@v4
+    uses: actions/upload-artifact@v6
     with:
       name: OpenMP-example-${{ runner.os }}-CMakeConfigureLog.yaml
       path: example/openmp/build/CMakeFiles/CMakeConfigureLog.yaml
