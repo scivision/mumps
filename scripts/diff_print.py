@@ -4,6 +4,7 @@
 
 import difflib
 from pathlib import Path
+import logging
 import argparse
 
 COMM = {
@@ -28,11 +29,17 @@ def print_diff(file1: str, file2: str, ignore_comments: bool) -> None:
     ignore_comments: assumes same file extensions of file1 and file2.
     Uses simple tag-based comment logic.
     """
-    p1 = Path(file1)
-    lines1 = p1.read_text().splitlines()
 
+    p1 = Path(file1)
     p2 = Path(file2)
-    lines2 = p2.read_text().splitlines()
+
+    try:
+        lines1 = p1.read_text().splitlines()
+        lines2 = p2.read_text().splitlines()
+    except FileNotFoundError as e:
+        print(f"\n{e}\n")
+        logging.error(e)  # printing twice so that piping stderr shows the error
+        return
 
     if ignore_comments:
         com = COMM.get(p1.suffix) if p1.suffix else COMM.get(p1.name)
