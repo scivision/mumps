@@ -3,8 +3,8 @@
 cmake_minimum_required(VERSION 3.19)
 
 if(NOT DEFINED old OR NOT DEFINED new)
-  message(FATAL_ERROR "Please set 'old' and 'new' variables to the MUMPS source versions you want to compare.
-  cmake -Dold=5.8.0 -Dnew=5.8.1 -P ${CMAKE_CURRENT_LIST_DIR}/compare_mumps_version_source.cmake")
+  message(FATAL_ERROR "Please set 'old' and 'new' variables to the MUMPS source versions you want to compare. Example:
+  cmake -Dold=\"5.7.3\" -Dnew=\"5.8.2\" -P ${CMAKE_CURRENT_LIST_DIR}/compare_mumps_version_source.cmake")
 endif()
 
 set(old_url "https://mumps-solver.org/MUMPS_${old}.tar.gz")
@@ -22,10 +22,11 @@ find_package(Python COMPONENTS Interpreter)
 
 set(makefiles Makefile src/Makefile)
 if(Python_Interpreter_FOUND)
-  message(STATUS "Makefile diffs include:")
+
   foreach(file IN LISTS makefiles)
     execute_process(
-        COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/diff_print.py ${src_old_SOURCE_DIR}/${file} ${src_new_SOURCE_DIR}/${file}
+        COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/diff_print.py --ignore-comments
+          ${src_old_SOURCE_DIR}/${file} ${src_new_SOURCE_DIR}/${file}
         COMMAND_ERROR_IS_FATAL ANY
     )
   endforeach()
