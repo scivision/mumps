@@ -13,7 +13,7 @@ def print_diff(file1: str, file2: str) -> None:
             f1.readlines(), f2.readlines(), fromfile=file1, tofile=file2, lineterm=""
         )
         for line in d:
-            print(line)
+            print(line, end="")
 
 
 if __name__ == "__main__":
