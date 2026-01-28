@@ -225,7 +225,22 @@ endif()
 
 message(STATUS "Configured MUMPS ${MUMPS_ACTUAL_VERSION} source in ${mumps_upstream_SOURCE_DIR}")
 
+if(PROJECT_IS_TOP_LEVEL)
+
+find_program(GRAPHVIZ_DOT NAMES dot)
+if(GRAPHVIZ_DOT)
+    file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/graphviz)
+    set(_graph_name ${PROJECT_BINARY_DIR}/graphviz/${PROJECT_NAME})
+    add_custom_target(graphviz
+      COMMAND ${CMAKE_COMMAND} --graphviz=${_graph_name}.dot -B${PROJECT_BINARY_DIR} -S${PROJECT_SOURCE_DIR}
+      COMMAND ${GRAPHVIZ_DOT} -Tsvg ${_graph_name}.dot -o ${_graph_name}.svg
+      COMMAND ${CMAKE_COMMAND} -E echo "CMake ${PROJECT_NAME} targets graph: ${_graph_name}.svg"
+    )
+endif()
+
 include(cmake/summary.cmake)
+
+endif()
 
 include(cmake/install.cmake)
 

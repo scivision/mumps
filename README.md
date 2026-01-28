@@ -86,6 +86,16 @@ These libraries can be linked into C, C++, Fortran, etc. programs, or even be us
 and
 [python-mumps](https://pypi.org/project/python-mumps/).
 
+To see the CMake target dependency graph do:
+
+```sh
+cmake -B build
+
+cmake --build build -t graphviz
+```
+
+and view the SVG file build/graphviz/MUMPS.svg via a web browser or SVG viewer.
+
 ## Self test and examples
 
 Optionally, run self-tests:
