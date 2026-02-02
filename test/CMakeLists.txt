@@ -46,7 +46,7 @@ if(BUILD_DOUBLE)
   $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
   )
   add_test(NAME test_mumps_complex128 COMMAND test_mumps_complex128)
-  if(CMAKE_C_COMPILER_ID MATCHES "^Intel" AND "$ENV{GITHUB_ACTIONS}")
+  if(CMAKE_C_COMPILER_ID STREQUAL "IntelLLVM" AND "$ENV{GITHUB_ACTIONS}")
     # Please verify that both the operating system and the processor support Intel(R) X87, CMOV, MMX, SSE, SSE2, SSE3, SSSE3, SSE4_1, SSE4_2, MOVBE, POPCNT, AVX, F16C, FMA, BMI, LZCNT, AVX2, ADX and SHSTK instructions.
     set_tests_properties(test_mumps_complex128 PROPERTIES DISABLED true)
   endif()

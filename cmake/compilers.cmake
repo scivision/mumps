@@ -66,7 +66,7 @@ if(MUMPS_intsize64)
   # or runtime fails
   # See MUMPS 5.7.0 User manual about error -69
 
-  if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
+  if(CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
     # https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2025-2/using-the-ilp64-interface-vs-lp64-interface.html
     # https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2025-2/using-the-ilp64-interface-vs-lp64-interface.html
     # https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-16/ilp64-support.html
