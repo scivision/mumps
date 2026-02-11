@@ -1,12 +1,10 @@
 # MUMPS on Windows
 
 MUMPS builds on Windows as well as other operating systems.
-Windows Subsystem for Linux (WSL) is also supported.
-For Windows builds, we suggest
+Windows Subsystem for Linux (WSL) is suggested and tested in our CI.
+One may also use
 [Intel oneAPI](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html)
-using the
-[Ninja](https://github.com/ninja-build/ninja/releases)
-build system with CMake.
+using the Ninja build system with CMake.
 
 These can be installed via WinGet:
 
@@ -47,9 +45,9 @@ cmake -G Ninja -B build -DCMAKE_MAKE_PROGRAM=C:/path/to/ninja.exe
 
 Windows compilers known to work:
 
-* Intel [oneAPI](./Readme_oneapi.md) (recommended) -- requires oneAPI Base Toolkit and oneAPI HPC Toolkit for LAPACK, ScaLAPACK, and Intel MPI
+* Windows Subsystem for Linux (recommended in general for scientific computing on Windows)
+* Intel [oneAPI](./Readme_oneapi.md)  -- requires oneAPI Base Toolkit and oneAPI HPC Toolkit for LAPACK, ScaLAPACK, and Intel MPI
 * MSYS2
-* Windows Subsystem for Linux
 
 ## CMake configure output
 

@@ -24,6 +24,9 @@ cmake -B build -DCMAKE_C_COMPILER=$CMPLR_ROOT/bin/icx -DCMAKE_Fortran_COMPILER=$
 
 ## Windows
 
+One may use Intel oneAPI on Windows via WSL.
+This procedure described native oneAPI on Windows instead.
+
 Be sure to use the oneAPI command prompt.
 Under Windows Start menu look for "Intel oneAPI command prompt for Intel 64 for Visual Studio".
 Alternatively, use the oneAPI
