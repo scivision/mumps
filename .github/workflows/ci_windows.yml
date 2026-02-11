@@ -110,7 +110,7 @@ jobs:
 
 
     - name: configure example
-      run: cmake -S example -B /tmp/build-ex -DCMAKE_PREFIX_PATH=/tmp/mumps
+      run: cmake -G Ninja -S example -B /tmp/build-ex -DCMAKE_PREFIX_PATH=/tmp/mumps
 
     - name: Upload log failure
       if: failure()
