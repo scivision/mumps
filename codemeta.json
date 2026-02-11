@@ -1,9 +1,9 @@
 {
-    "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+    "@context": "https://w3id.org/codemeta/3.0",
     "@type": "SoftwareSourceCode",
     "license": "https://spdx.org/licenses/CECILL-C.html",
     "codeRepository": "https://github.com/scivision/mumps-superbuild",
-    "contIntegration": "https://github.com/scivision/mumps-superbuild/actions",
+    "continuousIntegration": "https://github.com/scivision/mumps-superbuild/actions",
     "downloadUrl": "https://github.com/scivision/mumps-superbuild/releases",
     "issueTracker": "https://github.com/scivision/mumps-superbuild/issues",
     "name": "MUMPS",

@@ -5,7 +5,7 @@ option(MUMPS_find_static "Find static libraries for Lapack and Scalapack (defaul
 
 if(MUMPS_url)
   if(EXISTS ${MUMPS_url})
-    get_filename_component(MUMPS_url ${MUMPS_url} ABSOLUTE)
+    file(REAL_PATH "${MUMPS_url}" MUMPS_url)
   endif()
 else()
   if(NOT DEFINED MUMPS_UPSTREAM_VERSION)
