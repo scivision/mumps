@@ -105,7 +105,7 @@ if(MUMPS_parallel)
   # this is needed for Intel MPI ILP64 support
   # It's a long-known FindMPI CMake issue
   # https://discourse.cmake.org/t/problem-enabling-64-bit-fortran-compilation-on-windows-using-intel-oneapi-with-cmake-on-windows/4541
-  # https://github.com/scivision/mumps/issues/114
+  # https://github.com/scivision/mumps-superbuild/issues/114
   if(MUMPS_intsize64 AND DEFINED ENV{I_MPI_ROOT})
     find_path(IMPI_INC64
       NAMES mpi.mod

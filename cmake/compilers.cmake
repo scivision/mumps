@@ -31,7 +31,7 @@ endif()
 list(APPEND mumps_cflags $<$<COMPILE_LANG_AND_ID:C,AppleClang,Clang,GNU,IntelLLVM>:-Werror-implicit-function-declaration>)
 
 # -fno-strict-aliasing is important for memory leaks
-# https://github.com/scivision/mumps/pull/56
+# https://github.com/scivision/mumps-superbuild/pull/56
 # IntelLLVM does not have -fno-strict-aliasing for Fortran
 list(APPEND mumps_cflags
 "$<$<COMPILE_LANG_AND_ID:C,AppleClang,Clang,GNU,IntelLLVM>:-fno-strict-aliasing>"

@@ -4,9 +4,9 @@
 # git_submodule() calls.
 #
 # For example, in the MUMPS project, we have submodule directories
-# mumps/parmetis/METIS/GKlib
+# mumps-superbuild/parmetis/METIS/GKlib
 #
-# from the mumps/ directory to enable METIS but not ParMETIS if the user desires, we do
+# from the mumps-superbuild/ directory to enable METIS but not ParMETIS if the user desires, we do
 # git_submodule(${PROJECT_SOURCE_DIR}/parmetis)
 # if(MUMPS_parmetis)
 #   add_subdirectory(${PROJECT_SOURCE_DIR}/parmetis)

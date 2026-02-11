@@ -1,14 +1,15 @@
 # MUMPS sparse solver
 
-[![ci](https://github.com/scivision/mumps/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci.yml)
-[![ci_windows](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml)
-[![ci_build](https://github.com/scivision/mumps/actions/workflows/ci_build.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci_build.yml)
-[![oneapi-linux](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml)
+[![ci](https://github.com/scivision/mumps-superbuild/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/ci.yml)
+[![ci_windows](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_windows.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_windows.yml)
+[![ci_build](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_build.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_build.yml)
+[![oneapi-linux](https://github.com/scivision/mumps-superbuild/actions/workflows/oneapi-linux.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/oneapi-linux.yml)
 
-CMake downloads the unmodified source tarfile from MUMPS developers and builds.
+This repository provides a CMake superbuild project for MUMPS and optional MUMPS dependencies including ScaLAPACK, ParMETIS, Scotch, etc.
+This CMake superbuild downloads the unmodified source tarfile from mumps-solver.org and builds.
 For offline usage, the user can specify a local MUMPS source archive like `cmake -Bbuild -DMUMPS_url=/path/to/mumps.zip`
 
-CMake builds MUMPS in parallel faster and more conveniently than the original Makefiles.
+CMake builds MUMPS quickly and more conveniently than the original Makefiles.
 CMake allows easy reuse of MUMPS in external projects via any of:
 
 * CMake [FetchContent](https://gist.github.com/scivision/2ad002ed26589783f1522160da4d27d1)
@@ -16,8 +17,8 @@ CMake allows easy reuse of MUMPS in external projects via any of:
 * CMake ExternalProject_Add (similar to FetchContent example)
 
 [MUMPS CeCILL-C license](https://mumps-solver.org/index.php?page=dwnld#license)
-is distinct from this CMake script license.
-MUMPS teams typically make new
+is distinct from this CMake superbuild license.
+The MUMPS Team typically make new
 [releases](https://mumps-solver.org/index.php?page=dwnld#cl)
 each year.
 
@@ -32,7 +33,7 @@ can be used and will be automatically built if needed.
 
 Several [LAPACK vendors](./Readme_LAPACK.md) are supported.
 
-The MUMPS project is distinct from this CMake script wrapper.
+The MUMPS discrete solver project is distinct from this CMake superbuild.
 See the
 [MUMPS Users email list](https://listes.ens-lyon.fr/sympa/subscribe/mumps-users)
 and
