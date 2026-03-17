@@ -34,6 +34,15 @@ if(MSVC AND BUILD_SHARED_LIBS)
   cmake -DBUILD_SHARED_LIBS=off")
 endif()
 
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang" AND CMAKE_GENERATOR MATCHES "Ninja")
+  message(WARNING "MUMPS: LLVM Flang with Ninja generator may fail to build.
+  https://gitlab.kitware.com/cmake/cmake/-/issues/27702
+
+Recommend using Makefiles generator instead:
+cmake -G \"Unix Makefiles\" -B build --fresh")
+endif()
+
+
 if(DEFINED ENV{CONDA_PREFIX})
   list(APPEND CMAKE_IGNORE_PREFIX_PATH $ENV{CONDA_PREFIX})
   list(APPEND CMAKE_IGNORE_PATH $ENV{CONDA_PREFIX}/bin)
