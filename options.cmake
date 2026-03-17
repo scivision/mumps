@@ -66,6 +66,9 @@ option(BUILD_DOUBLE "Build double precision float64 real" ON)
 option(BUILD_COMPLEX "Build single precision complex")
 option(BUILD_COMPLEX16 "Build double precision complex")
 
+option(MUMPS_ENABLE_RPATH "Enable RPATH in installed MUMPS libraries" OFF)
+
+
 # --- other options
 
 # this is for convenience of those needing scalapack, lapack, scotch, etc. built

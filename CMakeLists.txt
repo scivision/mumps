@@ -53,6 +53,12 @@ endif()
 
 # --- user options
 include(options.cmake)
+
+# --- RPATH handling for transitive dependencies
+if(MUMPS_ENABLE_RPATH AND NOT WIN32)
+  set(CMAKE_INSTALL_RPATH "$ORIGIN;$ORIGIN/..")
+endif()
+
 include(cmake/compilers.cmake)
 
 message(STATUS "MUMPS ${PROJECT_VERSION} upstream ${MUMPS_UPSTREAM_VERSION} install prefix: ${CMAKE_INSTALL_PREFIX}")
