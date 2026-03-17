@@ -2,6 +2,9 @@ option(MUMPS_BUILD_TESTING "Build tests" ${MUMPS_IS_TOP_LEVEL})
 
 option(MUMPS_find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
 
+option(MUMPS_UPDATE_DISCONNECTED "don't check for updates of Git submodules if they exist" ON)
+set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED ${MUMPS_UPDATE_DISCONNECTED})
+set(FETCHCONTENT_UPDATES_DISCONNECTED ${MUMPS_UPDATE_DISCONNECTED})
 
 if(MUMPS_url)
   if(EXISTS ${MUMPS_url})
@@ -64,10 +67,6 @@ option(BUILD_COMPLEX "Build single precision complex")
 option(BUILD_COMPLEX16 "Build double precision complex")
 
 # --- other options
-
-set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED true)
-
-set(FETCHCONTENT_UPDATES_DISCONNECTED true)
 
 # this is for convenience of those needing scalapack, lapack, scotch, etc. built
 if(MUMPS_IS_TOP_LEVEL AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)

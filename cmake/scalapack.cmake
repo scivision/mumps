@@ -1,6 +1,3 @@
-include(ExternalProject)
-include(GNUInstallDirs)
-
 if(MUMPS_find_SCALAPACK AND NOT TARGET SCALAPACK::SCALAPACK)
 
 # Make SCALAPACK_VENDOR match LAPACK_VENDOR
