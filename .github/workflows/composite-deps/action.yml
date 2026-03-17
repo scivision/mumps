@@ -1,3 +1,6 @@
+name: install dependencies
+description: Install dependencies for MUMPS build and test workflow
+
 runs:
   using: "composite"
 

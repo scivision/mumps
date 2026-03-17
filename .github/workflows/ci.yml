@@ -42,6 +42,7 @@ jobs:
         parmetis: [false]
         parallel: [true]
         openmp: [false]
+        shared: [false]
         mpich: [false]
         lapack_vendor: [""]
         os: [ubuntu-latest, macos-latest]
@@ -68,6 +69,8 @@ jobs:
             parallel: true
             os: ubuntu-latest
             name: MPICH
+          - shared: true
+            os: ubuntu-latest
 
     name: ${{ matrix.os }}-parallel=${{ matrix.parallel }}-${{ matrix.name }}-scotch-${{ matrix.scotch }}
     runs-on: ${{ matrix.os }}

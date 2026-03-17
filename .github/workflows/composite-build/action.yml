@@ -1,3 +1,6 @@
+name: Build and Test
+description: Build and test MUMPS with CMake workflow
+
 runs:
   using: "composite"
 
@@ -14,6 +17,7 @@ runs:
       -DMUMPS_parmetis:BOOL=${{ matrix.parmetis }}
       -DLAPACK_VENDOR=${{ matrix.lapack_vendor }}
       -DMUMPS_openmp:BOOL=${{ matrix.openmp }}
+      -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
 
   - name: build, test release
     shell: bash

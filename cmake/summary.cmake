@@ -11,10 +11,10 @@ add_feature_info(Scotch MUMPS_scotch "Scotch graph partitioning https://www.labr
 
 add_feature_info(Openmp MUMPS_openmp "OpenMP API https://www.openmp.org/")
 
-add_feature_info(real32 ${BUILD_SINGLE} "Build with single precision")
-add_feature_info(real64 ${BUILD_DOUBLE} "Build with double precision")
-add_feature_info(complex32 ${BUILD_COMPLEX} "Build with complex precision")
-add_feature_info(complex64 ${BUILD_COMPLEX16} "Build with complex16 precision")
-add_feature_info(shared ${BUILD_SHARED_LIBS} "Build shared libraries")
+add_feature_info(real32 BUILD_SINGLE "Build with single precision")
+add_feature_info(real64 BUILD_DOUBLE "Build with double precision")
+add_feature_info(complex32 BUILD_COMPLEX "Build with complex precision")
+add_feature_info(complex64 BUILD_COMPLEX16 "Build with complex16 precision")
+add_feature_info(shared BUILD_SHARED_LIBS "Build shared libraries")
 
 feature_summary(WHAT ENABLED_FEATURES DISABLED_FEATURES)

@@ -1,3 +1,6 @@
+name: install CMake
+description: Install CMake of requested version
+
 runs:
 
   using: "composite"

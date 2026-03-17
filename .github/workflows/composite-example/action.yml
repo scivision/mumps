@@ -1,3 +1,6 @@
+name: build example
+description: Build and test MUMPS example workflow
+
 runs:
   using: "composite"
 
