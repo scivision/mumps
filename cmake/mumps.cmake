@@ -268,6 +268,11 @@ string(TOUPPER ${a} aup)
 set_property(TARGET ${a}mumps PROPERTY EXPORT_NAME ${aup}MUMPS)
 set_property(TARGET ${a}mumps PROPERTY VERSION ${MUMPS_ACTUAL_VERSION})
 
+if(BUILD_SHARED_LIBS AND APPLE AND CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang")
+  # flang linker can't handle -dynamiclib flag
+  set_property(TARGET ${a}mumps PROPERTY LINKER_LANGUAGE C)
+endif()
+
 target_link_libraries(MUMPS INTERFACE ${a}mumps)
 
 install(TARGETS ${a}mumps EXPORT ${PROJECT_NAME}-targets)
