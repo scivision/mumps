@@ -72,8 +72,8 @@ get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 
 set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
 
-# Windows DLL
-if(BUILD_SHARED_LIBS AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.22)
+# CMake >= 3.22
+if(BUILD_SHARED_LIBS)
   if(WIN32)
     set_property(TEST ${test_names} PROPERTY
     ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${CMAKE_INSTALL_FULL_BINDIR};PATH=path_list_prepend:${CMAKE_PREFIX_PATH}/bin;PATH=path_list_prepend:${PROJECT_BINARY_DIR}"
