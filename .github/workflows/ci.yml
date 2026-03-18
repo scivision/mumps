@@ -69,7 +69,8 @@ jobs:
             parallel: true
             os: ubuntu-latest
             name: MPICH
-          - shared: true
+          - name: shared
+            shared: true
             os: ubuntu-latest
 
     name: ${{ matrix.os }}-parallel=${{ matrix.parallel }}-${{ matrix.name }}-scotch-${{ matrix.scotch }}
@@ -111,7 +112,7 @@ jobs:
     - uses: ./.github/workflows/composite-cmake
 
     - name: configure
-      run: $CMAKE -Bbuild -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/build/local
+      run: $CMAKE -Bbuild
 
     - name: build
       run: $CMAKE --build build

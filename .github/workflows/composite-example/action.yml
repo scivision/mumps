@@ -43,10 +43,8 @@ runs:
   - name: OpenMP example
     shell: bash
     if: ${{ matrix.openmp }}
-    run: |
-      cmake -S example/openmp -Bexample/openmp/build
-      cmake --build example/openmp/build
-      ctest --test-dir example/openmp/build -V
+    working-directory: example/openmp
+    run: cmake --workflow default
 
   - name: Upload log failure
     if: ${{ failure() && matrix.openmp }}
