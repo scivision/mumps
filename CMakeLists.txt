@@ -46,8 +46,8 @@ endif()
 
 if(DEFINED ENV{CONDA_PREFIX})
   list(APPEND CMAKE_IGNORE_PREFIX_PATH $ENV{CONDA_PREFIX})
-  list(APPEND CMAKE_IGNORE_PATH $ENV{CONDA_PREFIX}/bin)
-  # need CMAKE_IGNORE_PATH for CMake < 3.23 and to ensure system env var PATH doesn't interfere
+  list(APPEND CMAKE_IGNORE_PATH $ENV{CONDA_PREFIX}/bin $ENV{CONDA_PREFIX}/lib $ENV{CONDA_PREFIX}/include)
+  # need CMAKE_IGNORE_PATH to ensure env var PATH doesn't interfere
   # despite CMAKE_IGNORE_PREFIX_PATH
 endif()
 
@@ -56,7 +56,8 @@ include(options.cmake)
 
 # --- RPATH handling for transitive dependencies
 if(MUMPS_ENABLE_RPATH AND NOT WIN32)
-  set(CMAKE_INSTALL_RPATH "$ORIGIN;$ORIGIN/..")
+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
+  set(CMAKE_BUILD_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
 endif()
 
 include(cmake/compilers.cmake)

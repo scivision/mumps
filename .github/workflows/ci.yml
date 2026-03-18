@@ -42,7 +42,6 @@ jobs:
         parmetis: [false]
         parallel: [true]
         openmp: [false]
-        shared: [false]
         mpich: [false]
         lapack_vendor: [""]
         os: [ubuntu-latest, macos-latest]
@@ -69,9 +68,6 @@ jobs:
             parallel: true
             os: ubuntu-latest
             name: MPICH
-          - name: shared
-            shared: true
-            os: ubuntu-latest
 
     name: ${{ matrix.os }}-parallel=${{ matrix.parallel }}-${{ matrix.name }}-scotch-${{ matrix.scotch }}
     runs-on: ${{ matrix.os }}
@@ -94,6 +90,30 @@ jobs:
 
     - name: build example
       uses: ./.github/workflows/composite-example
+
+
+  shared:
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      CC: gcc-14
+      FC: gfortran-14
+
+    steps:
+    - *checkout
+    - *prereqs
+
+    - run: cmake --workflow shared
+    - run: cmake --install build-shared
+
+    - name: example workflow
+      working-directory: example
+      run: cmake --workflow default
 
 
   cmake-older:
