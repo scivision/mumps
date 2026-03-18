@@ -2,49 +2,40 @@ name: build example
 description: Build and test MUMPS example workflow
 
 runs:
-  using: "composite"
+  using: composite
 
   steps:
 
   - name: configure example
     shell: bash
-    run: cmake -S example -B example/build
-
-  - name: build example
-    shell: bash
-    run: cmake --build example/build
-
-  - name: test example
-    shell: bash
-    run: ctest --test-dir example/build -V
+    working-directory: example
+    run: cmake --workflow default
 
   - name: Scotch example
     shell: bash
     if: ${{ matrix.scotch }}
-    run: |
-      cmake -S example/scotch -Bexample/scotch/build
-      cmake --build example/scotch/build
-      ctest --test-dir example/scotch/build -V
+    working-directory: example/scotch
+    run: cmake --workflow default
 
   - name: Upload log failure
     if: ${{ failure() && matrix.scotch }}
-    uses: actions/upload-artifact@v6
+    uses: actions/upload-artifact@v7
     with:
+      archive: false
       name: Scotch-example-${{ runner.os }}-CMakeConfigureLog.yaml
       path: example/scotch/build/CMakeFiles/CMakeConfigureLog.yaml
 
   - name: METIS example
     shell: bash
     if: ${{ matrix.metis }}
-    run: |
-      cmake -S example/metis -Bexample/metis/build
-      cmake --build example/metis/build
-      ctest --test-dir example/metis/build -V
+    working-directory: example/metis
+    run: cmake --workflow default
 
   - name: Upload log failure
     if: ${{ failure() && matrix.metis }}
-    uses: actions/upload-artifact@v6
+    uses: actions/upload-artifact@v7
     with:
+      archive: false
       name: METIS-example-${{ runner.os }}-CMakeConfigureLog.yaml
       path: example/metis/build/CMakeFiles/CMakeConfigureLog.yaml
 
@@ -59,7 +50,8 @@ runs:
 
   - name: Upload log failure
     if: ${{ failure() && matrix.openmp }}
-    uses: actions/upload-artifact@v6
+    uses: actions/upload-artifact@v7
     with:
+      archive: false
       name: OpenMP-example-${{ runner.os }}-CMakeConfigureLog.yaml
       path: example/openmp/build/CMakeFiles/CMakeConfigureLog.yaml

@@ -12,13 +12,18 @@
     "BUILD_COMPLEX16": false,
     "CMAKE_BUILD_TYPE": "Release"
   }
+},
+{
+  "name": "shared", "inherits": "default",
+  "binaryDir": "${sourceDir}/build-shared",
+  "cacheVariables": {
+    "BUILD_SHARED_LIBS": true
+  }
 }
 ],
 "buildPresets": [
-  {
-    "name": "default",
-    "configurePreset": "default"
-  }
+  { "name": "default", "configurePreset": "default", "jobs": 0 },
+  { "name": "shared", "configurePreset": "shared", "inherits": "default" }
 ],
 "testPresets": [
 {
@@ -34,24 +39,24 @@
     "stopOnFailure": false,
     "timeout": 60
   }
-}
+},
+{ "name": "shared", "configurePreset": "shared", "inherits": "default" }
 ],
 "workflowPresets": [
   {
     "name": "default",
     "steps": [
-      {
-        "type": "configure",
-        "name": "default"
-      },
-      {
-        "type": "build",
-        "name": "default"
-      },
-      {
-        "type": "test",
-        "name": "default"
-      }
+      { "type": "configure", "name": "default" },
+      { "type": "build", "name": "default" },
+      { "type": "test", "name": "default"}
+    ]
+  },
+  {
+    "name": "shared",
+    "steps": [
+      { "type": "configure", "name": "shared" },
+      { "type": "build", "name": "shared" },
+      { "type": "test", "name": "shared"}
     ]
   }
 ]
