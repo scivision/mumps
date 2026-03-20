@@ -33,10 +33,17 @@ if(IS_DIRECTORY ${mod_dir}/.git OR EXISTS ${submod_dir}/CMakeLists.txt)
 
 message(STATUS "${mod_dir} is a Git repository, updating submodule ${submod_dir}")
 
-execute_process(COMMAND ${GIT_EXECUTABLE} -C ${mod_dir} submodule
-    update --init --recursive -- ${submod_dir}
-  COMMAND_ERROR_IS_FATAL ANY
+execute_process(COMMAND
+  ${GIT_EXECUTABLE} -C ${mod_dir} submodule update --init --recursive -- ${submod_dir}
+RESULT_VARIABLE _ret
+ERROR_VARIABLE _err
 )
+if(_ret EQUAL 128 AND _err MATCHES "fatal: detected dubious ownership in repository")
+  message(WARNING "Failed to update submodule ${submod_dir} in ${mod_dir}: ${_err}"
+    "This may be caused by a shallow Git clone or shallow Git submodules.")
+elseif(NOT _ret EQUAL 0)
+  message(FATAL_ERROR "Failed to update submodule ${submod_dir} in ${mod_dir}: ${_err}")
+endif()
 
 else()
 
