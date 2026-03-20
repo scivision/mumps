@@ -28,7 +28,8 @@ find_package(Git REQUIRED)
 cmake_path(GET submod_dir PARENT_PATH mod_dir)
 # we need to descend level by level
 
-if(IS_DIRECTORY ${mod_dir}/.git)
+if(IS_DIRECTORY ${mod_dir}/.git OR EXISTS ${submod_dir}/CMakeLists.txt)
+# EXISTS check is in case of shallow submodule clone, where the .git directory may not be present
 
 message(STATUS "${mod_dir} is a Git repository, updating submodule ${submod_dir}")
 
