@@ -6,6 +6,7 @@ import difflib
 from pathlib import Path
 import logging
 import argparse
+import sys
 
 COMM = {
     ".c": "/*",
@@ -48,7 +49,8 @@ def print_diff(file1: str, file2: str, ignore_comments: bool) -> None:
             lines1 = [line for line in lines1 if not line.startswith(com)]
             lines2 = [line for line in lines2 if not line.startswith(com)]
 
-    d = difflib.unified_diff(lines1, lines2, fromfile=file1, tofile=file2, lineterm="")
+    diff_kwargs = {"color": True} if sys.version_info >= (3, 15) else {}
+    d = difflib.unified_diff(lines1, lines2, fromfile=file1, tofile=file2, lineterm="", **diff_kwargs)
     for line in d:
         print(line)
 
