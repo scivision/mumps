@@ -1,8 +1,6 @@
 name: ci_build
 
 env:
-  CTEST_NO_TESTS_ACTION: error
-  CTEST_PARALLEL_LEVEL: 0
   CMAKE_INSTALL_PREFIX: ~/libs
   CMAKE_PREFIX_PATH: ~/libs
   CMAKE_GENERATOR: Ninja
@@ -12,6 +10,7 @@ on:
     paths:
       - "scripts/CMakeLists.txt"
       - ".github/workflows/ci_build.yml"
+      - "cmake/libraries.json"
 
 jobs:
 
@@ -22,6 +21,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         scotch: [true]
+
+    env:
+      FC: gfortran-14
 
     steps:
     - uses: actions/checkout@v6
@@ -36,9 +38,8 @@ jobs:
     - name: Install prereqs (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install flang open-mpi
+        brew install open-mpi
         [[ "${{ matrix.scotch }}" == "true" ]] && brew install bison flex
-        echo "FC=flang" >> $GITHUB_ENV
 
     - name: configure
       run: cmake --preset default -DMUMPS_scotch:BOOL=${{ matrix.scotch }}
