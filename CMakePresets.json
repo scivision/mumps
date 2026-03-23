@@ -4,7 +4,7 @@
 "configurePresets": [
 {
   "name": "default",
-  "binaryDir": "${sourceDir}/build",
+  "binaryDir": "build",
   "cacheVariables": {
     "BUILD_SINGLE": false,
     "BUILD_DOUBLE": true,
@@ -15,16 +15,24 @@
 },
 {
   "name": "shared", "inherits": "default",
-  "binaryDir": "${sourceDir}/build-shared",
+  "binaryDir": "build-shared",
   "cacheVariables": {
     "BUILD_SHARED_LIBS": true,
     "MUMPS_ENABLE_RPATH": true
+  }
+},
+{
+  "name": "scotch", "inherits": "default",
+  "binaryDir": "build-scotch",
+  "cacheVariables": {
+    "MUMPS_scotch": true
   }
 }
 ],
 "buildPresets": [
   { "name": "default", "configurePreset": "default", "jobs": 0 },
-  { "name": "shared", "configurePreset": "shared", "inherits": "default" }
+  { "name": "shared", "configurePreset": "shared", "inherits": "default" },
+  { "name": "scotch", "configurePreset": "scotch", "inherits": "default" }
 ],
 "testPresets": [
 {
@@ -41,7 +49,8 @@
     "timeout": 60
   }
 },
-{ "name": "shared", "configurePreset": "shared", "inherits": "default" }
+{ "name": "shared", "configurePreset": "shared", "inherits": "default" },
+{ "name": "scotch", "configurePreset": "scotch", "inherits": "default" }
 ],
 "workflowPresets": [
   {
@@ -58,6 +67,14 @@
       { "type": "configure", "name": "shared" },
       { "type": "build", "name": "shared" },
       { "type": "test", "name": "shared"}
+    ]
+  },
+  {
+    "name": "scotch",
+    "steps": [
+      { "type": "configure", "name": "scotch" },
+      { "type": "build", "name": "scotch" },
+      { "type": "test", "name": "scotch"}
     ]
   }
 ]

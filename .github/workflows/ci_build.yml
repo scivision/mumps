@@ -41,13 +41,15 @@ jobs:
         brew install open-mpi
         [[ "${{ matrix.scotch }}" == "true" ]] && brew install bison flex
 
-    - name: configure
-      run: cmake --preset default -DMUMPS_scotch:BOOL=${{ matrix.scotch }}
-
     - name: build, test release
+      if: ${{ !matrix.scotch }}
       run: cmake --workflow default
 
-    - run: cmake --install build
+    - name: build with scotch
+      if: ${{ matrix.scotch }}
+      run: cmake --workflow scotch
+
+    - run: cmake --install build-scotch
 
 # builds fine on local machine
     # - name: configure example

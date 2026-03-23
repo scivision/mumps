@@ -2,7 +2,3 @@
 	path = parmetis
 	url = https://github.com/scivision/parmetis
 	shallow = true
-[submodule "scotch"]
-	path = scotch
-	url = https://github.com/scivision/scotch
-	shallow = true
