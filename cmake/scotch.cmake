@@ -105,7 +105,6 @@ message(STATUS "BISON_ROOT ${BISON_ROOT}  FLEX_ROOT ${FLEX_ROOT}")
 
 FetchContent_Declare(SCOTCH
   URL ${scotch_url}
-  FIND_PACKAGE_ARGS
 )
 
 if(DEFINED win_flex_bison)

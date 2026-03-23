@@ -1,4 +1,0 @@
-[submodule "parmetis"]
-	path = parmetis
-	url = https://github.com/scivision/parmetis
-	shallow = true

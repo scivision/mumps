@@ -26,7 +26,6 @@ endif()
 enable_testing()
 
 include(GNUInstallDirs)
-include(cmake/GitSubmodule.cmake)
 
 # --- sanity checks
 if(MSVC AND BUILD_SHARED_LIBS)
@@ -183,25 +182,27 @@ if(MUMPS_scotch)
 endif()
 
 
+
 if(MUMPS_metis OR MUMPS_parmetis)
+  set(IDXTYPEWIDTH $<IF:$<BOOL:${MUMPS_intsize64}>,64,32>)
+
   if(MUMPS_find_metis)
     if(MUMPS_parmetis)
-      set(METIS_COMPONENTS ParMETIS)
+      find_package(METIS COMPONENTS ParMETIS REQUIRED)
     endif()
-    find_package(METIS COMPONENTS ${METIS_COMPONENTS})
-  endif()
-
-  if(NOT METIS_FOUND)
-    set(IDXTYPEWIDTH $<IF:$<BOOL:${MUMPS_intsize64}>,64,32>)
-    git_submodule(${PROJECT_SOURCE_DIR}/parmetis)
+    find_package(METIS REQUIRED)
+  else()
 
     if(MUMPS_parmetis)
-      add_subdirectory(parmetis)
-      list(APPEND ORDERING_DEFS parmetis)
+      string(JSON metis_url GET "${json}" "parmetis")
     else()
-      git_submodule(${PROJECT_SOURCE_DIR}/parmetis/METIS)
-      add_subdirectory(parmetis/METIS)
+      string(JSON metis_url GET "${json}" "metis")
     endif()
+
+    FetchContent_Declare(mumps_metis URL ${metis_url})
+
+    FetchContent_MakeAvailable(mumps_metis)
+
   endif()
 
   list(APPEND ORDERING_DEFS REALTYPEWIDTH=32 IDXTYPEWIDTH=${IDXTYPEWIDTH} metis)
