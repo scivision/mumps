@@ -1,4 +1,4 @@
-if(MUMPS_find_SCALAPACK AND NOT TARGET SCALAPACK::SCALAPACK)
+if(MUMPS_find_SCALAPACK)
 
 # Make SCALAPACK_VENDOR match LAPACK_VENDOR
 
@@ -32,18 +32,26 @@ if(MUMPS_find_static)
   list(APPEND SCALAPACK_VENDOR STATIC)
 endif()
 
-find_package(SCALAPACK COMPONENTS ${SCALAPACK_VENDOR})
-
 endif()
 
-if(SCALAPACK_FOUND OR TARGET SCALAPACK::SCALAPACK)
-  return()
-elseif(DEFINED SCALAPACK_VENDOR)
-  message(FATAL_ERROR "Scalapack from ${SCALAPACK_VENDOR} not found.")
+set(_fc_args)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
+  set(_fc_args FIND_PACKAGE_ARGS)
+elseif(NOT TARGET SCALAPACK::SCALAPACK AND MUMPS_find_SCALAPACK)
+  find_package(SCALAPACK REQUIRED COMPONENTS ${SCALAPACK_VENDOR})
+  if(TARGET SCALAPACK::SCALAPACK)
+    return()
+  endif()
 endif()
 
 # build scalapack
 set(SCALAPACK_BUILD_TESTING off)
 
-git_submodule(${PROJECT_SOURCE_DIR}/scalapack)
-add_subdirectory(${PROJECT_SOURCE_DIR}/scalapack)
+string(JSON scalapack_url GET "${json}" "scalapack")
+
+FetchContent_Declare(SCALAPACK
+URL ${scalapack_url}
+${_fc_args}
+)
+
+FetchContent_MakeAvailable(SCALAPACK)

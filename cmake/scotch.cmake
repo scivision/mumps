@@ -94,9 +94,8 @@ endif()
 
 if(WIN32 AND (NOT BISON_ROOT OR NOT FLEX_ROOT))
 
-  file(READ ${CMAKE_CURRENT_LIST_DIR}/libraries.json json)
-  string(JSON win_flex_bison_url GET ${json} win_flex_bison url)
-  string(JSON win_flex_bison_sha256 GET ${json} win_flex_bison sha256)
+  string(JSON win_flex_bison_url GET "${json}" win_flex_bison url)
+  string(JSON win_flex_bison_sha256 GET "${json}" win_flex_bison sha256)
 
   FetchContent_Populate(win_flex_bison
   URL ${win_flex_bison_url}

@@ -13,7 +13,7 @@ endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.8.2.2
+VERSION 5.8.2.3
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "https://mumps-solver.org/"
 )

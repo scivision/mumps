@@ -6,7 +6,3 @@
 	path = scotch
 	url = https://github.com/scivision/scotch
 	shallow = true
-[submodule "scalapack"]
-	path = scalapack
-	url = https://github.com/scivision/scalapack
-	shallow = true
