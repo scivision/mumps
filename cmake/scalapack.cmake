@@ -46,6 +46,7 @@ endif()
 
 # build scalapack
 set(SCALAPACK_BUILD_TESTING off)
+set(SCALAPACK_BUILD_TESTS off)
 
 string(JSON scalapack_url GET "${json}" "scalapack")
 
@@ -55,3 +56,7 @@ ${_fc_args}
 )
 
 FetchContent_MakeAvailable(SCALAPACK)
+
+if(NOT TARGET SCALAPACK::SCALAPACK)
+  add_library(SCALAPACK::SCALAPACK ALIAS scalapack)
+endif()
