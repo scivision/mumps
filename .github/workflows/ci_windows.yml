@@ -2,7 +2,6 @@ name: ci_windows
 
 env:
   CMAKE_GENERATOR: Ninja
-  CTEST_NO_TESTS_ACTION: error
 
 on:
   push:
@@ -39,34 +38,24 @@ jobs:
     - &checkout
       uses: actions/checkout@v6
 
-    - name: config
-      run: cmake --preset default -DMUMPS_parallel=false --install-prefix=${{ runner.temp }}
+    - name: build & test no-MPI
+      run: cmake --workflow serial
       env: &lapack
         LAPACK_ROOT: ${{ steps.msys2.outputs.msys2-location }}/ucrt64
-
-    - name: build, test
-      run: cmake --workflow default
 
     - name: install package
       run: cmake --install build
 
-    - name: configure example
-      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH=${{ runner.temp }}
-      env: *lapack
+    - name: example workflow
+      working-directory: example
+      run: cmake --workflow default
 
     - name: Upload log failure
       if: failure()
       uses: actions/upload-artifact@v7
       with:
-        archive: false
         name: example-${{ runner.os }}-CMakeConfigureLog.yaml
         path: example/build/CMakeFiles/CMakeConfigureLog.yaml
-
-    - name: build example
-      run: cmake --build example/build
-
-    - name: test example
-      run: ctest --test-dir example/build -V
 
 
   wsl:

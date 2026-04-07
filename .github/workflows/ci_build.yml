@@ -1,10 +1,5 @@
 name: ci_build
 
-env:
-  CMAKE_INSTALL_PREFIX: ~/libs
-  CMAKE_PREFIX_PATH: ~/libs
-  CMAKE_GENERATOR: Ninja
-
 on:
   push:
     paths:

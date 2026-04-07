@@ -5,11 +5,6 @@ env:
   CXX: icpx
   FC: ifx
 # https://github.com/oneapi-src/oneapi-ci/blob/master/.github/workflows/build_all.yml
-  CTEST_NO_TESTS_ACTION: error
-  CMAKE_BUILD_TYPE: Release
-  CMAKE_INSTALL_PREFIX: ~/libs
-  CMAKE_PREFIX_PATH: ~/libs
-  CMAKE_GENERATOR: Ninja
 # don't need Ninja but it prints the command lines by default which is good for debugging
 
   # debug triggers asan build errors, peculiar to GitHub Actions
@@ -107,17 +102,17 @@ jobs:
       run: cmake --install build
 
     - name: configure example
-      run: >-
-        cmake
-        -S example
-        -B example/build
+      working-directory: example
+      run: cmake --preset default
 
     - name: build example
-      run: cmake --build example/build
+      working-directory: example
+      run: cmake --build --preset default
 
     - name: test example
       if: ${{ matrix.int64 == 'false' }}
-      run: ctest --test-dir example/build -V
+      working-directory: example
+      run: ctest --preset default
 
 
     - name: exclude unused files from cache

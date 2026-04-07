@@ -5,34 +5,48 @@
 {
   "name": "default",
   "binaryDir": "build",
+  "installDir": "${fileDir}/build/local",
   "cacheVariables": {
     "BUILD_SINGLE": false,
     "BUILD_DOUBLE": true,
     "BUILD_COMPLEX": false,
     "BUILD_COMPLEX16": false,
-    "CMAKE_BUILD_TYPE": "Release"
+    "CMAKE_BUILD_TYPE": "Release",
+    "MUMPS_parallel": true,
+    "MUMPS_scotch": false
   }
 },
 {
   "name": "shared", "inherits": "default",
   "binaryDir": "build-shared",
+  "installDir": "${fileDir}/build-shared/local",
   "cacheVariables": {
     "BUILD_SHARED_LIBS": true,
     "MUMPS_ENABLE_RPATH": true
   }
 },
 {
+  "name": "serial", "inherits": "default",
+  "binaryDir": "build-serial",
+  "installDir": "${fileDir}/build-serial/local",
+  "cacheVariables": {
+    "MUMPS_parallel": false
+  }
+},
+{
   "name": "scotch", "inherits": "default",
   "binaryDir": "build-scotch",
+  "installDir": "${fileDir}/build-scotch/local",
   "cacheVariables": {
     "MUMPS_scotch": true
   }
 }
 ],
 "buildPresets": [
-  { "name": "default", "configurePreset": "default", "jobs": 0 },
+  { "name": "default", "configurePreset": "default", "jobs": 4 },
   { "name": "shared", "configurePreset": "shared", "inherits": "default" },
-  { "name": "scotch", "configurePreset": "scotch", "inherits": "default" }
+  { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
+  { "name": "serial", "configurePreset": "serial", "inherits": "default" }
 ],
 "testPresets": [
 {
@@ -46,11 +60,12 @@
     "noTestsAction": "error",
     "scheduleRandom": true,
     "stopOnFailure": false,
-    "timeout": 60
+    "jobs": 4
   }
 },
 { "name": "shared", "configurePreset": "shared", "inherits": "default" },
-{ "name": "scotch", "configurePreset": "scotch", "inherits": "default" }
+{ "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
+{ "name": "serial", "configurePreset": "serial", "inherits": "default" }
 ],
 "workflowPresets": [
   {
@@ -75,6 +90,14 @@
       { "type": "configure", "name": "scotch" },
       { "type": "build", "name": "scotch" },
       { "type": "test", "name": "scotch"}
+    ]
+  },
+  {
+    "name": "serial",
+    "steps": [
+      { "type": "configure", "name": "serial" },
+      { "type": "build", "name": "serial" },
+      { "type": "test", "name": "serial"}
     ]
   }
 ]

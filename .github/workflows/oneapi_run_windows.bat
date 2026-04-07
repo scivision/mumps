@@ -7,15 +7,11 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 echo "MKLROOT: %MKLROOT%"
 echo "I_MPI_ROOT: %I_MPI_ROOT%"
 
-echo "configure %GITHUB_REPOSITORY%"
-cmake --preset default --install-prefix %RUNNER_TEMP%
+echo "workflow %GITHUB_REPOSITORY%"
+cmake --workflow default
 if %errorlevel% neq 0 (
   type build\CMakeFiles\CMakeConfigureLog.yaml & exit /b %errorlevel%
 )
-
-echo "workflow %GITHUB_REPOSITORY%"
-cmake --workflow default
-if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo "install project"
 cmake --install build
@@ -23,6 +19,5 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo "Example config, build, test"
 cd example
-set CMAKE_PREFIX_PATH=%RUNNER_TEMP%
 cmake --workflow default
 if %errorlevel% neq 0 exit /b %errorlevel%
