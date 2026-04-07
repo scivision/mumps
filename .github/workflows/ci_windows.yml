@@ -44,11 +44,12 @@ jobs:
         LAPACK_ROOT: ${{ steps.msys2.outputs.msys2-location }}/ucrt64
 
     - name: install package
-      run: cmake --install build
+      run: cmake --install build-serial
 
     - name: example workflow
       working-directory: example
-      run: cmake --workflow default
+      run: cmake --workflow serial
+      env: *lapack
 
     - name: Upload log failure
       if: failure()
@@ -57,60 +58,45 @@ jobs:
         name: example-${{ runner.os }}-CMakeConfigureLog.yaml
         path: example/build/CMakeFiles/CMakeConfigureLog.yaml
 
+# works, just saving CI resources
 
-  wsl:
-    runs-on: windows-latest
-    timeout-minutes: 10
+  # wsl:
+  #   runs-on: windows-latest
+  #   timeout-minutes: 10
 
-    defaults:
-      run:
-        shell: wsl-bash {0}
+  #   defaults:
+  #     run:
+  #       shell: wsl-bash {0}
 
-    steps:
+  #   steps:
 
-    - uses: Vampire/setup-wsl@v6
-      with:
-        distribution: Ubuntu-24.04
-        additional-packages:
-          cmake ninja-build gcc g++ gfortran liblapack-dev libscalapack-openmpi-dev libopenmpi-dev
-        use-cache: true
-        wsl-shell-user: tester
+  #   - uses: Vampire/setup-wsl@v6
+  #     with:
+  #       distribution: Ubuntu-24.04
+  #       additional-packages:
+  #         cmake ninja-build gcc g++ gfortran liblapack-dev libscalapack-openmpi-dev libopenmpi-dev
+  #       use-cache: true
+  #       wsl-shell-user: tester
 
-    - name: tell OS release
-      run: cat /etc/os-release
+  #   - name: tell OS release
+  #     run: cat /etc/os-release
 
-    - name: tell WSL version
-      run: wsl.exe -l -v
-      shell: pwsh
+  #   - name: tell WSL version
+  #     run: wsl.exe -l -v
+  #     shell: pwsh
 
-    - *checkout
+  #   - *checkout
 
-    - name: CMake configure
-      run: cmake -B /tmp/build -G Ninja --install-prefix=/tmp/mumps
+  #   - name: CMake workflow
+  #     run: cmake --workflow --preset linux
 
-    - name: CMake build
-      run: cmake --build /tmp/build
+  #   - name: CMake install
+  #     run: cmake --install /tmp/build
 
-    - name: CTest
-      run: ctest --test-dir /tmp/build -V
-
-    - name: CMake install
-      run: cmake --install /tmp/build
-
-
-    - name: configure example
-      run: cmake -G Ninja -S example -B /tmp/build-ex -DCMAKE_PREFIX_PATH=/tmp/mumps
-
-    - name: Upload log failure
-      if: failure()
-      uses: actions/upload-artifact@v7
-      with:
-        archive: false
-        name: example-${{ runner.os }}-CMakeConfigureLog.yaml
-        path: /tmp/build-ex/CMakeFiles/CMakeConfigureLog.yaml
-
-    - name: build example
-      run: cmake --build /tmp/build-ex
-
-    - name: test example
-      run: ctest --test-dir /tmp/build-ex -V
+  #   - name: Upload log failure
+  #     if: failure()
+  #     uses: actions/upload-artifact@v7
+  #     with:
+  #       archive: false
+  #       name: example-${{ runner.os }}-CMakeConfigureLog.yaml
+  #       path: /tmp/build-ex/CMakeFiles/CMakeConfigureLog.yaml

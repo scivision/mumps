@@ -17,6 +17,12 @@
   }
 },
 {
+  "name": "linux", "inherits": "default",
+  "generator": "Ninja",
+  "binaryDir": "/tmp/build",
+  "installDir": "/tmp/build/local"
+},
+{
   "name": "shared", "inherits": "default",
   "binaryDir": "build-shared",
   "installDir": "${fileDir}/build-shared/local",
@@ -44,6 +50,7 @@
 ],
 "buildPresets": [
   { "name": "default", "configurePreset": "default", "jobs": 4 },
+  { "name": "linux", "configurePreset": "linux", "inherits": "default" },
   { "name": "shared", "configurePreset": "shared", "inherits": "default" },
   { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
   { "name": "serial", "configurePreset": "serial", "inherits": "default" }
@@ -63,6 +70,7 @@
     "jobs": 4
   }
 },
+{ "name": "linux", "configurePreset": "linux", "inherits": "default" },
 { "name": "shared", "configurePreset": "shared", "inherits": "default" },
 { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
 { "name": "serial", "configurePreset": "serial", "inherits": "default" }
@@ -82,6 +90,14 @@
       { "type": "configure", "name": "shared" },
       { "type": "build", "name": "shared" },
       { "type": "test", "name": "shared"}
+    ]
+  },
+  {
+    "name": "linux",
+    "steps": [
+      { "type": "configure", "name": "linux" },
+      { "type": "build", "name": "linux" },
+      { "type": "test", "name": "linux"}
     ]
   },
   {
