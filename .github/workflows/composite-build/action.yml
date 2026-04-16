@@ -9,12 +9,8 @@ runs:
   - name: configure
     shell: bash
     run: >-
-      cmake
-      --preset default
+      cmake --preset default
       -DMUMPS_parallel:BOOL=${{ matrix.parallel }}
-      -DMUMPS_scotch:BOOL=${{ matrix.scotch }} -DMUMPS_find_scotch:BOOL=${{ matrix.scotch }}
-      -DMUMPS_metis:BOOL=${{ matrix.metis }}
-      -DMUMPS_parmetis:BOOL=${{ matrix.parmetis }}
       -DLAPACK_VENDOR=${{ matrix.lapack_vendor }}
       -DMUMPS_openmp:BOOL=${{ matrix.openmp }}
 

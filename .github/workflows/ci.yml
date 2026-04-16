@@ -32,23 +32,12 @@ jobs:
 
     strategy:
       matrix:
-        scotch: [true,false]
-        metis: [false]
-        parmetis: [false]
         parallel: [true]
         openmp: [false]
         mpich: [false]
         lapack_vendor: [""]
         os: [ubuntu-latest, macos-latest]
         include:
-          - metis: true
-            parallel: false
-            os: ubuntu-latest
-            name: METIS
-          - parmetis: true
-            parallel: true
-            os: ubuntu-latest
-            name: ParMETIS
           - lapack_vendor: "OpenBLAS"
             parallel: true
             os: ubuntu-latest
@@ -64,7 +53,7 @@ jobs:
             os: ubuntu-latest
             name: MPICH
 
-    name: ${{ matrix.os }}-parallel=${{ matrix.parallel }}-${{ matrix.name }}-scotch-${{ matrix.scotch }}
+    name: ${{ matrix.os }}-parallel=${{ matrix.parallel }}-${{ matrix.name }}
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -108,7 +97,80 @@ jobs:
 
     - name: example workflow
       working-directory: example
-      run: cmake --workflow default
+      run: cmake --workflow shared
+
+
+  scotch:
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      CC: gcc-14
+      FC: gfortran-14
+
+    steps:
+    - *checkout
+    - *prereqs
+
+    - run: cmake --workflow scotch
+    - run: cmake --install build-scotch
+
+    - name: example workflow
+      working-directory: example/scotch
+      run: cmake --workflow scotch
+
+
+  metis:
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      CC: gcc-14
+      FC: gfortran-14
+
+    steps:
+    - *checkout
+    - *prereqs
+
+    - run: cmake --workflow metis
+    - run: cmake --install build-metis
+
+    - name: example workflow
+      working-directory: example/metis
+      run: cmake --workflow metis
+
+
+  parmetis:
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      CC: gcc-14
+      FC: gfortran-14
+
+    steps:
+    - *checkout
+    - *prereqs
+
+    - run: cmake --workflow parmetis
+    - run: cmake --install build-parmetis
+
+    - name: example workflow
+      working-directory: example/metis
+      run: cmake --workflow parmetis
+      # parmetis also uses example/metis
 
 
   cmake-older:

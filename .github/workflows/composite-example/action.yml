@@ -11,34 +11,6 @@ runs:
     working-directory: example
     run: cmake --workflow default
 
-  - name: Scotch example
-    shell: bash
-    if: ${{ matrix.scotch }}
-    working-directory: example/scotch
-    run: cmake --workflow default
-
-  - name: Upload log failure
-    if: ${{ failure() && matrix.scotch }}
-    uses: actions/upload-artifact@v7
-    with:
-      archive: false
-      name: Scotch-example-${{ runner.os }}-CMakeConfigureLog.yaml
-      path: example/scotch/build/CMakeFiles/CMakeConfigureLog.yaml
-
-  - name: METIS example
-    shell: bash
-    if: ${{ matrix.metis }}
-    working-directory: example/metis
-    run: cmake --workflow default
-
-  - name: Upload log failure
-    if: ${{ failure() && matrix.metis }}
-    uses: actions/upload-artifact@v7
-    with:
-      archive: false
-      name: METIS-example-${{ runner.os }}-CMakeConfigureLog.yaml
-      path: example/metis/build/CMakeFiles/CMakeConfigureLog.yaml
-
 
   - name: OpenMP example
     shell: bash
@@ -50,6 +22,5 @@ runs:
     if: ${{ failure() && matrix.openmp }}
     uses: actions/upload-artifact@v7
     with:
-      archive: false
       name: OpenMP-example-${{ runner.os }}-CMakeConfigureLog.yaml
       path: example/openmp/build/CMakeFiles/CMakeConfigureLog.yaml

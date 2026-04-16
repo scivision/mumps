@@ -47,6 +47,22 @@
   "cacheVariables": {
     "MUMPS_scotch": true
   }
+},
+{
+  "name": "metis", "inherits": "default",
+  "binaryDir": "build-${presetName}",
+  "installDir": "${fileDir}/build-${presetName}/local",
+  "cacheVariables": {
+    "MUMPS_metis": true
+  }
+},
+{
+  "name": "parmetis", "inherits": "default",
+  "binaryDir": "build-${presetName}",
+  "installDir": "${fileDir}/build-${presetName}/local",
+  "cacheVariables": {
+    "MUMPS_parmetis": true
+  }
 }
 ],
 "buildPresets": [
@@ -55,6 +71,8 @@
   { "name": "linux", "configurePreset": "linux", "inherits": "default" },
   { "name": "shared", "configurePreset": "shared", "inherits": "default" },
   { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
+  { "name": "metis", "configurePreset": "metis", "inherits": "default" },
+  { "name": "parmetis", "configurePreset": "parmetis", "inherits": "default" },
   { "name": "serial", "configurePreset": "serial", "inherits": "default" }
 ],
 "testPresets": [
@@ -75,6 +93,8 @@
 { "name": "linux", "configurePreset": "linux", "inherits": "default" },
 { "name": "shared", "configurePreset": "shared", "inherits": "default" },
 { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
+{ "name": "metis", "configurePreset": "metis", "inherits": "default" },
+{ "name": "parmetis", "configurePreset": "parmetis", "inherits": "default" },
 { "name": "serial", "configurePreset": "serial", "inherits": "default" }
 ],
 "workflowPresets": [
@@ -115,6 +135,22 @@
       { "type": "configure", "name": "scotch" },
       { "type": "build", "name": "scotch" },
       { "type": "test", "name": "scotch"}
+    ]
+  },
+  {
+    "name": "metis",
+    "steps": [
+      { "type": "configure", "name": "metis" },
+      { "type": "build", "name": "metis" },
+      { "type": "test", "name": "metis"}
+    ]
+  },
+  {
+    "name": "parmetis",
+    "steps": [
+      { "type": "configure", "name": "parmetis" },
+      { "type": "build", "name": "parmetis" },
+      { "type": "test", "name": "parmetis"}
     ]
   },
   {
