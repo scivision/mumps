@@ -105,6 +105,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
+        scotch: [true]
 
     runs-on: ${{ matrix.os }}
 
@@ -115,6 +116,13 @@ jobs:
     steps:
     - *checkout
     - *prereqs
+
+    - name: Load Homebrew environment (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+        printenv >> $GITHUB_ENV
+# necessary to find Homebrew Bison to build Scotch on macOS
 
     - run: cmake --workflow scotch
     - run: cmake --install build-scotch

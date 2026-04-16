@@ -49,9 +49,9 @@ runs:
   - name: install Scotch (macOS)
     shell: bash
     if: ${{ runner.os == 'macOS' && matrix.scotch }}
-    run: |
-      brew install scotch
+    run: brew install scotch bison
     # Homebrew "scotch" is also ptscotch
+    # bison is in case we build Scotch
 
   - name: install METIS (macOS)
     shell: bash
