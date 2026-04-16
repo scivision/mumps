@@ -103,11 +103,7 @@ jobs:
 
     - name: configure example
       working-directory: example
-      run: cmake --preset default
-
-    - name: build example
-      working-directory: example
-      run: cmake --build --preset default
+      run: cmake --workflow build
 
     - name: test example
       if: ${{ matrix.int64 == 'false' }}

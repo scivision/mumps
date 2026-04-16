@@ -16,6 +16,7 @@
     "MUMPS_scotch": false
   }
 },
+{ "name": "build", "inherits": "default" },
 {
   "name": "linux", "inherits": "default",
   "generator": "Ninja",
@@ -24,8 +25,8 @@
 },
 {
   "name": "shared", "inherits": "default",
-  "binaryDir": "build-shared",
-  "installDir": "${fileDir}/build-shared/local",
+  "binaryDir": "build-${presetName}",
+  "installDir": "${fileDir}/build-${presetName}/local",
   "cacheVariables": {
     "BUILD_SHARED_LIBS": true,
     "MUMPS_ENABLE_RPATH": true
@@ -33,16 +34,16 @@
 },
 {
   "name": "serial", "inherits": "default",
-  "binaryDir": "build-serial",
-  "installDir": "${fileDir}/build-serial/local",
+  "binaryDir": "build-${presetName}",
+  "installDir": "${fileDir}/build-${presetName}/local",
   "cacheVariables": {
     "MUMPS_parallel": false
   }
 },
 {
   "name": "scotch", "inherits": "default",
-  "binaryDir": "build-scotch",
-  "installDir": "${fileDir}/build-scotch/local",
+  "binaryDir": "build-${presetName}",
+  "installDir": "${fileDir}/build-${presetName}/local",
   "cacheVariables": {
     "MUMPS_scotch": true
   }
@@ -50,6 +51,7 @@
 ],
 "buildPresets": [
   { "name": "default", "configurePreset": "default", "jobs": 4 },
+  { "name": "build", "configurePreset": "build", "inherits": "default" },
   { "name": "linux", "configurePreset": "linux", "inherits": "default" },
   { "name": "shared", "configurePreset": "shared", "inherits": "default" },
   { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
@@ -82,6 +84,13 @@
       { "type": "configure", "name": "default" },
       { "type": "build", "name": "default" },
       { "type": "test", "name": "default"}
+    ]
+  },
+  {
+    "name": "build",
+    "steps": [
+      { "type": "configure", "name": "build" },
+      { "type": "build", "name": "build" }
     ]
   },
   {
