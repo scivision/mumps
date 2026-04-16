@@ -3,21 +3,13 @@ include(FetchContent)
 
 function(bison_homebrew)
 
-find_program(brew NAMES brew)
-if(NOT brew)
-  return()
-endif()
 
-execute_process(COMMAND ${brew} --prefix
-RESULT_VARIABLE ret
-OUTPUT_VARIABLE out OUTPUT_STRIP_TRAILING_WHITESPACE
+find_program(BISON_EXECUTABLE
+NAMES bison
+HINTS $ENV{HOMEBREW_PREFIX}
+PATH_SUFFIXES opt/bison/bin
+NO_DEFAULT_PATH
 )
-
-if(NOT ret EQUAL 0)
-  return()
-endif()
-
-find_program(BISON_EXECUTABLE NAMES bison HINTS ${out} PATH_SUFFIXES opt/bison/bin)
 if(NOT BISON_EXECUTABLE)
   return()
 endif()
@@ -26,7 +18,11 @@ cmake_path(GET BISON_EXECUTABLE PARENT_PATH BISON_ROOT)
 message(STATUS "BISON_EXECUTABLE ${BISON_EXECUTABLE}  BISON_ROOT ${BISON_ROOT}")
 
 if(NOT DEFINED FLEX_ROOT)
-  find_program(FLEX_EXECUTABLE NAMES flex HINTS ${out} PATH_SUFFIXES opt/flex/bin)
+  find_program(FLEX_EXECUTABLE
+  NAMES flex
+  HINTS $ENV{HOMEBREW_PREFIX}
+  PATH_SUFFIXES opt/flex/bin
+  )
   if(FLEX_EXECUTABLE)
     cmake_path(GET FLEX_EXECUTABLE PARENT_PATH FLEX_ROOT)
     message(STATUS "FLEX_EXECUTABLE ${FLEX_EXECUTABLE}  FLEX_ROOT ${FLEX_ROOT}")
