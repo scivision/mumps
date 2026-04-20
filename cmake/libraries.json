@@ -1,6 +1,6 @@
 {
   "scalapack":  "https://github.com/Reference-ScaLAPACK/scalapack/archive/8ea5880a448cd24622dff95fd1b7394c31e61bda.tar.gz",
-  "scotch": "https://github.com/scivision/scotch/archive/7e11ad8943c804232f8d6fd5519af73d10ce7ce1.tar.gz",
+  "scotch": "https://github.com/scivision/scotch/archive/60b8febe6261485a94f6d8ba523d5a244a0068b4.tar.gz",
   "parmetis": "https://github.com/scivision/parmetis/archive/590ce706fa5484d53a3f23b3683a83b7c66983f1.tar.gz",
   "metis": "https://github.com/scivision/metis/archive/777472ae3cd15a8e6d1e5b7d6c347d21947e3ab2.tar.gz",
   "win_flex_bison": {
