@@ -129,8 +129,8 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   endif()
 
   target_link_libraries(${t} PUBLIC
-  $<$<BOOL:${MUMPS_parmetis}>:parmetis::parmetis>
-  $<$<BOOL:${MUMPS_metis}>:metis::metis>
+  $<$<BOOL:${MUMPS_parmetis}>:PARMETIS::PARMETIS>
+  $<$<BOOL:${MUMPS_metis}>:METIS::METIS>
   pord
   $<$<AND:$<BOOL:${MUMPS_scalapack}>,$<BOOL:${MUMPS_parallel}>>:SCALAPACK::SCALAPACK>
   LAPACK::LAPACK

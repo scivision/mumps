@@ -174,24 +174,24 @@ endif()
 if(MUMPS_metis OR MUMPS_parmetis)
   set(IDXTYPEWIDTH $<IF:$<BOOL:${MUMPS_intsize64}>,64,32>)
 
-  if(MUMPS_find_metis)
-    if(MUMPS_parmetis)
-      find_package(METIS COMPONENTS ParMETIS REQUIRED)
-    endif()
-    find_package(METIS REQUIRED)
+  if(MUMPS_parmetis)
+    set(_metis_components COMPONENTS ParMETIS)
   else()
-
-    if(MUMPS_parmetis)
-      string(JSON metis_url GET "${json}" "parmetis")
-    else()
-      string(JSON metis_url GET "${json}" "metis")
-    endif()
-
-    FetchContent_Declare(mumps_metis URL ${metis_url})
-
-    FetchContent_MakeAvailable(mumps_metis)
-
+    set(_metis_components)
   endif()
+
+  if(MUMPS_parmetis)
+    string(JSON metis_url GET "${json}" "parmetis")
+  else()
+    string(JSON metis_url GET "${json}" "metis")
+  endif()
+
+  FetchContent_Declare(mumps_metis
+  URL ${metis_url}
+  FIND_PACKAGE_ARGS ${_metis_components}
+  )
+
+  FetchContent_MakeAvailable(mumps_metis)
 
   list(APPEND ORDERING_DEFS REALTYPEWIDTH=32 IDXTYPEWIDTH=${IDXTYPEWIDTH} metis)
 
