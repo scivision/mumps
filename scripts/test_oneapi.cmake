@@ -1,7 +1,7 @@
 # convenience for testing MUMPS on physical machines, especially for Windows
 # as GitHub Actions takes a couple hours to setup Windows oneAPI.
 # So a dev might test MUMPS with Windows oneAPI on a laptop.
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.24)
 
 include(${CMAKE_CURRENT_LIST_DIR}/GetTempdir.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/ProjectBuild.cmake)

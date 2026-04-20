@@ -100,6 +100,7 @@
 "workflowPresets": [
   {
     "name": "default",
+    "displayName": "Build and Test in Release mode",
     "steps": [
       { "type": "configure", "name": "default" },
       { "type": "build", "name": "default" },
@@ -108,6 +109,7 @@
   },
   {
     "name": "build",
+    "displayName": "Build in Release mode",
     "steps": [
       { "type": "configure", "name": "build" },
       { "type": "build", "name": "build" }
@@ -115,6 +117,7 @@
   },
   {
     "name": "shared",
+    "displayName": "Build and Test Shared Libraries",
     "steps": [
       { "type": "configure", "name": "shared" },
       { "type": "build", "name": "shared" },
@@ -131,6 +134,7 @@
   },
   {
     "name": "scotch",
+    "displayName": "Build and Test with Scotch",
     "steps": [
       { "type": "configure", "name": "scotch" },
       { "type": "build", "name": "scotch" },
@@ -139,6 +143,7 @@
   },
   {
     "name": "metis",
+    "displayName": "Build and Test with METIS",
     "steps": [
       { "type": "configure", "name": "metis" },
       { "type": "build", "name": "metis" },
@@ -147,6 +152,7 @@
   },
   {
     "name": "parmetis",
+    "displayName": "Build and Test with ParMETIS",
     "steps": [
       { "type": "configure", "name": "parmetis" },
       { "type": "build", "name": "parmetis" },
@@ -155,6 +161,7 @@
   },
   {
     "name": "serial",
+    "displayName": "Build and Test without MPI",
     "steps": [
       { "type": "configure", "name": "serial" },
       { "type": "build", "name": "serial" },

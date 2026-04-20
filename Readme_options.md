@@ -39,10 +39,16 @@ cmake -DMUMPS_scalapack=off
 ```
 
 To control whether to first look for Scalapack and only if needed automatically build ScalaPACK,
-Optionally, specify the location of Scalapack with CMake option `-DScalapack_ROOT=/path/to/scalapack"
+Optionally, specify the location of Scalapack with CMake option `-DSCALAPACK_ROOT=/path/to/scalapack"
 
 ```sh
-cmake -DMUMPS_find_SCALAPACK=on
+cmake -DSCALAPACK_ROOT=/path/to/scalapack
+```
+
+To instead force build of Scalapack, do:
+
+```sh
+cmake -DFETCHCONTENT_TRY_FIND_PACKAGE_MODE=NEVER
 ```
 
 ## MPI

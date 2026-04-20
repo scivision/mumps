@@ -1,5 +1,3 @@
-if(MUMPS_find_SCALAPACK)
-
 # Make SCALAPACK_VENDOR match LAPACK_VENDOR
 
 if(NOT DEFINED SCALAPACK_VENDOR)
@@ -32,17 +30,6 @@ if(MUMPS_find_static)
   list(APPEND SCALAPACK_VENDOR STATIC)
 endif()
 
-endif()
-
-set(_fc_args)
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
-  set(_fc_args FIND_PACKAGE_ARGS)
-elseif(NOT TARGET SCALAPACK::SCALAPACK AND MUMPS_find_SCALAPACK)
-  find_package(SCALAPACK REQUIRED COMPONENTS ${SCALAPACK_VENDOR})
-  if(TARGET SCALAPACK::SCALAPACK)
-    return()
-  endif()
-endif()
 
 # build scalapack
 set(SCALAPACK_BUILD_TESTING off)
@@ -50,9 +37,14 @@ set(SCALAPACK_BUILD_TESTS off)
 
 string(JSON scalapack_url GET "${json}" "scalapack")
 
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM" OR CMAKE_C_COMPILER_ID STREQUAL "IntelLLVM")
+  # oneAPI must use MKL, it will fail to build Netlib SCALAPACK
+  set(FETCHCONTENT_TRY_FIND_PACKAGE_MODE OPT_IN)
+endif()
+
 FetchContent_Declare(SCALAPACK
 URL ${scalapack_url}
-${_fc_args}
+FIND_PACKAGE_ARGS COMPONENTS ${SCALAPACK_VENDOR}
 )
 
 FetchContent_MakeAvailable(SCALAPACK)

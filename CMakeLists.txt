@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.21...4.3)
-# CMake >= 3.21 for *_IS_TOP_LEVEL
+cmake_minimum_required(VERSION 3.24...4.3)
+# CMake >= 3.24 for FetchContent FIND_PACKAGE_ARGS
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "Please use out of source build:

@@ -2,18 +2,11 @@ option(MUMPS_BUILD_TESTING "Build tests" ${MUMPS_IS_TOP_LEVEL})
 
 option(MUMPS_find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
 
-option(MUMPS_find_SCALAPACK "find ScaLAPACK" on)
-
 option(MUMPS_UPDATE_DISCONNECTED "don't check for updates of Git submodules if they exist" ON)
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED ${MUMPS_UPDATE_DISCONNECTED})
 
 set(FETCHCONTENT_QUIET OFF)
-if(MUMPS_find_SCALAPACK AND NOT DEFINED FETCHCONTENT_TRY_FIND_PACKAGE_MODE)
-  set(FETCHCONTENT_TRY_FIND_PACKAGE_MODE OPT_IN)
-else()
-  set(FETCHCONTENT_TRY_FIND_PACKAGE_MODE NEVER)
-endif()
 
 if(MUMPS_url)
   if(EXISTS ${MUMPS_url})
