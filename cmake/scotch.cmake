@@ -99,8 +99,14 @@ string(JSON scotch_url GET "${json}" "scotch")
 
 message(STATUS "BISON_ROOT ${BISON_ROOT}  FLEX_ROOT ${FLEX_ROOT}")
 
+set(SCOTCH_COMPONENTS ESMUMPS)
+if(MUMPS_ptscotch)
+  list(APPEND SCOTCH_COMPONENTS PTScotch)
+endif()
+
 FetchContent_Declare(SCOTCH
-  URL ${scotch_url}
+URL ${scotch_url}
+FIND_PACKAGE_ARGS COMPONENTS ${SCOTCH_COMPONENTS}
 )
 
 if(DEFINED win_flex_bison)
@@ -108,6 +114,9 @@ if(DEFINED win_flex_bison)
 endif()
 
 FetchContent_MakeAvailable(${_winfc_dep} SCOTCH)
+
+
+if(NOT TARGET SCOTCH::scotch)
 
 set(SCOTCH_names scotch scotcherr esmumps)
 if(MUMPS_parallel)
@@ -117,3 +126,5 @@ endif()
 foreach(l IN LISTS SCOTCH_names)
   add_library(SCOTCH::${l} ALIAS ${l})
 endforeach()
+
+endif()

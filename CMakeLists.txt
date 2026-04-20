@@ -164,21 +164,9 @@ endif()
 set(ORDERING_DEFS pord)
 
 if(MUMPS_scotch)
-
-  if(MUMPS_find_scotch)
-    set(SCOTCH_COMPONENTS ESMUMPS)
-    if(MUMPS_ptscotch)
-      list(APPEND SCOTCH_COMPONENTS PTScotch)
-    endif()
-    find_package(SCOTCH COMPONENTS ${SCOTCH_COMPONENTS})
-  endif()
-
-  if(NOT TARGET SCOTCH::scotch)
-    include(cmake/scotch.cmake)
-  endif()
+  include(cmake/scotch.cmake)
 
   list(APPEND ORDERING_DEFS scotch $<$<BOOL:${MUMPS_parallel}>:ptscotch>)
-
 endif()
 
 

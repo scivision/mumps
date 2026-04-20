@@ -38,7 +38,6 @@ option(MUMPS_ptscotch "use PTScotch orderings" ${_ptscotch_default})
 if(MUMPS_ptscotch AND NOT MUMPS_parallel)
   message(FATAL_ERROR "PTScotch requires MUMPS_parallel=on")
 endif()
-option(MUMPS_find_scotch "find Scotch")
 
 option(MUMPS_parmetis "use parallel METIS ordering")
 option(MUMPS_metis "use sequential METIS ordering")
