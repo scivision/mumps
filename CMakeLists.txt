@@ -172,7 +172,10 @@ endif()
 
 
 if(MUMPS_metis OR MUMPS_parmetis)
-  set(IDXTYPEWIDTH $<IF:$<BOOL:${MUMPS_intsize64}>,64,32>)
+  set(IDXTYPEWIDTH 32)
+  if(MUMPS_intsize64)
+    set(IDXTYPEWIDTH 64)
+  endif()
 
   if(MUMPS_parmetis)
     set(_metis_components COMPONENTS ParMETIS)
