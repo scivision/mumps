@@ -23,7 +23,7 @@ else()
   set(MUMPS_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
 endif()
 
-option(gemmt "GEMMT is recommended in User Manual if available" ON)
+option(MUMPS_gemmt "GEMMT is recommended in MUMPS User Manual if available" ON)
 
 option(MUMPS_parallel "parallel (use MPI)" ON)
 option(MUMPS_scalapack "Use ScalaPACK to speed up the solution of linear systems" ON)

@@ -1,7 +1,7 @@
 # Used by MUMPS devs to compare MUMPS source versions
 #  option: -Dglob="Makefile" to only compare Makefiles or other file(GLOB) patterns
 
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.25)
 
 if(NOT DEFINED old OR NOT DEFINED new)
   message(FATAL_ERROR "Please set 'old' and 'new' variables to the MUMPS source versions you want to compare. Example:

@@ -1,5 +1,6 @@
-cmake_minimum_required(VERSION 3.24...4.3)
+cmake_minimum_required(VERSION 3.25...4.4)
 # CMake >= 3.24 for FetchContent FIND_PACKAGE_ARGS
+# CMAKE >= 3.25 for block()
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "Please use out of source build:
@@ -13,7 +14,7 @@ endif()
 
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.8.2.3
+VERSION 5.9.0.0
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "https://mumps-solver.org/"
 )
@@ -155,7 +156,7 @@ if(MUMPS_openmp)
 endif()
 
 # GEMMT is recommended in MUMPS User Manual if available
-if(gemmt)
+if(MUMPS_gemmt)
   include(cmake/gemmt.cmake)
 endif()
 
