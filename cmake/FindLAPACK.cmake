@@ -96,6 +96,80 @@ unset(LAPACK_INCLUDE_DIR)
 
 # ===== functions ==========
 
+function(lapack_check _result path)
+
+get_property(enabled_langs GLOBAL PROPERTY ENABLED_LANGUAGES)
+if(NOT Fortran IN_LIST enabled_langs)
+  set(${_result} true PARENT_SCOPE)
+  return()
+endif()
+
+set(CMAKE_REQUIRED_FLAGS)
+set(CMAKE_REQUIRED_LINK_OPTIONS)
+set(CMAKE_REQUIRED_INCLUDES)
+set(CMAKE_REQUIRED_LIBRARIES ${path})
+
+check_source_compiles(Fortran
+"program test
+use, intrinsic :: iso_fortran_env, only : rk => real32
+implicit none
+real(rk), external :: snrm2
+print *, snrm2(1, [0._rk], 1)
+end program"
+LAPACK_s_FOUND
+)
+if(LAPACK_s_FOUND)
+  set(${_result} true PARENT_SCOPE)
+  return()
+endif()
+
+check_source_compiles(Fortran
+"program test
+use, intrinsic :: iso_fortran_env, only : rk => real64
+implicit none
+real(rk), external :: dnrm2
+print *, dnrm2(1, [0._rk], 1)
+end program"
+LAPACK_d_FOUND
+)
+if(LAPACK_d_FOUND)
+  set(${_result} true PARENT_SCOPE)
+  return()
+endif()
+
+check_source_compiles(Fortran
+"program test
+use, intrinsic :: iso_fortran_env, only : rk => real32
+implicit none
+real(rk), external :: scnrm2
+print *, scnrm2(1, [(0._rk, 0._rk)], 1)
+end program"
+LAPACK_c_FOUND
+)
+if(LAPACK_c_FOUND)
+  set(${_result} true PARENT_SCOPE)
+  return()
+endif()
+
+check_source_compiles(Fortran
+"program test
+use, intrinsic :: iso_fortran_env, only : rk => real64
+implicit none
+real(rk), external :: dznrm2
+print *, dznrm2(1, [(0._rk, 0._rk)], 1)
+end program"
+LAPACK_z_FOUND
+)
+if(LAPACK_z_FOUND)
+  set(${_result} true PARENT_SCOPE)
+  return()
+endif()
+
+set(${_result} false PARENT_SCOPE)
+
+endfunction()
+
+
 function(lapack_atlas)
 
 find_library(ATLAS_LIB
@@ -166,7 +240,7 @@ if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
 
   set(LAPACK95_LIBRARY ${LAPACK95_LIBRARY} PARENT_SCOPE)
   set(LAPACK_LAPACK95_FOUND true PARENT_SCOPE)
-endif(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
+endif()
 
 find_library(LAPACK_LIBRARY
 NAMES lapack
@@ -199,7 +273,7 @@ if(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
   list(APPEND LAPACK_INCLUDE_DIR ${LAPACKE_INCLUDE_DIR})
   list(APPEND LAPACK_LIBRARY ${LAPACKE_LIBRARY})
   mark_as_advanced(LAPACKE_LIBRARY LAPACKE_INCLUDE_DIR)
-endif(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
+endif()
 
 # Netlib on Cygwin and others
 
@@ -207,6 +281,7 @@ find_library(BLAS_LIBRARY
 NAMES blas
 PATH_SUFFIXES lapack lapack/lib blas
 DOC "BLAS library"
+VALIDATOR lapack_check
 )
 
 if(NOT BLAS_LIBRARY)
@@ -470,63 +545,15 @@ if(STATIC IN_LIST LAPACK_FIND_COMPONENTS)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ${_orig_suff})
 endif()
 
-# -- verify library works
-
-function(lapack_check)
-
-get_property(enabled_langs GLOBAL PROPERTY ENABLED_LANGUAGES)
-if(NOT Fortran IN_LIST enabled_langs)
-  set(LAPACK_links true PARENT_SCOPE)
-  return()
-endif()
-
-set(CMAKE_REQUIRED_FLAGS)
-set(CMAKE_REQUIRED_LINK_OPTIONS)
-set(CMAKE_REQUIRED_INCLUDES ${LAPACK_INCLUDE_DIR})
-set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARY})
-
-check_source_compiles(Fortran
-"program check_lapack
-use, intrinsic :: iso_fortran_env, only : real32
-implicit none
-real(real32), external :: snrm2
-print *, snrm2(1, [0._real32], 1)
-end program"
-LAPACK_s_FOUND
-)
-
-check_source_compiles(Fortran
-"program check_lapack
-use, intrinsic :: iso_fortran_env, only : real64
-implicit none
-real(real64), external :: dnrm2
-print *, dnrm2(1, [0._real64], 1)
-end program"
-LAPACK_d_FOUND
-)
-
-if(LAPACK_s_FOUND OR LAPACK_d_FOUND)
-  set(LAPACK_links true PARENT_SCOPE)
-endif()
-
-endfunction()
-
-# --- Check library links
-if(LAPACK_CRAY OR LAPACK_LIBRARY)
-  lapack_check()
-endif()
 
 
 include(FindPackageHandleStandardArgs)
 
 if(LAPACK_CRAY)
-  find_package_handle_standard_args(LAPACK HANDLE_COMPONENTS
-  REQUIRED_VARS LAPACK_links
-  )
+  set(LAPACK_links true)
+  find_package_handle_standard_args(LAPACK REQUIRED_VARS LAPACK_links)
 else()
-  find_package_handle_standard_args(LAPACK HANDLE_COMPONENTS
-  REQUIRED_VARS LAPACK_LIBRARY LAPACK_links
-  )
+  find_package_handle_standard_args(LAPACK HANDLE_COMPONENTS REQUIRED_VARS LAPACK_LIBRARY)
 endif()
 
 
