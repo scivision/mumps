@@ -1,34 +1,30 @@
 # MUMPS on Windows
 
-MUMPS builds on Windows as well as other operating systems.
-Windows Subsystem for Linux (WSL) is suggested and tested in our CI.
-One may also use
-[Intel oneAPI](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html)
-using the Ninja build system with CMake.
+The Fortran library MUMPS builds on Windows just as well as other operating systems.
+Methods of building MUMPS on Windows include:
 
-These can be installed via WinGet:
+* Windows Subsystem for Linux (WSL) -- recommended in general for scientific computing on Windows
+* [Intel oneAPI Fortran compiler](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html) with oneAPI C compiler `icx` or Visual Studio C compiler `cl`
+* MSYS2 (GCC / GFortran)
+
+CMake and Ninja can be installed on native Windows via WinGet:
 
 ```pwsh
 winget install Ninja-build.Ninja
 winget install Kitware.CMake
-
-winget install Intel.OneAPI.BaseToolkit
-winget install Intel.OneAPI.HPCToolkit
 ```
 
-We have provided a helper script "build.bat" at the top of the MUMPS project directory.
-One can edit / run this script to help get started.
-
-## CMake Generator
-
-In general on Windows, CMake is easier to use with Ninja as the build system backend.
-That is, specify at CMake configure:
+Build and test MUMPS with the CMake preset workflow:
 
 ```sh
-cmake -G Ninja -B build
+cmake --workflow default
 ```
 
-To persist this setting across CMake projects, set Windows environment variable `CMAKE_GENERATOR` to `Ninja`.
+If desired to use MSVC Visual Studio `cl` as the C compiler with oneAPI Fortran compiler `ifx`, use workflow:
+
+```sh
+cmake --workflow msvc
+```
 
 ### Troubleshooting generator
 
@@ -46,7 +42,7 @@ cmake -G Ninja -B build -DCMAKE_MAKE_PROGRAM=C:/path/to/ninja.exe
 Windows compilers known to work:
 
 * Windows Subsystem for Linux (recommended in general for scientific computing on Windows)
-* Intel [oneAPI](./Readme_oneapi.md)  -- requires oneAPI Base Toolkit and oneAPI HPC Toolkit for LAPACK, ScaLAPACK, and Intel MPI
+* Intel [oneAPI](./Readme_oneapi.md)  -- requires oneAPI Toolkit for LAPACK, ScaLAPACK, and Intel MPI
 * MSYS2
 
 ## CMake configure output
@@ -57,7 +53,7 @@ cmake -G Ninja -B build -DBUILD_SINGLE=yes -DBUILD_DOUBLE=yes -DBUILD_COMPLEX=ye
 
 To speed up MUMPS build and reduce binary size, feel free to omit (set to `no`) unneeded precisions in the command above.
 
-Intel oneAPI Base Toolkit MKL LAPACK and Intel oneAPI HPC toolkit SCALAPACK are used.
+Intel oneAPI MKL LAPACK and SCALAPACK are used.
 
 ## Build
 

@@ -4,6 +4,7 @@
 "configurePresets": [
 {
   "name": "default",
+  "generator": "Ninja",
   "binaryDir": "build",
   "installDir": "${fileDir}/build/local",
   "cacheVariables": {
@@ -17,6 +18,12 @@
   }
 },
 { "name": "build", "inherits": "default" },
+{ "name": "msvc", "inherits": "default",
+  "cacheVariables": {
+    "CMAKE_C_COMPILER": "cl",
+    "CMAKE_Fortran_COMPILER": "ifx"
+  }
+},
 {
   "name": "linux", "inherits": "default",
   "generator": "Ninja",
@@ -66,8 +73,9 @@
 }
 ],
 "buildPresets": [
-  { "name": "default", "configurePreset": "default", "jobs": 4 },
+  { "name": "default", "configurePreset": "default" },
   { "name": "build", "configurePreset": "build", "inherits": "default" },
+  { "name": "msvc", "configurePreset": "msvc", "configuration": "Release", "inherits": "default" },
   { "name": "linux", "configurePreset": "linux", "inherits": "default" },
   { "name": "shared", "configurePreset": "shared", "inherits": "default" },
   { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
@@ -86,10 +94,10 @@
   "execution": {
     "noTestsAction": "error",
     "scheduleRandom": true,
-    "stopOnFailure": false,
-    "jobs": 4
+    "stopOnFailure": false
   }
 },
+{ "name": "msvc", "configurePreset": "msvc", "configuration": "Release", "inherits": "default" },
 { "name": "linux", "configurePreset": "linux", "inherits": "default" },
 { "name": "shared", "configurePreset": "shared", "inherits": "default" },
 { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
@@ -113,6 +121,15 @@
     "steps": [
       { "type": "configure", "name": "build" },
       { "type": "build", "name": "build" }
+    ]
+  },
+  {
+    "name": "msvc",
+    "displayName": "Build and Test with MSVC Visual Studio",
+    "steps": [
+      { "type": "configure", "name": "msvc" },
+      { "type": "build", "name": "msvc" },
+      { "type": "test", "name": "msvc"}
     ]
   },
   {

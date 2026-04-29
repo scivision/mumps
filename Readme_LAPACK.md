@@ -29,12 +29,7 @@ Optionally, hint the location the LAPACK library like:
 cmake -DLAPACK_ROOT=/path/to/lapack
 ```
 
-## Intel MKL
-
-CMake searches for Intel oneMKL if environment variables MKLROOT is set:
-
-* Base Toolkit: MKL LAPACK
-* HPC toolkit: SCALAPACK.
+CMake searches for Intel oneMKL if environment variable `MKLROOT` is set.
 
 ## GEMMT symmetric matrix-matrix multiplication
 

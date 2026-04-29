@@ -5,7 +5,8 @@
 [![ci_build](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_build.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_build.yml)
 [![oneapi-linux](https://github.com/scivision/mumps-superbuild/actions/workflows/oneapi-linux.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/oneapi-linux.yml)
 
-This repository provides a CMake superbuild project for MUMPS and optional MUMPS dependencies including ScaLAPACK, ParMETIS, Scotch, etc.
+MUMPS is a Fortran library with optional C interfaces for MPI and/or OpenMP parallel (or serial) solving of sparse linear systems of equations.
+This repository provides a CMake superbuild project for MUMPS and optional MUMPS dependencies including ScaLAPACK, ParMETIS, and Scotch.
 This CMake superbuild downloads the unmodified source tarfile from mumps-solver.org and builds.
 For offline usage, the user can specify a local MUMPS source archive like `cmake -Bbuild -DMUMPS_url=/path/to/mumps.zip`
 If mumps-solver.org is unavailable, try [mumps_archive](https://github.com/gsylvand/mumps_archive/) which has the same source tarfiles.
@@ -69,7 +70,9 @@ cmake -Bbuild --install-prefix /path/to/install/mumps
 cmake --install build
 ```
 
-With the default options the build/ directory contains library binaries ([Windows](./Readme_Windows.md) binaries have different names):
+With the default options the build/ directory contains library binaries.
+[Windows](./Readme_Windows.md)
+binaries have different names.
 
 * libdmumps.a (real64)
 * libsmumps.a (real32)
