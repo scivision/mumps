@@ -204,8 +204,7 @@ endif(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
 # Netlib on Cygwin and others
 
 find_library(BLAS_LIBRARY
-NAMES refblas blas
-NAMES_PER_DIR
+NAMES blas
 PATH_SUFFIXES lapack lapack/lib blas
 DOC "BLAS library"
 )
