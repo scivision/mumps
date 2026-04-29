@@ -1,7 +1,7 @@
 # CMake >= 3.28 strongly recommended for build graph reliability
 cmake_minimum_required(VERSION 3.25...4.4)
 # CMake >= 3.24 for FetchContent FIND_PACKAGE_ARGS
-# CMAKE >= 3.25 for block()
+# CMAKE >= 3.25 for block(), VALIDATOR on find_*()
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "Please use out of source build:
@@ -19,7 +19,6 @@ VERSION 5.9.0.0
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "https://mumps-solver.org/"
 )
-
 if(CMAKE_VERSION VERSION_LESS 3.28)
   message(WARNING "CMake >= 3.28 is strongly recommended for reliable build graph and minimal rebuilds, but you are using ${CMAKE_VERSION}.
   Consider upgrading CMake if you experience build failures.")
@@ -153,7 +152,6 @@ if(MUMPS_parallel)
 else()
 
   include(cmake/lapack.cmake)
-
   set(MPI_C_INCLUDE_DIRS       ${mumps_upstream_SOURCE_DIR}/libseq)
   set(MPI_Fortran_INCLUDE_DIRS ${mumps_upstream_SOURCE_DIR}/libseq)
 
