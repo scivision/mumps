@@ -61,7 +61,7 @@ Intel oneAPI MKL LAPACK and SCALAPACK are used.
 cmake --build build
 ```
 
-With the default options, under the build/ directory this results in library binaries for Windows oneAPI / Visual Studio:
+With the default options, under the `${MUMPS_BINARY_DIR}/lib` directory this results in library binaries for Windows oneAPI / Visual Studio:
 
 ```
 dmumps.lib

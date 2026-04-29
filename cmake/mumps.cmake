@@ -1,99 +1,84 @@
-set(_mi ${mumps_upstream_SOURCE_DIR}/include/)
-set(_s ${mumps_upstream_SOURCE_DIR}/src/)
-
 # -- generated MUMPS_INTSIZE header
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.5)
+  set(intsrc ${CMAKE_CURRENT_SOURCE_DIR}/mumps_int_def)
   if(MUMPS_intsize64)
-    set(intsrc ${_s}mumps_int_def64_h.in)
+    string(APPEND intsrc 64_h.in)
   else()
-    set(intsrc ${_s}mumps_int_def32_h.in)
+    string(APPEND intsrc 32_h.in)
   endif()
-  configure_file(${intsrc} ${_mi}mumps_int_def.h COPYONLY)
+  configure_file(${intsrc} ${CMAKE_CURRENT_SOURCE_DIR}/../include/mumps_int_def.h COPYONLY)
 else()
   if(MUMPS_intsize64)
     set(MUMPS_INTSIZE MUMPS_INTSIZE64)
   else()
     set(MUMPS_INTSIZE MUMPS_INTSIZE32)
   endif()
-  file(WRITE ${_mi}mumps_int_def.h
-"
-#ifndef MUMPS_INT_H
+  file(CONFIGURE OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/../include/mumps_int_def.h
+CONTENT "#ifndef MUMPS_INT_H
 #define MUMPS_INT_H
 #define ${MUMPS_INTSIZE}
-#endif
-"
-  )
+#endif"
+@ONLY)
 endif()
 
 # -- Mumps COMMON
-set(COMM_SRC_Fortran ${_s}mumps_ooc_common.F ${_s}mumps_static_mapping.F ${_s}mumps_mpitoomp_m.F)
-
-foreach(i IN ITEMS ana_omp_m.F double_linked_list.F fac_asm_build_sort_index_ELT_m.F fac_asm_build_sort_index_m.F fac_descband_data_m.F fac_future_niv2_mod.F fac_maprow_data_m.F front_data_mgt_m.F mumps_l0_omp_m.F omp_tps_common_m.F
-                   ana_orderings_wrappers_m.F lr_common.F mumps_memory_mod.F)
-  list(APPEND COMM_SRC_Fortran ${_s}${i})
-endforeach()
+set(COMM_SRC_Fortran mumps_ooc_common.F mumps_static_mapping.F mumps_mpitoomp_m.F
+ana_omp_m.F double_linked_list.F
+fac_asm_build_sort_index_ELT_m.F fac_asm_build_sort_index_m.F fac_descband_data_m.F fac_future_niv2_mod.F fac_maprow_data_m.F
+front_data_mgt_m.F mumps_l0_omp_m.F omp_tps_common_m.F
+ana_orderings_wrappers_m.F lr_common.F mumps_memory_mod.F
+)
 
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.3)
-  list(APPEND COMM_SRC_Fortran ${_s}ana_blk_m.F)
+  list(APPEND COMM_SRC_Fortran ana_blk_m.F)
 endif()
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.6)
-  list(APPEND COMM_SRC_Fortran ${_s}mumps_pivnul_mod.F)
+  list(APPEND COMM_SRC_Fortran mumps_pivnul_mod.F)
 endif()
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.7)
-  list(APPEND COMM_SRC_Fortran ${_s}sol_ds_common_m.F)
+  list(APPEND COMM_SRC_Fortran sol_ds_common_m.F)
 endif()
 if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.8)
-  list(APPEND COMM_SRC_Fortran ${_s}fac_ibct_data_m.F ${_s}mumps_comm_ibcast.F)
+  list(APPEND COMM_SRC_Fortran fac_ibct_data_m.F mumps_comm_ibcast.F)
 else()
-  list(APPEND COMM_SRC_Fortran ${_s}lr_stats.F ${_s}mumps_comm_buffer_common.F ${_s}mumps_intr_types_common.F ${_s}mumps_load.F ${_s}sol_omp_common_m.F ${_s}tools_common_m.F)
+  list(APPEND COMM_SRC_Fortran lr_stats.F mumps_comm_buffer_common.F mumps_intr_types_common.F mumps_load.F sol_omp_common_m.F tools_common_m.F)
 endif()
 
-set(COMM_OTHER_C)
-set(COMM_OTHER_Fortran)
+set(COMM_OTHER_C mumps_common.c mumps_io_basic.c mumps_io_thread.c mumps_io_err.c mumps_io.c mumps_numa.c mumps_pord.c mumps_thread.c mumps_save_restore_C.c)
 
-foreach(i IN ITEMS mumps_common.c mumps_io_basic.c mumps_io_thread.c mumps_io_err.c mumps_io.c mumps_numa.c mumps_pord.c mumps_thread.c mumps_save_restore_C.c)
-  list(APPEND COMM_OTHER_C ${_s}${i})
-endforeach()
-foreach(i IN ITEMS ana_orderings.F ana_set_ordering.F ana_AMDMF.F bcast_errors.F estim_flops.F mumps_type2_blocking.F mumps_version.F mumps_print_defined.F tools_common.F)
-  list(APPEND COMM_OTHER_Fortran ${_s}${i})
-endforeach()
+set(COMM_OTHER_Fortran ana_orderings.F ana_set_ordering.F ana_AMDMF.F bcast_errors.F estim_flops.F
+mumps_type2_blocking.F mumps_version.F mumps_print_defined.F tools_common.F
+)
 
 if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.6)
-  list(APPEND COMM_OTHER_C ${_s}mumps_size.c)
+  list(APPEND COMM_OTHER_C mumps_size.c)
 else()
-  list(APPEND COMM_OTHER_C ${_s}mumps_addr.c)
+  list(APPEND COMM_OTHER_C mumps_addr.c)
 endif()
 
-foreach(i IN ITEMS mumps_config_file_C.c mumps_thread_affinity.c)
-  list(APPEND COMM_OTHER_C ${_s}${i})
-endforeach()
-list(APPEND COMM_OTHER_Fortran ${_s}sol_common.F)
+list(APPEND COMM_OTHER_C mumps_config_file_C.c mumps_thread_affinity.c sol_common.F)
 
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.3)
-  list(APPEND COMM_OTHER_Fortran ${_s}ana_blk.F)
+  list(APPEND COMM_OTHER_Fortran ana_blk.F)
 endif()
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.4)
-  list(APPEND COMM_OTHER_C ${_s}mumps_register_thread.c)
+  list(APPEND COMM_OTHER_C mumps_register_thread.c)
 endif()
 if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.7)
-  list(APPEND COMM_OTHER_Fortran ${_s}mumps_type_size.F)
+  list(APPEND COMM_OTHER_Fortran mumps_type_size.F)
 endif()
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.8)
-  list(APPEND COMM_OTHER_C ${_s}mumps_flytes.c)
+  list(APPEND COMM_OTHER_C mumps_flytes.c)
 endif()
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.9)
-  list(APPEND COMM_OTHER_C ${_s}mumps_sol_omp_memory_manager.c)
+  list(APPEND COMM_OTHER_C mumps_sol_omp_memory_manager.c)
 endif()
 
 if(MUMPS_scotch)
-  foreach(i IN ITEMS mumps_scotch.c mumps_scotch64.c mumps_scotch_int.c)
-    list(APPEND COMM_OTHER_C ${_s}${i})
-  endforeach()
+  list(APPEND COMM_OTHER_C mumps_scotch.c mumps_scotch64.c mumps_scotch_int.c)
 endif()
 if(MUMPS_metis OR MUMPS_parmetis)
-  foreach(i IN ITEMS mumps_metis.c mumps_metis64.c mumps_metis_int.c)
-    list(APPEND COMM_OTHER_C ${_s}${i})
-  endforeach()
+  list(APPEND COMM_OTHER_C mumps_metis.c mumps_metis64.c mumps_metis_int.c)
 endif()
 
 add_library(mumps_common_C OBJECT ${COMM_OTHER_C})
@@ -115,7 +100,7 @@ add_library(mumps_common $<TARGET_OBJECTS:mumps_common_Fortran> $<TARGET_OBJECTS
 
 foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   target_include_directories(${t} PUBLIC
-  "$<BUILD_INTERFACE:${mumps_upstream_SOURCE_DIR}/src;${mumps_upstream_SOURCE_DIR}/include>"
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_CURRENT_SOURCE_DIR}/../include>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 
@@ -157,8 +142,12 @@ if(BUILD_SHARED_LIBS AND APPLE AND CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang
   set_property(TARGET mumps_common PROPERTY LINKER_LANGUAGE C)
 endif()
 
-set_property(TARGET mumps_common PROPERTY EXPORT_NAME COMMON)
-set_property(TARGET mumps_common PROPERTY VERSION ${MUMPS_ACTUAL_VERSION})
+set_target_properties(mumps_common PROPERTIES
+EXPORT_NAME COMMON
+VERSION ${MUMPS_ACTUAL_VERSION}
+LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib
+ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib
+)
 
 install(TARGETS mumps_common EXPORT ${PROJECT_NAME}-targets)
 
@@ -168,31 +157,31 @@ add_library(MUMPS INTERFACE)
 
 function(precision_source a)
 
-set(SRC_Fortran ${_s}${a}sol_distrhs.F)
+set(SRC_Fortran ${a}sol_distrhs.F)
 
-set(SRC_C ${_s}${a}mumps_gpu.c)
+set(SRC_C ${a}mumps_gpu.c)
 
 foreach(i IN ITEMS mumps_comm_buffer.F mumps_ooc_buffer.F mumps_ooc.F mumps_struc_def.F
                    ana_aux.F ana_aux_par.F ana_lr.F fac_asm_master_ELT_m.F fac_asm_master_m.F fac_front_aux.F fac_front_LU_type1.F fac_front_LU_type2.F fac_front_LDLT_type1.F fac_front_LDLT_type2.F fac_front_type2_aux.F fac_lr.F fac_omp_m.F fac_par_m.F lr_core.F mumps_lr_data_m.F omp_tps_m.F static_ptr_m.F
                    lr_type.F mumps_save_restore.F mumps_save_restore_files.F
                    fac_mem_dynamic.F mumps_config_file.F mumps_sol_es.F sol_lr.F
                    )
-  list(APPEND SRC_Fortran ${_s}${a}${i})
+  list(APPEND SRC_Fortran ${a}${i})
 endforeach()
 
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.3)
   foreach(i IN ITEMS fac_sispointers_m.F fac_sol_l0omp_m.F sol_omp_m.F)
-    list(APPEND SRC_Fortran ${_s}${a}${i})
+    list(APPEND SRC_Fortran ${a}${i})
   endforeach()
 endif()
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.6)
-  list(APPEND SRC_Fortran ${_s}${a}mumps_mpi3_mod.F)
+  list(APPEND SRC_Fortran ${a}mumps_mpi3_mod.F)
 endif()
 
 if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.8)
-  list(APPEND SRC_Fortran ${_s}${a}lr_stats.F ${_s}${a}mumps_load.F)
+  list(APPEND SRC_Fortran ${a}lr_stats.F ${a}mumps_load.F)
 else()
-  list(APPEND SRC_Fortran ${_s}${a}fac_compact_factors_m.F ${_s}${a}mumps_intr_types.F)
+  list(APPEND SRC_Fortran ${a}fac_compact_factors_m.F ${a}mumps_intr_types.F)
 endif()
 
 foreach(i IN ITEMS
@@ -215,14 +204,14 @@ foreach(i IN ITEMS
   sol_aux.F sol_bwd_aux.F sol_bwd.F sol_c.F sol_fwd_aux.F sol_fwd.F sol_matvec.F
   sol_root_parallel.F tools.F type3_root.F
 )
-  list(APPEND SRC_Fortran ${_s}${a}${i})
+  list(APPEND SRC_Fortran ${a}${i})
 endforeach()
 
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.7)
-  list(APPEND SRC_Fortran ${_s}${a}sol_distsol.F ${_s}${a}fac_diag.F ${_s}${a}fac_dist_arrowheads_omp.F)
+  list(APPEND SRC_Fortran ${a}sol_distsol.F ${a}fac_diag.F ${a}fac_dist_arrowheads_omp.F)
 endif()
 
-set(CINT_SRC ${_s}mumps_c.c)
+set(CINT_SRC mumps_c.c)
 
 add_library(${a}mumps_C OBJECT ${CINT_SRC} ${SRC_C})
 target_compile_definitions(${a}mumps_C PRIVATE ${mumps_cdefs})
@@ -247,7 +236,7 @@ foreach(t IN ITEMS ${a}mumps ${a}mumps_C ${a}mumps_Fortran)
   $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${MUMPS_scalapack}>>>:NOSCALAPACK>
   )
   target_include_directories(${t} PUBLIC
-  "$<BUILD_INTERFACE:${mumps_upstream_SOURCE_DIR}/include>"
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
   target_link_libraries(${t} PUBLIC mumps_common)
@@ -263,8 +252,12 @@ $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
 
 string(TOUPPER ${a} aup)
 
-set_property(TARGET ${a}mumps PROPERTY EXPORT_NAME ${aup}MUMPS)
-set_property(TARGET ${a}mumps PROPERTY VERSION ${MUMPS_ACTUAL_VERSION})
+set_target_properties(${a}mumps PROPERTIES
+EXPORT_NAME ${aup}MUMPS
+VERSION ${MUMPS_ACTUAL_VERSION}
+LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib
+ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib
+)
 
 if(BUILD_SHARED_LIBS AND APPLE AND CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang")
   # flang linker can't handle -dynamiclib flag
@@ -275,7 +268,12 @@ target_link_libraries(MUMPS INTERFACE ${a}mumps)
 
 install(TARGETS ${a}mumps EXPORT ${PROJECT_NAME}-targets)
 
-install(FILES ${_mi}${a}mumps_c.h ${_mi}${a}mumps_struc.h ${_mi}mumps_int_def.h TYPE INCLUDE)
+install(FILES
+${CMAKE_CURRENT_SOURCE_DIR}/../include/${a}mumps_c.h
+${CMAKE_CURRENT_SOURCE_DIR}/../include/${a}mumps_struc.h
+${CMAKE_CURRENT_SOURCE_DIR}/../include/mumps_int_def.h
+TYPE INCLUDE
+)
 
 endfunction(precision_source)
 
@@ -293,7 +291,11 @@ if(BUILD_COMPLEX16)
 endif()
 
 
-install(FILES ${_mi}mumps_c_types.h ${_mi}mumps_compat.h TYPE INCLUDE)
+install(FILES
+${CMAKE_CURRENT_SOURCE_DIR}/../include/mumps_c_types.h
+${CMAKE_CURRENT_SOURCE_DIR}/../include/mumps_compat.h
+TYPE INCLUDE
+)
 
 install(TARGETS MUMPS EXPORT ${PROJECT_NAME}-targets)
 

@@ -147,7 +147,15 @@ if(MUMPS_parallel)
 else()
 
   include(cmake/lapack.cmake)
-  include(cmake/libseq.cmake)
+
+  set(MPI_C_INCLUDE_DIRS       ${mumps_upstream_SOURCE_DIR}/libseq)
+  set(MPI_Fortran_INCLUDE_DIRS ${mumps_upstream_SOURCE_DIR}/libseq)
+
+  configure_file(cmake/libseq.cmake
+  ${mumps_upstream_SOURCE_DIR}/libseq/CMakeLists.txt
+  COPYONLY
+  )
+  add_subdirectory(${mumps_upstream_SOURCE_DIR}/libseq libseq)
 
 endif()
 
@@ -216,13 +224,23 @@ message(STATUS "MUMPS SCALAPACK_VENDOR: ${SCALAPACK_VENDOR}")
 # --- MUMPS build
 
 # --- PORD (always used)
-include(cmake/pord.cmake)
+configure_file(cmake/pord.cmake
+${mumps_upstream_SOURCE_DIR}/PORD/lib/CMakeLists.txt
+COPYONLY)
+add_subdirectory(${mumps_upstream_SOURCE_DIR}/PORD/lib PORD/lib)
 
 # --- MUMPS itself
-include(cmake/mumps.cmake)
+configure_file(cmake/mumps.cmake
+${mumps_upstream_SOURCE_DIR}/src/CMakeLists.txt
+COPYONLY)
+add_subdirectory(${mumps_upstream_SOURCE_DIR}/src src)
 
 if(MUMPS_matlab)
-  include(cmake/matlab.cmake)
+  configure_file(cmake/matlab.cmake
+  ${mumps_upstream_SOURCE_DIR}/MATLAB/CMakeLists.txt
+  COPYONLY
+  )
+  add_subdirectory(${mumps_upstream_SOURCE_DIR}/MATLAB MATLAB)
 endif()
 
 
