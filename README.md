@@ -70,7 +70,7 @@ cmake -Bbuild --install-prefix /path/to/install/mumps
 cmake --install build
 ```
 
-With the default options the `${MUMPS_BINARY_DIR}/lib` directory contains library binaries.
+The `${MUMPS_BINARY_DIR}/lib` directory contains library binaries.
 [Windows](./Readme_Windows.md)
 binaries have different names.
 
