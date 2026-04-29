@@ -6,18 +6,16 @@ if(MUMPS_parallel)
   message(WARNING "MUMPS MEX assumes no MPI (cmake -DMUMPS_parallel=no)")
 endif()
 
-set(mumps_matlab_path ${mumps_upstream_SOURCE_DIR}/MATLAB)
-
 find_package(Matlab REQUIRED COMPONENTS MEX_COMPILER MAIN_PROGRAM)
 
 matlab_add_mex(NAME dmumpsmex
 SHARED
-SRC ${mumps_matlab_path}/mumpsmex.c
+SRC mumpsmex.c
 LINK_TO MUMPS::MUMPS
 )
 
 add_test(NAME matlabMEX
-COMMAND ${Matlab_MAIN_PROGRAM} -sd ${mumps_matlab_path}
+COMMAND ${Matlab_MAIN_PROGRAM} -sd ${CMAKE_CURRENT_SOURCE_DIR}
 -batch "addpath('$<TARGET_FILE_DIR:dmumps>'), sparserhs_example"
 )
 set_tests_properties(matlabMEX PROPERTIES
