@@ -4,7 +4,7 @@ The Fortran library MUMPS builds on Windows just as well as other operating syst
 Methods of building MUMPS on Windows include:
 
 * Windows Subsystem for Linux (WSL) -- recommended in general for scientific computing on Windows
-* [Intel oneAPI Fortran compiler](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html) with oneAPI C compiler `icx` or Visual Studio C compiler `cl`
+* [Intel oneAPI Fortran compiler](https://www.intel.com/content/www/us/en/developer/tools/oneapi/oneapi-toolkit-download.html) with oneAPI C compiler `icx` or Visual Studio C compiler `cl`
 * MSYS2 (GCC / GFortran)
 
 CMake and Ninja can be installed on native Windows via WinGet:

@@ -24,6 +24,12 @@
     "CMAKE_Fortran_COMPILER": "ifx"
   }
 },
+{ "name": "msvc-vs", "inherits": "msvc",
+  "displayName": "MSVC Visual Studio 18 2026 (requires oneAPI Visual Studio IDE integration installed)",
+  "generator": "Visual Studio 18 2026",
+  "toolset": "fortran=ifx",
+  "architecture": "x64"
+},
 {
   "name": "linux", "inherits": "default",
   "generator": "Ninja",
@@ -76,6 +82,7 @@
   { "name": "default", "configurePreset": "default" },
   { "name": "build", "configurePreset": "build", "inherits": "default" },
   { "name": "msvc", "configurePreset": "msvc", "configuration": "Release", "inherits": "default" },
+  { "name": "msvc-vs", "configurePreset": "msvc-vs", "inherits": "msvc" },
   { "name": "linux", "configurePreset": "linux", "inherits": "default" },
   { "name": "shared", "configurePreset": "shared", "inherits": "default" },
   { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
@@ -98,6 +105,7 @@
   }
 },
 { "name": "msvc", "configurePreset": "msvc", "configuration": "Release", "inherits": "default" },
+{ "name": "msvc-vs", "configurePreset": "msvc-vs", "inherits": "msvc" },
 { "name": "linux", "configurePreset": "linux", "inherits": "default" },
 { "name": "shared", "configurePreset": "shared", "inherits": "default" },
 { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
@@ -133,12 +141,21 @@
     ]
   },
   {
+    "name": "msvc-vs",
+    "displayName": "Build and Test with MSVC Visual Studio 18 2026 (requires oneAPI Visual Studio IDE integration installed)",
+    "steps": [
+      { "type": "configure", "name": "msvc-vs" },
+      { "type": "build", "name": "msvc-vs" },
+      { "type": "test", "name": "msvc-vs"}
+    ]
+  },
+  {
     "name": "shared",
     "displayName": "Build and Test Shared Libraries",
     "steps": [
       { "type": "configure", "name": "shared" },
       { "type": "build", "name": "shared" },
-      { "type": "test", "name": "shared"}
+      { "type": "test", "name": "shared" }
     ]
   },
   {
@@ -146,7 +163,7 @@
     "steps": [
       { "type": "configure", "name": "linux" },
       { "type": "build", "name": "linux" },
-      { "type": "test", "name": "linux"}
+      { "type": "test", "name": "linux" }
     ]
   },
   {
@@ -155,7 +172,7 @@
     "steps": [
       { "type": "configure", "name": "scotch" },
       { "type": "build", "name": "scotch" },
-      { "type": "test", "name": "scotch"}
+      { "type": "test", "name": "scotch" }
     ]
   },
   {
@@ -164,7 +181,7 @@
     "steps": [
       { "type": "configure", "name": "metis" },
       { "type": "build", "name": "metis" },
-      { "type": "test", "name": "metis"}
+      { "type": "test", "name": "metis" }
     ]
   },
   {
@@ -173,7 +190,7 @@
     "steps": [
       { "type": "configure", "name": "parmetis" },
       { "type": "build", "name": "parmetis" },
-      { "type": "test", "name": "parmetis"}
+      { "type": "test", "name": "parmetis" }
     ]
   },
   {
@@ -182,7 +199,7 @@
     "steps": [
       { "type": "configure", "name": "serial" },
       { "type": "build", "name": "serial" },
-      { "type": "test", "name": "serial"}
+      { "type": "test", "name": "serial" }
     ]
   }
 ]
