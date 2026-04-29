@@ -34,10 +34,10 @@ CMake searches for Intel oneMKL if environment variable `MKLROOT` is set.
 ## GEMMT symmetric matrix-matrix multiplication
 
 For MUMPS &ge; 5.2.0, GEMMT symmetric matrix-matrix multiplication is recommended by the MUMPS User Guide if available.
-By default GEMMT is ON, but may be disabled like:
+By default GEMMT is ON if available, but may be disabled like:
 
 ```sh
-cmake -Dgemmt=off
+cmake -DMUMPS_gemmt=off
 ```
 
 ## Build LAPACK

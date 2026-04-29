@@ -1,7 +1,7 @@
 # For dev testing, to ease testing of shared libraries, which
 # may not show run path problems until executables are run.
 
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.25)
 
 include(${CMAKE_CURRENT_LIST_DIR}/GetTempdir.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/ProjectBuild.cmake)

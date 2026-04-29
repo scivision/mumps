@@ -1,5 +1,7 @@
 include(CheckSourceCompiles)
 
+block(PROPAGATE BLAS_HAVE_GEMMT)
+
 if(TARGET MKL::MKL)
   set(CMAKE_REQUIRED_LIBRARIES MKL::MKL)
   if(MUMPS_parallel)
@@ -8,8 +10,6 @@ if(TARGET MKL::MKL)
 else()
   set(CMAKE_REQUIRED_LIBRARIES LAPACK::LAPACK)
 endif()
-
-function(check_gemmt)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE "EXECUTABLE")
 
@@ -24,6 +24,10 @@ CALL DGEMMT( 'U', 'N', 'T',  2 , 1 , 1._real64 , A , 2 , B , 2 , 1._real64 , C ,
 end program"
 BLAS_HAVE_dGEMMT
 )
+if(BLAS_HAVE_dGEMMT)
+  set(BLAS_HAVE_GEMMT TRUE)
+  return()
+endif()
 endif()
 
 if(BUILD_SINGLE)
@@ -37,6 +41,10 @@ CALL SGEMMT( 'U', 'N', 'T',  2 , 1 , 1._real32 , A , 2 , B , 2 , 1._real32 , C ,
 end program"
 BLAS_HAVE_sGEMMT
 )
+if(BLAS_HAVE_sGEMMT)
+  set(BLAS_HAVE_GEMMT TRUE)
+  return()
+endif()
 endif()
 
 if(BUILD_COMPLEX)
@@ -50,6 +58,10 @@ CALL CGEMMT( 'U', 'N', 'T',  2 , 1 , 1._real32 , A , 2 , B , 2 , 1._real32 , C ,
 end program"
 BLAS_HAVE_cGEMMT
 )
+if(BLAS_HAVE_cGEMMT)
+  set(BLAS_HAVE_GEMMT TRUE)
+  return()
+endif()
 endif()
 
 if(BUILD_COMPLEX16)
@@ -63,8 +75,12 @@ CALL ZGEMMT( 'U', 'N', 'T',  2 , 1 , 1._real64 , A , 2 , B , 2 , 1._real64 , C ,
 end program"
 BLAS_HAVE_zGEMMT
 )
+if(BLAS_HAVE_zGEMMT)
+  set(BLAS_HAVE_GEMMT TRUE)
+  return()
+endif()
 endif()
 
-endfunction(check_gemmt)
+set(BLAS_HAVE_GEMMT FALSE)
 
-check_gemmt()
+endblock()

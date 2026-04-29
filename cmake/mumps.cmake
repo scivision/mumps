@@ -4,9 +4,9 @@ set(_s ${mumps_upstream_SOURCE_DIR}/src/)
 # -- generated MUMPS_INTSIZE header
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.5)
   if(MUMPS_intsize64)
-    set(intsrc ${mumps_upstream_SOURCE_DIR}/src/mumps_int_def64_h.in)
+    set(intsrc ${_s}mumps_int_def64_h.in)
   else()
-    set(intsrc ${mumps_upstream_SOURCE_DIR}/src/mumps_int_def32_h.in)
+    set(intsrc ${_s}mumps_int_def32_h.in)
   endif()
   configure_file(${intsrc} ${_mi}mumps_int_def.h COPYONLY)
 else()
@@ -81,6 +81,9 @@ endif()
 if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.8)
   list(APPEND COMM_OTHER_C ${_s}mumps_flytes.c)
 endif()
+if(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.9)
+  list(APPEND COMM_OTHER_C ${_s}mumps_sol_omp_memory_manager.c)
+endif()
 
 if(MUMPS_scotch)
   foreach(i IN ITEMS mumps_scotch.c mumps_scotch64.c mumps_scotch_int.c)
@@ -107,11 +110,6 @@ target_compile_definitions(mumps_common_Fortran PRIVATE ${mumps_fdefs})
 target_compile_options(mumps_common_Fortran PRIVATE ${mumps_fflags})
 
 add_library(mumps_common $<TARGET_OBJECTS:mumps_common_Fortran> $<TARGET_OBJECTS:mumps_common_C>)
-
-set(BLAS_HAVE_GEMMT FALSE)
-if(BLAS_HAVE_sGEMMT OR BLAS_HAVE_dGEMMT OR BLAS_HAVE_cGEMMT OR BLAS_HAVE_zGEMMT)
-  set(BLAS_HAVE_GEMMT TRUE)
-endif()
 
 # use MPI_Fortran_INCLUDE_DIRS directly to avoid MPICH Fortran -fallow flag leakage
 
