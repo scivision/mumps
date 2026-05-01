@@ -26,7 +26,7 @@ function(precision_ex a)
   # always link MPI as we use the libmpiseq if not MUMPS_parallel
 
   add_test(NAME ${a}_scotch COMMAND ${a}_scotch)
-  set_tests_properties(${a}_scotch PROPERTIES LABELS "Scotch")
+  set_tests_properties(${a}_scotch PROPERTIES LABELS "mumps:scotch")
 endfunction()
 
 if(MUMPS_d_FOUND OR BUILD_DOUBLE)

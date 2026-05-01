@@ -26,7 +26,7 @@ OpenMP::OpenMP_Fortran
 
 add_test(NAME MUMPSopenMP COMMAND test_mumps_openmp)
 set_tests_properties(MUMPSopenMP PROPERTIES
-LABELS "OpenMP"
+LABELS "mumps:openmp"
 ENVIRONMENT OMP_NUM_THREADS=4
 )
 

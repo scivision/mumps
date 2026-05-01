@@ -1,6 +1,10 @@
-set_property(DIRECTORY PROPERTY LABELS "unit;mumps")
+set_property(DIRECTORY PROPERTY LABELS "mumps:unit")
 
 include(${PROJECT_SOURCE_DIR}/cmake/mpi_launcher.cmake)
+
+add_executable(print_mumps_options print_mumps_options.f90)
+target_link_libraries(print_mumps_options PRIVATE MUMPS::MUMPS)
+add_test(NAME print_mumps_options COMMAND print_mumps_options)
 
 if(BUILD_DOUBLE)
   add_executable(test_mumps_config test_mumps.f90)
@@ -72,7 +76,6 @@ get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 
 set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)
 
-# CMake >= 3.22
 if(BUILD_SHARED_LIBS)
   if(WIN32)
     set_property(TEST ${test_names} PROPERTY

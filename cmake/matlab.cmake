@@ -20,7 +20,7 @@ COMMAND ${Matlab_MAIN_PROGRAM} -sd ${CMAKE_CURRENT_SOURCE_DIR}
 )
 set_tests_properties(matlabMEX PROPERTIES
 TIMEOUT 90
-LABELS "matlab"
+LABELS "mumps:matlab"
 PASS_REGULAR_EXPRESSION "SOLUTION OK"
 )
 # sometimes the example succeeds but hangs on cleanup

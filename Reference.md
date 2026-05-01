@@ -27,6 +27,8 @@ These definitions are described in MUMPS docs:
 * MUMPS &ge; 5.0 uses BLAS3 for efficiency, but `MUMPS_USE_BLAS2` allows BLAS2
 * MUMPS &ge; 4.9 can fall back to out-of-core strategy via `OLD_OOC_NOPANEL`
 * `DETERMINISTIC_PARALLEL_GRAPH` in MUMPS &ge; 5.0 makes graph deterministic for MPI workers (default off)
+* `AVOID_MPI_IN_PLACE` to disable MPI_IN_PLACE (not set)
+* `MUMPS_SCOTCHIMPORTOMPTHREADS` to import OpenMP threads into Scotch (enabled by CMake)
 
 * `WORKAROUNDINTELILP64OPENMPLIMITATION` for OpenMP (not currently needed or set)
 * `WORKAROUNDILP64MPICUSTOMREDUCE` was for IBM Platform MPI, which has been discontinued in favor of OpenMPI (obsolete)
@@ -35,8 +37,9 @@ These definitions are described in MUMPS docs:
 `MPI_TO_K_OMP` is for advanced use of OpenMP with MPI vis-a-vis `ICNTL(17)`. See User Manual section 5.23 for details.
 We don't enable this.
 
-* `metis`, `parmetis` for enablement of these graph partitioning libraries (handled by CMake options).
+* `metis`, `parmetis` for enablement of these graph partitioning libraries, handled by CMake options.
 * `metis4`, `parmetis3` are obsolete, not used, and not supported by MUMPS 5.0+.
+* `NOSCALAPACK` for the non-MPI case, handled by CMake.
 
 These definitions are generic, well-known:
 

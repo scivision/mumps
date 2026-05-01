@@ -26,7 +26,7 @@ function(precision_ex a)
   # always link MPI as we use the libmpiseq if not MUMPS_parallel
 
   add_test(NAME ${a}_metis COMMAND ${a}_metis)
-  set_tests_properties(${a}_metis PROPERTIES LABELS "Metis")
+  set_tests_properties(${a}_metis PROPERTIES LABELS "mumps:metis")
 endfunction()
 
 if(MUMPS_DOUBLE OR BUILD_DOUBLE)
