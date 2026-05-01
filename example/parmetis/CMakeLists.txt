@@ -1,12 +1,10 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(MUMPSgpuExample
+project(MUMPSparmetisExamples
 LANGUAGES C Fortran
 )
 
 enable_testing()
-
-set_property(DIRECTORY PROPERTY LABELS "mumps:gpu")
 
 if(DEFINED ENV{CONDA_PREFIX})
   list(APPEND CMAKE_IGNORE_PREFIX_PATH $ENV{CONDA_PREFIX})
@@ -19,16 +17,20 @@ if(PROJECT_IS_TOP_LEVEL)
   find_package(MUMPS CONFIG REQUIRED)
 endif()
 
-if(MUMPS_DOUBLE OR BUILD_DOUBLE)
-  add_executable(D_gpu mumps_cuda_gpu_example.f90)
-  target_link_libraries(D_gpu PRIVATE MUMPS::MUMPS
+function(precision_ex a)
+  add_executable(${a}_metis ${a}_metis.f90)
+  target_link_libraries(${a}_metis PRIVATE MUMPS::MUMPS
   MPI::MPI_Fortran
   $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
   )
   # always link MPI as we use the libmpiseq if not MUMPS_parallel
 
-  add_test(NAME D_gpu COMMAND D_gpu)
-endif()
+  add_test(NAME ${a}_metis COMMAND ${a}_metis)
+  set_tests_properties(${a}_metis PROPERTIES LABELS "mumps:parmetis")
+endfunction()
 
+if(MUMPS_DOUBLE OR BUILD_DOUBLE)
+  precision_ex("d")
+endif()
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")

@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        scotch: [true]
+        preset: [scotch]
 
     env:
       FC: gfortran-14
@@ -28,23 +28,18 @@ jobs:
       run: |
         sudo apt update
         sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin liblapack-dev
-        [[ "${{ matrix.scotch }}" == "true" ]] && sudo apt install --no-install-recommends bison flex
+        [[ ${{ contains(matrix.preset, 'scotch') }} ]] && sudo apt install --no-install-recommends bison flex
 
     - name: Install prereqs (macOS)
       if: runner.os == 'macOS'
       run: |
         brew install open-mpi
-        [[ "${{ matrix.scotch }}" == "true" ]] && brew install bison flex
+        [[ ${{ contains(matrix.preset, 'scotch') }} ]] && brew install bison flex
 
-    - name: build, test release
-      if: ${{ !matrix.scotch }}
-      run: cmake --workflow default
+    - name: build and test
+      run: cmake --workflow ${{ matrix.preset }}
 
-    - name: build with scotch
-      if: ${{ matrix.scotch }}
-      run: cmake --workflow scotch
-
-    - run: cmake --install build-scotch
+    - run: cmake --install build-${{ matrix.preset }}
 
 # builds fine on local machine
     # - name: configure example

@@ -32,23 +32,19 @@ jobs:
 
     strategy:
       matrix:
-        parallel: [true]
         mpich: [false]
         lapack_vendor: [""]
         os: [ubuntu-latest, macos-latest]
         include:
           - lapack_vendor: "OpenBLAS"
-            parallel: true
             os: ubuntu-latest
             name: OpenBLAS
-          - parallel: false
-            os: ubuntu-latest
           - mpich: true
             parallel: true
             os: ubuntu-latest
             name: MPICH
 
-    name: ${{ matrix.os }}-parallel=${{ matrix.parallel }}-${{ matrix.name }}
+    name: ${{ matrix.os }}-${{ matrix.name }}
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -133,13 +129,13 @@ jobs:
       run: cmake --workflow ${{ matrix.preset }}
 
 
-  scotch:
+  scotch-metis:
     timeout-minutes: 15
 
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        scotch: [true]
+        preset: [scotch, metis, parmetis]
 
     runs-on: ${{ matrix.os }}
 
@@ -155,55 +151,12 @@ jobs:
         printenv >> $GITHUB_ENV
 # necessary to find Homebrew Bison to build Scotch on macOS
 
-    - run: cmake --workflow scotch
-    - run: cmake --install build-scotch
+    - run: cmake --workflow ${{ matrix.preset }}
+    - run: cmake --install build-${{ matrix.preset }}
 
     - name: example workflow
-      working-directory: example/scotch
-      run: cmake --workflow scotch
-
-
-  metis:
-    timeout-minutes: 15
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-    - *checkout
-    - *prereqs
-    - *macos_fortran
-
-    - run: cmake --workflow metis
-    - run: cmake --install build-metis
-
-    - name: example workflow
-      working-directory: example/metis
-      run: cmake --workflow metis
-
-
-  parmetis:
-    timeout-minutes: 15
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-    - *checkout
-    - *prereqs
-    - *macos_fortran
-
-    - run: cmake --workflow parmetis
-    - run: cmake --install build-parmetis
-
-    - name: example workflow
-      working-directory: example/metis
-      run: cmake --workflow parmetis
-      # parmetis also uses example/metis
+      working-directory: example/${{ matrix.preset }}
+      run: cmake --workflow ${{ matrix.preset }}
 
 
   cmake-older:

@@ -9,7 +9,7 @@ add_test(NAME print_mumps_options COMMAND print_mumps_options)
 if(BUILD_DOUBLE)
   add_executable(test_mumps_config test_mumps.f90)
   target_link_libraries(test_mumps_config PRIVATE MUMPS::MUMPS
-  MPI::MPI_Fortran MPI::MPI_C
+  MPI::MPI_Fortran
   $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
   )
   add_test(NAME test_mumps_config COMMAND test_mumps_config)
@@ -22,7 +22,7 @@ endif()
 if(BUILD_SINGLE)
   add_executable(test_mumps_simple32 s_simple.f90)
   target_link_libraries(test_mumps_simple32 PRIVATE MUMPS::MUMPS
-  MPI::MPI_Fortran MPI::MPI_C
+  MPI::MPI_Fortran
   $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
   )
   add_test(NAME test_mumps_simple32 COMMAND test_mumps_simple32)
@@ -35,7 +35,7 @@ endif()
 if(BUILD_DOUBLE)
   add_executable(test_mumps_simple64 d_simple.f90)
   target_link_libraries(test_mumps_simple64 PRIVATE MUMPS::MUMPS
-  MPI::MPI_Fortran MPI::MPI_C
+  MPI::MPI_Fortran
   $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
   )
   add_test(NAME test_mumps_simple64 COMMAND test_mumps_simple64)
@@ -46,7 +46,7 @@ if(BUILD_DOUBLE)
 
   add_executable(test_mumps_complex128 simple.c)
   target_link_libraries(test_mumps_complex128 PRIVATE MUMPS::MUMPS
-  MPI::MPI_Fortran MPI::MPI_C
+  MPI::MPI_Fortran
   $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
   )
   add_test(NAME test_mumps_complex128 COMMAND test_mumps_complex128)

@@ -45,6 +45,7 @@ else()
   find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})
 
   # This is used in place of find_dependency(MPI) in MUMPS when MUMPS_parallel is OFF
+  # may not have ALIAS of ALIAS so we do INTERFACE IMPORTED of ALIAS
   add_library(MPI::MPI_C INTERFACE IMPORTED)
   target_link_libraries(MPI::MPI_C INTERFACE MUMPS::mpiseq_c)
 

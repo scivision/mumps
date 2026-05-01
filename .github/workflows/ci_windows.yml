@@ -36,16 +36,16 @@ jobs:
       uses: actions/checkout@v6
 
     - name: build & test no-MPI
-      run: cmake --workflow serial
+      run: cmake --workflow nompi
       env: &lapack
         LAPACK_ROOT: ${{ steps.msys2.outputs.msys2-location }}/ucrt64
 
     - name: install package
-      run: cmake --install build-serial
+      run: cmake --install build
 
     - name: example workflow
       working-directory: example
-      run: cmake --workflow serial
+      run: cmake --workflow nompi
       env: *lapack
 
     - name: Upload log failure

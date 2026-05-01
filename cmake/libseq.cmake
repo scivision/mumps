@@ -13,11 +13,12 @@ target_include_directories(mpiseq_fortran PUBLIC
 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_compile_options(mpiseq_fortran PRIVATE ${mumps_fflags})
+target_link_libraries(mpiseq_fortran INTERFACE mpiseq_c)
 
 # we don't use this target directly, but it's to be compatible with other build systems that make a
 # libmpiseq file
 add_library(mpiseq $<TARGET_OBJECTS:mpiseq_c> $<TARGET_OBJECTS:mpiseq_fortran>)
-target_link_libraries(mpiseq PUBLIC mpiseq_c mpiseq_fortran)
+target_link_libraries(mpiseq PUBLIC mpiseq_fortran mpiseq_c)
 
 set_target_properties(mpiseq PROPERTIES
 EXPORT_NAME MPISEQ

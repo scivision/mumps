@@ -10,7 +10,6 @@ runs:
     shell: bash
     run: >-
       cmake --preset default
-      -DMUMPS_parallel:BOOL=${{ matrix.parallel }}
       -DLAPACK_VENDOR=${{ matrix.lapack_vendor }}
 
   - name: build, test release

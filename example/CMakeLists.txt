@@ -51,12 +51,18 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/mpi_launcher.cmake)
 function(precision_ex a lang)
 
   add_executable(${a}_example_${lang} ${a}_example.${lang})
-  target_link_libraries(${a}_example_${lang} PRIVATE MUMPS::MUMPS
-  "$<$<BOOL:${MPI_CXX_FOUND}>:MPI::MPI_CXX>"
-  MPI::MPI_Fortran MPI::MPI_C
-  $<$<BOOL:${OpenMP_CXX_FOUND}>:OpenMP::OpenMP_CXX>
-  $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_C>
-  )
+  target_link_libraries(${a}_example_${lang} PRIVATE MUMPS::MUMPS MPI::MPI_Fortran)
+  if(lang STREQUAL "cpp")
+    target_link_libraries(${a}_example_${lang} PRIVATE
+      $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_CXX>
+      $<$<BOOL:${MUMPS_parallel}>:MPI::MPI_CXX>
+    )
+  elseif(lang STREQUAL "c")
+    target_link_libraries(${a}_example_${lang} PRIVATE
+      $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_C>
+      $<$<BOOL:${MUMPS_parallel}>:MPI::MPI_C>
+    )
+  endif()
   # always link MPI (MPI::MPI_Fortran and MPI::MPI_C) as we use the libmpiseq if not MUMPS_parallel
 
   add_test(NAME ${a}_example_${lang} COMMAND ${a}_example_${lang})

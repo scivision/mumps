@@ -82,7 +82,10 @@ if(MUMPS_metis OR MUMPS_parmetis)
 endif()
 
 add_library(mumps_common_C OBJECT ${COMM_OTHER_C})
-target_link_libraries(mumps_common_C PRIVATE MPI::MPI_C)
+target_link_libraries(mumps_common_C PRIVATE
+MPI::MPI_C
+$<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_C>
+)
 target_compile_definitions(mumps_common_C PRIVATE ${mumps_cdefs})
 target_compile_options(mumps_common_C PRIVATE ${mumps_cflags})
 
@@ -134,7 +137,7 @@ endforeach()
 
 target_link_libraries(mumps_common PRIVATE
 MPI::MPI_Fortran MPI::MPI_C
-$<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
+"$<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran;OpenMP::OpenMP_C>"
 )
 # this is needed for mpiseq, and is best for clarity and consistency
 

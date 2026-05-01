@@ -15,7 +15,7 @@ runs:
 
   - name: install open-mpi (linux)
     shell: bash
-    if: ${{ runner.os == 'Linux' && !matrix.mpich }}
+    if: ${{ runner.os == 'Linux' && !matrix.mpich && !contains(matrix.preset, 'nompi') }}
     run: sudo apt install --no-install-recommends libopenmpi-dev openmpi-bin libscalapack-openmpi-dev
 
   - name: install MPICH (linux)
@@ -27,35 +27,35 @@ runs:
 
   - name: install Scotch (Linux)
     shell: bash
-    if: ${{ runner.os == 'Linux' && matrix.scotch}}
+    if: ${{ runner.os == 'Linux' && contains(matrix.preset, 'scotch') }}
     run: |
       sudo apt install --no-install-recommends libptscotch-dev
 
   - name: install METIS (Linux)
     shell: bash
-    if: ${{ runner.os == 'Linux' && matrix.metis }}
+    if: ${{ runner.os == 'Linux' && contains(matrix.preset, 'metis') }}
     run: sudo apt install --no-install-recommends libmetis-dev
 
   - name: Install ParMETIS (Linux)
     shell: bash
-    if: ${{ runner.os == 'Linux' && matrix.parmetis }}
+    if: ${{ runner.os == 'Linux' && contains(matrix.preset, 'parmetis') }}
     run: sudo apt install --no-install-recommends libparmetis-dev
 
   - name: Install MPI (macOS)
     shell: bash
-    if: runner.os == 'macOS'
+    if: ${{ runner.os == 'macOS' && !contains(matrix.preset, 'nompi') }}
     run: brew install open-mpi scalapack
 
   - name: install Scotch (macOS)
     shell: bash
-    if: ${{ runner.os == 'macOS' && matrix.scotch }}
+    if: ${{ runner.os == 'macOS' && contains(matrix.preset, 'scotch') }}
     run: brew install scotch bison
     # Homebrew "scotch" is also ptscotch
     # bison is in case we build Scotch
 
   - name: install METIS (macOS)
     shell: bash
-    if: ${{ runner.os == 'macOS' && matrix.metis }}
+    if: ${{ runner.os == 'macOS' && contains(matrix.preset, 'metis') }}
     run: brew install metis
 
   - name: Install OpenBLAS (Linux)

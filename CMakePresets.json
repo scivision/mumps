@@ -18,7 +18,8 @@
     "MUMPS_scotch": false,
     "MUMPS_parmetis": false,
     "MUMPS_metis": false,
-    "MUMPS_openmp": false
+    "MUMPS_openmp": false,
+    "MUMPS_intsize64": false
   }
 },
 { "name": "build", "inherits": "default" },
@@ -33,6 +34,12 @@
   "displayName": "with OpenMP, but without MPI",
   "cacheVariables": {
     "MUMPS_parallel": false
+  }
+},
+{ "name": "int64", "inherits": "default",
+  "displayName": "with 64-bit integers",
+  "cacheVariables": {
+    "MUMPS_intsize64": true
   }
 },
 { "name": "msvc", "inherits": "default",
@@ -75,11 +82,11 @@
   }
 },
 {
-  "name": "serial", "inherits": "default",
-  "binaryDir": "build-${presetName}",
-  "installDir": "${fileDir}/build-${presetName}/local",
+  "name": "nompi", "inherits": "default",
+  "installDir": "${fileDir}/build/local",
   "cacheVariables": {
-    "MUMPS_parallel": false
+    "MUMPS_parallel": false,
+    "MUMPS_openmp": false
   }
 },
 {
@@ -110,6 +117,7 @@
 "buildPresets": [
   { "name": "default", "displayName": "build with Ninja", "configurePreset": "default" },
   { "name": "build", "configurePreset": "build" },
+  { "name": "int64", "configurePreset": "int64", "displayName": "with 64-bit integers" },
   { "name": "openmp-mpi", "configurePreset": "openmp-mpi", "displayName": "with OpenMP and MPI" },
   { "name": "openmp-nompi", "configurePreset": "openmp-nompi", "displayName": "with OpenMP, but without MPI" },
   { "name": "gmake", "displayName": "build with GNU Make", "configurePreset": "gmake", "jobs": 4 },
@@ -133,7 +141,7 @@
   { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
   { "name": "metis", "configurePreset": "metis", "inherits": "default" },
   { "name": "parmetis", "configurePreset": "parmetis", "inherits": "default" },
-  { "name": "serial", "configurePreset": "serial", "inherits": "default" }
+  { "name": "nompi", "configurePreset": "nompi", "inherits": "default" }
 ],
 "testPresets": [
 {
@@ -150,6 +158,7 @@
     "stopOnFailure": false
   }
 },
+{ "name": "int64", "configurePreset": "int64", "inherits": "default", "displayName": "with 64-bit integers" },
 { "name": "openmp-mpi", "configurePreset": "openmp-mpi", "inherits": "default" },
 { "name": "openmp-nompi", "configurePreset": "openmp-nompi", "inherits": "default" },
 { "name": "gmake", "configurePreset": "gmake", "inherits": "default" },
@@ -172,7 +181,7 @@
 { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
 { "name": "metis", "configurePreset": "metis", "inherits": "default" },
 { "name": "parmetis", "configurePreset": "parmetis", "inherits": "default" },
-{ "name": "serial", "configurePreset": "serial", "inherits": "default" }
+{ "name": "nompi", "configurePreset": "nompi", "inherits": "default" }
 ],
 "workflowPresets": [
   {
@@ -190,6 +199,15 @@
     "steps": [
       { "type": "configure", "name": "build" },
       { "type": "build", "name": "build" }
+    ]
+  },
+  {
+    "name": "int64",
+    "displayName": "Build and Test with 64-bit integers",
+    "steps": [
+      { "type": "configure", "name": "int64" },
+      { "type": "build", "name": "int64" },
+      { "type": "test", "name": "int64" }
     ]
   },
   {
@@ -282,12 +300,12 @@
     ]
   },
   {
-    "name": "serial",
+    "name": "nompi",
     "displayName": "Build and Test without MPI",
     "steps": [
-      { "type": "configure", "name": "serial" },
-      { "type": "build", "name": "serial" },
-      { "type": "test", "name": "serial" }
+      { "type": "configure", "name": "nompi" },
+      { "type": "build", "name": "nompi" },
+      { "type": "test", "name": "nompi" }
     ]
   }
 ]

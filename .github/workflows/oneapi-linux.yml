@@ -37,15 +37,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    name: parallel=${{ matrix.parallel }} int64=${{ matrix.int64 }}
-
     strategy:
       matrix:
-        int64: [true, false]
-        parallel: [true]
-        include:
-          - int64: true
-            parallel: false
+        preset: [default, int64]
 
     steps:
     - uses: actions/checkout@v6
@@ -77,38 +71,22 @@ jobs:
     - name: Tell MPI compiler wrapper flags
       run: mpiifx -show
 
-    - name: CMake Configure
-      run: >-
-        cmake --preset default
-        -DMUMPS_intsize64=${{ matrix.int64 }}
-        -DMUMPS_parallel:BOOL=${{ matrix.parallel }}
+    - name: CMake build and test
+      run: cmake --workflow ${{ matrix.preset }}
 
     - name: Upload log failure
       if: failure()
       uses: actions/upload-artifact@v7
       with:
-        archive: false
         name: oneapi-${{ runner.os }}-CMakeConfigureLog.yaml
         path: build/CMakeFiles/CMakeConfigureLog.yaml
-
-    - name: CMake build
-      run: cmake --build --preset default
-
-    - name: CMake Test
-      if: ${{ matrix.int64 == 'false' }}
-      run: ctest --preset default
 
     - name: install package
       run: cmake --install build
 
     - name: configure example
       working-directory: example
-      run: cmake --workflow build
-
-    - name: test example
-      if: ${{ matrix.int64 == 'false' }}
-      working-directory: example
-      run: ctest --preset default
+      run: cmake --workflow ${{ matrix.preset }}
 
 
     - name: exclude unused files from cache

@@ -5,7 +5,8 @@
 [![ci_build](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_build.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_build.yml)
 [![oneapi-linux](https://github.com/scivision/mumps-superbuild/actions/workflows/oneapi-linux.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/oneapi-linux.yml)
 
-MUMPS is a Fortran library with optional C interfaces for MPI and/or OpenMP parallel (or serial) solving of sparse linear systems of equations.
+MUMPS is a Fortran library with optional C interfaces for MPI and/or OpenMP parallel
+(or serial `cmake --workflow nompi`) solving of sparse linear systems of equations.
 This repository provides a CMake superbuild project for MUMPS and optional MUMPS dependencies including ScaLAPACK, ParMETIS, and Scotch.
 This CMake superbuild downloads the unmodified source tarfile from mumps-solver.org and builds.
 For offline usage, the user can specify a local MUMPS source archive like `cmake -Bbuild -DMUMPS_url=/path/to/mumps.zip`
