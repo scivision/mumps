@@ -105,6 +105,16 @@
     "MUMPS_metis": true
   }
 },
+{ "name" : "scotch-metis", "inherits": "scotch",
+  "cacheVariables": {
+    "MUMPS_metis": true
+  }
+},
+{ "name" : "scotch-parmetis", "inherits": "scotch",
+  "cacheVariables": {
+    "MUMPS_parmetis": true
+  }
+},
 {
   "name": "parmetis", "inherits": "default",
   "binaryDir": "build-${presetName}",
@@ -140,6 +150,8 @@
   { "name": "shared", "configurePreset": "shared", "inherits": "default" },
   { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
   { "name": "metis", "configurePreset": "metis", "inherits": "default" },
+  { "name": "scotch-metis", "configurePreset": "scotch-metis", "inherits": "default" },
+  { "name": "scotch-parmetis", "configurePreset": "scotch-parmetis", "inherits": "scotch" },
   { "name": "parmetis", "configurePreset": "parmetis", "inherits": "default" },
   { "name": "nompi", "configurePreset": "nompi", "inherits": "default" }
 ],
@@ -180,6 +192,8 @@
 { "name": "shared", "configurePreset": "shared", "inherits": "default" },
 { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
 { "name": "metis", "configurePreset": "metis", "inherits": "default" },
+{ "name": "scotch-metis", "configurePreset": "scotch-metis", "inherits": "default" },
+{ "name": "scotch-parmetis", "configurePreset": "scotch-parmetis", "inherits": "scotch" },
 { "name": "parmetis", "configurePreset": "parmetis", "inherits": "default" },
 { "name": "nompi", "configurePreset": "nompi", "inherits": "default" }
 ],
@@ -295,6 +309,20 @@
       { "type": "configure", "name": "scotch" },
       { "type": "build", "name": "scotch" },
       { "type": "test", "name": "scotch" }
+    ]
+  },
+  { "name": "scotch-metis", "displayName": "Build and Test with Scotch and METIS",
+    "steps": [
+      { "type": "configure", "name": "scotch-metis" },
+      { "type": "build", "name": "scotch-metis" },
+      { "type": "test", "name": "scotch-metis" }
+    ]
+  },
+  { "name": "scotch-parmetis", "displayName": "Build and Test with Scotch and ParMETIS",
+    "steps": [
+      { "type": "configure", "name": "scotch-parmetis" },
+      { "type": "build", "name": "scotch-parmetis" },
+      { "type": "test", "name": "scotch-parmetis" }
     ]
   },
   {
