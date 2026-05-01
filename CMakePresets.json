@@ -5,6 +5,7 @@
 {
   "name": "default",
   "generator": "Ninja",
+  "displayName": "Build with Ninja and Test",
   "binaryDir": "build",
   "installDir": "${fileDir}/build/local",
   "cacheVariables": {
@@ -14,14 +15,36 @@
     "BUILD_COMPLEX16": false,
     "CMAKE_BUILD_TYPE": "Release",
     "MUMPS_parallel": true,
-    "MUMPS_scotch": false
+    "MUMPS_scotch": false,
+    "MUMPS_parmetis": false,
+    "MUMPS_metis": false,
+    "MUMPS_openmp": false
   }
 },
 { "name": "build", "inherits": "default" },
+{ "name": "gmake", "inherits": "default", "generator": "Unix Makefiles", "displayName": "Build with GNU Make" },
+{ "name": "openmp-mpi", "inherits": "default",
+  "displayName": "with OpenMP and MPI",
+  "cacheVariables": {
+    "MUMPS_openmp": true
+  }
+},
+{ "name": "openmp-nompi", "inherits": "openmp-mpi",
+  "displayName": "with OpenMP, but without MPI",
+  "cacheVariables": {
+    "MUMPS_parallel": false
+  }
+},
 { "name": "msvc", "inherits": "default",
+  "displayName": "MSVC with Ninja and oneAPI",
   "cacheVariables": {
     "CMAKE_C_COMPILER": "cl",
     "CMAKE_Fortran_COMPILER": "ifx"
+  },
+  "condition": {
+    "type": "equals",
+    "lhs": "${hostSystemName}",
+    "rhs": "Windows"
   }
 },
 { "name": "msvc-vs", "inherits": "msvc",
@@ -32,9 +55,15 @@
 },
 {
   "name": "linux", "inherits": "default",
+  "displayName": "Linux with Ninja (for WSL CI)",
   "generator": "Ninja",
   "binaryDir": "/tmp/build",
-  "installDir": "/tmp/build/local"
+  "installDir": "/tmp/build/local",
+  "condition": {
+    "type": "notEquals",
+    "lhs": "${hostSystemName}",
+    "rhs": "Windows"
+  }
 },
 {
   "name": "shared", "inherits": "default",
@@ -79,11 +108,27 @@
 }
 ],
 "buildPresets": [
-  { "name": "default", "configurePreset": "default" },
-  { "name": "build", "configurePreset": "build", "inherits": "default" },
-  { "name": "msvc", "configurePreset": "msvc", "configuration": "Release", "inherits": "default" },
+  { "name": "default", "displayName": "build with Ninja", "configurePreset": "default" },
+  { "name": "build", "configurePreset": "build" },
+  { "name": "openmp-mpi", "configurePreset": "openmp-mpi", "displayName": "with OpenMP and MPI" },
+  { "name": "openmp-nompi", "configurePreset": "openmp-nompi", "displayName": "with OpenMP, but without MPI" },
+  { "name": "gmake", "displayName": "build with GNU Make", "configurePreset": "gmake", "jobs": 4 },
+  { "name": "msvc", "configurePreset": "msvc",
+    "configuration": "Release", "inherits": "default",
+    "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+  },
   { "name": "msvc-vs", "configurePreset": "msvc-vs", "inherits": "msvc" },
-  { "name": "linux", "configurePreset": "linux", "inherits": "default" },
+  { "name": "linux", "configurePreset": "linux", "inherits": "default",
+    "condition": {
+      "type": "notEquals",
+      "lhs": "${hostSystemName}",
+      "rhs": "Windows"
+    }
+  },
   { "name": "shared", "configurePreset": "shared", "inherits": "default" },
   { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
   { "name": "metis", "configurePreset": "metis", "inherits": "default" },
@@ -94,6 +139,7 @@
 {
   "name": "default",
   "configurePreset": "default",
+  "configuration": "Release",
   "output": {
     "outputOnFailure": true,
     "verbosity": "verbose"
@@ -104,9 +150,24 @@
     "stopOnFailure": false
   }
 },
-{ "name": "msvc", "configurePreset": "msvc", "configuration": "Release", "inherits": "default" },
+{ "name": "openmp-mpi", "configurePreset": "openmp-mpi", "inherits": "default" },
+{ "name": "openmp-nompi", "configurePreset": "openmp-nompi", "inherits": "default" },
+{ "name": "gmake", "configurePreset": "gmake", "inherits": "default" },
+{ "name": "msvc", "configurePreset": "msvc", "configuration": "Release", "inherits": "default",
+  "condition": {
+    "type": "equals",
+    "lhs": "${hostSystemName}",
+    "rhs": "Windows"
+  }
+},
 { "name": "msvc-vs", "configurePreset": "msvc-vs", "inherits": "msvc" },
-{ "name": "linux", "configurePreset": "linux", "inherits": "default" },
+{ "name": "linux", "configurePreset": "linux", "inherits": "default",
+    "condition": {
+      "type": "notEquals",
+      "lhs": "${hostSystemName}",
+      "rhs": "Windows"
+    }
+},
 { "name": "shared", "configurePreset": "shared", "inherits": "default" },
 { "name": "scotch", "configurePreset": "scotch", "inherits": "default" },
 { "name": "metis", "configurePreset": "metis", "inherits": "default" },
@@ -129,6 +190,33 @@
     "steps": [
       { "type": "configure", "name": "build" },
       { "type": "build", "name": "build" }
+    ]
+  },
+  {
+    "name": "openmp-mpi",
+    "displayName": "Build and Test with OpenMP and MPI",
+    "steps": [
+      { "type": "configure", "name": "openmp-mpi" },
+      { "type": "build", "name": "openmp-mpi" },
+      { "type": "test", "name": "openmp-mpi" }
+    ]
+  },
+  {
+    "name": "openmp-nompi",
+    "displayName": "Build and Test with OpenMP, but without MPI",
+    "steps": [
+      { "type": "configure", "name": "openmp-nompi" },
+      { "type": "build", "name": "openmp-nompi" },
+      { "type": "test", "name": "openmp-nompi" }
+    ]
+  },
+  {
+    "name": "gmake",
+    "displayName": "GNU Make build and test",
+    "steps": [
+      { "type": "configure", "name": "gmake" },
+      { "type": "build", "name": "gmake" },
+      { "type": "test", "name": "gmake" }
     ]
   },
   {

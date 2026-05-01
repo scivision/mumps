@@ -33,7 +33,6 @@ jobs:
     strategy:
       matrix:
         parallel: [true]
-        openmp: [false]
         mpich: [false]
         lapack_vendor: [""]
         os: [ubuntu-latest, macos-latest]
@@ -44,10 +43,6 @@ jobs:
             name: OpenBLAS
           - parallel: false
             os: ubuntu-latest
-          - openmp: true
-            parallel: false
-            os: ubuntu-latest
-            name: OpenMP
           - mpich: true
             parallel: true
             os: ubuntu-latest
@@ -75,6 +70,20 @@ jobs:
     - name: build example
       uses: ./.github/workflows/composite-example
 
+  gnu-make:
+    # this is important case as due to project complexity, some failures only happen with GNU Make (or Ninja)
+    timeout-minutes: 15
+
+    runs-on: [ubuntu-latest, macos-latest]
+
+    steps:
+    - *checkout
+    - *prereqs
+
+    - name: build and test with GNU Make
+      shell: bash
+      run: cmake --workflow gmake
+
 
   shared:
     timeout-minutes: 15
@@ -98,6 +107,26 @@ jobs:
     - name: example workflow
       working-directory: example
       run: cmake --workflow shared
+
+  openmp:
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        preset: [openmp-nompi, openmp-mpi]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - *checkout
+    - *prereqs
+
+    - run: cmake --workflow ${{ matrix.preset }}
+
+    - run: cmake --install build
+
+    - name: example workflow
+      working-directory: example/openmp
+      run: cmake --workflow ${{ matrix.preset }}
 
 
   scotch:

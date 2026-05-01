@@ -12,7 +12,6 @@ runs:
       cmake --preset default
       -DMUMPS_parallel:BOOL=${{ matrix.parallel }}
       -DLAPACK_VENDOR=${{ matrix.lapack_vendor }}
-      -DMUMPS_openmp:BOOL=${{ matrix.openmp }}
 
   - name: build, test release
     shell: bash

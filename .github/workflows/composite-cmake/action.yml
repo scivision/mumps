@@ -16,7 +16,7 @@ runs:
     shell: bash
     run: |
       curl -LO "https://github.com/Kitware/CMake/releases/download/v${{ matrix.cmake_version }}/cmake-${{ matrix.cmake_version }}-$archive"
-      tar -xf cmake-${{ matrix.cmake_version }}-$archive
+      tar -xf cmake-${{ matrix.cmake_version }}-$archive --exclude=doc/ --exclude=man/ --exclude=Help/
 
   - name: CMake path
     shell: bash
