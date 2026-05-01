@@ -65,24 +65,23 @@ add_compile_options("$<$<COMPILE_LANG_AND_ID:Fortran,IntelLLVM>:$<IF:$<BOOL:${WI
 # Leave this as ADD_COMPILE_OPTIONS()!
 
 if(MUMPS_intsize64)
-  list(APPEND mumps_cdefs "$<$<COMPILE_LANGUAGE:C>:INTSIZE64;PORD_INTSIZE64>")
-  # PORD_INTSIZE64 is used in src/mumps_pord.c and PORD/include/types.h
-
-  add_compile_options("$<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-fdefault-integer-8>")
   # ALL libraries must be compiled with -fdefault-integer-8, including MPI,
   # or runtime fails
   # See MUMPS 5.7.0 User manual about error -69
 
-  if(CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
+  list(APPEND mumps_cdefs "$<$<COMPILE_LANGUAGE:C>:INTSIZE64;PORD_INTSIZE64>")
+  # PORD_INTSIZE64 is used in src/mumps_pord.c and PORD/include/types.h
+
+  if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU|LLVMFlang")
+
+    add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:-fdefault-integer-8>")
+
+  elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
     # https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2025-2/using-the-ilp64-interface-vs-lp64-interface.html
     # https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2025-2/using-the-ilp64-interface-vs-lp64-interface.html
     # https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-16/ilp64-support.html
 
-    if(MUMPS_openmp)
-      set(_mkl_ilp64 parallel)
-    else()
-      set(_mkl_ilp64 sequential)
-    endif()
+    set(_mkl_ilp64 $<IF:$<BOOL:${MUMPS_openmp}>,parallel,sequential>)
 
     add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:-i8>")
     if(WIN32)

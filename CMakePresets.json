@@ -194,6 +194,14 @@
     ]
   },
   {
+    "name": "default-build",
+    "displayName": "Build in Release mode",
+    "steps": [
+      { "type": "configure", "name": "build" },
+      { "type": "build", "name": "build" }
+    ]
+  },
+  {
     "name": "build",
     "displayName": "Build in Release mode",
     "steps": [
@@ -208,6 +216,14 @@
       { "type": "configure", "name": "int64" },
       { "type": "build", "name": "int64" },
       { "type": "test", "name": "int64" }
+    ]
+  },
+  {
+    "name": "int64-build",
+    "displayName": "Build with 64-bit integers",
+    "steps": [
+      { "type": "configure", "name": "int64" },
+      { "type": "build", "name": "int64" }
     ]
   },
   {

@@ -84,9 +84,9 @@ jobs:
     - name: install package
       run: cmake --install build
 
-    - name: configure example
+    - name: build example
       working-directory: example
-      run: cmake --workflow ${{ matrix.preset }}
+      run: cmake --workflow ${{ matrix.preset }}-build
 
 
     - name: exclude unused files from cache
