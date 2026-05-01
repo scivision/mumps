@@ -45,6 +45,14 @@ These definitions are generic, well-known:
 
 * `_OPENMP` is set by the compiler when OpenMP is enabled
 
+## CUDA GPU MUMPS
+
+MUMPS has experimental GPU support, with or without MPI and controlled by CMake option `MUMPS_gpu:BOOL`. This is not yet fully supported by CMake, but we set the `USE_GPU` definition when `MUMPS_gpu` is enabled. The MUMPS manual section 5.27 describes the GPU support in more detail.
+
+* `USE_GPU` see MUMPS manual section 5.27 for details. We set this when MUMPS_gpu is enabled, which also adds CUDA::cublas and CUDA::cudart as dependencies.
+* `GEMMT_AVAILABLE_FOR_GPU` is not yet handled by CMake.
+* `USE_XKBLAS` is to use the external XKBLAS library for GPU-accelerated BLAS, which we don't yet handle in CMake.
+
 ## MUMPS Fortran modules
 
 While

@@ -26,6 +26,7 @@ Scotch: ${MUMPS_scotch}
 METIS: ${MUMPS_metis}
 ParMETIS: ${MUMPS_parmetis}
 OpenMP: ${MUMPS_openmp}
+GPU: ${MUMPS_gpu}
 ")
 
 message(STATUS "MUMPS_intsize64: ${MUMPS_intsize64}

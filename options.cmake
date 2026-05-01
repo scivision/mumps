@@ -30,6 +30,8 @@ option(MUMPS_scalapack "Use ScalaPACK to speed up the solution of linear systems
 
 option(MUMPS_intsize64 "use 64-bit integers in C and Fortran")
 
+option(MUMPS_gpu "MUMPS CUDA CPU support (see User Manual section 5.27)" OFF)
+
 option(MUMPS_scotch "use Scotch orderings")
 if(MUMPS_scotch AND MUMPS_parallel)
   set(_ptscotch_default ON)

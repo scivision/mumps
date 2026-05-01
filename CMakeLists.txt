@@ -112,6 +112,12 @@ endif()
 # --- dependencies
 find_package(Threads)
 
+if(MUMPS_gpu)
+# see User Manual section 5.27
+  find_package(CUDAToolkit REQUIRED)
+# https://cmake.org/cmake/help/latest/module/FindCUDAToolkit.html
+endif()
+
 # -- Scalapack / MPI
 if(MUMPS_parallel)
   find_package(MPI COMPONENTS C Fortran REQUIRED)
@@ -257,7 +263,7 @@ endif()
 
 message(STATUS "Configured MUMPS ${MUMPS_ACTUAL_VERSION} source in ${mumps_upstream_SOURCE_DIR}")
 
-if(PROJECT_IS_TOP_LEVEL)
+if(MUMPS_IS_TOP_LEVEL)
 
 find_program(GRAPHVIZ_DOT NAMES dot)
 if(GRAPHVIZ_DOT)
@@ -270,8 +276,10 @@ if(GRAPHVIZ_DOT)
     )
 endif()
 
-include(cmake/summary.cmake)
+endif()
 
+if(MUMPS_IS_TOP_LEVEL)
+  include(cmake/summary.cmake)
 endif()
 
 include(cmake/install.cmake)

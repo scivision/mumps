@@ -64,6 +64,11 @@ if(MUMPS_metis)
   find_dependency(METIS)
 endif()
 
+set(MUMPS_gpu @MUMPS_gpu@)
+if(MUMPS_gpu)
+  find_dependency(CUDAToolkit)
+endif()
+
 set(MUMPS_parmetis @MUMPS_parmetis@)
 if(MUMPS_parmetis)
   find_dependency(METIS COMPONENTS ParMETIS)

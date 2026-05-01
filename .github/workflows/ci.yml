@@ -60,7 +60,8 @@ jobs:
       name: install prereqs
       uses: ./.github/workflows/composite-deps
 
-    - name: set Fortran compiler FC (macOS)
+    - &macos_fortran
+      name: set Fortran compiler FC (macOS)
       if: runner.os == 'macOS'
       run: echo "FC=gfortran-15" >> $GITHUB_ENV
 
@@ -70,15 +71,21 @@ jobs:
     - name: build example
       uses: ./.github/workflows/composite-example
 
+
   gnu-make:
     # this is important case as due to project complexity, some failures only happen with GNU Make (or Ninja)
     timeout-minutes: 15
 
-    runs-on: [ubuntu-latest, macos-latest]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
     - *checkout
     - *prereqs
+    - *macos_fortran
 
     - name: build and test with GNU Make
       shell: bash
@@ -93,13 +100,10 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    env:
-      CC: gcc-14
-      FC: gfortran-14
-
     steps:
     - *checkout
     - *prereqs
+    - *macos_fortran
 
     - run: cmake --workflow shared
     - run: cmake --install build-shared
@@ -131,6 +135,7 @@ jobs:
 
   scotch:
     timeout-minutes: 15
+
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -138,13 +143,10 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    env:
-      CC: gcc-14
-      FC: gfortran-14
-
     steps:
     - *checkout
     - *prereqs
+    - *macos_fortran
 
     - name: Load Homebrew environment (macOS)
       if: runner.os == 'macOS'
@@ -169,13 +171,10 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    env:
-      CC: gcc-14
-      FC: gfortran-14
-
     steps:
     - *checkout
     - *prereqs
+    - *macos_fortran
 
     - run: cmake --workflow metis
     - run: cmake --install build-metis
@@ -193,13 +192,10 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    env:
-      CC: gcc-14
-      FC: gfortran-14
-
     steps:
     - *checkout
     - *prereqs
+    - *macos_fortran
 
     - run: cmake --workflow parmetis
     - run: cmake --install build-parmetis

@@ -72,6 +72,10 @@ if(MUMPS_openmp)
   add_subdirectory(${PROJECT_SOURCE_DIR}/example/openmp build_openmp_example)
 endif()
 
+if(MUMPS_gpu)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/example/gpu build_gpu_example)
+endif()
+
 get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 
 set_property(TEST ${test_names} PROPERTY RESOURCE_LOCK cpu_mpi)

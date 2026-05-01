@@ -117,6 +117,7 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   pord
   $<$<AND:$<BOOL:${MUMPS_scalapack}>,$<BOOL:${MUMPS_parallel}>>:SCALAPACK::SCALAPACK>
   LAPACK::LAPACK
+  "$<$<BOOL:${MUMPS_gpu}>:CUDA::cublas;CUDA::cudart>"
   $<$<BOOL:${IMPI_LIB64}>:${IMPI_LIB64}>
   ${CMAKE_THREAD_LIBS_INIT}
   )

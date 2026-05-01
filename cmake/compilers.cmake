@@ -3,13 +3,20 @@
 set(mumps_cdefs)
 set(mumps_fdefs)
 set(mumps_cflags)
-set(mumps_fflags)
+
+set(mumps_fflags -w)
+# lets project consuming MUMPS not have excessive warnings from MUMPS sources
 
 list(APPEND mumps_cdefs "$<$<COMPILE_LANGUAGE:C>:Add_>")
 # "Add_" works for all modern compilers we tried.
 
 if(MSVC)
   list(APPEND mumps_cdefs _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE)
+endif()
+
+if(MUMPS_gpu)
+  list(APPEND mumps_cdefs "USE_GPU")
+  list(APPEND mumps_fdefs "USE_GPU")
 endif()
 
 if(MUMPS_openmp)
