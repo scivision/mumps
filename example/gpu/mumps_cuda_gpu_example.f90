@@ -37,6 +37,8 @@ mumps_par%icntl(3) = stdout! ! global info, for the host (myid==0)
 mumps_par%icntl(4) = 2           ! default is 2, 1 reduces verbosity
 
 mumps_par%icntl(51) = 1 ! see MUMPS user manual section 5.27
+! Avoid async pinned-memory registration warnings on very small test matrices.
+mumps_par%keep(422) = 0
 
 ! === config done, now check config
 IF (mumps_par%INFOG(1) < 0) THEN

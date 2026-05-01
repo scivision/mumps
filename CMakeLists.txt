@@ -170,7 +170,7 @@ else()
 endif()
 
 if(MUMPS_openmp)
-  find_package(OpenMP COMPONENTS Fortran REQUIRED)
+  find_package(OpenMP COMPONENTS C Fortran REQUIRED)
 endif()
 
 # GEMMT is recommended in MUMPS User Manual if available

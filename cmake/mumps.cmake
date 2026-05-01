@@ -217,6 +217,10 @@ set(CINT_SRC mumps_c.c)
 add_library(${a}mumps_C OBJECT ${CINT_SRC} ${SRC_C})
 target_compile_definitions(${a}mumps_C PRIVATE ${mumps_cdefs})
 target_compile_options(${a}mumps_C PRIVATE ${mumps_cflags})
+target_link_libraries(${a}mumps_C PRIVATE
+MPI::MPI_C
+$<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_C>
+)
 
 add_library(${a}mumps_Fortran OBJECT ${SRC_Fortran})
 target_link_libraries(${a}mumps_Fortran PRIVATE
