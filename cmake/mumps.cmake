@@ -22,7 +22,7 @@ CONTENT "#ifndef MUMPS_INT_H
 endif()
 
 # -- Mumps COMMON
-set(COMM_SRC_Fortran mumps_ooc_common.F mumps_static_mapping.F mumps_mpitoomp_m.F
+set(COMM_SRC_Fortran mumps_ooc_common.F mumps_static_mapping.F
 ana_omp_m.F double_linked_list.F
 fac_asm_build_sort_index_ELT_m.F fac_asm_build_sort_index_m.F fac_descband_data_m.F fac_future_niv2_mod.F fac_maprow_data_m.F
 front_data_mgt_m.F mumps_l0_omp_m.F omp_tps_common_m.F
@@ -96,6 +96,18 @@ $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
 )
 target_compile_definitions(mumps_common_Fortran PRIVATE ${mumps_fdefs})
 target_compile_options(mumps_common_Fortran PRIVATE ${mumps_fflags})
+
+get_property(mumps_common_Fortran_defs TARGET mumps_common_Fortran PROPERTY COMPILE_DEFINITIONS)
+message(DEBUG "mumps_common_Fortran compile definitions: ${mumps_common_Fortran_defs}")
+if("MPI_TO_K_OMP" IN_LIST mumps_common_Fortran_defs OR
+   NOT CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+   # Error copying Fortran module "src/mumps_mpitoomp_m.mod" with GNU Make
+   # the issue seems to be that the Fortran module is only present if MPI_TO_K_OMP is defined.
+   # detect if this worked as intended - assuming MPI_TO_K_OMP not defined and building with Ninja:
+   #   nm build/src/CMakeFiles/mumps_common_Fortran.dir/mumps_mpitoomp_m.F.o
+   # should see like "T _mumps_mpitoomp_m_return_"
+  target_sources(mumps_common_Fortran PRIVATE mumps_mpitoomp_m.F)
+endif()
 
 add_library(mumps_common $<TARGET_OBJECTS:mumps_common_Fortran> $<TARGET_OBJECTS:mumps_common_C>)
 
