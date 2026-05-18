@@ -89,11 +89,11 @@ endif()
 
 set(FETCHCONTENT_QUIET no)
 
-include(cmake/CPM.cmake)
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake")
 
 CPMAddPackage(
   NAME mumps_upstream
-  URL ${MUMPS_url}
+  URL "${MUMPS_url}"
   ${_hash}
   DOWNLOAD_ONLY TRUE
 )
