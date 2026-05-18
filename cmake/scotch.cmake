@@ -49,7 +49,7 @@ endif()
 # options were checked with Scotch 7.0.7
 set(ENABLE_TESTS false)
 set(INSTALL_METIS_HEADERS false)
-set(BUILD_LIBSCOTCHMETIS: false)
+set(BUILD_LIBSCOTCHMETIS false)
 set(BUILD_LIBESMUMPS true)
 set(BUILD_PTSCOTCH ${MUMPS_parallel})
 if(MUMPS_intsize64)
