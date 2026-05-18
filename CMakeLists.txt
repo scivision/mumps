@@ -233,6 +233,8 @@ message(STATUS "MUMPS ORDERING_DEFS: ${ORDERING_DEFS}")
 message(STATUS "MUMPS LAPACK_VENDOR: ${LAPACK_VENDOR}")
 message(STATUS "MUMPS SCALAPACK_VENDOR: ${SCALAPACK_VENDOR}")
 
+# --- MUMPS build
+
 # --- PORD (always used)
 configure_file(cmake/pord.cmake
 ${mumps_upstream_SOURCE_DIR}/PORD/lib/CMakeLists.txt
