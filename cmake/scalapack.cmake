@@ -1,8 +1,3 @@
-include(ExternalProject)
-include(GNUInstallDirs)
-
-if(MUMPS_find_SCALAPACK AND NOT TARGET SCALAPACK::SCALAPACK)
-
 # Make SCALAPACK_VENDOR match LAPACK_VENDOR
 
 if(NOT DEFINED SCALAPACK_VENDOR)
@@ -35,18 +30,25 @@ if(MUMPS_find_static)
   list(APPEND SCALAPACK_VENDOR STATIC)
 endif()
 
-find_package(SCALAPACK COMPONENTS ${SCALAPACK_VENDOR})
-
-endif()
-
-if(SCALAPACK_FOUND OR TARGET SCALAPACK::SCALAPACK)
-  return()
-elseif(DEFINED SCALAPACK_VENDOR)
-  message(FATAL_ERROR "Scalapack from ${SCALAPACK_VENDOR} not found.")
-endif()
 
 # build scalapack
 set(SCALAPACK_BUILD_TESTING off)
+set(SCALAPACK_BUILD_TESTS off)
 
-git_submodule(${PROJECT_SOURCE_DIR}/scalapack)
-add_subdirectory(${PROJECT_SOURCE_DIR}/scalapack)
+string(JSON scalapack_url GET "${json}" "scalapack")
+
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM" OR CMAKE_C_COMPILER_ID STREQUAL "IntelLLVM")
+  # oneAPI must use MKL, it will fail to build Netlib SCALAPACK
+  set(FETCHCONTENT_TRY_FIND_PACKAGE_MODE OPT_IN)
+endif()
+
+FetchContent_Declare(SCALAPACK
+URL ${scalapack_url}
+FIND_PACKAGE_ARGS COMPONENTS ${SCALAPACK_VENDOR}
+)
+
+FetchContent_MakeAvailable(SCALAPACK)
+
+if(NOT TARGET SCALAPACK::SCALAPACK)
+  add_library(SCALAPACK::SCALAPACK ALIAS scalapack)
+endif()

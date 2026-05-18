@@ -4,8 +4,6 @@ include(CMakeFindDependencyMacro)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
-include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
-
 set(MUMPS_UPSTREAM_VERSION @MUMPS_UPSTREAM_VERSION@)
 set(MUMPS_ACTUAL_VERSION @MUMPS_ACTUAL_VERSION@)
 
@@ -47,6 +45,7 @@ else()
   find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})
 
   # This is used in place of find_dependency(MPI) in MUMPS when MUMPS_parallel is OFF
+  # may not have ALIAS of ALIAS so we do INTERFACE IMPORTED of ALIAS
   add_library(MPI::MPI_C INTERFACE IMPORTED)
   target_link_libraries(MPI::MPI_C INTERFACE MUMPS::mpiseq_c)
 
@@ -63,17 +62,25 @@ endif()
 
 set(MUMPS_metis @MUMPS_metis@)
 if(MUMPS_metis)
-  find_dependency(metis CONFIG)
+  find_dependency(METIS)
+endif()
+
+set(MUMPS_gpu @MUMPS_gpu@)
+if(MUMPS_gpu)
+  find_dependency(CUDAToolkit)
 endif()
 
 set(MUMPS_parmetis @MUMPS_parmetis@)
 if(MUMPS_parmetis)
-  find_dependency(parmetis CONFIG)
+  find_dependency(METIS COMPONENTS ParMETIS)
 endif()
 
 set(MUMPS_openmp @MUMPS_openmp@)
 if(MUMPS_openmp)
   find_dependency(OpenMP COMPONENTS C Fortran)
 endif()
+
+# all dependencies must be determined before this project's targets
+include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
 
 check_required_components(@PROJECT_NAME@)

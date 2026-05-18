@@ -5,6 +5,9 @@ implicit none
 
 include 'mpif.h'
 include 'dmumps_struc.h'  ! per MUMPS manual
+
+external :: DMUMPS
+
 type(DMUMPS_STRUC) :: mumps_par
 
 integer :: num_mpi

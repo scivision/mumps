@@ -28,7 +28,7 @@ For MUMPS, there are typically not changes in the source files used, though it's
 Use Meld for convenient visual comparison of the Makefiles.
 
 Example: minor release
-[patch](https://github.com/scivision/mumps/commit/c12584665024737f177d831256c6fb891104b133).
+[patch](https://github.com/scivision/mumps-superbuild/commit/c12584665024737f177d831256c6fb891104b133).
 
 ## All releases
 

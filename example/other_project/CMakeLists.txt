@@ -11,7 +11,7 @@ set(MUMPS_metis on)
 # tests that MUMPS/cmake/GitSubmodule.cmake can retrieve multi-level Git Submodule
 
 FetchContent_Declare(mumps
-  URL https://github.com/scivision/mumps/archive/refs/heads/main.zip
+  URL https://github.com/scivision/mumps-superbuild/archive/refs/heads/main.zip
 )
 
 FetchContent_MakeAvailable(mumps)

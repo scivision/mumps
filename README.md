@@ -1,14 +1,18 @@
 # MUMPS sparse solver
 
-[![ci](https://github.com/scivision/mumps/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci.yml)
-[![ci_windows](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci_windows.yml)
-[![ci_build](https://github.com/scivision/mumps/actions/workflows/ci_build.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/ci_build.yml)
-[![oneapi-linux](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml/badge.svg)](https://github.com/scivision/mumps/actions/workflows/oneapi-linux.yml)
+[![ci](https://github.com/scivision/mumps-superbuild/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/ci.yml)
+[![ci_windows](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_windows.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_windows.yml)
+[![ci_build](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_build.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/ci_build.yml)
+[![oneapi-linux](https://github.com/scivision/mumps-superbuild/actions/workflows/oneapi-linux.yml/badge.svg)](https://github.com/scivision/mumps-superbuild/actions/workflows/oneapi-linux.yml)
 
-CMake downloads the unmodified source tarfile from MUMPS developers and builds.
+MUMPS is a Fortran library with optional C interfaces for MPI and/or OpenMP parallel
+(or serial `cmake --workflow nompi`) solving of sparse linear systems of equations.
+This repository provides a CMake superbuild project for MUMPS and optional MUMPS dependencies including ScaLAPACK, ParMETIS, and Scotch.
+This CMake superbuild downloads the unmodified source tarfile from mumps-solver.org and builds.
 For offline usage, the user can specify a local MUMPS source archive like `cmake -Bbuild -DMUMPS_url=/path/to/mumps.zip`
+If mumps-solver.org is unavailable, try [mumps_archive](https://github.com/gsylvand/mumps_archive/) which has the same source tarfiles.
 
-CMake builds MUMPS in parallel faster and more conveniently than the original Makefiles.
+CMake builds MUMPS quickly and more conveniently than the original Makefiles.
 CMake allows easy reuse of MUMPS in external projects via any of:
 
 * CMake [FetchContent](https://gist.github.com/scivision/2ad002ed26589783f1522160da4d27d1)
@@ -16,8 +20,8 @@ CMake allows easy reuse of MUMPS in external projects via any of:
 * CMake ExternalProject_Add (similar to FetchContent example)
 
 [MUMPS CeCILL-C license](https://mumps-solver.org/index.php?page=dwnld#license)
-is distinct from this CMake script license.
-MUMPS teams typically make new
+is distinct from this CMake superbuild license.
+The MUMPS Team typically make new
 [releases](https://mumps-solver.org/index.php?page=dwnld#cl)
 each year.
 
@@ -32,7 +36,7 @@ can be used and will be automatically built if needed.
 
 Several [LAPACK vendors](./Readme_LAPACK.md) are supported.
 
-The MUMPS project is distinct from this CMake script wrapper.
+The MUMPS discrete solver project is distinct from this CMake superbuild.
 See the
 [MUMPS Users email list](https://listes.ens-lyon.fr/sympa/subscribe/mumps-users)
 and
@@ -67,7 +71,9 @@ cmake -Bbuild --install-prefix /path/to/install/mumps
 cmake --install build
 ```
 
-With the default options the build/ directory contains library binaries ([Windows](./Readme_Windows.md) binaries have different names):
+The `${MUMPS_BINARY_DIR}/lib` directory contains library binaries.
+[Windows](./Readme_Windows.md)
+binaries have different names.
 
 * libdmumps.a (real64)
 * libsmumps.a (real32)
@@ -85,6 +91,16 @@ These libraries can be linked into C, C++, Fortran, etc. programs, or even be us
 [PyMUMPS](https://pypi.org/project/PyMUMPS/)
 and
 [python-mumps](https://pypi.org/project/python-mumps/).
+
+To see the CMake target dependency graph do:
+
+```sh
+cmake -B build
+
+cmake --build build -t graphviz
+```
+
+and view the SVG file build/graphviz/MUMPS.svg via a web browser or SVG viewer.
 
 ## Self test and examples
 

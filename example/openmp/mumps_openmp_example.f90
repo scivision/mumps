@@ -40,15 +40,16 @@ PROGRAM MAIN_MUMPS_OMP
   id%job = -1 ! -1 indicates an initialization call.
   id%par = 1  ! The host process will participate in computations.
   id%sym = 2  ! The matrix is symmetric positive definite.
+  ! Set the MPI communicator for MUMPS.
+  id%COMM = MPI_COMM_WORLD
   CALL DMUMPS(id)
   IF (id%infog(1) < 0) THEN
     WRITE(error_Unit,*) "MUMPS initialization error:", id%infog(1)
     error stop
   END IF
 
-  ! Set the problem size and MPI communicator for MUMPS.
+  ! Set the problem size.
   id%n = n
-  id%COMM = MPI_COMM_WORLD
 
   ! Use an automatic ordering strategy chosen by MUMPS.
   id%icntl(7) = 5
@@ -114,7 +115,7 @@ PROGRAM MAIN_MUMPS_OMP
   id%jcn = jcn
   id%a = a
   id%rhs = b  ! MUMPS will use this as the RHS and return the solution in it.
-
+  
   print '(a)', 'entering MUMPS solve'
   ! Call MUMPS to perform analysis, factorization, and solve (Job = 6).
   id%job = 6

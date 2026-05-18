@@ -1,17 +1,17 @@
-program s_simple
+program d_simple
 !  This file is part of MUMPS 5.2.1, released
 !  on Fri Jun 14 14:46:05 UTC 2019
 
-use, intrinsic :: iso_fortran_env, only: stderr=>error_unit, stdout=>output_unit, int32
+use, intrinsic :: iso_fortran_env, only: stderr=>error_unit, stdout=>output_unit, int64, int32
 
 implicit none
 
 include 'mpif.h'
-INCLUDE 'smumps_struc.h'
+INCLUDE 'dmumps_struc.h'
 
-external :: sMUMPS
+external :: DMUMPS
 
-TYPE (sMUMPS_STRUC) mumps_par
+TYPE (DMUMPS_STRUC) mumps_par
 INTEGER :: num_mpi
 integer(int32) :: ierr
 
@@ -29,16 +29,20 @@ mumps_par%JOB = -1
 mumps_par%SYM = 0
 mumps_par%PAR = 1
 
-CALL sMUMPS(mumps_par)
+CALL DMUMPS(mumps_par)
 
 mumps_par%icntl(1) = stderr  ! error messages
 mumps_par%icntl(2) = stdout !  diagnostic, statistics, and warning messages
 mumps_par%icntl(3) = stdout! ! global info, for the host (myid==0)
-mumps_par%icntl(4) = 1           ! default is 2, this reduces verbosity
+mumps_par%icntl(4) = 2           ! default is 2, 1 reduces verbosity
+
+mumps_par%icntl(51) = 1 ! see MUMPS user manual section 5.27
+! Avoid async pinned-memory registration warnings on very small test matrices.
+mumps_par%keep(422) = 0
 
 ! === config done, now check config
 IF (mumps_par%INFOG(1) < 0) THEN
-  WRITE(stderr,'(A,A,I6,A,I9)') " ERROR RETURN: ", &
+  WRITE(stderr,'(A,A,I0,A,I0)') "ERROR:initialization: ", &
   "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1), &
   "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2)
 
@@ -60,14 +64,11 @@ IF ( mumps_par%MYID == 0 ) THEN
 END IF
 !  Call package for solution
 mumps_par%JOB = 6
-CALL sMUMPS(mumps_par)
-IF (mumps_par%INFOG(1) < 0) THEN
-  WRITE(stderr,'(A,A,I6,A,I9)') " ERROR RETURN: ", &
-  "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1), &
-  "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2)
 
- error stop
-END IF
+CALL DMUMPS(mumps_par)
+
+IF (mumps_par%INFOG(1) < 0) call diagnose(mumps_par)
+
 !  Solution has been assembled on the host
 
 IF ( mumps_par%MYID == 0 ) THEN
@@ -77,7 +78,7 @@ IF ( mumps_par%MYID == 0 ) THEN
   if (sum(mumps_par%rhs-[1,2,3,4,5]) > 0.01) error stop 'excessive error in computation'
 END IF
 !  Deallocate user data
-IF ( mumps_par%MYID == 0 )THEN
+IF ( mumps_par%MYID == 0 ) THEN
   DEALLOCATE( mumps_par%IRN )
   DEALLOCATE( mumps_par%JCN )
   DEALLOCATE( mumps_par%A   )
@@ -85,15 +86,36 @@ IF ( mumps_par%MYID == 0 )THEN
 END IF
 !  Destroy the instance (deallocate internal data structures)
 mumps_par%JOB = -2
-CALL sMUMPS(mumps_par)
-IF (mumps_par%INFOG(1) < 0) THEN
-  WRITE(stderr,'(A,A,I6,A,I9)') " ERROR RETURN: ", &
-  "  mumps_par%INFOG(1)= ", mumps_par%INFOG(1), &
-  "  mumps_par%INFOG(2)= ", mumps_par%INFOG(2)
 
- error stop
-END IF
+CALL DMUMPS(mumps_par)
 
+if (mumps_par%infog(1) < 0) call diagnose(mumps_par)
+
+IF ( mumps_par%MYID == 0 ) print '(/,a)', "MUMPS successfully finalized"
 call mpi_finalize(ierr)
+
+
+contains
+
+
+subroutine diagnose(p)
+type(DMUMPS_STRUC), intent(in) :: p
+
+write(stderr,'(A,/,A,i0,/,A,i0,/,a,i0)') " MUMPS ERROR ", &
+"INFOG(1) ", p%INFOG(1), &
+"INFOG(2) ", p%INFOG(2), &
+"INFO(2) ", p%INFO(2)
+
+select case(p%INFOG(1))
+case (-100)
+  write(stderr,'(a,i0)') " MUMPS ERROR: insufficient GPUs available: ", p%INFO(2)
+case (-1)
+  write(stderr,'(a,i0)') " MUMPS ERROR: on processer: ", p%INFO(2)
+case default
+  write(stderr,'(a)') " MUMPS ERROR: see user manual section 8 for INFOG(1) error codes"
+end select
+
+error stop
+end subroutine diagnose
 
 END program

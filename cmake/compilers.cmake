@@ -3,10 +3,21 @@
 set(mumps_cdefs)
 set(mumps_fdefs)
 set(mumps_cflags)
-set(mumps_fflags)
+
+set(mumps_fflags -w)
+# lets project consuming MUMPS not have excessive warnings from MUMPS sources
 
 list(APPEND mumps_cdefs "$<$<COMPILE_LANGUAGE:C>:Add_>")
 # "Add_" works for all modern compilers we tried.
+
+if(MSVC)
+  list(APPEND mumps_cdefs _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE)
+endif()
+
+if(MUMPS_gpu)
+  list(APPEND mumps_cdefs "USE_GPU")
+  list(APPEND mumps_fdefs "USE_GPU")
+endif()
 
 if(MUMPS_openmp)
   list(APPEND mumps_cflags
@@ -27,7 +38,7 @@ endif()
 list(APPEND mumps_cflags $<$<COMPILE_LANG_AND_ID:C,AppleClang,Clang,GNU,IntelLLVM>:-Werror-implicit-function-declaration>)
 
 # -fno-strict-aliasing is important for memory leaks
-# https://github.com/scivision/mumps/pull/56
+# https://github.com/scivision/mumps-superbuild/pull/56
 # IntelLLVM does not have -fno-strict-aliasing for Fortran
 list(APPEND mumps_cflags
 "$<$<COMPILE_LANG_AND_ID:C,AppleClang,Clang,GNU,IntelLLVM>:-fno-strict-aliasing>"
@@ -54,24 +65,23 @@ add_compile_options("$<$<COMPILE_LANG_AND_ID:Fortran,IntelLLVM>:$<IF:$<BOOL:${WI
 # Leave this as ADD_COMPILE_OPTIONS()!
 
 if(MUMPS_intsize64)
-  list(APPEND mumps_cdefs "$<$<COMPILE_LANGUAGE:C>:INTSIZE64;PORD_INTSIZE64>")
-  # PORD_INTSIZE64 is used in src/mumps_pord.c and PORD/include/types.h
-
-  add_compile_options("$<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-fdefault-integer-8>")
   # ALL libraries must be compiled with -fdefault-integer-8, including MPI,
   # or runtime fails
   # See MUMPS 5.7.0 User manual about error -69
 
-  if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
+  list(APPEND mumps_cdefs "$<$<COMPILE_LANGUAGE:C>:INTSIZE64;PORD_INTSIZE64>")
+  # PORD_INTSIZE64 is used in src/mumps_pord.c and PORD/include/types.h
+
+  if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU|LLVMFlang")
+
+    add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:-fdefault-integer-8>")
+
+  elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
     # https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2025-2/using-the-ilp64-interface-vs-lp64-interface.html
     # https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2025-2/using-the-ilp64-interface-vs-lp64-interface.html
     # https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-16/ilp64-support.html
 
-    if(MUMPS_openmp)
-      set(_mkl_ilp64 parallel)
-    else()
-      set(_mkl_ilp64 sequential)
-    endif()
+    set(_mkl_ilp64 $<IF:$<BOOL:${MUMPS_openmp}>,parallel,sequential>)
 
     add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:-i8>")
     if(WIN32)

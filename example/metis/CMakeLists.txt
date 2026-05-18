@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.25)
 
 project(MUMPSmetisExamples
 LANGUAGES C Fortran
@@ -20,13 +20,13 @@ endif()
 function(precision_ex a)
   add_executable(${a}_metis ${a}_metis.f90)
   target_link_libraries(${a}_metis PRIVATE MUMPS::MUMPS
-  MPI::MPI_Fortran MPI::MPI_C
+  MPI::MPI_Fortran
   $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
   )
   # always link MPI as we use the libmpiseq if not MUMPS_parallel
 
   add_test(NAME ${a}_metis COMMAND ${a}_metis)
-  set_tests_properties(${a}_metis PROPERTIES LABELS "Metis")
+  set_tests_properties(${a}_metis PROPERTIES LABELS "mumps:metis")
 endfunction()
 
 if(MUMPS_DOUBLE OR BUILD_DOUBLE)

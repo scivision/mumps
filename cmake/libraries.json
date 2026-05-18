@@ -1,6 +1,10 @@
 {
+  "scalapack":  "https://github.com/Reference-ScaLAPACK/scalapack/archive/8ea5880a448cd24622dff95fd1b7394c31e61bda.tar.gz",
+  "scotch": "https://github.com/scivision/scotch/archive/60b8febe6261485a94f6d8ba523d5a244a0068b4.tar.gz",
+  "parmetis": "https://github.com/scivision/parmetis/archive/175ffe29d7980360a4253cbedb978873e8002bfb.tar.gz",
+  "metis": "https://github.com/scivision/metis/archive/456244e99d7f0027706033d18bc1b3424d3507cc.tar.gz",
   "win_flex_bison": {
-    "url": "https://github.com/lexxmark/winflexbison/releases/download/v2.5.25/win_flex_bison-2.5.25.zip",
+    "url": "https://github.com/lexxmark/winflexbison/archive/a243a1c618c061624cdf48ac9dbb68de1e08e9a0.tar.gz",
     "sha256": "8d324b62be33604b2c45ad1dd34ab93d722534448f55a16ca7292de32b6ac135"
   },
   "mumps_sha256": {
@@ -16,6 +20,8 @@
     "5.7.2": "1362d377ce7422fc886c55212b4a4d2c381918b5ca4478f682a22d0627a8fbf8",
     "5.7.3": "84a47f7c4231b9efdf4d4f631a2cae2bdd9adeaabc088261d15af040143ed112",
     "5.8.0": "d762eb8b1d9843a0993b8cfc137d043d04c7c51877ad37c94560433a474340a0",
-    "5.8.1": "e91b6dcd93597a34c0d433b862cf303835e1ea05f12af073b06c32f652f3edd8"
+    "5.8.1": "e91b6dcd93597a34c0d433b862cf303835e1ea05f12af073b06c32f652f3edd8",
+    "5.8.2": "eb515aa688e6dbab414bb6e889ff4c8b23f1691a843c68da5230a33ac4db7039",
+    "5.9.0": "02c6efdb91749ec0f82351d40f3f860547272a1eb1d899126a4265b4d6bcc4ca"
   }
 }

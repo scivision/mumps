@@ -62,59 +62,86 @@ References
 
 include(CheckSourceCompiles)
 
-set(SCALAPACK_LIBRARY)  # avoids appending to prior FindScalapack
-
 #===== functions
 
-function(scalapack_check)
+function(scalapack_check _result path)
 
 # some OpenMPI builds need -pthread
 find_package(Threads)
 
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "EXECUTABLE")
 
 set(CMAKE_REQUIRED_FLAGS)
 set(CMAKE_REQUIRED_LINK_OPTIONS)
-set(CMAKE_REQUIRED_INCLUDES ${SCALAPACK_INCLUDE_DIR} ${LAPACK_INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS})
-set(CMAKE_REQUIRED_LIBRARIES ${SCALAPACK_LIBRARY})
+set(CMAKE_REQUIRED_INCLUDES ${SCALAPACK_INCLUDE_DIR} ${LAPACK_INCLUDE_DIRS})
+set(CMAKE_REQUIRED_LIBRARIES ${path})
 if(BLACS_LIBRARY)
   list(APPEND CMAKE_REQUIRED_LIBRARIES ${BLACS_LIBRARY})
 endif()
-list(APPEND CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES} ${MPI_Fortran_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+list(APPEND CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES} MPI::MPI_Fortran ${CMAKE_THREAD_LIBS_INIT})
 
 if(STATIC IN_LIST SCALAPACK_FIND_COMPONENTS AND
   NOT WIN32 AND
-  MKL IN_LIST SCALAPACK_FIND_COMPONENTS AND
-  CMAKE_VERSION VERSION_GREATER_EQUAL 3.24
+  MKL IN_LIST SCALAPACK_FIND_COMPONENTS
   )
   set(CMAKE_REQUIRED_LIBRARIES $<LINK_GROUP:RESCAN,${CMAKE_REQUIRED_LIBRARIES}>)
 endif()
 # MPI needed for IntelLLVM
 
-check_source_compiles(Fortran
-"program test
-use, intrinsic :: iso_fortran_env, only : real64
-implicit none
-real(real64), external :: pdlamch
-integer :: ictxt
-print *, pdlamch(ictxt, 'E')
-end program"
-SCALAPACK_d_FOUND
-)
+foreach(_prec IN ITEMS s d)
+  if(_prec STREQUAL "s")
+    set(_ip 32)
+  elseif(_prec STREQUAL "d")
+    set(_ip 64)
+  endif()
+  if(${_prec} IN_LIST SCALAPACK_FIND_COMPONENTS)
+    check_source_compiles(Fortran
+    "program test
+    use, intrinsic :: iso_fortran_env
+    implicit none
+    real(kind=real${_ip}), external :: p${_prec}lamch
+    integer :: i
+    print *, p${_prec}lamch(i, 'E')
+    end program"
+    SCALAPACK_${_prec}_FOUND
+    )
+    if(NOT SCALAPACK_${_prec}_FOUND)
+      set(${_result} false PARENT_SCOPE)
+      return()
+    endif()
+  endif()
+endforeach()
 
-check_source_compiles(Fortran
-"program test
-use, intrinsic :: iso_fortran_env, only : real32
-implicit none
-real(real32), external :: pslamch
-integer :: ictxt
-print *, pslamch(ictxt, 'E')
-end program"
-SCALAPACK_s_FOUND
-)
 
-if(SCALAPACK_s_FOUND OR SCALAPACK_d_FOUND)
-  set(SCALAPACK_links true PARENT_SCOPE)
-endif()
+foreach(_prec IN ITEMS c z)
+  if(_prec IN_LIST SCALAPACK_FIND_COMPONENTS)
+    if(_prec STREQUAL "c")
+      set(_rk real32)
+    elseif(_prec STREQUAL "z")
+      set(_rk real64)
+    endif()
+
+    check_source_compiles(Fortran
+    "program test
+    use, intrinsic :: iso_fortran_env, only : ${_rk} => rk
+    implicit none
+    external :: p${_prec}gemm
+    integer :: desca(9), descb(9), descc(9)
+    complex(kind=rk) :: alpha, beta, a(1), b(1), c(1)
+    alpha = (1.0_rk, 0.0_rk)
+    beta = (0.0_rk, 0.0_rk)
+    call p${_prec}gemm('N', 'N', 0, 0, 0, alpha, a, 1, 1, desca, b, 1, 1, descb, beta, c, 1, 1, descc)
+    end program"
+    SCALAPACK_${_prec}_FOUND
+    )
+    if(NOT SCALAPACK_${_prec}_FOUND)
+      set(${_result} false PARENT_SCOPE)
+      return()
+    endif()
+  endif()
+endforeach()
+
+set(${_result} true PARENT_SCOPE)
 
 endfunction()
 
@@ -212,28 +239,23 @@ else()
 endif()
 list(APPEND _s openmpi/lib mpich/lib)
 
+# Names to search for:
+# scalapack-{openmpi,mpich}: Ubuntu and similar
+# "scalapack":               RHEL-like distros, Netlib, etc.
 find_library(SCALAPACK_LIBRARY
 NAMES scalapack scalapack-openmpi scalapack-mpich
 NAMES_PER_DIR
 PATH_SUFFIXES ${_s}
 DOC "SCALAPACK library"
-)
-
-# some systems have libblacs as a separate file, instead of being subsumed in libscalapack.
-if(NOT DEFINED BLACS_ROOT)
-  cmake_path(GET SCALAPACK_LIBRARY PARENT_PATH BLACS_ROOT)
-endif()
-
-find_library(BLACS_LIBRARY
-NAMES blacs
-NO_DEFAULT_PATH
-HINTS ${BLACS_ROOT}
-DOC "BLACS library"
+VALIDATOR scalapack_check
 )
 
 endfunction()
 
 # === main
+if(NOT DEFINED SCALAPACK_FIND_COMPONENTS OR SCALAPACK_FIND_COMPONENTS STREQUAL "")
+  set(SCALAPACK_FIND_COMPONENTS d) # default to double precision
+endif()
 
 if(NOT DEFINED SCALAPACK_CRAY AND DEFINED ENV{CRAYPE_VERSION})
   set(SCALAPACK_CRAY true)
@@ -267,24 +289,16 @@ if(STATIC IN_LIST SCALAPACK_FIND_COMPONENTS)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ${_orig_suff})
 endif()
 
-# --- Check that Scalapack links
-
-if(SCALAPACK_CRAY OR SCALAPACK_LIBRARY)
-  scalapack_check()
-endif()
-
 # --- Finalize
 
 include(FindPackageHandleStandardArgs)
 
 if(SCALAPACK_CRAY)
-  find_package_handle_standard_args(SCALAPACK HANDLE_COMPONENTS
-  REQUIRED_VARS SCALAPACK_links
-  )
+  set(SCALAPACK_links true)
+  # Cray PE has ScaLAPACK built into libsci, linked automatically by the compiler wrapper
+  find_package_handle_standard_args(SCALAPACK REQUIRED_VARS SCALAPACK_links)
 else()
-  find_package_handle_standard_args(SCALAPACK HANDLE_COMPONENTS
-  REQUIRED_VARS SCALAPACK_LIBRARY SCALAPACK_links
-  )
+  find_package_handle_standard_args(SCALAPACK REQUIRED_VARS SCALAPACK_LIBRARY HANDLE_COMPONENTS)
 endif()
 
 if(SCALAPACK_FOUND)

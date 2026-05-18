@@ -2,11 +2,6 @@ name: ci
 
 env:
   HOMEBREW_NO_INSTALL_CLEANUP: 1
-  CTEST_NO_TESTS_ACTION: error
-  CTEST_PARALLEL_LEVEL: 0
-  CMAKE_INSTALL_PREFIX: ~/local
-  CMAKE_PREFIX_PATH: ~/local
-  CMAKE_GENERATOR: Ninja
 
 on:
   push:
@@ -37,47 +32,32 @@ jobs:
 
     strategy:
       matrix:
-        scotch: [true,false]
-        metis: [false]
-        parmetis: [true,false]
-        parallel: [true]
-        openmp: [false]
         mpich: [false]
         lapack_vendor: [""]
         os: [ubuntu-latest, macos-latest]
         include:
-          - metis: true
-            parallel: false
-            os: ubuntu-latest
-            name: METIS
           - lapack_vendor: "OpenBLAS"
-            parallel: true
             os: ubuntu-latest
             name: OpenBLAS
-          - parallel: false
-            os: ubuntu-latest
-          - openmp: true
-            parallel: false
-            os: ubuntu-latest
-            name: OpenMP
           - mpich: true
             parallel: true
             os: ubuntu-latest
             name: MPICH
 
-    name: ${{ matrix.os }}-parallel=${{ matrix.parallel }}-${{ matrix.name }}-scotch-${{ matrix.scotch }}
+    name: ${{ matrix.os }}-${{ matrix.name }}
     runs-on: ${{ matrix.os }}
 
     steps:
 
     - &checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - &prereqs
       name: install prereqs
       uses: ./.github/workflows/composite-deps
 
-    - name: set Fortran compiler FC (macOS)
+    - &macos_fortran
+      name: set Fortran compiler FC (macOS)
       if: runner.os == 'macOS'
       run: echo "FC=gfortran-15" >> $GITHUB_ENV
 
@@ -88,6 +68,97 @@ jobs:
       uses: ./.github/workflows/composite-example
 
 
+  gnu-make:
+    # this is important case as due to project complexity, some failures only happen with GNU Make (or Ninja)
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - *checkout
+    - *prereqs
+    - *macos_fortran
+
+    - name: build and test with GNU Make
+      shell: bash
+      run: cmake --workflow gmake
+
+
+  shared:
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - *checkout
+    - *prereqs
+    - *macos_fortran
+
+    - run: cmake --workflow shared
+    - run: cmake --install build-shared
+
+    - name: example workflow
+      working-directory: example
+      run: cmake --workflow shared
+
+  openmp:
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        preset: [openmp-nompi, openmp-mpi]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - *checkout
+    - *prereqs
+
+    - run: cmake --workflow ${{ matrix.preset }}
+
+    - run: cmake --install build
+
+    - name: example workflow
+      working-directory: example/openmp
+      run: cmake --workflow ${{ matrix.preset }}
+
+
+  scotch-metis:
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        preset: [scotch, metis, parmetis]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - *checkout
+    - *prereqs
+    - *macos_fortran
+
+    - name: Load Homebrew environment (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+        printenv >> $GITHUB_ENV
+# necessary to find Homebrew Bison to build Scotch on macOS
+
+    - run: cmake --workflow ${{ matrix.preset }}
+    - run: cmake --install build-${{ matrix.preset }}
+
+    - name: example workflow
+      working-directory: example/${{ matrix.preset }}
+      run: cmake --workflow ${{ matrix.preset }}
+
+
   cmake-older:
     timeout-minutes: 30
 
@@ -95,7 +166,7 @@ jobs:
 
     strategy:
       matrix:
-        cmake_version: ["3.20.6"]
+        cmake_version: ["3.25.3"]
 
     steps:
     - *checkout
@@ -104,13 +175,8 @@ jobs:
     - uses: ./.github/workflows/composite-cmake
 
     - name: configure
-      run: $CMAKE -Bbuild -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/build/local
-
-    - name: build
-      run: $CMAKE --build build
-
-    - name: test
-      run: $CTEST --test-dir build
+      run: $CMAKE --workflow --preset default
+# syntax needed for older CMake
 
     - name: install package
       run: $CMAKE --install build

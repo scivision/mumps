@@ -5,11 +5,6 @@ env:
   CXX: icpx
   FC: ifx
 # https://github.com/oneapi-src/oneapi-ci/blob/master/.github/workflows/build_all.yml
-  CTEST_NO_TESTS_ACTION: error
-  CMAKE_BUILD_TYPE: Release
-  CMAKE_INSTALL_PREFIX: ~/libs
-  CMAKE_PREFIX_PATH: ~/libs
-  CMAKE_GENERATOR: Ninja
 # don't need Ninja but it prints the command lines by default which is good for debugging
 
   # debug triggers asan build errors, peculiar to GitHub Actions
@@ -42,24 +37,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    name: parallel=${{ matrix.parallel }} int64=${{ matrix.int64 }}
-
     strategy:
       matrix:
-        int64: [true, false]
-        parallel: [true, false]
-        oneapi: [2025.2]
+        preset: [default, int64]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: cache install oneAPI
       id: cache-install
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           /opt/intel/oneapi
-        key: oneapi-${{ matrix.oneapi }}-apt
+        key: oneapi-apt
 
     - name: non-cache install oneAPI
       if: steps.cache-install.outputs.cache-hit != 'true'
@@ -67,12 +58,10 @@ jobs:
       run: |
         .github/workflows/oneapi_setup_apt_repo_linux.sh
         sudo apt install --no-install-recommends \
-          intel-oneapi-compiler-dpcpp-cpp-${{ matrix.oneapi }} \
-          intel-oneapi-compiler-fortran-${{ matrix.oneapi }} \
-          intel-oneapi-mkl-${{ matrix.oneapi }} \
-          intel-oneapi-mkl-devel-${{ matrix.oneapi }} \
-          intel-oneapi-mpi \
-          intel-oneapi-mpi-devel
+          intel-oneapi-compiler-dpcpp-cpp \
+          intel-oneapi-compiler-fortran \
+          intel-oneapi-mkl intel-oneapi-mkl-devel \
+          intel-oneapi-mpi intel-oneapi-mpi-devel
 
     - name: Setup Intel oneAPI environment
       run: |
@@ -82,41 +71,22 @@ jobs:
     - name: Tell MPI compiler wrapper flags
       run: mpiifx -show
 
-    - name: CMake Configure
-      run: >-
-        cmake --preset default
-        -DMUMPS_intsize64=${{ matrix.int64 }}
-        -DMUMPS_parallel:BOOL=${{ matrix.parallel }}
+    - name: CMake build and test
+      run: cmake --workflow ${{ matrix.preset }}
 
     - name: Upload log failure
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        name: oneapi-${{ matrix.oneapi }}-${{ runner.os }}-CMakeConfigureLog.yaml
+        name: oneapi-${{ runner.os }}-CMakeConfigureLog.yaml
         path: build/CMakeFiles/CMakeConfigureLog.yaml
-
-    - name: CMake build
-      run: cmake --build --preset default
-
-    - name: CMake Test
-      if: ${{ matrix.int64 == 'false' }}
-      run: ctest --preset default
 
     - name: install package
       run: cmake --install build
 
-    - name: configure example
-      run: >-
-        cmake
-        -S example
-        -B example/build
-
     - name: build example
-      run: cmake --build example/build
-
-    - name: test example
-      if: ${{ matrix.int64 == 'false' }}
-      run: ctest --test-dir example/build -V
+      working-directory: example
+      run: cmake --workflow ${{ matrix.preset }}-build
 
 
     - name: exclude unused files from cache

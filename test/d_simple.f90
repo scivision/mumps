@@ -8,6 +8,9 @@ implicit none
 
 include 'mpif.h'
 INCLUDE 'dmumps_struc.h'
+
+external :: DMUMPS
+
 TYPE (DMUMPS_STRUC) mumps_par
 INTEGER :: num_mpi
 integer(int32) :: ierr

@@ -1,12 +1,4 @@
-# Disabled because of TLS problems and failure to find lapack,
-# while it works on a real Windows lapop.
-
 name: ci_windows
-
-env:
-  CMAKE_GENERATOR: Ninja
-  CTEST_NO_TESTS_ACTION: error
-  CTEST_PARALLEL_LEVEL: 0
 
 on:
   push:
@@ -40,32 +32,68 @@ jobs:
     - name: Put MSYS2_MinGW64 on PATH
       run: echo "${{ steps.msys2.outputs.msys2-location }}/ucrt64/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-    - uses: actions/checkout@v5
+    - &checkout
+      uses: actions/checkout@v6
 
-    - name: config
-      run: cmake --preset default -DMUMPS_parallel:BOOL=false --install-prefix=${{ runner.temp }}
+    - name: build & test no-MPI
+      run: cmake --workflow nompi
       env: &lapack
         LAPACK_ROOT: ${{ steps.msys2.outputs.msys2-location }}/ucrt64
-
-    - name: build, test
-      run: cmake --workflow default
 
     - name: install package
       run: cmake --install build
 
-    - name: configure example
-      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH=${{ runner.temp }}
+    - name: example workflow
+      working-directory: example
+      run: cmake --workflow nompi
       env: *lapack
 
     - name: Upload log failure
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: example-${{ runner.os }}-CMakeConfigureLog.yaml
         path: example/build/CMakeFiles/CMakeConfigureLog.yaml
 
-    - name: build example
-      run: cmake --build example/build
+# works, just saving CI resources
 
-    - name: test example
-      run: ctest --test-dir example/build -V
+  # wsl:
+  #   runs-on: windows-latest
+  #   timeout-minutes: 10
+
+  #   defaults:
+  #     run:
+  #       shell: wsl-bash {0}
+
+  #   steps:
+
+  #   - uses: Vampire/setup-wsl@v7
+  #     with:
+  #       distribution: Ubuntu-24.04
+  #       additional-packages:
+  #         cmake ninja-build gcc g++ gfortran liblapack-dev libscalapack-openmpi-dev libopenmpi-dev
+  #       use-cache: true
+  #       wsl-shell-user: tester
+
+  #   - name: tell OS release
+  #     run: cat /etc/os-release
+
+  #   - name: tell WSL version
+  #     run: wsl.exe -l -v
+  #     shell: pwsh
+
+  #   - *checkout
+
+  #   - name: CMake workflow
+  #     run: cmake --workflow --preset linux
+
+  #   - name: CMake install
+  #     run: cmake --install /tmp/build
+
+  #   - name: Upload log failure
+  #     if: failure()
+  #     uses: actions/upload-artifact@v7
+  #     with:
+  #       archive: false
+  #       name: example-${{ runner.os }}-CMakeConfigureLog.yaml
+  #       path: /tmp/build-ex/CMakeFiles/CMakeConfigureLog.yaml

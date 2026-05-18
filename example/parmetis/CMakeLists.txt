@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(MUMPSscotchExamples
+project(MUMPSparmetisExamples
 LANGUAGES C Fortran
 )
 
@@ -18,18 +18,18 @@ if(PROJECT_IS_TOP_LEVEL)
 endif()
 
 function(precision_ex a)
-  add_executable(${a}_scotch ${a}_scotch.f90)
-  target_link_libraries(${a}_scotch PRIVATE MUMPS::MUMPS
+  add_executable(${a}_metis ${a}_metis.f90)
+  target_link_libraries(${a}_metis PRIVATE MUMPS::MUMPS
   MPI::MPI_Fortran
   $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
   )
   # always link MPI as we use the libmpiseq if not MUMPS_parallel
 
-  add_test(NAME ${a}_scotch COMMAND ${a}_scotch)
-  set_tests_properties(${a}_scotch PROPERTIES LABELS "mumps:scotch")
+  add_test(NAME ${a}_metis COMMAND ${a}_metis)
+  set_tests_properties(${a}_metis PROPERTIES LABELS "mumps:parmetis")
 endfunction()
 
-if(MUMPS_d_FOUND OR BUILD_DOUBLE)
+if(MUMPS_DOUBLE OR BUILD_DOUBLE)
   precision_ex("d")
 endif()
 
