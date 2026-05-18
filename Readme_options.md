@@ -16,6 +16,20 @@ option(BUILD_COMPLEX "Build single precision complex")
 option(BUILD_COMPLEX16 "Build double precision complex")
 ```
 
+## GPU
+
+Optionally CUDA GPU acceleration can be enabled with:
+
+```cmake
+cmake -DMUMPS_gpu=on
+```
+
+XKBlas GPU-accelerated BLAS can be enabled with:
+
+```cmake
+cmake -DMUMPS_xkblas=on -DMUMPS_gpu=on
+```
+
 ## Integer size
 
 The default integer size is 32-bit.

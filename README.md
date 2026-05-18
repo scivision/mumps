@@ -12,6 +12,8 @@ This CMake superbuild downloads the unmodified source tarfile from mumps-solver.
 For offline usage, the user can specify a local MUMPS source archive like `cmake -Bbuild -DMUMPS_url=/path/to/mumps.zip`
 If mumps-solver.org is unavailable, try [mumps_archive](https://github.com/gsylvand/mumps_archive/) which has the same source tarfiles.
 
+Optional support for CUDA GPA and xKBLAS GPU-accelerated BLAS is [available](./Readme_options.md).
+
 CMake builds MUMPS quickly and more conveniently than the original Makefiles.
 CMake allows easy reuse of MUMPS in external projects via any of:
 
@@ -28,7 +30,7 @@ each year.
 Many compilers and systems are supported by CMake build system on Windows, MacOS and Linux.
 Static (default) or Shared `cmake -DBUILD_SHARED_LIBS=on` MUMPS builds are supported.
 
-Virtually all contemporary compilers work, including GCC, Clang/Flang, oneAPI, NVHPC, AOCC, Cray, etc.
+Virtually all contemporary compilers work, including GCC, Clang/Flang, oneAPI, NVHPC, AOCC, Cray, CUDA, etc.
 
 By default PORD ordering is used.
 [Scotch, METIS, and parMETIS ordering](./Readme_ordering.md)
