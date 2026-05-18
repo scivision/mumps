@@ -137,10 +137,7 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   ${CMAKE_THREAD_LIBS_INIT}
   )
 
-  target_compile_definitions(${t} PRIVATE
-  ${ORDERING_DEFS}
-  $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${MUMPS_scalapack}>>>:NOSCALAPACK>
-  )
+  target_compile_definitions(${t} PRIVATE ${ORDERING_DEFS})
 
   if(BLAS_HAVE_GEMMT)
     target_compile_definitions(${t} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>)
@@ -253,7 +250,6 @@ foreach(t IN ITEMS ${a}mumps ${a}mumps_C ${a}mumps_Fortran)
   MUMPS_ARITH=MUMPS_ARITH_${a}
   ${ORDERING_DEFS}
   $<$<AND:$<BOOL:${BLAS_HAVE_${a}GEMMT}>,$<COMPILE_LANGUAGE:Fortran>>:GEMMT_AVAILABLE>
-  $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${MUMPS_scalapack}>>>:NOSCALAPACK>
   )
   target_include_directories(${t} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>"

@@ -128,6 +128,8 @@ if(MUMPS_parallel)
 
   if(MUMPS_scalapack)
     include(cmake/scalapack.cmake) # this will also create the LAPACK::LAPACK target
+  elseif(MUMPS_ACTUAL_VERSION VERSION_GREATER_EQUAL 5.6)
+    list(APPEND mumps_fdefs NOSCALAPACK)
   endif()
 
   # this is needed for Intel MPI ILP64 support
