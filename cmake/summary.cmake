@@ -10,6 +10,7 @@ add_feature_info(parMETIS MUMPS_parmetis "parMETIS parallel graph partitioning")
 add_feature_info(Scotch MUMPS_scotch "Scotch graph partitioning https://www.labri.fr/perso/pelegrin/scotch/")
 
 add_feature_info(GPU MUMPS_gpu "MUMPS CUDA GPU support (see User Manual section 5.27)")
+add_feature_info(xKBLAS MUMPS_xkblas "xKBLAS GPU-accelerated BLAS")
 
 add_feature_info(Openmp MUMPS_openmp "OpenMP API https://www.openmp.org/")
 

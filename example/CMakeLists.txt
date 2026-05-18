@@ -27,6 +27,7 @@ METIS: ${MUMPS_metis}
 ParMETIS: ${MUMPS_parmetis}
 OpenMP: ${MUMPS_openmp}
 GPU: ${MUMPS_gpu}
+XKBlas: ${MUMPS_xkblas}
 ")
 
 message(STATUS "MUMPS_intsize64: ${MUMPS_intsize64}

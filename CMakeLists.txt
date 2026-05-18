@@ -115,7 +115,26 @@ find_package(Threads)
 if(MUMPS_gpu)
 # see User Manual section 5.27
   find_package(CUDAToolkit REQUIRED)
+
+  list(APPEND mumps_cdefs "USE_GPU")
+  list(APPEND mumps_fdefs "USE_GPU")
+
 # https://cmake.org/cmake/help/latest/module/FindCUDAToolkit.html
+  if(MUMPS_xkblas)
+    string(JSON xkblas_url GET "${json}" "xkblas")
+
+    # FIXME: in the future as users contribute, we could adapt to NVHPC, etc.
+    set(KAAPI_USE_CUDA_RT true)
+    set(KAAPI_USE_OPENBLAS true)
+
+    FetchContent_Declare(mumps_xkblas URL ${xkblas_url})
+    FetchContent_MakeAvailable(mumps_xkblas)
+
+    list(APPEND mumps_cdefs "USE_XKBLAS")
+    list(APPEND mumps_fdefs "USE_XKBLAS")
+
+    add_library(xkblas::xkblas ALIAS xkblas)
+  endif()
 endif()
 
 # -- Scalapack / MPI

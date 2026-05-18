@@ -14,11 +14,6 @@ if(MSVC)
   list(APPEND mumps_cdefs _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE)
 endif()
 
-if(MUMPS_gpu)
-  list(APPEND mumps_cdefs "USE_GPU")
-  list(APPEND mumps_fdefs "USE_GPU")
-endif()
-
 if(MUMPS_openmp)
   list(APPEND mumps_cflags
   "$<$<COMPILE_LANG_AND_ID:C,IntelLLVM>:$<IF:$<BOOL:${WIN32}>,/Qopenmp,-fiopenmp>>"
