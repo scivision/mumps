@@ -223,7 +223,7 @@ endif()
 set(CINT_SRC mumps_c.c)
 
 add_library(${a}mumps_C OBJECT ${CINT_SRC} ${SRC_C})
-target_compile_definitions(${a}mumps_C PRIVATE ${mumps_cdefs})
+target_compile_definitions(${a}mumps_C PRIVATE ${ORDERING_DEFS} ${mumps_cdefs} MUMPS_ARITH=MUMPS_ARITH_${a})
 target_compile_options(${a}mumps_C PRIVATE ${mumps_cflags})
 target_link_libraries(${a}mumps_C PRIVATE
 MPI::MPI_C
@@ -235,14 +235,13 @@ target_link_libraries(${a}mumps_Fortran PRIVATE
 MPI::MPI_Fortran
 $<$<BOOL:${MUMPS_openmp}>:OpenMP::OpenMP_Fortran>
 )
-target_compile_definitions(${a}mumps_Fortran PRIVATE ${mumps_fdefs})
+target_compile_definitions(${a}mumps_Fortran PRIVATE ${ORDERING_DEFS} ${mumps_fdefs})
 target_compile_options(${a}mumps_Fortran PRIVATE ${mumps_fflags})
 
 add_library(${a}mumps $<TARGET_OBJECTS:${a}mumps_C> $<TARGET_OBJECTS:${a}mumps_Fortran>)
 
 foreach(t IN ITEMS ${a}mumps ${a}mumps_C ${a}mumps_Fortran)
 
-  target_compile_definitions(${t} PRIVATE MUMPS_ARITH=MUMPS_ARITH_${a} ${ORDERING_DEFS})
   target_include_directories(${t} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
