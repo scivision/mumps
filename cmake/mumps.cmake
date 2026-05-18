@@ -138,10 +138,6 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
   )
 
   target_compile_definitions(${t} PRIVATE ${ORDERING_DEFS})
-
-  if(BLAS_HAVE_GEMMT)
-    target_compile_definitions(${t} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>)
-  endif()
 endforeach()
 
 target_link_libraries(mumps_common PRIVATE
@@ -246,11 +242,7 @@ add_library(${a}mumps $<TARGET_OBJECTS:${a}mumps_C> $<TARGET_OBJECTS:${a}mumps_F
 
 foreach(t IN ITEMS ${a}mumps ${a}mumps_C ${a}mumps_Fortran)
 
-  target_compile_definitions(${t} PRIVATE
-  MUMPS_ARITH=MUMPS_ARITH_${a}
-  ${ORDERING_DEFS}
-  $<$<AND:$<BOOL:${BLAS_HAVE_${a}GEMMT}>,$<COMPILE_LANGUAGE:Fortran>>:GEMMT_AVAILABLE>
-  )
+  target_compile_definitions(${t} PRIVATE MUMPS_ARITH=MUMPS_ARITH_${a} ${ORDERING_DEFS})
   target_include_directories(${t} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>

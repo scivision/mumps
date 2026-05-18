@@ -178,6 +178,9 @@ endif()
 # GEMMT is recommended in MUMPS User Manual if available
 if(MUMPS_gemmt)
   include(cmake/gemmt.cmake)
+  if(BLAS_HAVE_GEMMT)
+    list(APPEND mumps_fdefs GEMMT_AVAILABLE)
+  endif()
 endif()
 
 # --- ordering libs
