@@ -94,6 +94,7 @@ include(cmake/CPM.cmake)
 CPMAddPackage(
   NAME mumps_upstream
   URL ${MUMPS_url}
+  ${_hash}
   DOWNLOAD_ONLY TRUE
 )
 
