@@ -4,10 +4,7 @@
   "parmetis": "https://github.com/scivision/parmetis/archive/175ffe29d7980360a4253cbedb978873e8002bfb.tar.gz",
   "metis": "https://github.com/scivision/metis/archive/456244e99d7f0027706033d18bc1b3424d3507cc.tar.gz",
   "xkblas": "https://github.com/scivision/xkblas/archive/dbb84a2f8503609a871428bbb1da1a3361f9bd62.tar.gz",
-  "win_flex_bison": {
-    "url": "https://github.com/lexxmark/winflexbison/archive/a243a1c618c061624cdf48ac9dbb68de1e08e9a0.tar.gz",
-    "sha256": "8d324b62be33604b2c45ad1dd34ab93d722534448f55a16ca7292de32b6ac135"
-  },
+  "win_flex_bison": "https://github.com/lexxmark/winflexbison/releases/download/v2.5.25/win_flex_bison-2.5.25.zip",
   "mumps_sha256": {
     "5.2.1": "d988fc34dfc8f5eee0533e361052a972aa69cc39ab193e7f987178d24981744a",
     "5.3.5": "e5d665fdb7043043f0799ae3dbe3b37e5b200d1ab7a6f7b2a4e463fd89507fa4",

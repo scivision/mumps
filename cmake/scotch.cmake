@@ -65,12 +65,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE true)
 if(WIN32 AND (NOT BISON_ROOT OR NOT FLEX_ROOT))
 
   string(JSON win_flex_bison_url GET "${json}" win_flex_bison url)
-  string(JSON win_flex_bison_sha256 GET "${json}" win_flex_bison sha256)
 
-  FetchContent_Populate(win_flex_bison
-  URL ${win_flex_bison_url}
-  URL_HASH SHA256=${win_flex_bison_sha256}
-  )
+  FetchContent_Declare(win_flex_bison URL ${win_flex_bison_url})
+  FetchContent_MakeAvailable(win_flex_bison)
 
   message(DEBUG "Hint Bison,Flex path ${win_flex_bison_SOURCE_DIR}")
   find_program(_bison_exe
