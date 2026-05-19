@@ -10,6 +10,9 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   cmake -B build")
 endif()
 
+set(_json_fn ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libraries.json)
+file(READ ${_json_fn} json)
+
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(NOT is_multi_config AND NOT (CMAKE_BUILD_TYPE OR DEFINED ENV{CMAKE_BUILD_TYPE}))
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Release default" FORCE)
@@ -33,8 +36,6 @@ else()
 endif()
 
 if(DEFINED MUMPS_UPSTREAM_VERSION AND NOT DEFINED MUMPS_sha256)
-  set(_json_fn ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libraries.json)
-  file(READ ${_json_fn} json)
   string(JSON MUMPS_sha256 ERROR_VARIABLE _jerr GET ${json} "mumps_sha256" "${MUMPS_UPSTREAM_VERSION}")
   if(NOT _jerr AND MUMPS_sha256)
     set(MUMPS_hash URL_HASH SHA256=${MUMPS_sha256})
