@@ -92,7 +92,6 @@ function(lapack_check _result path)
 
 get_property(enabled_langs GLOBAL PROPERTY ENABLED_LANGUAGES)
 if(NOT Fortran IN_LIST enabled_langs)
-  set(${_result} true PARENT_SCOPE)
   return()
 endif()
 
@@ -111,7 +110,6 @@ end program"
 LAPACK_s_FOUND
 )
 if(LAPACK_s_FOUND)
-  set(${_result} true PARENT_SCOPE)
   return()
 endif()
 
@@ -125,7 +123,6 @@ end program"
 LAPACK_d_FOUND
 )
 if(LAPACK_d_FOUND)
-  set(${_result} true PARENT_SCOPE)
   return()
 endif()
 
@@ -139,7 +136,6 @@ end program"
 LAPACK_c_FOUND
 )
 if(LAPACK_c_FOUND)
-  set(${_result} true PARENT_SCOPE)
   return()
 endif()
 
@@ -153,7 +149,6 @@ end program"
 LAPACK_z_FOUND
 )
 if(LAPACK_z_FOUND)
-  set(${_result} true PARENT_SCOPE)
   return()
 endif()
 
@@ -254,7 +249,7 @@ endif()
 
 list(APPEND LAPACK_LIBRARY ${BLAS_LIBRARY})
 set(LAPACK_Netlib_FOUND true PARENT_SCOPE)
-set(LAPACK_LIBRARY ${LAPACK_LIBRARY} PARENT_SCOPE)
+return(PROPAGATE LAPACK_LIBRARY)
 
 endfunction()
 
