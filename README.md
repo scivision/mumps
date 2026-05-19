@@ -10,15 +10,6 @@ MUMPS is a Fortran library with optional C interfaces for MPI and/or OpenMP para
 This repository provides a CMake superbuild project for MUMPS and optional MUMPS dependencies including ScaLAPACK, ParMETIS, and Scotch.
 This CMake superbuild downloads the unmodified source tarfile from mumps-solver.org and builds.
 
-For offline / cached MUMPS source usage, the user can download & specify a local MUMPS source archive like:
-
-```sh
-cmake -Dversion="5.9.0" -Dcache=./cache -P scripts/DownloadMUMPSsource.cmake
-
-cmake -Bbuild -DMUMPS_url=./cache/MUMPS_5.9.0.tar.gz
-```
-
-
 Optional support for CUDA GPA and xKBLAS GPU-accelerated BLAS is [available](./Readme_options.md).
 
 CMake builds MUMPS quickly and more conveniently than the original Makefiles.
@@ -101,6 +92,24 @@ These libraries can be linked into C, C++, Fortran, etc. programs, or even be us
 and
 [python-mumps](https://pypi.org/project/python-mumps/).
 
+## offline / cache source
+
+For offline / cached MUMPS source usage, the user can download & specify a local MUMPS source archive like:
+
+```sh
+cmake -Dversion="5.9.0" -Dcache=./cache -P scripts/DownloadMUMPSsource.cmake
+
+cmake -Bbuild -DMUMPS_url=./cache/MUMPS_5.9.0.tar.gz
+```
+
+The MUMPS version can be omitted to download a recent version, default location "./cache".
+
+```sh
+cmake -P scripts/DownloadMUMPSsource.cmake
+```
+
+## Target dependency graph
+
 To see the CMake target dependency graph do:
 
 ```sh
@@ -122,11 +131,11 @@ ctest --test-dir build
 To build the example, first "install" the MUMPS package-the default install location is under the MUMPS build/local directory:
 
 ```sh
+cmake --workflow default
 cmake --install build
 
-cmake -S example -B example/build -DMUMPS_ROOT=build/local
-
-cmake --build example/build
+cd ./example
+cmake --workflow default
 ```
 
 ## Using binary libraries
