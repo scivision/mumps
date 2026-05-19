@@ -9,8 +9,15 @@ MUMPS is a Fortran library with optional C interfaces for MPI and/or OpenMP para
 (or serial `cmake --workflow nompi`) solving of sparse linear systems of equations.
 This repository provides a CMake superbuild project for MUMPS and optional MUMPS dependencies including ScaLAPACK, ParMETIS, and Scotch.
 This CMake superbuild downloads the unmodified source tarfile from mumps-solver.org and builds.
-For offline usage, the user can specify a local MUMPS source archive like `cmake -Bbuild -DMUMPS_url=/path/to/mumps.zip`
-If mumps-solver.org is unavailable, try [mumps_archive](https://github.com/gsylvand/mumps_archive/) which has the same source tarfiles.
+
+For offline / cached MUMPS source usage, the user can download & specify a local MUMPS source archive like:
+
+```sh
+cmake -Dversion="5.9.0" -Dcache=./cache -P scripts/DownloadMUMPSsource.cmake
+
+cmake -Bbuild -DMUMPS_url=./cache/MUMPS_5.9.0.tar.gz
+```
+
 
 Optional support for CUDA GPA and xKBLAS GPU-accelerated BLAS is [available](./Readme_options.md).
 
