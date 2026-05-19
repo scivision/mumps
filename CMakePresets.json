@@ -22,7 +22,6 @@
     "MUMPS_intsize64": false
   }
 },
-{ "name": "build", "inherits": "default" },
 { "name": "gmake", "inherits": "default", "generator": "Unix Makefiles", "displayName": "Build with GNU Make" },
 { "name": "openmp-mpi", "inherits": "default",
   "displayName": "with OpenMP and MPI",
@@ -30,9 +29,10 @@
     "MUMPS_openmp": true
   }
 },
-{ "name": "openmp-nompi", "inherits": "openmp-mpi",
+{ "name": "openmp-nompi", "inherits": "default",
   "displayName": "with OpenMP, but without MPI",
   "cacheVariables": {
+    "MUMPS_openmp": true,
     "MUMPS_parallel": false
   }
 },
@@ -126,7 +126,6 @@
 ],
 "buildPresets": [
   { "name": "default", "displayName": "build with Ninja", "configurePreset": "default" },
-  { "name": "build", "configurePreset": "build" },
   { "name": "int64", "configurePreset": "int64", "displayName": "with 64-bit integers" },
   { "name": "openmp-mpi", "configurePreset": "openmp-mpi", "displayName": "with OpenMP and MPI" },
   { "name": "openmp-nompi", "configurePreset": "openmp-nompi", "displayName": "with OpenMP, but without MPI" },
@@ -198,113 +197,76 @@
 { "name": "nompi", "configurePreset": "nompi", "inherits": "default" }
 ],
 "workflowPresets": [
-  {
-    "name": "default",
-    "displayName": "Build and Test in Release mode",
+  { "name": "default", "displayName": "Build and Test in Release mode",
     "steps": [
       { "type": "configure", "name": "default" },
       { "type": "build", "name": "default" },
       { "type": "test", "name": "default"}
     ]
   },
-  {
-    "name": "default-build",
-    "displayName": "Build in Release mode",
+  { "name": "build", "displayName": "Build in Release mode",
     "steps": [
-      { "type": "configure", "name": "build" },
-      { "type": "build", "name": "build" }
+      { "type": "configure", "name": "default" },
+      { "type": "build", "name": "default" }
     ]
   },
-  {
-    "name": "build",
-    "displayName": "Build in Release mode",
-    "steps": [
-      { "type": "configure", "name": "build" },
-      { "type": "build", "name": "build" }
-    ]
-  },
-  {
-    "name": "int64",
-    "displayName": "Build and Test with 64-bit integers",
+  { "name": "int64", "displayName": "Build and Test with 64-bit integers",
     "steps": [
       { "type": "configure", "name": "int64" },
       { "type": "build", "name": "int64" },
       { "type": "test", "name": "int64" }
     ]
   },
-  {
-    "name": "int64-build",
-    "displayName": "Build with 64-bit integers",
-    "steps": [
-      { "type": "configure", "name": "int64" },
-      { "type": "build", "name": "int64" }
-    ]
-  },
-  {
-    "name": "openmp-mpi",
-    "displayName": "Build and Test with OpenMP and MPI",
+  { "name": "openmp-mpi", "displayName": "Build and Test with OpenMP and MPI",
     "steps": [
       { "type": "configure", "name": "openmp-mpi" },
       { "type": "build", "name": "openmp-mpi" },
       { "type": "test", "name": "openmp-mpi" }
     ]
   },
-  {
-    "name": "openmp-nompi",
-    "displayName": "Build and Test with OpenMP, but without MPI",
+  { "name": "openmp-nompi", "displayName": "Build and Test with OpenMP, but without MPI",
     "steps": [
       { "type": "configure", "name": "openmp-nompi" },
       { "type": "build", "name": "openmp-nompi" },
       { "type": "test", "name": "openmp-nompi" }
     ]
   },
-  {
-    "name": "gmake",
-    "displayName": "GNU Make build and test",
+  { "name": "gmake", "displayName": "GNU Make build and test",
     "steps": [
       { "type": "configure", "name": "gmake" },
       { "type": "build", "name": "gmake" },
       { "type": "test", "name": "gmake" }
     ]
   },
-  {
-    "name": "msvc",
-    "displayName": "Build and Test with MSVC Visual Studio",
+  { "name": "msvc", "displayName": "Build and Test with MSVC Visual Studio",
     "steps": [
       { "type": "configure", "name": "msvc" },
       { "type": "build", "name": "msvc" },
       { "type": "test", "name": "msvc"}
     ]
   },
-  {
-    "name": "msvc-vs",
-    "displayName": "Build and Test with MSVC Visual Studio 18 2026 (requires oneAPI Visual Studio IDE integration installed)",
+  { "name": "msvc-vs", "displayName": "Build and Test with MSVC Visual Studio 18 2026 (requires oneAPI Visual Studio IDE integration installed)",
     "steps": [
       { "type": "configure", "name": "msvc-vs" },
       { "type": "build", "name": "msvc-vs" },
       { "type": "test", "name": "msvc-vs"}
     ]
   },
-  {
-    "name": "shared",
-    "displayName": "Build and Test Shared Libraries",
+  { "name": "shared", "displayName": "Build and Test Shared Libraries",
     "steps": [
       { "type": "configure", "name": "shared" },
       { "type": "build", "name": "shared" },
       { "type": "test", "name": "shared" }
     ]
   },
-  {
-    "name": "linux",
+  { "name": "linux", "displayName": "Build and Test on Linux (WSL)",
     "steps": [
       { "type": "configure", "name": "linux" },
       { "type": "build", "name": "linux" },
       { "type": "test", "name": "linux" }
     ]
   },
-  {
-    "name": "scotch",
-    "displayName": "Build and Test with Scotch",
+  { "name": "scotch", "displayName": "Build and Test with Scotch",
     "steps": [
       { "type": "configure", "name": "scotch" },
       { "type": "build", "name": "scotch" },
@@ -325,27 +287,21 @@
       { "type": "test", "name": "scotch-parmetis" }
     ]
   },
-  {
-    "name": "metis",
-    "displayName": "Build and Test with METIS",
+  { "name": "metis", "displayName": "Build and Test with METIS",
     "steps": [
       { "type": "configure", "name": "metis" },
       { "type": "build", "name": "metis" },
       { "type": "test", "name": "metis" }
     ]
   },
-  {
-    "name": "parmetis",
-    "displayName": "Build and Test with ParMETIS",
+  { "name": "parmetis", "displayName": "Build and Test with ParMETIS",
     "steps": [
       { "type": "configure", "name": "parmetis" },
       { "type": "build", "name": "parmetis" },
       { "type": "test", "name": "parmetis" }
     ]
   },
-  {
-    "name": "nompi",
-    "displayName": "Build and Test without MPI",
+  { "name": "nompi", "displayName": "Build and Test without MPI",
     "steps": [
       { "type": "configure", "name": "nompi" },
       { "type": "build", "name": "nompi" },

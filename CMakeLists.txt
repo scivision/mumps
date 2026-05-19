@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.25...4.4)
 # CMake >= 3.24 for FetchContent FIND_PACKAGE_ARGS
 # CMAKE >= 3.25 for block(), VALIDATOR on find_*()
 
+set(MUMPS_PROJECT_VERSION 5.9.0.2)
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "Please use out of source build:
   cmake -B build")
@@ -13,9 +15,62 @@ if(NOT is_multi_config AND NOT (CMAKE_BUILD_TYPE OR DEFINED ENV{CMAKE_BUILD_TYPE
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Release default" FORCE)
 endif()
 
+include(FetchContent)
+
+if(DEFINED MUMPS_url)
+  if(EXISTS ${MUMPS_url})
+    file(REAL_PATH "${MUMPS_url}" MUMPS_url)
+  endif()
+else()
+  if(NOT DEFINED MUMPS_UPSTREAM_VERSION)
+    string(REGEX MATCH "^([0-9]+\\.[0-9]+\\.[0-9]+)" MUMPS_UPSTREAM_VERSION ${MUMPS_PROJECT_VERSION})
+    if(MUMPS_UPSTREAM_VERSION STREQUAL "")
+      message(FATAL_ERROR "Please define 'cmake -DMUMPS_url=...' or 'cmake -DMUMPS_UPSTREAM_VERSION=...")
+    endif()
+  endif()
+
+  set(MUMPS_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
+endif()
+
+if(DEFINED MUMPS_UPSTREAM_VERSION AND NOT DEFINED MUMPS_sha256)
+  set(_json_fn ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libraries.json)
+  file(READ ${_json_fn} json)
+  string(JSON MUMPS_sha256 ERROR_VARIABLE _jerr GET ${json} "mumps_sha256" "${MUMPS_UPSTREAM_VERSION}")
+  if(NOT _jerr AND MUMPS_sha256)
+    set(MUMPS_hash URL_HASH SHA256=${MUMPS_sha256})
+  else()
+    set(MUMPS_hash)
+    message(STATUS "No sha256 for MUMPS ${MUMPS_UPSTREAM_VERSION} found in ${_json_fn}")
+  endif()
+endif()
+
+if(NOT FETCHCONTENT_SOURCE_DIR_MUMPS_UPSTREAM)
+  message(STATUS "MUMPS ${MUMPS_UPSTREAM_VERSION}: ${MUMPS_url} ${MUMPS_sha256}")
+endif()
+
+option(MUMPS_UPDATE_DISCONNECTED "don't check for updates of subprojects" ON)
+set(FETCHCONTENT_UPDATES_DISCONNECTED ${MUMPS_UPDATE_DISCONNECTED})
+
+FetchContent_Declare(mumps_upstream URL ${MUMPS_url} ${MUMPS_hash})
+FetchContent_MakeAvailable(mumps_upstream)
+
+# Read MUMPS/VERSION file to get the actual version
+# the first line is like "MUMPS 5.7.3"
+file(STRINGS "${mumps_upstream_SOURCE_DIR}/VERSION" _version_line LIMIT_COUNT 1 REGEX "^MUMPS [0-9]+\\.[0-9]+\\.[0-9]+")
+message(DEBUG "MUMPS version line: ${_version_line}")
+string(REGEX REPLACE "MUMPS ([0-9]+\\.[0-9]+\\.[0-9]+)" "\\1" MUMPS_ACTUAL_VERSION "${_version_line}")
+if(MUMPS_UPSTREAM_VERSION AND NOT MUMPS_ACTUAL_VERSION VERSION_EQUAL MUMPS_UPSTREAM_VERSION)
+  message(FATAL_ERROR "Failed to read MUMPS version ${MUMPS_UPSTREAM_VERSION} from ${mumps_upstream_SOURCE_DIR}/VERSION, got ${MUMPS_ACTUAL_VERSION} instead.")
+endif()
+
+# minimum MUMPS version
+if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.2)
+  message(FATAL_ERROR "MUMPS version ${MUMPS_ACTUAL_VERSION} is too old, please use MUMPS >= 5.2")
+endif()
+
 project(MUMPS
 LANGUAGES C Fortran
-VERSION 5.9.0.1
+VERSION ${MUMPS_PROJECT_VERSION}
 DESCRIPTION "Sparse direct parallel solver"
 HOMEPAGE_URL "https://mumps-solver.org/"
 )
@@ -69,45 +124,6 @@ include(cmake/compilers.cmake)
 
 message(STATUS "MUMPS ${PROJECT_VERSION} upstream ${MUMPS_UPSTREAM_VERSION} install prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "CMake ${CMAKE_VERSION}  Toolchain ${CMAKE_TOOLCHAIN_FILE}")
-message(STATUS "MUMPS source URL: ${MUMPS_url}")
-
-# --- download MUMPS source
-include(FetchContent)
-
-set(_hash)
-if(MUMPS_UPSTREAM_VERSION)
-  set(_json_fn ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libraries.json)
-  file(READ ${_json_fn} json)
-  string(JSON mumps_sha256 ERROR_VARIABLE _jerr GET ${json} "mumps_sha256" "${MUMPS_UPSTREAM_VERSION}")
-  if(NOT _jerr AND mumps_sha256)
-    set(_hash URL_HASH SHA256=${mumps_sha256})
-    message(STATUS "MUMPS ${MUMPS_UPSTREAM_VERSION} ${_hash}")
-  else()
-    message(STATUS "No sha256 for MUMPS ${MUMPS_UPSTREAM_VERSION} found in ${_json_fn}")
-  endif()
-endif()
-
-set(FETCHCONTENT_QUIET no)
-
-
-FetchContent_Populate(mumps_upstream
-URL ${MUMPS_url}
-${_hash}
-)
-
-# Read MUMPS/VERSION file to get the actual version
-# the first line is like "MUMPS 5.7.3"
-file(STRINGS "${mumps_upstream_SOURCE_DIR}/VERSION" _version_line LIMIT_COUNT 1 REGEX "^MUMPS [0-9]+\\.[0-9]+\\.[0-9]+")
-message(DEBUG "MUMPS version line: ${_version_line}")
-string(REGEX REPLACE "MUMPS ([0-9]+\\.[0-9]+\\.[0-9]+)" "\\1" MUMPS_ACTUAL_VERSION "${_version_line}")
-if(MUMPS_UPSTREAM_VERSION AND NOT MUMPS_ACTUAL_VERSION VERSION_EQUAL MUMPS_UPSTREAM_VERSION)
-  message(FATAL_ERROR "Failed to read MUMPS version ${MUMPS_UPSTREAM_VERSION} from ${mumps_upstream_SOURCE_DIR}/VERSION, got ${MUMPS_ACTUAL_VERSION} instead.")
-endif()
-
-# minimum MUMPS version
-if(MUMPS_ACTUAL_VERSION VERSION_LESS 5.2)
-  message(FATAL_ERROR "MUMPS version ${MUMPS_ACTUAL_VERSION} is too old, please use MUMPS >= 5.2")
-endif()
 
 # --- dependencies
 find_package(Threads)

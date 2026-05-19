@@ -2,27 +2,6 @@ option(MUMPS_BUILD_TESTING "Build tests" ${MUMPS_IS_TOP_LEVEL})
 
 option(MUMPS_find_static "Find static libraries for Lapack and Scalapack (default shared then static search)")
 
-option(MUMPS_UPDATE_DISCONNECTED "don't check for updates of Git submodules if they exist" ON)
-
-set(FETCHCONTENT_UPDATES_DISCONNECTED ${MUMPS_UPDATE_DISCONNECTED})
-
-set(FETCHCONTENT_QUIET OFF)
-
-if(MUMPS_url)
-  if(EXISTS ${MUMPS_url})
-    file(REAL_PATH "${MUMPS_url}" MUMPS_url)
-  endif()
-else()
-  if(NOT DEFINED MUMPS_UPSTREAM_VERSION)
-    string(REGEX MATCH "^([0-9]+\\.[0-9]+\\.[0-9]+)" MUMPS_UPSTREAM_VERSION ${PROJECT_VERSION})
-    if(NOT MUMPS_UPSTREAM_VERSION)
-      message(FATAL_ERROR "Please define 'cmake -DMUMPS_url=...' or 'cmake -DMUMPS_UPSTREAM_VERSION=...")
-    endif()
-  endif()
-
-  set(MUMPS_url "https://mumps-solver.org/MUMPS_${MUMPS_UPSTREAM_VERSION}.tar.gz")
-endif()
-
 option(MUMPS_gemmt "GEMMT is recommended in MUMPS User Manual if available" ON)
 
 option(MUMPS_parallel "parallel (use MPI)" ON)

@@ -86,7 +86,7 @@ jobs:
 
     - name: build example
       working-directory: example
-      run: cmake --workflow ${{ matrix.preset }}-build
+      run: cmake --workflow build
 
 
     - name: exclude unused files from cache
