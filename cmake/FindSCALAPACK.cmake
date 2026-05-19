@@ -17,11 +17,12 @@ This module does NOT find LAPACK.
 COMPONENTS
 ^^^^^^^^^^
 
+``INT64``
+  64-bit integers (default 32-bit integers is what most users want and what most libraries have)
+
 ``MKL``
   Intel MKL for MSVC, oneAPI, GCC.
   Working with IntelMPI (default Window, Linux), MPICH (default Mac) or OpenMPI (Linux only).
-``MKL64``
-  MKL 64-bit integers  (default is 32-bit integers)
 ``TBB``
   MKL only: Intel MPI + TBB (default is sequential)
 ``OpenMP``
@@ -31,8 +32,6 @@ COMPONENTS
   AMD ScaLAPACK fork of Netlib ScaLAPACK.
   Requires LAPACK AOCL
   https://www.amd.com/en/developer/aocl/scalapack.html
-``AOCL64``
-  AOCL 64-bit integers  (default is 32-bit integers)
 
 ``STATIC``
   Library search default on non-Windows is shared then static. On Windows default search is static only.
@@ -75,9 +74,6 @@ set(CMAKE_REQUIRED_FLAGS)
 set(CMAKE_REQUIRED_LINK_OPTIONS)
 set(CMAKE_REQUIRED_INCLUDES ${SCALAPACK_INCLUDE_DIR} ${LAPACK_INCLUDE_DIRS})
 set(CMAKE_REQUIRED_LIBRARIES ${path})
-if(BLACS_LIBRARY)
-  list(APPEND CMAKE_REQUIRED_LIBRARIES ${BLACS_LIBRARY})
-endif()
 list(APPEND CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES} MPI::MPI_Fortran ${CMAKE_THREAD_LIBS_INIT})
 
 if(STATIC IN_LIST SCALAPACK_FIND_COMPONENTS AND
@@ -94,8 +90,8 @@ foreach(_prec IN ITEMS s d)
   elseif(_prec STREQUAL "d")
     set(_ip 64)
   endif()
-  if(${_prec} IN_LIST SCALAPACK_FIND_COMPONENTS)
-    check_source_compiles(Fortran
+
+  check_source_compiles(Fortran
     "program test
     use, intrinsic :: iso_fortran_env
     implicit none
@@ -104,24 +100,22 @@ foreach(_prec IN ITEMS s d)
     print *, p${_prec}lamch(i, 'E')
     end program"
     SCALAPACK_${_prec}_FOUND
-    )
-    if(NOT SCALAPACK_${_prec}_FOUND)
-      set(${_result} false PARENT_SCOPE)
-      return()
-    endif()
+  )
+  if(SCALAPACK_${_prec}_FOUND)
+    set(${_result} true PARENT_SCOPE)
+    return()
   endif()
 endforeach()
 
 
 foreach(_prec IN ITEMS c z)
-  if(_prec IN_LIST SCALAPACK_FIND_COMPONENTS)
-    if(_prec STREQUAL "c")
-      set(_rk real32)
-    elseif(_prec STREQUAL "z")
-      set(_rk real64)
-    endif()
+  if(_prec STREQUAL "c")
+    set(_rk real32)
+  elseif(_prec STREQUAL "z")
+    set(_rk real64)
+  endif()
 
-    check_source_compiles(Fortran
+  check_source_compiles(Fortran
     "program test
     use, intrinsic :: iso_fortran_env, only : ${_rk} => rk
     implicit none
@@ -133,15 +127,14 @@ foreach(_prec IN ITEMS c z)
     call p${_prec}gemm('N', 'N', 0, 0, 0, alpha, a, 1, 1, desca, b, 1, 1, descb, beta, c, 1, 1, descc)
     end program"
     SCALAPACK_${_prec}_FOUND
-    )
-    if(NOT SCALAPACK_${_prec}_FOUND)
-      set(${_result} false PARENT_SCOPE)
-      return()
-    endif()
+  )
+  if(SCALAPACK_${_prec}_FOUND)
+    set(${_result} true PARENT_SCOPE)
+    return()
   endif()
 endforeach()
 
-set(${_result} true PARENT_SCOPE)
+set(${_result} false PARENT_SCOPE)
 
 endfunction()
 
@@ -153,7 +146,7 @@ set(ENABLE_SCALAPACK true)
 set(ENABLE_BLAS true)
 
 set(MKL_INTERFACE "lp64")
-if(MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
+if(INT64 IN_LIST SCALAPACK_FIND_COMPONENTS)
   string(PREPEND MKL_INTERFACE "i")
 endif()
 
@@ -192,7 +185,7 @@ get_property(SCALAPACK_LIBRARY TARGET MKL::MKL PROPERTY INTERFACE_LINK_LIBRARIES
 
 set(SCALAPACK_MKL_FOUND true)
 
-foreach(c IN ITEMS TBB MKL64 OpenMP)
+foreach(c IN ITEMS TBB INT64 OpenMP)
   if(${c} IN_LIST SCALAPACK_FIND_COMPONENTS)
     set(SCALAPACK_${c}_FOUND true)
   endif()
@@ -210,7 +203,7 @@ if(DEFINED SCALAPACK_ROOT)
 endif()
 
 set(_s "LP64")
-if(AOCL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
+if(INT64 IN_LIST SCALAPACK_FIND_COMPONENTS)
   string(PREPEND _s "I")
 endif()
 
@@ -220,6 +213,7 @@ PATH_SUFFIXES lib/${_s}
 HINTS ${SCALAPACK_ROOT} $ENV{SCALAPACK_ROOT}
 ${_nodef_scalapack}
 DOC "AOCL SCALAPACK library"
+VALIDATOR scalapack_check
 )
 
 if(SCALAPACK_LIBRARY)
@@ -253,9 +247,6 @@ VALIDATOR scalapack_check
 endfunction()
 
 # === main
-if(NOT DEFINED SCALAPACK_FIND_COMPONENTS OR SCALAPACK_FIND_COMPONENTS STREQUAL "")
-  set(SCALAPACK_FIND_COMPONENTS d) # default to double precision
-endif()
 
 if(NOT DEFINED SCALAPACK_CRAY AND DEFINED ENV{CRAYPE_VERSION})
   set(SCALAPACK_CRAY true)
@@ -272,7 +263,7 @@ if(STATIC IN_LIST SCALAPACK_FIND_COMPONENTS)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
 endif()
 
-if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS OR MKL64 IN_LIST SCALAPACK_FIND_COMPONENTS)
+if(MKL IN_LIST SCALAPACK_FIND_COMPONENTS)
   scalapack_mkl()
 elseif(SCALAPACK_CRAY)
   # Cray PE has Scalapack build into LibSci. Use Cray compiler wrapper.
@@ -304,10 +295,6 @@ endif()
 if(SCALAPACK_FOUND)
   # need if _FOUND guard as can't overwrite imported target even if bad
   set(SCALAPACK_LIBRARIES ${SCALAPACK_LIBRARY})
-  if(BLACS_LIBRARY)
-    list(APPEND SCALAPACK_LIBRARIES ${BLACS_LIBRARY})
-  endif()
-
   set(SCALAPACK_INCLUDE_DIRS ${SCALAPACK_INCLUDE_DIR})
 
   message(VERBOSE "Scalapack libraries: ${SCALAPACK_LIBRARIES}

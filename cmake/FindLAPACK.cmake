@@ -27,27 +27,24 @@ Tested on Linux, MacOS and Windows with:
 * Cray
 
 
-Parameters
+COMPONENTS
 ^^^^^^^^^^
 
-COMPONENTS default to Netlib LAPACK / LapackE, otherwise:
+``INT64``
+  64-bit integers (default 32-bit integers is what most users want and what most libraries have)
 
 ``MKL``
   Intel MKL -- sequential by default, or add TBB or MPI as well
-``MKL64``
-  MKL only: 64-bit integers  (default is 32-bit integers)
 ``TBB``
-  Intel MPI + TBB for MKL
+  Intel MKL only: use threaded building blocks TBB
 ``OpenMP``
-  MKL only: use OpenMP (default is sequential)
+  Intel MKL only: use OpenMP (default is sequential)
 
 
 ``AOCL``
   AMD LAPACK fork of Netlib LAPACK.
   Requires LAPACK AOCL
   https://www.amd.com/en/developer/aocl/dense.html
-``AOCL64``
-  AOCL 64-bit integers  (default is 32-bit integers)
 
 ``LAPACKE``
   LapackE C / C++ interface
@@ -88,10 +85,6 @@ References
 #]=======================================================================]
 
 include(CheckSourceCompiles)
-
-# clear to avoid endless appending on subsequent calls
-set(LAPACK_LIBRARY)
-unset(LAPACK_INCLUDE_DIR)
 
 # ===== functions ==========
 
@@ -175,14 +168,14 @@ function(lapack_netlib)
 if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
   find_path(LAPACK95_INCLUDE_DIR
   NAMES f95_lapack.mod
-  HINTS ${LAPACK95_ROOT} ENV LAPACK95_ROOT
+  HINTS ${LAPACK95_ROOT} $ENV{LAPACK95_ROOT}
   PATH_SUFFIXES include
   DOC "LAPACK95 Fortran module"
   )
 
   find_library(LAPACK95_LIBRARY
   NAMES lapack95
-  HINTS ${LAPACK95_ROOT} ENV LAPACK95_ROOT
+  HINTS ${LAPACK95_ROOT} $ENV{LAPACK95_ROOT}
   DOC "LAPACK95 library"
   )
 
@@ -192,10 +185,17 @@ if(LAPACK95 IN_LIST LAPACK_FIND_COMPONENTS)
 
   set(LAPACK95_LIBRARY ${LAPACK95_LIBRARY} PARENT_SCOPE)
   set(LAPACK_LAPACK95_FOUND true PARENT_SCOPE)
+  mark_as_advanced(LAPACK95_LIBRARY LAPACK95_INCLUDE_DIR)
+endif()
+
+# https://centos.pkgs.org/9-stream/centos-crb-x86_64/lapack-devel-3.9.0-8.el9.x86_64.rpm.html
+set(_lapack_names lapack)
+if(INT64 IN_LIST LAPACK_FIND_COMPONENTS)
+  list(PREPEND _lapack_names lapack64)
 endif()
 
 find_library(LAPACK_LIBRARY
-NAMES lapack
+NAMES ${_lapack_names}
 PATH_SUFFIXES lapack lapack/lib
 DOC "LAPACK library"
 )
@@ -203,11 +203,14 @@ if(NOT LAPACK_LIBRARY)
   return()
 endif()
 
-if(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
+cmake_path(GET LAPACK_LIBRARY PARENT_PATH _lapack_root)
+cmake_path(GET _lapack_root PARENT_PATH _lapack_root)
 
+if(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
   find_library(LAPACKE_LIBRARY
   NAMES lapacke
   PATH_SUFFIXES lapack lapack/lib
+  HINTS ${_lapack_root}
   DOC "LAPACKE library"
   )
 
@@ -215,24 +218,33 @@ if(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
   find_path(LAPACKE_INCLUDE_DIR
   NAMES lapacke.h
   PATH_SUFFIXES lapack lapack/include
+  HINTS ${_lapack_root}
   DOC "LAPACKE include directory"
   )
-  if(NOT (LAPACKE_LIBRARY AND LAPACKE_INCLUDE_DIR))
-    return()
+
+  if(LAPACKE_LIBRARY AND LAPACKE_INCLUDE_DIR)
+    set(LAPACK_LAPACKE_FOUND true PARENT_SCOPE)
+    list(APPEND LAPACK_INCLUDE_DIR ${LAPACKE_INCLUDE_DIR})
+    list(APPEND LAPACK_LIBRARY ${LAPACKE_LIBRARY})
   endif()
 
-  set(LAPACK_LAPACKE_FOUND true PARENT_SCOPE)
-  list(APPEND LAPACK_INCLUDE_DIR ${LAPACKE_INCLUDE_DIR})
-  list(APPEND LAPACK_LIBRARY ${LAPACKE_LIBRARY})
   mark_as_advanced(LAPACKE_LIBRARY LAPACKE_INCLUDE_DIR)
 endif()
 
 # Netlib on Cygwin and others
 
+# https://centos.pkgs.org/9-stream/centos-crb-x86_64/blas-devel-3.9.0-8.el9.x86_64.rpm.html
+
+set(_blas_names blas)
+if(INT64 IN_LIST LAPACK_FIND_COMPONENTS)
+  list(PREPEND _blas_names blas64)
+endif()
+
 find_library(BLAS_LIBRARY
-NAMES blas
+NAMES ${_blas_names}
 PATH_SUFFIXES lapack lapack/lib blas
 DOC "BLAS library"
+HINTS ${_lapack_root} ${BLAS_ROOT} $ENV{BLAS_ROOT}
 VALIDATOR lapack_check
 )
 
@@ -242,7 +254,6 @@ endif()
 
 list(APPEND LAPACK_LIBRARY ${BLAS_LIBRARY})
 set(LAPACK_Netlib_FOUND true PARENT_SCOPE)
-
 set(LAPACK_LIBRARY ${LAPACK_LIBRARY} PARENT_SCOPE)
 
 endfunction()
@@ -257,8 +268,12 @@ DOC "OpenBLAS library"
 VALIDATOR lapack_check
 )
 
+cmake_path(GET LAPACK_LIBRARY PARENT_PATH _openblas_root)
+cmake_path(GET _openblas_root PARENT_PATH _openblas_root)
+
 find_path(LAPACK_INCLUDE_DIR
 NAMES openblas_config.h cblas-openblas.h
+HINTS ${_openblas_root}
 DOC "OpenBLAS include directory"
 )
 
@@ -289,7 +304,7 @@ if(WIN32)
 endif()
 
 set(_s "LP64")
-if(AOCL64 IN_LIST LAPACK_FIND_COMPONENTS)
+if(INT64 IN_LIST LAPACK_FIND_COMPONENTS)
   string(PREPEND _s "I")
 endif()
 
@@ -302,10 +317,13 @@ ${_nodef_lapack}
 DOC "AOCL Flame library"
 )
 
+cmake_path(GET LAPACK_LIBRARY PARENT_PATH _lapack_root)
+cmake_path(GET _lapack_root PARENT_PATH _lapack_root)
+
 find_path(LAPACK_INCLUDE_DIR
 NAMES FLAME.h
 PATH_SUFFIXES include/${_s}
-HINTS ${LAPACK_ROOT} $ENV{LAPACK_ROOT}
+HINTS ${_lapack_root} ${LAPACK_ROOT} $ENV{LAPACK_ROOT}
 ${_nodef_lapack}
 DOC "Flame header"
 )
@@ -332,18 +350,17 @@ endif()
 find_library(BLAS_LIBRARY
 NAMES ${_names}
 NAMES_PER_DIR
-HINTS ${BLAS_ROOT}
 PATH_SUFFIXES lib/${_s}
-HINTS ${BLAS_ROOT} $ENV{BLAS_ROOT}
+HINTS ${_lapack_root} ${LAPACK_ROOT} $ENV{LAPACK_ROOT} ${BLAS_ROOT} $ENV{BLAS_ROOT}
 ${_nodef_blas}
+VALIDATOR lapack_check
 DOC "AOCL Blis library"
 )
 
 find_path(BLAS_INCLUDE_DIR
 NAMES blis.h
-HINTS ${BLAS_ROOT}
 PATH_SUFFIXES include/${_s}
-HINTS ${BLAS_ROOT} $ENV{BLAS_ROOT}
+HINTS ${_lapack_root} ${LAPACK_ROOT} $ENV{LAPACK_ROOT} ${BLAS_ROOT} $ENV{BLAS_ROOT}
 ${_nodef_blas}
 DOC "Blis header"
 )
@@ -358,7 +375,7 @@ if(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
   find_library(LAPACKE_LIBRARY
   NAMES lapacke
   PATH_SUFFIXES lib/${_s}
-  HINTS ${LAPACK_ROOT} $ENV{LAPACK_ROOT}
+  HINTS ${_lapack_root} ${LAPACK_ROOT} $ENV{LAPACK_ROOT}
   ${_nodef_lapack}
   DOC "AOCL LAPACKE library"
   )
@@ -367,17 +384,17 @@ if(LAPACKE IN_LIST LAPACK_FIND_COMPONENTS)
   find_path(LAPACKE_INCLUDE_DIR
   NAMES lapacke.h
   PATH_SUFFIXES include/${_s}
-  HINTS ${LAPACK_ROOT} $ENV{LAPACK_ROOT}
+  HINTS ${_lapack_root} ${LAPACK_ROOT} $ENV{LAPACK_ROOT}
   ${_nodef_lapack}
   DOC "AOCL LAPACKE include directory"
   )
-  if(NOT (LAPACKE_LIBRARY AND LAPACKE_INCLUDE_DIR))
-    return()
+
+  if(LAPACKE_LIBRARY AND LAPACKE_INCLUDE_DIR)
+    set(LAPACK_LAPACKE_FOUND true PARENT_SCOPE)
+    list(APPEND LAPACK_INCLUDE_DIR ${LAPACKE_INCLUDE_DIR})
+    list(APPEND LAPACK_LIBRARY ${LAPACKE_LIBRARY})
   endif()
 
-  set(LAPACK_LAPACKE_FOUND true PARENT_SCOPE)
-  list(APPEND LAPACK_INCLUDE_DIR ${LAPACKE_INCLUDE_DIR})
-  list(APPEND LAPACK_LIBRARY ${LAPACKE_LIBRARY})
   mark_as_advanced(LAPACKE_LIBRARY LAPACKE_INCLUDE_DIR)
 endif()
 
@@ -394,7 +411,7 @@ macro(lapack_mkl)
 # https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2025-0/cmake-config-for-onemkl.html
 
 set(MKL_INTERFACE "lp64")
-if(MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
+if(INT64 IN_LIST LAPACK_FIND_COMPONENTS)
   string(PREPEND MKL_INTERFACE "i")
 endif()
 
@@ -435,7 +452,7 @@ get_property(LAPACK_LIBRARY TARGET MKL::MKL PROPERTY INTERFACE_LINK_LIBRARIES)
 
 set(LAPACK_MKL_FOUND true)
 
-foreach(c IN ITEMS TBB LAPACK95 MKL64 OpenMP)
+foreach(c IN ITEMS TBB LAPACK95 INT64 OpenMP)
   if(${c} IN_LIST LAPACK_FIND_COMPONENTS)
     set(LAPACK_${c}_FOUND true)
   endif()
@@ -453,7 +470,6 @@ if(NOT (LAPACK_CRAY
   OR OpenBLAS IN_LIST LAPACK_FIND_COMPONENTS
   OR Netlib IN_LIST LAPACK_FIND_COMPONENTS
   OR MKL IN_LIST LAPACK_FIND_COMPONENTS
-  OR MKL64 IN_LIST LAPACK_FIND_COMPONENTS
   OR AOCL IN_LIST LAPACK_FIND_COMPONENTS))
   if(DEFINED ENV{MKLROOT} AND IS_DIRECTORY "$ENV{MKLROOT}")
     list(APPEND LAPACK_FIND_COMPONENTS MKL)
@@ -467,7 +483,7 @@ if(STATIC IN_LIST LAPACK_FIND_COMPONENTS)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
 endif()
 
-if(MKL IN_LIST LAPACK_FIND_COMPONENTS OR MKL64 IN_LIST LAPACK_FIND_COMPONENTS)
+if(MKL IN_LIST LAPACK_FIND_COMPONENTS)
   lapack_mkl()
 elseif(Netlib IN_LIST LAPACK_FIND_COMPONENTS)
   lapack_netlib()
